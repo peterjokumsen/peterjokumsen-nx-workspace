@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   standalone: true,
-  imports: [RouterOutlet, RouterLinkActive, RouterLink, FaIconComponent],
+  imports: [RouterOutlet, RouterLinkActive, RouterLink, FaIconComponent, NgOptimizedImage],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styles: `
