@@ -1,0 +1,2 @@
+npm run lint:affected
+npx nx format:write --uncommitted
