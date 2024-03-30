@@ -8,10 +8,20 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
   imports: [RouterOutlet, RouterLinkActive, RouterLink, FaIconComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styles: '',
+  styles: `
+  a.router-link-active {
+    @apply bg-gray-400 text-pink-600;
+    cursor: default;
+
+    &:hover {
+      @apply text-pink-600;
+    }
+  }
+  `,
 })
 export class AppComponent {
   readonly navElements: Array<{ route: string; title: string }> = [
+    { route: '/about-me', title: 'About Me' },
     { route: '/home', title: 'Home' },
   ];
   codeIcon = faCode;
