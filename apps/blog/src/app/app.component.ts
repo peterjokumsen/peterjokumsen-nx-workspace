@@ -6,7 +6,13 @@ import { NgOptimizedImage } from '@angular/common';
 
 @Component({
   standalone: true,
-  imports: [RouterOutlet, RouterLinkActive, RouterLink, FaIconComponent, NgOptimizedImage],
+  imports: [
+    RouterOutlet,
+    RouterLinkActive,
+    RouterLink,
+    FaIconComponent,
+    NgOptimizedImage,
+  ],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styles: `
