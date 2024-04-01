@@ -1,2 +1,26 @@
-npm run test:affected
-npm run build:affected
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Define some colors
+BLUE='\033[0;34m'
+RED_BACKGROUND='\033[41m'
+GREEN_BACKGROUND='\033[42m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}Running tests of affected projects..."
+if npm run test:affected; then
+  echo -e "${NC}${GREEN_BACKGROUND}All tests passed.${NC}"
+else
+  echo -e "${NC}${RED_BACKGROUND}Tests failed.${NC}"
+  exit 1
+fi
+
+echo -e "${BLUE}Building affected projects..."
+if npm run build:affected; then
+  echo -e "${NC}${GREEN_BACKGROUND}Successfully built projects.${NC}"
+else
+  echo -e "${NC}${RED_BACKGROUND}Build failed.${NC}"
+  exit 1
+fi
+
+echo -e "${NC}${GREEN_BACKGROUND}Pre-push checks completed.${NC}"

@@ -1,2 +1,31 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+# Define some colors
+BLUE='\033[0;34m'
+RED_BACKGROUND='\033[41m'
+GREEN_BACKGROUND='\033[42m'
+NC='\033[0m' # No Color
+
+echo -e "${BLUE}Running lint check..."
 npm run lint:affected
-npx nx format:write --uncommitted
+lint_status=$?
+if [ $lint_status -ne 0 ]; then
+  echo -e "${NC}${RED_BACKGROUND}Lint check failed. Please fix the linting errors and try again.${NC}"
+else
+  echo -e "${NC}${GREEN_BACKGROUND}Lint check passed.${NC}"
+fi
+
+echo -e "${BLUE}Running format check..."
+if npm run format:check; then
+  echo -e "${NC}${GREEN_BACKGROUND}Format check passed.${NC}"
+else
+  echo -e "${NC}${RED_BACKGROUND}Format check failed. Use 'npm run format' to apply formatting.${NC}"
+  exit 1
+fi
+
+if [ $lint_status -ne 0 ]; then
+  exit 1
+fi
+
+echo -e "${NC}${GREEN_BACKGROUND}All checks passed. Proceeding with the commit.${NC}"
