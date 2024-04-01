@@ -83,18 +83,20 @@ export class AboutMeComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const headers = Array.from(
       this.content.nativeElement.querySelectorAll('h1, h2, h3, h4, h5, h6'),
-    ).map((el) => {
-      const header = el as HTMLElement;
-      const id = header.innerText
-        .toLowerCase()
-        .replace(/[\W]/g, '')
-        .replace(/ /g, '-');
-      return {
-        id,
-        element: header,
-        title: header.innerText,
-      };
-    });
+    )
+      .map((el) => {
+        const header = el as HTMLElement;
+        const id = header.innerText
+          ?.toLowerCase()
+          .replace(/[\W]/g, '')
+          .replace(/ /g, '-');
+        return {
+          id,
+          element: header,
+          title: header.innerText,
+        };
+      })
+      .filter((header) => header.id);
 
     this.headers.update(() => headers);
   }
