@@ -1,0 +1,37 @@
+{
+  "name": "ui-elements",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "ng-libs/ui-elements/src",
+  "prefix": "pj-ui",
+  "tags": [],
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:package",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "ng-libs/ui-elements/ng-package.json",
+        "tailwindConfig": "ng-libs/ui-elements/tailwind.config.js"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "ng-libs/ui-elements/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "ng-libs/ui-elements/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "ng-libs/ui-elements/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}

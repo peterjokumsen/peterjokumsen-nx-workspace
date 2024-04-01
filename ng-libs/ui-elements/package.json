@@ -1,0 +1,11 @@
+{
+  "name": "@peterjokumsen/ui-elements",
+  "version": "0.0.1",
+  "peerDependencies": {
+    "@angular/common": "^17.2.0",
+    "@angular/core": "^17.2.0",
+    "@nx/angular": "^18.1.2"
+  },
+  "dependencies": {},
+  "sideEffects": false
+}
