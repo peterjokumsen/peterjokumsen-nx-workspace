@@ -7,6 +7,7 @@
 This repository was created as a blog and project to practice skills and techniques for development.
 
 # Functionality to implement
+
 - [ ] Create about me page
 - [ ] Create `Workarounds`, a page to house collection of workarounds I've had to use to tackle issues
 - [ ] Create CI/CD pipeline

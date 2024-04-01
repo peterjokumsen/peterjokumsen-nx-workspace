@@ -3,9 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  signal,
   ViewChild,
+  signal,
 } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -14,20 +15,20 @@ import { CommonModule } from '@angular/common';
   template: `
     <ng-template #headersTemplate>
       <div
-        class="table-of-contents sticky top-0 flex justify-around flex-col gap-4 p-2"
+        class="table-of-contents sticky top-0 flex flex-col justify-around gap-4 p-2"
       >
         @for (header of headers(); track header.title) {
-        <a
-          class="bg-pink-600 text-white hover:bg-gray-800 border rounded p-6"
-          href="#"
-          (click)="navigateTo(header.element)"
-          >{{ header.title }}</a
-        >
+          <a
+            class="rounded border bg-pink-600 p-6 text-white hover:bg-gray-800"
+            href="#"
+            (click)="navigateTo(header.element)"
+            >{{ header.title }}</a
+          >
         }
       </div>
     </ng-template>
     <div class="content grid grid-cols-5">
-      <div class="md:hidden col-span-5">
+      <div class="col-span-5 md:hidden">
         <ng-container *ngTemplateOutlet="headersTemplate"></ng-container>
       </div>
       <div #content class="col-span-5 md:col-span-2 md:col-start-2">
@@ -60,15 +61,15 @@ import { CommonModule } from '@angular/common';
           </p>
         </div>
       </div>
-      <div class="hidden md:block col-span-1 col-start-5">
+      <div class="col-span-1 col-start-5 hidden md:block">
         <ng-container *ngTemplateOutlet="headersTemplate"></ng-container>
       </div>
     </div>
   `,
   styles: `
-  .about-me-section {
-    @apply flex flex-col items-center justify-around p-6 h-screen;
-  }
+    .about-me-section {
+      @apply flex h-screen flex-col items-center justify-around p-6;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -95,7 +96,7 @@ export class AboutMeComponent implements AfterViewInit {
       };
     });
 
-    this.headers.update((h) => headers);
+    this.headers.update(() => headers);
   }
 
   navigateTo(element: HTMLElement): boolean {
