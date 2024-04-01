@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UiElementsComponent } from './ui-elements.component';
+import { RouterNavComponent } from './router-nav.component';
 
-describe('UiElementsComponent', () => {
-  let component: UiElementsComponent;
-  let fixture: ComponentFixture<UiElementsComponent>;
+describe('RouterNavComponent', () => {
+  let component: RouterNavComponent;
+  let fixture: ComponentFixture<RouterNavComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UiElementsComponent],
+      imports: [RouterNavComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(UiElementsComponent);
+    fixture = TestBed.createComponent(RouterNavComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
