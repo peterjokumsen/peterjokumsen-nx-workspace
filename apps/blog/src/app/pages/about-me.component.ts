@@ -8,30 +8,48 @@ import {
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faGear } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FaIconComponent],
   template: `
     <ng-template #headersTemplate>
       <div
-        class="table-of-contents sticky top-0 flex flex-col justify-around gap-4 p-2"
+        class="table-of-contents sticky top-0 flex max-h-screen flex-col justify-around gap-4 overflow-scroll p-2"
       >
         @for (header of headers(); track header.title) {
           <a
             class="rounded border bg-pink-600 p-6 text-white hover:bg-gray-800"
             href="#"
             (click)="navigateTo(header.element)"
-            >{{ header.title }}</a
           >
+            {{ header.title }}
+          </a>
         }
       </div>
     </ng-template>
     <div class="content grid grid-cols-5">
-      <div class="col-span-5 md:hidden">
-        <ng-container *ngTemplateOutlet="headersTemplate"></ng-container>
-      </div>
-      <div #content class="col-span-5 md:col-span-2 md:col-start-2">
+      <div
+        #content
+        class="col-span-5 md:col-span-3 md:col-start-1 lg:col-span-2 lg:col-start-2"
+      >
+        <div class="sticky top-1 col-span-5 md:hidden">
+          <div class="control flex justify-end">
+            <button
+              class="rounded bg-pink-600 p-2 px-4 text-white"
+              (click)="showOrHideToc()"
+            >
+              <fa-icon [icon]="expandIcon"></fa-icon>
+            </button>
+          </div>
+          <div #toc class="show-hide">
+            <div class="mt-2 rounded border-2 border-pink-600 bg-stone-300 p-4">
+              <ng-container *ngTemplateOutlet="headersTemplate"></ng-container>
+            </div>
+          </div>
+        </div>
         <div class="about-me-section">
           <h1 class="text-4xl font-bold">Who am I?</h1>
           <p class="text-lg">
@@ -61,14 +79,30 @@ import { CommonModule } from '@angular/common';
           </p>
         </div>
       </div>
-      <div class="col-span-1 col-start-5 hidden md:block">
+      <div
+        class="col-span-2 col-start-4 hidden md:block lg:col-span-1 lg:col-start-5"
+      >
         <ng-container *ngTemplateOutlet="headersTemplate"></ng-container>
       </div>
     </div>
   `,
   styles: `
     .about-me-section {
-      @apply flex h-screen flex-col items-center justify-around p-6;
+      @apply flex h-screen flex-col items-center justify-center gap-6 p-6;
+    }
+
+    .show-hide {
+      transition: opacity 0.5s;
+      opacity: 0;
+      height: 0;
+
+      &.show {
+        opacity: 1;
+      }
+
+      .table-of-contents {
+        max-height: calc(100vh - 6rem);
+      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -77,8 +111,10 @@ export class AboutMeComponent implements AfterViewInit {
   headers = signal<Array<{ id: string; element: HTMLElement; title: string }>>(
     [],
   );
+  expandIcon = faGear;
 
   @ViewChild('content') content!: ElementRef;
+  @ViewChild('toc') toc!: ElementRef;
 
   ngAfterViewInit(): void {
     const headers = Array.from(
@@ -98,12 +134,30 @@ export class AboutMeComponent implements AfterViewInit {
       })
       .filter((header) => header.id);
 
-    this.headers.update(() => headers);
+    this.headers.update(() => [
+      { id: 'top', element: this.content.nativeElement, title: 'Top' },
+      ...headers,
+    ]);
   }
 
   navigateTo(element: HTMLElement): boolean {
     console.log(element);
-    element.scrollIntoView({ behavior: 'smooth' });
+    element.parentElement?.scrollIntoView({ behavior: 'smooth' });
+    this.showOrHideToc(true);
     return false;
+  }
+
+  showOrHideToc(forceHide = false) {
+    const element = this.toc?.nativeElement as HTMLElement;
+    if (!element) return;
+
+    if (element.classList.contains('show')) {
+      element.classList.remove('show');
+      return;
+    }
+
+    if (forceHide) return;
+
+    element.classList.add('show');
   }
 }
