@@ -25,17 +25,7 @@
       </p>
     </div>
   </div>
-  <nav class="flex flex-row-reverse items-end gap-2">
-    @for (navElement of navElements; track navElement.route) {
-      <a
-        class="inline-block rounded bg-gray-800 px-4 py-2 font-bold text-pink-600 hover:bg-gray-400 hover:text-gray-800"
-        [routerLink]="navElement.route"
-        routerLinkActive="router-link-active"
-      >
-        {{ navElement.title }}
-      </a>
-    }
-  </nav>
+  <pj-ui-router-nav [routes]="navElements"></pj-ui-router-nav>
 </header>
 <div class="w-full bg-white p-2">
   <div class="content">
