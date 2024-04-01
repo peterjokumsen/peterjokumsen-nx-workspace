@@ -14,7 +14,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <ng-template #headersTemplate>
       <div
-        class="table-of-contents sticky top-0 flex justify-around flex-col gap-4"
+        class="table-of-contents sticky top-0 flex justify-around flex-col gap-4 p-2"
       >
         @for (header of headers(); track header.title) {
         <a
@@ -26,11 +26,11 @@ import { CommonModule } from '@angular/common';
         }
       </div>
     </ng-template>
-    <div class="content grid grid-cols-2 md:grid-cols-3">
-      <div class="col-span-2 md:hidden">
+    <div class="content grid grid-cols-5">
+      <div class="md:hidden col-span-5">
         <ng-container *ngTemplateOutlet="headersTemplate"></ng-container>
       </div>
-      <div #content class="col-span-2">
+      <div #content class="col-span-5 md:col-span-2 md:col-start-2">
         <div class="about-me-section">
           <h1 class="text-4xl font-bold">Who am I?</h1>
           <p class="text-lg">
@@ -60,7 +60,7 @@ import { CommonModule } from '@angular/common';
           </p>
         </div>
       </div>
-      <div class="hidden md:block">
+      <div class="hidden md:block col-span-1 col-start-5">
         <ng-container *ngTemplateOutlet="headersTemplate"></ng-container>
       </div>
     </div>
