@@ -1,11 +1,16 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnDestroy,
+  OnInit,
   ViewChild,
+  inject,
   signal,
 } from '@angular/core';
+import { Subject, firstValueFrom, map } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -17,13 +22,13 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
   template: `
     <ng-template #headersTemplate>
       <div
-        class="table-of-contents sticky top-0 flex max-h-screen flex-col justify-around gap-4 overflow-scroll p-2"
+        class="table-of-contents sticky top-0 flex max-h-screen flex-col justify-around gap-2 overflow-y-auto p-2"
       >
         @for (header of headers(); track header.title) {
           <a
-            class="rounded border bg-pink-600 p-6 text-white hover:bg-gray-800"
+            class="rounded border bg-pink-600 px-4 py-2 text-white hover:bg-gray-800"
             href="#"
-            (click)="navigateTo(header.element)"
+            (click)="selectHeader(header.id)"
           >
             {{ header.title }}
           </a>
@@ -107,7 +112,11 @@ import { faGear } from '@fortawesome/free-solid-svg-icons';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AboutMeComponent implements AfterViewInit {
+export class AboutMeComponent implements AfterViewInit, OnDestroy, OnInit {
+  private _router = inject(Router);
+  private _route = inject(ActivatedRoute);
+
+  private _selectedHeader$ = new Subject<string>();
   headers = signal<Array<{ id: string; element: HTMLElement; title: string }>>(
     [],
   );
@@ -115,6 +124,21 @@ export class AboutMeComponent implements AfterViewInit {
 
   @ViewChild('content') content!: ElementRef;
   @ViewChild('toc') toc!: ElementRef;
+
+  async ngOnInit() {
+    const selectedHeader = await firstValueFrom(
+      this._route.queryParams.pipe(
+        map((qp) => qp['header'] as string | undefined),
+      ),
+    );
+    if (selectedHeader) {
+      this._selectedHeader$.next(selectedHeader);
+    }
+  }
+
+  ngOnDestroy() {
+    this._selectedHeader$.complete();
+  }
 
   ngAfterViewInit(): void {
     const headers = Array.from(
@@ -124,8 +148,9 @@ export class AboutMeComponent implements AfterViewInit {
         const header = el as HTMLElement;
         const id = header.innerText
           ?.toLowerCase()
-          .replace(/[\W]/g, '')
-          .replace(/ /g, '-');
+          .split(' ')
+          .map((word) => word.replace(/[^a-zA-Z0-9-]/g, ''))
+          .join('-');
         return {
           id,
           element: header,
@@ -138,12 +163,39 @@ export class AboutMeComponent implements AfterViewInit {
       { id: 'top', element: this.content.nativeElement, title: 'Top' },
       ...headers,
     ]);
+
+    this._selectedHeader$.subscribe((headerId) => this.navigateTo(headerId));
   }
 
-  navigateTo(element: HTMLElement): boolean {
-    console.log(element);
-    element.parentElement?.scrollIntoView({ behavior: 'smooth' });
+  private navigateTo(headerId: string): void {
+    const element =
+      this.headers()?.find((header) => header.id === headerId)?.element ??
+      (this.content?.nativeElement as HTMLElement);
+    if (!element) {
+      return;
+    }
+
+    if (headerId) {
+      this._router
+        .navigate([], {
+          queryParams: { header: headerId },
+          queryParamsHandling: 'merge',
+          replaceUrl: true,
+        })
+        .then();
+    } else {
+      this._router.navigate([], { queryParams: {}, replaceUrl: true }).then();
+    }
+
+    const scrollElement = element.parentElement ?? element;
+    if (!scrollElement.scrollIntoView) return;
+    scrollElement.scrollIntoView({ behavior: 'smooth' });
     this.showOrHideToc(true);
+  }
+
+  selectHeader(headerId: string): boolean {
+    headerId = headerId === 'top' ? '' : headerId;
+    this._selectedHeader$.next(headerId);
     return false;
   }
 
