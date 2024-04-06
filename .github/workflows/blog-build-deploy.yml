@@ -14,6 +14,7 @@ permissions:
   id-token: write
   contents: write
   pull-requests: write
+  security-events: write
 
 env:
   BICEP_MAIN_FILE: ./.biceps/main.bicep
