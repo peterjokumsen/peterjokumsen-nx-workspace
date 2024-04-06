@@ -2,6 +2,8 @@ param location string
 param branch string
 param staticWebAppName string
 param tags object
+param domain string = 'peterjokumsen.com'
+param subDomain string
 @secure()
 param repositoryToken string
 param appInsightsId string
@@ -47,19 +49,11 @@ resource staticWebAppAppSettings 'Microsoft.Web/staticSites/config@2022-09-01' =
   }
 }
 
-/* custom domain, to be implemented later
 resource rootCustomDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
   parent: staticWebApp
-  name: rootCustomDomainName
+  name: '${subDomain}.${domain}'
   properties: {}
 }
-
-resource blogCustomDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
-  parent: staticWebApp
-  name: blogCustomDomainName
-  properties: {}
-}
-*/
 
 output id string = staticWebApp.id
 output name string = staticWebApp.name

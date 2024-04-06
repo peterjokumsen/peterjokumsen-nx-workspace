@@ -2,6 +2,8 @@ param location string
 param branch string
 param appName string
 param tags object
+param customDomain string = 'peterjokumsen.com'
+param subDomain string
 @secure()
 param repositoryToken string
 
@@ -22,6 +24,8 @@ module staticWebApp './_static-web-app.bicep' = {
     branch: branch
     staticWebAppName: '${appName}-static-web-app'
     tags: tags
+    domain: customDomain
+    subDomain: subDomain
     repositoryToken: repositoryToken
     appInsightsId: appInsights.outputs.id
     appInsightsConnectionString: appInsights.outputs.connectionString
