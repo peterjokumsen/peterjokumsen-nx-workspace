@@ -85,7 +85,7 @@ jobs:
                   branch='main' \
                   location='${{ env.location }}' \
                   appName='${{ env.app-name }}' \
-                  tags='${{ env.tags }}'"
+                  tags='${{ toJSON(env.tags) }}'"
 
           echo "parameters=$parameters" >> $GITHUB_OUTPUT
 
