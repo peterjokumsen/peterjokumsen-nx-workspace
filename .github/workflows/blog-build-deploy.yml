@@ -9,6 +9,23 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      lint_biceps:
+        description: 'Lint Bicep files'
+        required: false
+        default: 'No'
+        type: 'choice'
+        options:
+          - 'Yes'
+          - 'No'
+      build_and_deploy:
+        description: 'Build and deploy application'
+        required: false
+        default: 'Yes'
+        type: 'choice'
+        options:
+          - 'Yes'
+          - 'No'
 
 permissions:
   id-token: write
@@ -28,7 +45,9 @@ env:
 
 jobs:
   lint_biceps:
-    # if: github.event_name == 'pull_request'
+    if: |
+      (github.event_name == 'pull_request' && github.event.action != 'closed') ||
+      (github.event_name == 'workflow_dispatch' && inputs.lint_biceps == 'Yes')
     runs-on: ubuntu-latest
     name: 'Lint Bicep 🔍'
     steps:
@@ -63,11 +82,11 @@ jobs:
 
   build_and_deploy_swa_job:
     if: |
-      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    name: Build and deploy 🏗️
+    name: 'Build and deploy 🏗️'
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
@@ -94,25 +113,3 @@ jobs:
 
           echo "Using deployment name: $DEPLOYMENT_NAME"
           echo "generated_name=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
-
-      - name: 'Lint Bicep 🔍'
-        if: github.event_name == 'pull_request'
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            az version
-            az bicep install
-            az bicep version
-            az bicep lint --file ${{ env.BICEP_MAIN_FILE }} --diagnostics-format sarif > bicep.sarif
-            echo '::group::Bicep linting results'
-            cat bicep.sarif
-            echo '::endgroup::'
-
-      - name: 'Upload SARIF ↗️'
-        if: |
-          (success() || failure()) &&
-          github.event_name == 'pull_request'
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          category: bicep
-          sarif_file: bicep.sarif
