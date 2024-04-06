@@ -1,0 +1,51 @@
+name: 'Blog - Build and Deploy 🏗️'
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+
+env:
+  RESOURCE_GROUP: blog-rg
+  LOCATION: westeurope
+  STATICWEBAPPNAME: blog.peterjokumsen.com
+  ROOTCUSTOMDOMAINNAME: peterjokumsen.com
+  BLOGCUSTOMDOMAINNAME: blog.peterjokumsen.com
+  TAGS: '{"app":"peterjokumsen-blog"}'
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+jobs:
+  build_and_deploy_swa_job:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    name: Build and deploy 🏗️
+    steps:
+      #      - name: 'Checkout 📥'
+      #        uses: actions/checkout@v4
+      #        with:
+      #          # Number of commits to fetch. 0 indicates all history for all branches and tags.
+      #          fetch-depth: 0
+      #          submodules: true
+
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Run Azure CLI commands'
+        run: |
+          az account show
+          az group list
+          pwd
