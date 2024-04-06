@@ -53,7 +53,7 @@ env:
   bicep-main-file: ./.biceps/main.bicep
   resource-group: blog-rg
   location: westeurope
-  app-name: blog.peterjokumsen.com
+  app-name: blog
   tags: '{"app":"peterjokumsen-blog"}'
   branch-name: ${{ github.head_ref || github.ref_name }}
   projects-to-build: 'blog' # comma-separated list of projects to build
