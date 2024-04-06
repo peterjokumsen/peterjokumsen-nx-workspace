@@ -63,24 +63,29 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Prepare 🛠️'
     steps:
-      - name: 'Set deployment name 📝'
-        id: deployment_name
+      - name: 'Prepare names 📝'
+        id: prepare_names
         run: |
           gitSha='${{ github.sha }}'
           shortSha=${gitSha:0:7}
           branchName='${{ env.branch-name }}'
-          subDomain="${{ env.app-name }}"
+          appName='${{ env.app-name }}'
+          subDomain='${{ env.app-name }}'
 
           if [ "${{ github.event_name }}" == 'pull_request' ]; then
             branchName="${{ env.branch-name }}-pr-${{ github.event.number }}"
             subDomain="${{ env.app-name }}-pr-${{ github.event.number }}"
+            appName="${{ env.app-name }}-pr-${{ github.event.number }}"
           fi
 
           deploymentName="${branchName////-}.$shortSha"
 
-          echo "Using deployment name: $deploymentNae"
+          echo "Deployment name: $deploymentNae"
           echo "generated_name=$deploymentName" >> $GITHUB_OUTPUT
+          echo "Sub-domain: $subDomain"
           echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
+          echo "App name: $appName"
+          echo "app_name=$appName" >> $GITHUB_OUTPUT
 
       - name: 'Set group deployment parameters 📝'
         id: group_deployment_parameters
@@ -90,17 +95,26 @@ jobs:
             exit 1
           fi
 
-          parameters="--resource-group ${{ env.resource-group }} \
-              --name '${{ steps.deployment_name.outputs.generated_name }}' \
+          basicParameters="--resource-group ${{ env.resource-group }} \
+              --name '${{ steps.prepare_names.outputs.generated_name }}' \
               --template-file ${{ env.bicep-main-file }} \
               --parameters \
                   branch='main' \
                   location='${{ env.location }}' \
-                  appName='${{ env.app-name }}' \
-                  tags='${{ toJSON(env.tags) }}' \
-                  subDomain='${{ steps.deployment_name.outputs.sub_domain }}'"
+                  tags='${{ toJSON(env.tags) }}'"
 
-          echo "parameters=$parameters" >> $GITHUB_OUTPUT
+          previewParameters="$basicParameters \
+              --parameters \
+                  app_name='${{ steps.prepare_names.outputs.app_name }}' \
+                  subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
+
+          prodParameters="$basicParameters \
+              --parameters \
+                  app_name='${{ env.app-name }}' \
+                  subDomain='${{ env.app-name }}'"
+
+          echo "preview_parameters=$previewParameters" >> $GITHUB_OUTPUT
+          echo "prod_parameters=$prodParameters" >> $GITHUB_OUTPUT
 
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
@@ -110,7 +124,9 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     outputs:
-      group_deployment_parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
+      preview_parameters: ${{ steps.group_deployment_parameters.outputs.preview_parameters }}
+      prod_parameters: ${{ steps.group_deployment_parameters.outputs.prod_parameters }}
+      api_key: ${{ steps.static_web_app_apikey.outputs.api_key }}
 
   lint_biceps:
     if: |
@@ -160,14 +176,14 @@ jobs:
 
             echo "::group::Static Web App what-if"
             az deployment group what-if \
-              ${{ needs.prep.outputs.group_deployment_parameters }} \
+              ${{ needs.prep.outputs.prod_parameters }} \
                 repositoryToken='${{ secrets.GITHUB_TOKEN }}'
 
             echo "::endgroup::"
 
             echo "::group::Static Web App validate"
             az deployment group validate \
-              ${{ needs.prep.outputs.group_deployment_parameters }} \
+              ${{ needs.prep.outputs.prod_parameters }} \
                 repositoryToken='${{ secrets.GITHUB_TOKEN }}'
 
             echo "::endgroup::"
@@ -207,7 +223,8 @@ jobs:
   deploy_bicep:
     if: |
       (github.event_name == 'workflow_dispatch' && inputs.deploy_bicep == 'Yes') ||
-      github.event_name != 'pull_request'
+      (github.event_name == 'pull_request' && github.event.action != 'closed') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     needs:
       - prep
@@ -229,10 +246,13 @@ jobs:
           inlineScript: |
             # https://github.com/Azure/azure-cli/issues/25710
             az config set bicep.use_binary_from_path=false
+            parameters = ${{ needs.prep.outputs.prod_parameters }}
+            if [ "${{ github.event_name }}" != 'push' ]; then
+              parameters = ${{ needs.prep.outputs.preview_parameters }}
+            fi
 
             echo "::group::Static Web App deployment"
-            az deployment group create \
-              ${{ needs.prep.outputs.group_deployment_parameters }} \
+            az deployment group create $parameters \
                 repositoryToken='${{ secrets.GITHUB_TOKEN }}'
 
             echo "::endgroup::"
