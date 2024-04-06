@@ -104,19 +104,9 @@ jobs:
             apiKey=$(az staticwebapp secrets list --name '${{ env.app-name }}-static-web-app' | jq -r '.properties.apiKey')
             echo "api_key=$apiKey" >> $GITHUB_OUTPUT
 
-      - name: 'Get preview URL 📝'
-        id: static_web_app_preview_url
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            defaultHostName=$(az staticwebapp show -n '${{ env.app-name }}-static-web-app' | jq -r '.defaultHostname')
-            previewUrl="https://${defaultHostName/.[1-9]./-${{github.event.pull_request.number }}.${{ env.location }}.1.}"
-            echo "preview_url=$previewUrl" >> $GITHUB_OUTPUT
-
     outputs:
       group_deployment_parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
       api_key: ${{ steps.static_web_app_apikey.outputs.api_key }}
-      preview_url: ${{ steps.static_web_app_preview_url.outputs.preview_url }}
 
   lint_biceps:
     if: |
@@ -300,12 +290,6 @@ jobs:
           api_location: '' # Empty for now, no API to deploy
           skip_app_build: true
           production_branch: 'main'
-
-      - name: 'Output preview URL 📝'
-        if: github.event_name == 'pull_request'
-        run: |
-          echo "# 🎉 Preview" >> $GITHUB_STEP_SUMMARY
-          echo "[${{ needs.prep.outputs.preview_url }}](${{ needs.prep.outputs.preview_url }})" >> $GITHUB_STEP_SUMMARY
 
   close_preview:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
