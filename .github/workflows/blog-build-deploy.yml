@@ -304,9 +304,8 @@ jobs:
       - name: 'Output preview URL 📝'
         if: github.event_name == 'pull_request'
         run: |
-          previewOutput="# 🎉 Preview
-          [${{ needs.prep.outputs.preview_url }}](${{ needs.prep.outputs.preview_url }})"
-          echo "$previewOutput" >> $GITHUB_SUMMARY
+          echo "# 🎉 Preview" >> $GITHUB_STEP_SUMMARY
+          echo "[${{ needs.prep.outputs.preview_url }}](${{ needs.prep.outputs.preview_url }})" >> $GITHUB_STEP_SUMMARY
 
   close_preview:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
