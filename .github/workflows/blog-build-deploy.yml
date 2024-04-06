@@ -43,7 +43,7 @@ jobs:
           submodules: true
 
       - name: 'AZ CLI login 🔑'
-        uses: azure/login@v1
+        uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -63,7 +63,7 @@ jobs:
 
       - name: 'Lint Bicep 🔍'
         # if: github.event_name == 'pull_request'
-        uses: azure/CLI@v1
+        uses: azure/CLI@v2
         with:
           inlineScript: |
             az version
