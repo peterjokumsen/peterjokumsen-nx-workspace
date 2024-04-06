@@ -79,7 +79,7 @@ jobs:
         id: group_deployment_parameters
         run: |
           parameters="--resource-group ${{ env.resource-group }} \
-              --name "${{ steps.deployment_name.outputs.generated_name }}" \
+              --name '${{ steps.deployment_name.outputs.generated_name }}' \
               --template-file ${{ env.bicep-main-file }} \
               --parameters \
                   branch='main' \
