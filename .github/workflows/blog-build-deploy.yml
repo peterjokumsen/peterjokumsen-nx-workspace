@@ -80,7 +80,7 @@ jobs:
         run: |
           parameters="--resource-group ${{ env.resource-group }} \
               --name "${{ steps.deployment_name.outputs.generated_name }}" \
-              --template-file ./infra/main.bicep \
+              --template-file ${{ env.bicep-main-file }} \
               --parameters \
                   branch='main' \
                   location='${{ env.location }}' \
