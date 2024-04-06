@@ -67,18 +67,18 @@ jobs:
         id: deployment_name
         run: |
           gitSha='${{ github.sha }}'
-          shortSha=${GIT_SHA:0:7}
+          shortSha=${gitSha:0:7}
           branchName='${{ env.branch-name }}'
           subDomain="${{ env.app-name }}"
 
           if [ "${{ github.event_name }}" == 'pull_request' ]; then
-            branchName="pr-${{ github.event.number }}"
+            branchName="${{ env.branch-name }}-pr-${{ github.event.number }}"
             subDomain="${{ env.app-name }}-pr-${{ github.event.number }}"
           fi
 
           deploymentName="${branchName////-}.$shortSha"
 
-          echo "Using deployment name: $DEPLOYMENT_NAME"
+          echo "Using deployment name: $deploymentNae"
           echo "generated_name=$deploymentName" >> $GITHUB_OUTPUT
           echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
 
@@ -86,7 +86,7 @@ jobs:
         id: group_deployment_parameters
         run: |
           if [ -z "${{ env.bicep-main-file }}" ]; then
-            echo "Bicep main file not found"
+            echo "::error::Bicep main file not found"
             exit 1
           fi
 
