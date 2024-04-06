@@ -89,8 +89,24 @@ jobs:
 
           echo "parameters=$parameters" >> $GITHUB_OUTPUT
 
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Get API key 🔑'
+        id: static_web_app_apikey
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            apiKey=$(az staticwebapp secrets list --name '${{ env.app-name }}-static-web-app' | jq -r '.properties.apiKey')
+            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
+
     outputs:
       group_deployment_parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
+      api_key: ${{ steps.static_web_app_apikey.outputs.api_key }}
 
   lint_biceps:
     if: |
@@ -141,14 +157,14 @@ jobs:
             echo "::group::Static Web App what-if"
             az deployment group what-if \
               ${{ needs.prep.outputs.group_deployment_parameters }} \
-                repositoryToken='${{ secrets.WORKFLOW_TOKEN }}'
+                repositoryToken='${{ secrets.GITHUB_TOKEN }}'
 
             echo "::endgroup::"
 
             echo "::group::Static Web App validate"
             az deployment group validate \
               ${{ needs.prep.outputs.group_deployment_parameters }} \
-                repositoryToken='${{ secrets.WORKFLOW_TOKEN }}'
+                repositoryToken='${{ secrets.GITHUB_TOKEN }}'
 
             echo "::endgroup::"
 
@@ -213,41 +229,20 @@ jobs:
             echo "::group::Static Web App deployment"
             az deployment group create \
               ${{ needs.prep.outputs.group_deployment_parameters }} \
-                repositoryToken='${{ secrets.WORKFLOW_TOKEN }}'
+                repositoryToken='${{ secrets.GITHUB_TOKEN }}'
 
             echo "::endgroup::"
 
-      - name: 'Get API key 🔑'
-        id: static_web_app_apikey
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            apiKey=$(az staticwebapp secrets list --name '${{ env.app-name }}-static-web-app' | jq -r '.properties.apiKey')
-            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
-
-    outputs:
-      api_key: ${{ steps.static_web_app_apikey.outputs.api_key }}
-
-  build_and_deploy_swa:
+  build_app:
     if: |
       (github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
-    needs:
-      - prep
-      - deploy_bicep
-    name: 'Build and deploy 🏗️'
+    name: 'Build app 🏗️'
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
-
-      - name: 'AZ CLI login 🔑'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: 'Install dependencies 📦'
         uses: ./.github/actions/install-deps
@@ -261,6 +256,50 @@ jobs:
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
-      - name: 'Echo API key 🔑'
-        run: |
-          echo "API key: ${{ needs.deploy_bicep.outputs.api_key }}"
+      - name: 'Upload artifacts 🚀'
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-app
+          path: 'dist'
+
+  deploy_app:
+    if: |
+      (github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.action != 'closed')
+    runs-on: ubuntu-latest
+    name: 'Deploy app 🚀'
+    needs:
+      - prep
+      - build_app
+    steps:
+      - name: 'Download artifacts 📥'
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-app
+          path: dist
+
+      - name: 'Publish SWA 🚀'
+        uses: azure/static-web-apps-deploy@v1
+        if: needs.prep.outputs.api_key != ''
+        with:
+          azure_static_web_apps_api_token: ${{ needs.prep.outputs.api_key }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: 'upload'
+          app_location: 'dist/apps/blog/browser'
+          api_location: '' # Empty for now, no API to deploy
+          skip_app_build: true
+          production_branch: 'main'
+
+  close_preview:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    name: 'Cleanup staging 💥'
+    needs:
+      - prep
+    steps:
+      - name: 'Destroy staging environment 💥'
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ needs.prep.outputs.api_key }}
+          action: 'close'
