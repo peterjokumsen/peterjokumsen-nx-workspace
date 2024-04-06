@@ -58,7 +58,8 @@ jobs:
 
           DEPLOYMENT_NAME="${BRANCH_NAME////-}.$SHORT_SHA"
 
-          echo "DEPLOYMENT_NAME=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
+          echo "Using deployment name: $DEPLOYMENT_NAME"
+          echo "generated_name=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
 
       - name: 'Lint Bicep 🔍'
         # if: github.event_name == 'pull_request'
