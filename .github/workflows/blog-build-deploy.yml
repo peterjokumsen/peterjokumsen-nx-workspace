@@ -103,18 +103,7 @@ jobs:
           submodules: true
 
       - name: 'Install dependencies 📦'
-        uses: chill-viking/npm-ci@latest
-
-      - name: 'Cache NX 🚄'
-        id: nx_cache
-        uses: actions/cache@v4
-        with:
-          path: '.nx-cache'
-          key: "${{ runner.os }}-nx-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('libs/**/src/**') }}-${{ hashFiles('apps/**/src/**') }}"
-          restore-keys: |
-            ${{ runner.os }}-nx-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('libs/**/src/**') }}
-            ${{ runner.os }}-nx-${{ hashFiles('**/package-lock.json') }}
-            ${{ runner.os }}-nx
+        uses: .github/actions/install-deps
 
       - name: 'Lint all 🧹'
         run: |
