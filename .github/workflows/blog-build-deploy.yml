@@ -18,6 +18,14 @@ on:
         options:
           - 'Yes'
           - 'No'
+      test_and_lint:
+        description: 'Test and lint application'
+        required: false
+        default: 'Yes'
+        type: 'choice'
+        options:
+          - 'Yes'
+          - 'No'
       build_and_deploy:
         description: 'Build and deploy application'
         required: false
@@ -79,6 +87,49 @@ jobs:
         with:
           category: bicep
           sarif_file: bicep.sarif
+
+  test_and_lint:
+    if: |
+      (github.event_name != 'workflow_dispatch' || inputs.test_and_lint == 'Yes') &&
+      github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: 'Test affected 🧪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+        with:
+          # Number of commits to fetch. 0 indicates all history for all branches and tags.
+          fetch-depth: 0
+          submodules: true
+
+      - name: 'Install dependencies 📦'
+        uses: chill-viking/npm-ci@latest
+
+      - name: 'Cache NX 🚄'
+        id: nx_cache
+        uses: actions/cache@v4
+        with:
+          path: '.nx-cache'
+          key: "${{ runner.os }}-nx-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('libs/**/src/**') }}-${{ hashFiles('apps/**/src/**') }}"
+          restore-keys: |
+            ${{ runner.os }}-nx-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('libs/**/src/**') }}
+            ${{ runner.os }}-nx-${{ hashFiles('**/package-lock.json') }}
+            ${{ runner.os }}-nx
+
+      - name: 'Lint all 🧹'
+        run: |
+          echo "::command::npx nx run-many -t lint --all"
+          npx nx run-many -t lint --all
+        env:
+          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
+
+      - name: 'Test all 🧪'
+        if: always()
+        run: |
+          echo "::command::npx nx run-many -t test -c ci --all"
+          npx nx run-many -t test -c ci --all
+        env:
+          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
   build_and_deploy_swa_job:
     if: |
