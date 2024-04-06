@@ -50,6 +50,7 @@ env:
   BLOGCUSTOMDOMAINNAME: blog.peterjokumsen.com
   TAGS: '{"app":"peterjokumsen-blog"}'
   BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+  PROJECTS_TO_BUILD: 'blog' # comma-separated list of projects to build
 
 jobs:
   lint_biceps:
@@ -153,3 +154,15 @@ jobs:
 
           echo "Using deployment name: $DEPLOYMENT_NAME"
           echo "generated_name=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
+
+      - name: 'Install dependencies 📦'
+        uses: .github/actions/install-deps
+        with:
+          nx-cache-key: 'nx-build'
+
+      - name: 'Build app(s) 🏗️'
+        run: |
+          echo "::command::npx nx run-many -t build --projects=${{ env.PROJECTS_TO_BUILD }}"
+          npx nx run-many -t build --projects=${{ env.PROJECTS_TO_BUILD }}
+        env:
+          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
