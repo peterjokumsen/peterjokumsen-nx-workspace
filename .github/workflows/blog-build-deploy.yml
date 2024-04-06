@@ -66,18 +66,30 @@ jobs:
       - name: 'Set deployment name 📝'
         id: deployment_name
         run: |
-          GIT_SHA='${{ github.sha }}'
-          SHORT_SHA=${GIT_SHA:0:7}
-          BRANCH_NAME='${{ env.branch-name }}'
+          gitSha='${{ github.sha }}'
+          shortSha=${GIT_SHA:0:7}
+          branchName='${{ env.branch-name }}'
+          subDomain="${{ env.app-name }}"
 
-          DEPLOYMENT_NAME="${BRANCH_NAME////-}.$SHORT_SHA"
+          if [ "${{ github.event_name }}" == 'pull_request' ]; then
+            branchName="pr-${{ github.event.number }}"
+            subDomain="${{ env.app-name }}-pr-${{ github.event.number }}"
+          fi
+
+          deploymentName="${branchName////-}.$shortSha"
 
           echo "Using deployment name: $DEPLOYMENT_NAME"
-          echo "generated_name=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
+          echo "generated_name=$deploymentName" >> $GITHUB_OUTPUT
+          echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
 
       - name: 'Set group deployment parameters 📝'
         id: group_deployment_parameters
         run: |
+          if [ -z "${{ env.bicep-main-file }}" ]; then
+            echo "Bicep main file not found"
+            exit 1
+          fi
+
           parameters="--resource-group ${{ env.resource-group }} \
               --name '${{ steps.deployment_name.outputs.generated_name }}' \
               --template-file ${{ env.bicep-main-file }} \
@@ -85,7 +97,8 @@ jobs:
                   branch='main' \
                   location='${{ env.location }}' \
                   appName='${{ env.app-name }}' \
-                  tags='${{ toJSON(env.tags) }}'"
+                  tags='${{ toJSON(env.tags) }}' \
+                  subDomain='${{ steps.deployment_name.outputs.sub_domain }}'"
 
           echo "parameters=$parameters" >> $GITHUB_OUTPUT
 
