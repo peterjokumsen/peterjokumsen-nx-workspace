@@ -16,6 +16,7 @@ permissions:
   pull-requests: write
 
 env:
+  BICEP_MAIN_FILE: ./.biceps/main.bicep
   RESOURCE_GROUP: blog-rg
   LOCATION: westeurope
   STATICWEBAPPNAME: blog.peterjokumsen.com
@@ -26,16 +27,19 @@ env:
 
 jobs:
   build_and_deploy_swa_job:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed') || github.event_name == 'workflow_dispatch'
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: Build and deploy 🏗️
     steps:
-      #      - name: 'Checkout 📥'
-      #        uses: actions/checkout@v4
-      #        with:
-      #          # Number of commits to fetch. 0 indicates all history for all branches and tags.
-      #          fetch-depth: 0
-      #          submodules: true
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+        with:
+          # Number of commits to fetch. 0 indicates all history for all branches and tags.
+          fetch-depth: 0
+          submodules: true
 
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v1
@@ -44,8 +48,33 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Run Azure CLI commands'
+      - name: 'Set deployment name 📝'
+        id: deployment_name
         run: |
-          az account show
-          az group list
-          pwd
+          GIT_SHA='${{ github.sha }}'
+          SHORT_SHA=${GIT_SHA:0:7}
+          BRANCH_NAME='${{ env.BRANCH_NAME }}'
+
+          DEPLOYMENT_NAME="${BRANCH_NAME////-}.$SHORT_SHA"
+
+          echo "DEPLOYMENT_NAME=$DEPLOYMENT_NAME" >> $GITHUB_OUTPUT
+
+      - name: 'Lint Bicep 🔍'
+        # if: github.event_name == 'pull_request'
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az version
+            az bicep install
+            az bicep version
+            az bicep lint --file ${{ env.BICEP_MAIN_FILE }} --diagnostics-format sarif > bicep.sarif
+            echo '::group::Bicep linting results'
+            cat bicep.sarif
+            echo '::endgroup::'
+
+      - name: 'Upload SARIF ↗️'
+        if: (success() || failure()) # && github.event_name == 'pull_request'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          category: bicep
+          sarif_file: bicep.sarif
