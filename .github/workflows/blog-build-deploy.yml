@@ -230,6 +230,10 @@ jobs:
       - lint_biceps
     name: 'Deploy bicep 💪'
     steps:
+      - name: test
+        run: |
+          echo "result: ${{ needs.lint_biceps.result }}"
+          exit 1
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
 
