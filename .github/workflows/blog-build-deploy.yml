@@ -50,13 +50,13 @@ permissions:
   security-events: write
 
 env:
-  bicep-main-file: ./.biceps/main.bicep
-  resource-group: blog-rg
+  bicep_main_file: ./.biceps/main.bicep
+  resource_group: blog-rg
   location: westeurope
-  app-name: blog
+  app_name: blog
   tags: '{"app":"peterjokumsen-blog"}'
-  branch-name: ${{ github.head_ref || github.ref_name }}
-  projects-to-build: 'blog' # comma-separated list of projects to build
+  branch_name: ${{ github.head_ref || github.ref_name }}
+  projects_to_build: 'blog' # comma-separated list of projects to build
 
 jobs:
   prep:
@@ -68,16 +68,16 @@ jobs:
         run: |
           gitSha='${{ github.sha }}'
           shortSha=${gitSha:0:7}
-          branchName='${{ env.branch-name }}'
-          appName='${{ env.app-name }}'
-          subDomain='${{ env.app-name }}'
-          resourceGroup='${{ env.resource-group }}'
+          branchName='${{ env.branch_name }}'
+          appName='${{ env.app_name }}'
+          subDomain='${{ env.app_name }}'
+          resourceGroup='${{ env.resource_group }}'
 
           if [ "${{ github.event_name }}" == 'pull_request' ]; then
-            branchName="${{ env.branch-name }}-pr-${{ github.event.number }}"
-            subDomain="${{ env.app-name }}-pr-${{ github.event.number }}"
-            appName="${{ env.app-name }}-pr-${{ github.event.number }}"
-            resourceGroup="${{ env.resource-group }}-pr-${{ github.event.number }}"
+            branchName="${{ env.branch_name }}-pr-${{ github.event.number }}"
+            subDomain="${{ env.app_name }}-pr-${{ github.event.number }}"
+            appName="${{ env.app_name }}-pr-${{ github.event.number }}"
+            resourceGroup="${{ env.resource_group }}-pr-${{ github.event.number }}"
           fi
 
           deploymentName="${branchName////-}.$shortSha"
@@ -94,33 +94,33 @@ jobs:
       - name: 'Set group deployment parameters 📝'
         id: group_deployment_parameters
         run: |
-          if [ -z "${{ env.bicep-main-file }}" ]; then
+          if [ -z "${{ env.bicep_main_file }}" ]; then
             echo "::error::Bicep main file not found"
             exit 1
           fi
 
-          basicParameters="--resource-group ${{ steps.prepare_names.outputs.resource_group }} \
-              --name '${{ steps.prepare_names.outputs.generated_name }}' \
-              --template-file ${{ env.bicep-main-file }} \
+          basicParameters="--name '${{ steps.prepare_names.outputs.generated_name }}' \
+              --template-file ${{ env.bicep_main_file }} \
               --parameters \
                   branch='main' \
                   location='${{ env.location }}' \
                   tags='${{ toJSON(env.tags) }}'"
 
-          previewParameters="$basicParameters \
-              --parameters \
-                  app_name='${{ steps.prepare_names.outputs.app_name }}' \
+          previewParameters="--resource-group ${{ steps.prepare_names.outputs.resource_group }} \
+              $basicParameters \
+                  appName='${{ steps.prepare_names.outputs.app_name }}' \
                   subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
 
-          prodParameters="$basicParameters \
-              --parameters \
-                  app_name='${{ env.app-name }}' \
-                  subDomain='${{ env.app-name }}'"
+          prodParameters="--resource-group ${{ env.resource_group }} \
+              $basicParameters \
+                  appName='${{ env.app_name }}' \
+                  subDomain='${{ env.app_name }}'"
 
           echo "preview_parameters=$previewParameters" >> $GITHUB_OUTPUT
           echo "prod_parameters=$prodParameters" >> $GITHUB_OUTPUT
 
     outputs:
+      app_name: ${{ steps.prepare_names.outputs.app_name }}
       preview_parameters: ${{ steps.group_deployment_parameters.outputs.preview_parameters }}
       prod_parameters: ${{ steps.group_deployment_parameters.outputs.prod_parameters }}
       resource_group: ${{ steps.prepare_names.outputs.resource_group }}
@@ -151,7 +151,7 @@ jobs:
             az version
             az bicep install
             az bicep version
-            az bicep lint --file ${{ env.bicep-main-file }} --diagnostics-format sarif > bicep.sarif
+            az bicep lint --file ${{ env.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
             echo '::group::Bicep linting results'
             cat bicep.sarif
             echo '::endgroup::'
@@ -275,8 +275,8 @@ jobs:
 
       - name: 'Build app(s) 🏗️'
         run: |
-          echo "::command::npx nx run-many -t build --projects=${{ env.projects-to-build }}"
-          npx nx run-many -t build --projects=${{ env.projects-to-build }}
+          echo "::command::npx nx run-many -t build --projects=${{ env.projects_to_build }}"
+          npx nx run-many -t build --projects=${{ env.projects_to_build }}
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
@@ -310,7 +310,10 @@ jobs:
         uses: azure/CLI@v2
         with:
           inlineScript: |
-            apiKey=$(az staticwebapp secrets list --name '${{ env.app-name }}-static-web-app' | jq -r '.properties.apiKey')
+            apiKey=$(az staticwebapp secrets list \
+              --resource-group '${{ needs.prep.outputs.resource_group }}' \
+              --name '${{ needs.prep.outputs.app_name }}-static-web-app' \
+              | jq -r '.properties.apiKey')
             echo "api_key=$apiKey" >> $GITHUB_OUTPUT
 
       - name: 'Download artifacts 📥'
