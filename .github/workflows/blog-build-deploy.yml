@@ -278,6 +278,13 @@ jobs:
       - build_app
       - deploy_bicep
     steps:
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: 'Get API key 🔑'
         id: static_web_app_apikey
         uses: azure/CLI@v2
@@ -311,6 +318,13 @@ jobs:
     needs:
       - prep
     steps:
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: 'Get API key 🔑'
         id: static_web_app_apikey
         uses: azure/CLI@v2
