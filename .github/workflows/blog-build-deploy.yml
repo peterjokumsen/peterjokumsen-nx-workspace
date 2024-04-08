@@ -62,13 +62,11 @@ jobs:
           branchName='${{ env.branch_name }}'
           appName='${{ env.app_name }}'
           subDomain='${{ env.app_name }}'
-          resourceGroup='${{ env.resource_group }}'
 
           if [ "${{ github.event_name }}" == 'pull_request' ]; then
             branchName="${{ env.branch_name }}-pr-${{ github.event.number }}"
             subDomain="${{ env.app_name }}-pr-${{ github.event.number }}"
             appName="${{ env.app_name }}-pr-${{ github.event.number }}"
-            resourceGroup="${{ env.resource_group }}-pr-${{ github.event.number }}"
           fi
 
           deploymentName="${branchName////-}.$shortSha"
@@ -79,8 +77,6 @@ jobs:
           echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
           echo "App name: $appName"
           echo "app_name=$appName" >> $GITHUB_OUTPUT
-          echo "Resource group: $resourceGroup"
-          echo "resource_group=$resourceGroup" >> $GITHUB_OUTPUT
 
       - name: 'Set group deployment parameters 📝'
         id: group_deployment_parameters
@@ -90,19 +86,18 @@ jobs:
             exit 1
           fi
 
-          basicParameters="--name '${{ steps.prepare_names.outputs.generated_name }}' \
+          basicParameters="--resource-group ${{ env.resource_group }} \
+              --name '${{ steps.prepare_names.outputs.generated_name }}' \
               --template-file ${{ env.bicep_main_file }} \
               --parameters \
                   branch='main' \
                   location='${{ env.location }}'"
 
-          previewParameters="--resource-group ${{ steps.prepare_names.outputs.resource_group }} \
-              $basicParameters \
+          previewParameters="$basicParameters \
                   appName='${{ steps.prepare_names.outputs.app_name }}' \
                   subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
 
-          prodParameters="--resource-group ${{ env.resource_group }} \
-              $basicParameters \
+          prodParameters="$basicParameters \
                   appName='${{ env.app_name }}' \
                   subDomain='${{ env.app_name }}'"
 
@@ -113,7 +108,6 @@ jobs:
       app_name: ${{ steps.prepare_names.outputs.app_name }}
       preview_parameters: ${{ steps.group_deployment_parameters.outputs.preview_parameters }}
       prod_parameters: ${{ steps.group_deployment_parameters.outputs.prod_parameters }}
-      resource_group: ${{ steps.prepare_names.outputs.resource_group }}
 
   lint_deploy_bicep:
     if: |
@@ -291,7 +285,6 @@ jobs:
         with:
           inlineScript: |
             apiKey=$(az staticwebapp secrets list \
-              --resource-group '${{ needs.prep.outputs.resource_group }}' \
               --name '${{ needs.prep.outputs.app_name }}-static-web-app' \
               | jq -r '.properties.apiKey')
             echo "api_key=$apiKey" >> $GITHUB_OUTPUT
@@ -328,9 +321,16 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Remove preview resource group 💥'
+      - name: 'Remove preview resources 💥'
         id: clear_resource_group
         uses: azure/CLI@v2
         with:
           inlineScript: |
-            az group delete --name ${{ needs.prep.outputs.resource_group }} --yes --no-wait
+            resources=$(az resource list --tag app=${{ needs.prep.outputs.app_name }} --query "[].id" -o tsv)
+
+            # Loop through the resources and delete each one
+            for resourceId in $resources
+            do
+              echo "Deleting resource: $resourceId"
+              az resource delete --ids $resourceId --yes
+            done
