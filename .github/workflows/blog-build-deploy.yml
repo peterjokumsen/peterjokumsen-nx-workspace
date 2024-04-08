@@ -138,6 +138,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: 'Lint Bicep 🔍'
+        if: github.event_name != 'push'
         uses: azure/CLI@v2
         with:
           inlineScript: |
@@ -150,13 +151,16 @@ jobs:
             echo '::endgroup::'
 
       - name: 'Upload SARIF ↗️'
-        if: success() || failure()
+        if: |
+          (success() || failure()) &&
+          github.event_name != 'push'
         uses: github/codeql-action/upload-sarif@v3
         with:
           category: bicep
           sarif_file: bicep.sarif
 
       - name: 'Detect changes & validate 📝'
+        if: github.event_name != 'push'
         id: static_web_app_what_if
         uses: azure/CLI@v2
         with:
