@@ -302,7 +302,6 @@ jobs:
           app_location: 'dist/apps/blog/browser'
           api_location: '' # Empty for now, no API to deploy
           skip_app_build: true
-          production_branch: 'main'
 
   close_preview:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
