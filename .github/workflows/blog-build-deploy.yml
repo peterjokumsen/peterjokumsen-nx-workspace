@@ -148,6 +148,7 @@ jobs:
         uses: azure/CLI@v2
         with:
           inlineScript: |
+            exit 1
             az version
             az bicep install
             az bicep version
@@ -219,8 +220,7 @@ jobs:
 
   deploy_bicep:
     if: |
-      always() &&
-      (needs.lint_biceps.result == 'success' || needs.lint_biceps.result == 'skipped') &&
+      always() && !failure() &&
       (github.event_name == 'workflow_dispatch' && inputs.deploy_bicep == 'Yes') ||
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
