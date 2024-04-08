@@ -42,7 +42,7 @@ module staticWebApp './_static-web-app.bicep' = {
 }
 
 module dnsZone './_dns-zone.bicep' = {
-  name: '${appName}-dns-zone'
+  name: '${deployment().name}-dnsZone'
   params: {
     subDomain: subDomainToUse
     parentDomain: customDomain
