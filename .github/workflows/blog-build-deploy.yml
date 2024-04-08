@@ -178,20 +178,27 @@ jobs:
 
             echo "::endgroup::"
 
+      - name: 'Prepare parameters for deployment 📝'
+        id: prepare_parameters
+        run: |
+          parameters="${{ needs.prep.outputs.prod_parameters }}"
+          if [ "${{ github.event_name }}" != 'push' ]; then
+              echo "::command::using preview parameters"
+              parameters="${{ needs.prep.outputs.preview_parameters }}"
+          else
+              echo "::command::using prod parameters"
+          fi
+
+          echo "parameters=$parameters" >> $GITHUB_OUTPUT
+
       - name: 'Deploy bicep for SWA 🚀'
         uses: azure/CLI@v2
         with:
           inlineScript: |
             # https://github.com/Azure/azure-cli/issues/25710
             az config set bicep.use_binary_from_path=false
-            parameters = ${{ needs.prep.outputs.prod_parameters }}
-            if [ "${{ github.event_name }}" != 'push' ]; then
-              echo "::command::using preview parameters"
-              parameters = ${{ needs.prep.outputs.preview_parameters }}
-            fi
-
             echo "::group::Static Web App deployment"
-            az deployment group create $parameters \
+            az deployment group create ${{ steps.prepare_parameters.outputs.parameters }} \
                 repositoryToken='${{ secrets.GITHUB_TOKEN }}'
 
             echo "::endgroup::"
