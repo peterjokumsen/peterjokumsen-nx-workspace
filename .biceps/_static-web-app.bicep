@@ -1,14 +1,20 @@
-param location string
+@description('Location to use')
+param location string = resourceGroup().location
+@description('Branch used for deployment')
 param branch string
+@description('Name of Static Web App')
 param staticWebAppName string
+@description('Tags to use for deployed resources')
 param tags object
-param domain string = 'peterjokumsen.com'
-param subDomain string
+@description('Repository token to use to access repository')
 @secure()
 param repositoryToken string
+@description('Application Insights ID')
 param appInsightsId string
+@description('Application Insights instrumentation key')
 @secure()
 param appInsightsInstrumentationKey string
+@description('Application Insights connection string')
 @secure()
 param appInsightsConnectionString string
 
@@ -47,12 +53,6 @@ resource staticWebAppAppSettings 'Microsoft.Web/staticSites/config@2022-09-01' =
     APPINSIGHTS_INSTRUMENTATIONKEY: appInsightsInstrumentationKey
     APPLICATIONINSIGHTS_CONNECTION_STRING: appInsightsConnectionString
   }
-}
-
-resource rootCustomDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
-  parent: staticWebApp
-  name: '${subDomain}.${domain}'
-  properties: {}
 }
 
 output id string = staticWebApp.id
