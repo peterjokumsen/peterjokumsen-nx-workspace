@@ -162,15 +162,13 @@ jobs:
 
             echo "::group::Static Web App what-if"
             az deployment group what-if \
-              ${{ needs.prep.outputs.prod_parameters }} \
-                repositoryToken='${{ secrets.GITHUB_TOKEN }}'
+              ${{ needs.prep.outputs.prod_parameters }}
 
             echo "::endgroup::"
 
             echo "::group::Static Web App validate"
             az deployment group validate \
-              ${{ needs.prep.outputs.prod_parameters }} \
-                repositoryToken='${{ secrets.GITHUB_TOKEN }}'
+              ${{ needs.prep.outputs.prod_parameters }}
 
             echo "::endgroup::"
 
@@ -194,8 +192,7 @@ jobs:
             # https://github.com/Azure/azure-cli/issues/25710
             az config set bicep.use_binary_from_path=false
             echo "::group::Static Web App deployment"
-            az deployment group create ${{ steps.prepare_parameters.outputs.parameters }} \
-                repositoryToken='${{ secrets.GITHUB_TOKEN }}'
+            az deployment group create ${{ steps.prepare_parameters.outputs.parameters }}
 
             echo "::endgroup::"
 

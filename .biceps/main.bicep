@@ -15,10 +15,6 @@ var tags = {
   domain: '${subDomainToUse}.${customDomain}'
 }
 
-@description('Repository token for the GitHub action')
-@secure()
-param repositoryToken string
-
 module appInsights './_app-insights.bicep' = {
   name: '${deployment().name}-appInsights'
   params: {
@@ -36,7 +32,6 @@ module staticWebApp './_static-web-app.bicep' = {
     branch: branch
     staticWebAppName: '${appName}-static-web-app'
     tags: tags
-    repositoryToken: repositoryToken
     appInsightsId: appInsights.outputs.id
     appInsightsConnectionString: appInsights.outputs.connectionString
     appInsightsInstrumentationKey: appInsights.outputs.instrumentationKey
