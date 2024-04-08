@@ -71,11 +71,13 @@ jobs:
           branchName='${{ env.branch-name }}'
           appName='${{ env.app-name }}'
           subDomain='${{ env.app-name }}'
+          resourceGroup='${{ env.resource-group }}'
 
           if [ "${{ github.event_name }}" == 'pull_request' ]; then
             branchName="${{ env.branch-name }}-pr-${{ github.event.number }}"
             subDomain="${{ env.app-name }}-pr-${{ github.event.number }}"
             appName="${{ env.app-name }}-pr-${{ github.event.number }}"
+            resourceGroup="${{ env.resource-group }}-pr-${{ github.event.number }}"
           fi
 
           deploymentName="${branchName////-}.$shortSha"
@@ -86,6 +88,8 @@ jobs:
           echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
           echo "App name: $appName"
           echo "app_name=$appName" >> $GITHUB_OUTPUT
+          echo "Resource group: $resourceGroup"
+          echo "resource_group=$resourceGroup" >> $GITHUB_OUTPUT
 
       - name: 'Set group deployment parameters 📝'
         id: group_deployment_parameters
@@ -95,7 +99,7 @@ jobs:
             exit 1
           fi
 
-          basicParameters="--resource-group ${{ env.resource-group }} \
+          basicParameters="--resource-group ${{ steps.prepare_names.outputs.resource_group }} \
               --name '${{ steps.prepare_names.outputs.generated_name }}' \
               --template-file ${{ env.bicep-main-file }} \
               --parameters \
@@ -116,17 +120,10 @@ jobs:
           echo "preview_parameters=$previewParameters" >> $GITHUB_OUTPUT
           echo "prod_parameters=$prodParameters" >> $GITHUB_OUTPUT
 
-      - name: 'AZ CLI login 🔑'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
     outputs:
       preview_parameters: ${{ steps.group_deployment_parameters.outputs.preview_parameters }}
       prod_parameters: ${{ steps.group_deployment_parameters.outputs.prod_parameters }}
-      api_key: ${{ steps.static_web_app_apikey.outputs.api_key }}
+      resource_group: ${{ steps.prepare_names.outputs.resource_group }}
 
   lint_biceps:
     if: |
@@ -222,12 +219,15 @@ jobs:
 
   deploy_bicep:
     if: |
+      always() &&
+      (needs.lint_biceps.result == 'success' || needs.lint_biceps.result == 'skipped') &&
       (github.event_name == 'workflow_dispatch' && inputs.deploy_bicep == 'Yes') ||
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     needs:
       - prep
+      - lint_biceps
     name: 'Deploy bicep 💪'
     steps:
       - name: 'Checkout 📥'
@@ -345,17 +345,9 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Get API key 🔑'
-        id: static_web_app_apikey
+      - name: 'Remove preview resource group 💥'
+        id: clear_resource_group
         uses: azure/CLI@v2
         with:
           inlineScript: |
-            apiKey=$(az staticwebapp secrets list --name '${{ env.app-name }}-static-web-app' | jq -r '.properties.apiKey')
-            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
-
-      # TODO: update preview functionality to create a new resource group, and delete it here instead of closing the SWA.
-      - name: 'Destroy staging environment 💥'
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
-          action: 'close'
+            az group delete --name ${{ needs.prep.outputs.resource_group }} --yes --no-wait
