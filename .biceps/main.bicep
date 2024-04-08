@@ -4,14 +4,16 @@ param location string
 param branch string
 @description('Name of the app')
 param appName string
-@description('Tags to apply to all resources')
-param tags object
 @description('Custom domain to use, defaults to "peterjokumsen.com"')
 param customDomain string = 'peterjokumsen.com'
 @description('Subdomain to use, defaults to "{appName}"')
 param subDomain string = ''
 
 var subDomainToUse = subDomain == '' ? appName : subDomain
+var tags = {
+  app: appName
+  domain: '${subDomainToUse}.${customDomain}'
+}
 
 @description('Repository token for the GitHub action')
 @secure()
@@ -47,6 +49,7 @@ module dnsZone './_dns-zone.bicep' = {
     subDomain: subDomainToUse
     parentDomain: customDomain
     targetResourceId: staticWebApp.outputs.id
+    tags: tags
   }
 }
 

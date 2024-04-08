@@ -10,9 +10,13 @@ param recordName string = '@'
 @description('The resource ID of the target resource for the DNS record.  This can be a resource of any type that has a public IP address.')
 param targetResourceId string
 
+@description('Tags to be assigned to the DNS zone.')
+param tags object
+
 resource zone 'Microsoft.Network/dnsZones@2018-05-01' = {
   name: '${subDomain}.${parentDomain}'
   location: 'global'
+  tags: tags
 }
 
 resource record 'Microsoft.Network/dnsZones/A@2018-05-01' = {
