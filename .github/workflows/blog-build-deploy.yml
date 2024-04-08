@@ -26,14 +26,6 @@ on:
         options:
           - 'Yes'
           - 'No'
-      deploy_bicep:
-        description: 'Deploy Bicep files'
-        required: false
-        default: 'Yes'
-        type: 'choice'
-        options:
-          - 'Yes'
-          - 'No'
       build_and_deploy:
         description: 'Build and deploy application'
         required: false
@@ -149,7 +141,6 @@ jobs:
         uses: azure/CLI@v2
         with:
           inlineScript: |
-            exit 1
             az version
             az bicep install
             az bicep version
@@ -195,6 +186,7 @@ jobs:
             az config set bicep.use_binary_from_path=false
             parameters = ${{ needs.prep.outputs.prod_parameters }}
             if [ "${{ github.event_name }}" != 'push' ]; then
+              echo "::command::using preview parameters"
               parameters = ${{ needs.prep.outputs.preview_parameters }}
             fi
 
