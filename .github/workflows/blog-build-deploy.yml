@@ -109,17 +109,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Get API key 🔑'
-        id: static_web_app_apikey
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            apiKey=$(az staticwebapp secrets list --name '${{ env.app-name }}-static-web-app' | jq -r '.properties.apiKey')
-            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
-
     outputs:
       group_deployment_parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
-      api_key: ${{ steps.static_web_app_apikey.outputs.api_key }}
 
   lint_biceps:
     if: |
@@ -285,7 +276,16 @@ jobs:
     needs:
       - prep
       - build_app
+      - deploy_bicep
     steps:
+      - name: 'Get API key 🔑'
+        id: static_web_app_apikey
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            apiKey=$(az staticwebapp secrets list --name '${{ env.app-name }}-static-web-app' | jq -r '.properties.apiKey')
+            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
+
       - name: 'Download artifacts 📥'
         uses: actions/download-artifact@v4
         with:
@@ -294,9 +294,9 @@ jobs:
 
       - name: 'Publish SWA 🚀'
         uses: azure/static-web-apps-deploy@v1
-        if: needs.prep.outputs.api_key != ''
+        if: steps.static_web_app_apikey.outputs.api_key != ''
         with:
-          azure_static_web_apps_api_token: ${{ needs.prep.outputs.api_key }}
+          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: 'upload'
           app_location: 'dist/apps/blog/browser'
@@ -311,8 +311,17 @@ jobs:
     needs:
       - prep
     steps:
+      - name: 'Get API key 🔑'
+        id: static_web_app_apikey
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            apiKey=$(az staticwebapp secrets list --name '${{ env.app-name }}-static-web-app' | jq -r '.properties.apiKey')
+            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
+
+      # TODO: update preview functionality to create a new resource group, and delete it here instead of closing the SWA.
       - name: 'Destroy staging environment 💥'
         uses: Azure/static-web-apps-deploy@v1
         with:
-          azure_static_web_apps_api_token: ${{ needs.prep.outputs.api_key }}
+          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
           action: 'close'
