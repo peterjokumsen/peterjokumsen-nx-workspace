@@ -14,7 +14,7 @@ import { Subject, firstValueFrom, map } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faGear } from '@fortawesome/free-solid-svg-icons';
+import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   standalone: true,
@@ -120,7 +120,7 @@ export class AboutMeComponent implements AfterViewInit, OnDestroy, OnInit {
   headers = signal<Array<{ id: string; element: HTMLElement; title: string }>>(
     [],
   );
-  expandIcon = faGear;
+  expandIcon = faMapLocationDot;
 
   @ViewChild('content') content!: ElementRef;
   @ViewChild('toc') toc!: ElementRef;
