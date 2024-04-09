@@ -46,6 +46,7 @@ env:
   resource_group: blog-rg
   location: westeurope
   app_name: blog
+  prod_branch: 'main'
   branch_name: ${{ github.head_ref || github.ref_name }}
   projects_to_build: 'blog' # comma-separated list of projects to build
 
@@ -64,14 +65,13 @@ jobs:
           subDomain='${{ env.app_name }}'
 
           if [ "${{ github.event_name }}" == 'pull_request' ]; then
-            branchName="${{ env.branch_name }}-pr-${{ github.event.number }}"
             subDomain="${{ env.app_name }}-pr-${{ github.event.number }}"
             appName="${{ env.app_name }}-pr-${{ github.event.number }}"
           fi
 
           deploymentName="${branchName////-}.$shortSha"
 
-          echo "Deployment name: $deploymentNae"
+          echo "Deployment name: $deploymentName"
           echo "generated_name=$deploymentName" >> $GITHUB_OUTPUT
           echo "Sub-domain: $subDomain"
           echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
@@ -90,14 +90,15 @@ jobs:
               --name '${{ steps.prepare_names.outputs.generated_name }}' \
               --template-file ${{ env.bicep_main_file }} \
               --parameters \
-                  branch='main' \
                   location='${{ env.location }}'"
 
           previewParameters="$basicParameters \
+                  branch='${{ steps.prepare_names.outputs.generated_name }}' \
                   appName='${{ steps.prepare_names.outputs.app_name }}' \
                   subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
 
           prodParameters="$basicParameters \
+                  branch='${{ env.prod_branch }}' \
                   appName='${{ env.app_name }}' \
                   subDomain='${{ env.app_name }}'"
 
