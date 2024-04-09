@@ -4,24 +4,22 @@ param location string
 param branch string
 @description('Name of the app')
 param appName string
-@description('Tags to apply to all resources')
-param tags object
 @description('Custom domain to use, defaults to "peterjokumsen.com"')
 param customDomain string = 'peterjokumsen.com'
 @description('Subdomain to use, defaults to "{appName}"')
 param subDomain string = ''
 
 var subDomainToUse = subDomain == '' ? appName : subDomain
-
-@description('Repository token for the GitHub action')
-@secure()
-param repositoryToken string
+var tags = {
+  app: appName
+  domain: '${subDomainToUse}.${customDomain}'
+}
 
 module appInsights './_app-insights.bicep' = {
   name: '${deployment().name}-appInsights'
   params: {
     location: location
-    tags: tags
+    tags: { app: 'global-insights' }
     workspaceName: 'peterjokumsen-app-insights-workspace'
     appInsightsName: 'peterjokumsen-app-insights'
   }
@@ -34,7 +32,6 @@ module staticWebApp './_static-web-app.bicep' = {
     branch: branch
     staticWebAppName: '${appName}-static-web-app'
     tags: tags
-    repositoryToken: repositoryToken
     appInsightsId: appInsights.outputs.id
     appInsightsConnectionString: appInsights.outputs.connectionString
     appInsightsInstrumentationKey: appInsights.outputs.instrumentationKey
@@ -47,6 +44,7 @@ module dnsZone './_dns-zone.bicep' = {
     subDomain: subDomainToUse
     parentDomain: customDomain
     targetResourceId: staticWebApp.outputs.id
+    tags: tags
   }
 }
 

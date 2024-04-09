@@ -6,9 +6,6 @@ param branch string
 param staticWebAppName string
 @description('Tags to use for deployed resources')
 param tags object
-@description('Repository token to use to access repository')
-@secure()
-param repositoryToken string
 @description('Application Insights ID')
 param appInsightsId string
 @description('Application Insights instrumentation key')
@@ -34,7 +31,6 @@ resource staticWebApp 'Microsoft.Web/staticSites@2022-09-01' = {
   }
   properties: {
     repositoryUrl: 'https://github.com/peterjokumsen/peterjokumsen-nx-workspace'
-    repositoryToken: repositoryToken
     branch: branch
     provider: 'GitHub'
     stagingEnvironmentPolicy: 'Enabled'
