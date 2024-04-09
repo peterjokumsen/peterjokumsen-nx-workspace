@@ -19,7 +19,7 @@ module appInsights './_app-insights.bicep' = {
   name: '${deployment().name}-appInsights'
   params: {
     location: location
-    tags: tags
+    tags: { app: 'global-insights' }
     workspaceName: 'peterjokumsen-app-insights-workspace'
     appInsightsName: 'peterjokumsen-app-insights'
   }
