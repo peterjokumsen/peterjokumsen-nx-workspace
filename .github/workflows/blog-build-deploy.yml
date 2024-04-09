@@ -391,11 +391,13 @@ jobs:
       #     NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
   close_preview:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    if: github.event_name == 'pull_request' #&& github.event.action == 'closed'
     runs-on: ubuntu-latest
     name: 'Cleanup staging 💥'
     needs:
       - prep
+      - end_to_end_tests
+      - lighthouse_report_job
     steps:
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
@@ -404,7 +406,14 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Remove preview resources 💥'
+      - name: 'Remove static web app 🗑️'
+        id: remove_swa
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az staticwebapp delete --name '${{ needs.prep.outputs.app_name }}-static-web-app'
+
+      - name: 'Remove other resources 💥'
         id: clear_resource_group
         uses: azure/CLI@v2
         with:
