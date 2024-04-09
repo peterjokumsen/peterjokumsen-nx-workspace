@@ -178,10 +178,10 @@ jobs:
         run: |
           parameters="${{ needs.prep.outputs.prod_parameters }}"
           if [ "${{ github.event_name }}" != 'push' ]; then
-              echo "::command::using preview parameters"
+              echo "running: using preview parameters"
               parameters="${{ needs.prep.outputs.preview_parameters }}"
           else
-              echo "::command::using prod parameters"
+              echo "running: using prod parameters"
           fi
 
           echo "parameters=$parameters" >> $GITHUB_OUTPUT
@@ -216,7 +216,7 @@ jobs:
 
       - name: 'Lint all 🧹'
         run: |
-          echo "::command::npx nx run-many -t lint --all"
+          echo "running: npx nx run-many -t lint --all"
           npx nx run-many -t lint --all
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
@@ -224,7 +224,7 @@ jobs:
       - name: 'Test all 🧪'
         if: always()
         run: |
-          echo "::command::npx nx run-many -t test -c ci --all"
+          echo "running: npx nx run-many -t test -c ci --all"
           npx nx run-many -t test -c ci --all
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
@@ -247,7 +247,7 @@ jobs:
 
       - name: 'Build app(s) 🏗️'
         run: |
-          echo "::command::npx nx run-many -t build --projects=${{ env.projects_to_build }}"
+          echo "running: npx nx run-many -t build --projects=${{ env.projects_to_build }}"
           npx nx run-many -t build --projects=${{ env.projects_to_build }}
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
@@ -366,6 +366,29 @@ jobs:
           number: ${{ github.event.pull_request.number }}
           header: lighthouse
           message: ${{ steps.format_lighthouse_score.outputs.comment }}
+
+  end_to_end_tests:
+    name: 'End-to-end tests 🧪'
+    needs:
+      - deploy_app
+      - wait_for_deployment
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Placeholder for end-to-end tests 🧪'
+        run: echo "No end-to-end tests configured, yet."
+      # - name: 'Checkout 📥'
+      #   uses: actions/checkout@v4
+
+      # - name: 'Install dependencies 📦'
+      #   uses: ./.github/actions/install-deps
+
+      # - name: 'Run end-to-end tests 🧪'
+      #   run: |
+      #     echo "running: npx nx run-many -t e2e --all"
+      #     npx nx run-many -t e2e --all
+      #   env:
+      #     NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
   close_preview:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
