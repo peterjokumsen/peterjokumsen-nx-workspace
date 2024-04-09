@@ -415,5 +415,5 @@ jobs:
             for resourceId in $resources
             do
               echo "Deleting resource: $resourceId"
-              az resource delete --ids $resourceId --yes
+              az resource delete --ids $resourceId
             done
