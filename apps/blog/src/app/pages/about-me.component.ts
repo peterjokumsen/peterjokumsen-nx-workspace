@@ -45,6 +45,7 @@ import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
             <button
               class="rounded bg-pink-600 p-2 px-4 text-white"
               (click)="showOrHideToc()"
+              aria-label="Show or hide page navigation"
             >
               <fa-icon [icon]="expandIcon"></fa-icon>
             </button>
