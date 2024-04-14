@@ -1,0 +1,31 @@
+@import 'ng-libs/styles/src/lib/styles/variables.scss';
+
+nav {
+  height: 100%;
+}
+
+a {
+  &.is-active {
+    display: none;
+  }
+
+  &:hover {
+    background-color: $primary-alt-text-color;
+    color: $primary-bg-color;
+    border-color: $primary-bg-color;
+  }
+}
+
+a,
+button {
+  border-color: $primary-alt-text-color;
+}
+
+button {
+  background-color: $primary-alt-text-color;
+  color: $primary-bg-color;
+
+  &.is-active {
+    display: inline-block;
+  }
+}
