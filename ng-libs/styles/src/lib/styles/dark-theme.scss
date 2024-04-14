@@ -1,0 +1,16 @@
+@import './variables';
+
+.main-block {
+  background-color: $dark-bg-color;
+  color: $dark-text-color;
+}
+
+.accent-block {
+  background-color: $accent-alt-color;
+  color: $accent-color;
+}
+
+.error-block {
+  background-color: $error-color;
+  color: $error-alt-color;
+}
