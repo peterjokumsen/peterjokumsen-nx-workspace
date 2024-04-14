@@ -52,3 +52,7 @@ body {
 .pj-footer {
   @apply mt-auto grid grid-cols-4 py-4 text-center;
 }
+
+.pj-button {
+  @apply rounded px-4 py-2 font-bold;
+}
