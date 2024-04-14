@@ -1,0 +1,28 @@
+@import 'ng-libs/styles/src/lib/styles/variables.scss';
+
+.show-hide {
+  transition: opacity 0.5s;
+  display: none;
+  opacity: 0;
+  height: 0;
+
+  &.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .table-of-contents {
+    max-height: calc(100vh - 6rem);
+  }
+}
+
+.nav-button {
+  border-color: $primary-alt-text-color;
+
+  &:hover,
+  &.active {
+    background-color: $primary-alt-text-color;
+    color: $primary-bg-color;
+    border-color: $primary-bg-color;
+  }
+}

@@ -26,7 +26,7 @@ import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
       >
         @for (header of headers(); track header.title) {
           <a
-            class="rounded border bg-pink-600 px-4 py-2 text-white hover:bg-gray-800"
+            class="nav-button primary-block alt-text rounded border px-4 py-2 font-bold"
             href="#"
             (click)="selectHeader(header.id)"
           >
@@ -43,7 +43,8 @@ import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
         <div class="sticky top-1 col-span-5 md:hidden">
           <div class="control flex justify-end">
             <button
-              class="rounded bg-pink-600 p-2 px-4 text-white"
+              class="nav-button primary-block rounded p-2 px-4"
+              [ngClass]="{ active: tocExpanded }"
               (click)="showOrHideToc()"
               aria-label="Show or hide page navigation"
             >
@@ -51,12 +52,14 @@ import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
             </button>
           </div>
           <div #toc class="show-hide">
-            <div class="mt-2 rounded border-2 border-pink-600 bg-stone-300 p-4">
+            <div class="primary-block mt-2 rounded-2xl border-2 p-4">
               <ng-container *ngTemplateOutlet="headersTemplate"></ng-container>
             </div>
           </div>
         </div>
-        <div class="about-me-section">
+        <div
+          class="flex h-screen flex-col items-center justify-center gap-6 p-6"
+        >
           <h1 class="text-4xl font-bold">Who am I?</h1>
           <p class="text-lg">
             I am a software engineer who loves to build things. I have been
@@ -67,7 +70,9 @@ import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
             in interesting ways.
           </p>
         </div>
-        <div class="about-me-section">
+        <div
+          class="flex h-screen flex-col items-center justify-center gap-6 p-6"
+        >
           <h1 class="text-2xl font-bold">What is the purpose of this blog?</h1>
           <p class="text-lg">
             The purpose of this blog is to share my knowledge and experiences
@@ -75,7 +80,9 @@ import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
             software engineers.
           </p>
         </div>
-        <div class="about-me-section">
+        <div
+          class="flex h-screen flex-col items-center justify-center gap-6 p-6"
+        >
           <h1 class="text-2xl font-bold">What will you find on this blog?</h1>
           <p class="text-lg">
             On this blog, you will find articles on various topics related to
@@ -92,25 +99,7 @@ import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
       </div>
     </div>
   `,
-  styles: `
-    .about-me-section {
-      @apply flex h-screen flex-col items-center justify-center gap-6 p-6;
-    }
-
-    .show-hide {
-      transition: opacity 0.5s;
-      opacity: 0;
-      height: 0;
-
-      &.show {
-        opacity: 1;
-      }
-
-      .table-of-contents {
-        max-height: calc(100vh - 6rem);
-      }
-    }
-  `,
+  styleUrl: 'about-me.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AboutMeComponent implements AfterViewInit, OnDestroy, OnInit {
@@ -122,6 +111,7 @@ export class AboutMeComponent implements AfterViewInit, OnDestroy, OnInit {
     [],
   );
   expandIcon = faMapLocationDot;
+  tocExpanded = false;
 
   @ViewChild('content') content!: ElementRef;
   @ViewChild('toc') toc!: ElementRef;
@@ -205,12 +195,14 @@ export class AboutMeComponent implements AfterViewInit, OnDestroy, OnInit {
     if (!element) return;
 
     if (element.classList.contains('show')) {
+      this.tocExpanded = false;
       element.classList.remove('show');
       return;
     }
 
     if (forceHide) return;
 
+    this.tocExpanded = true;
     element.classList.add('show');
   }
 }
