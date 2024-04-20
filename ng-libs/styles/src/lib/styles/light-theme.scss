@@ -1,16 +1,33 @@
 @import './variables';
+@import './mixins';
+
+:root {
+  @include set-variables(
+    (
+      primary-bg-color: $primary-bg-color,
+      primary-color: $primary-text-color,
+      primary-alt-color: $primary-alt-text-color,
+      bg-color: $light-bg-color,
+      color: $light-text-color,
+      accent-bg-color: $accent-color,
+      accent-color: $accent-alt-color,
+      error-bg-color: $error-color,
+      error-color: $error-alt-color,
+    )
+  );
+}
 
 .main-block {
-  background-color: $light-bg-color;
-  color: $light-text-color;
+  background-color: var(--bg-color);
+  color: var(--color);
 }
 
 .accent-block {
-  background-color: $accent-color;
-  color: $accent-alt-color;
+  background-color: var(--accent-bg-color);
+  color: var(--accent-color);
 }
 
 .error-block {
-  background-color: $error-alt-color;
-  color: $error-color;
+  background-color: var(--error-bg-color);
+  color: var(--error-color);
 }

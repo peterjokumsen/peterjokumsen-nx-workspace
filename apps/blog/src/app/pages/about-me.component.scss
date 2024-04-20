@@ -1,5 +1,3 @@
-@import 'ng-libs/styles/src/lib/styles/variables.scss';
-
 .show-hide {
   transition: opacity 0.5s;
   display: none;
@@ -17,12 +15,12 @@
 }
 
 .nav-button {
-  border-color: $primary-alt-text-color;
+  border-color: var(--primary-alt-color);
 
   &:hover,
   &.active {
-    background-color: $primary-alt-text-color;
-    color: $primary-bg-color;
-    border-color: $primary-bg-color;
+    background-color: var(--primary-alt-color);
+    color: var(--primary-bg-color);
+    border-color: var(--primary-bg-color);
   }
 }
