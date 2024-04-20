@@ -12,7 +12,7 @@ import { PjUiRouterNavigationElement } from './models';
     <nav class="flex flex-row-reverse items-end gap-2">
       @for (navElement of routes(); track navElement.route) {
         <button
-          class="hidden rounded bg-gray-400 px-4 py-2 font-bold text-pink-600"
+          class="pj-button hidden border-2"
           [routerLink]="navElement.route"
           routerLinkActive="is-active"
           disabled
@@ -20,7 +20,7 @@ import { PjUiRouterNavigationElement } from './models';
           {{ navElement.title }}
         </button>
         <a
-          class="inline-block rounded bg-gray-800 px-4 py-2 font-bold text-pink-600 hover:bg-gray-400 hover:text-gray-800"
+          class="pj-button border-2"
           [routerLink]="navElement.route"
           routerLinkActive="is-active"
         >
@@ -29,11 +29,7 @@ import { PjUiRouterNavigationElement } from './models';
       }
     </nav>
   `,
-  styles: [
-    'nav { height: 100% }',
-    'a.is-active { display: none }',
-    'button.is-active { display: inline-block }',
-  ],
+  styleUrl: 'router-nav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RouterNavComponent {

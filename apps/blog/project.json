@@ -17,7 +17,19 @@
         "tsConfig": "apps/blog/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": ["apps/blog/src/favicon.ico", "apps/blog/src/assets"],
-        "styles": ["apps/blog/src/styles/global.scss"],
+        "styles": [
+          {
+            "input": "ng-libs/styles/src/lib/styles/light-theme.scss",
+            "bundleName": "light-theme",
+            "inject": false
+          },
+          {
+            "input": "ng-libs/styles/src/lib/styles/dark-theme.scss",
+            "bundleName": "dark-theme",
+            "inject": false
+          },
+          "ng-libs/styles/src/lib/styles/global.scss"
+        ],
         "scripts": [],
         "server": "apps/blog/src/main.server.ts",
         "prerender": true,

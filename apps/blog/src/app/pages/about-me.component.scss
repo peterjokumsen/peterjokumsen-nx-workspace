@@ -1,0 +1,26 @@
+.show-hide {
+  transition: opacity 0.5s;
+  display: none;
+  opacity: 0;
+  height: 0;
+
+  &.show {
+    display: block;
+    opacity: 1;
+  }
+
+  .table-of-contents {
+    max-height: calc(100vh - 6rem);
+  }
+}
+
+.nav-button {
+  border-color: var(--primary-alt-color);
+
+  &:hover,
+  &.active {
+    background-color: var(--primary-alt-color);
+    color: var(--primary-bg-color);
+    border-color: var(--primary-bg-color);
+  }
+}

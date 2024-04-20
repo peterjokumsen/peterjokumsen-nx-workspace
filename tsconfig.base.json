@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@peterjokumsen/styles": ["ng-libs/styles/src/index.ts"],
       "@peterjokumsen/ui-elements": ["ng-libs/ui-elements/src/index.ts"]
     }
   },
