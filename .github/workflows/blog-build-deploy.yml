@@ -10,7 +10,7 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      lint_deploy_bicep:
+      deploy_bicep:
         description: 'Lint & Deploy Bicep files'
         required: false
         default: 'No'
@@ -61,92 +61,22 @@ jobs:
       bicep_main_file: ${{ env.bicep_main_file }}
       location: ${{ env.location }}
 
-  lint_deploy_bicep:
+  deploy_bicep:
     if: |
-      (github.event_name == 'workflow_dispatch' && inputs.lint_deploy_bicep == 'Yes') ||
+      (github.event_name == 'workflow_dispatch' && inputs.deploy_bicep == 'Yes') ||
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    runs-on: ubuntu-latest
+    uses: './.github/workflows/workflow-bicep-deploy.yml'
     needs:
       - prep
-    name: 'Lint & Deploy Bicep 💪'
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-
-      - name: 'AZ CLI login 🔑'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: 'Lint Bicep 🔍'
-        if: github.event_name != 'push'
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            az version
-            az bicep install
-            az bicep version
-            az bicep lint --file ${{ env.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
-            echo '::group::Bicep linting results'
-            cat bicep.sarif
-            echo '::endgroup::'
-
-      - name: 'Upload SARIF ↗️'
-        if: |
-          (success() || failure()) &&
-          github.event_name != 'push'
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          category: bicep
-          sarif_file: bicep.sarif
-
-      - name: 'Detect changes & validate 📝'
-        if: github.event_name != 'push'
-        id: static_web_app_what_if
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            # https://github.com/Azure/azure-cli/issues/25710
-            az config set bicep.use_binary_from_path=false
-
-            echo "::group::Static Web App what-if"
-            az deployment group what-if \
-              ${{ needs.prep.outputs.parameters }}
-
-            echo "::endgroup::"
-
-            echo "::group::Static Web App validate"
-            az deployment group validate \
-              ${{ needs.prep.outputs.parameters }}
-
-            echo "::endgroup::"
-
-      - name: 'Get API key 🔑'
-        id: static_web_app_apikey
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            apiKey=$(az staticwebapp secrets list \
-              --name '${{ needs.prep.outputs.app_name }}-static-web-app' \
-              | jq -r '.properties.apiKey')
-            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
-
-      - name: 'Deploy bicep for SWA 🚀'
-        if: |
-          github.event_name == 'push' ||
-          steps.static_web_app_apikey.outputs.api_key == ''
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            # https://github.com/Azure/azure-cli/issues/25710
-            az config set bicep.use_binary_from_path=false
-            echo "::group::Static Web App deployment"
-            az deployment group create ${{ needs.prep.outputs.parameters }}
-
-            echo "::endgroup::"
+    name: 'Deploy Bicep 💪'
+    with:
+      parameters: ${{ needs.prep.outputs.parameters }}
+      app_name: ${{ needs.prep.outputs.app_name }}
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
   test_and_lint:
     if: |
@@ -219,7 +149,7 @@ jobs:
     needs:
       - prep
       - build_app
-      - lint_deploy_bicep
+      - deploy_bicep
     steps:
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
