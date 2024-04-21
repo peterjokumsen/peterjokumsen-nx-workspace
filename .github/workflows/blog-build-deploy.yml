@@ -52,49 +52,14 @@ env:
 
 jobs:
   prep:
-    runs-on: ubuntu-latest
+    uses: './.github/workflows/workflow-prep.yml'
     name: 'Prepare 🛠️'
-    steps:
-      - name: 'Prepare names 📝'
-        id: prepare_names
-        run: |
-          gitSha='${{ github.sha }}'
-          shortSha=${gitSha:0:7}
-          branchName='${{ env.branch_name }}'
-          appName='${{ env.app_name }}'
-          subDomain='${{ env.app_name }}'
-
-          deploymentName="${branchName////-}.$shortSha"
-
-          echo "Deployment name: $deploymentName"
-          echo "generated_name=$deploymentName" >> $GITHUB_OUTPUT
-          echo "Sub-domain: $subDomain"
-          echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
-          echo "App name: $appName"
-          echo "app_name=$appName" >> $GITHUB_OUTPUT
-
-      - name: 'Set group deployment parameters 📝'
-        id: group_deployment_parameters
-        run: |
-          if [ -z "${{ env.bicep_main_file }}" ]; then
-            echo "::error::Bicep main file not found"
-            exit 1
-          fi
-
-          parameters="--resource-group ${{ env.resource_group }} \
-              --name '${{ steps.prepare_names.outputs.generated_name }}' \
-              --template-file ${{ env.bicep_main_file }} \
-              --parameters \
-                  location='${{ env.location }}' \
-                  branch='${{ env.branch_name }}' \
-                  appName='${{ steps.prepare_names.outputs.app_name }}' \
-                  subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
-
-          echo "parameters=$parameters" >> $GITHUB_OUTPUT
-
-    outputs:
-      app_name: ${{ steps.prepare_names.outputs.app_name }}
-      parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
+    with:
+      branch_name: ${{ env.branch_name }}
+      resource_group: ${{ env.resource_group }}
+      app_name: ${{ env.app_name }}
+      bicep_main_file: ${{ env.bicep_main_file }}
+      location: ${{ env.location }}
 
   lint_deploy_bicep:
     if: |
