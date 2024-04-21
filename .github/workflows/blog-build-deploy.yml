@@ -95,29 +95,10 @@ jobs:
       ((github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && github.event.action != 'closed'))
-    runs-on: ubuntu-latest
-    name: 'Build app 🏗️'
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-
-      - name: 'Install dependencies 📦'
-        uses: ./.github/actions/install-deps
-        with:
-          nx-cache-key: 'nx-build'
-
-      - name: 'Build app(s) 🏗️'
-        run: |
-          echo "running: npx nx run-many -t build --projects=${{ env.projects_to_build }}"
-          npx nx run-many -t build --projects=${{ env.projects_to_build }}
-        env:
-          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
-
-      - name: 'Upload artifacts 🚀'
-        uses: actions/upload-artifact@v4
-        with:
-          name: compiled-app
-          path: 'dist'
+    uses: './.github/workflows/workflow-build-app.yml'
+    name: 'Build app(s) 🏗️'
+    with:
+      project_names: 'blog'
 
   deploy_app:
     needs:
