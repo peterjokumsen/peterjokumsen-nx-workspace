@@ -12,9 +12,15 @@ on:
         required: true
         type: string
     secrets:
-      - AZURE_CLIENT_ID
-      - AZURE_TENANT_ID
-      - AZURE_SUBSCRIPTION_ID
+      AZURE_CLIENT_ID:
+        description: 'Azure Client ID'
+        required: true
+      AZURE_TENANT_ID:
+        description: 'Azure Tenant ID'
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        description: 'Azure Subscription ID'
+        required: true
 
 jobs:
   lint_deploy_bicep:
