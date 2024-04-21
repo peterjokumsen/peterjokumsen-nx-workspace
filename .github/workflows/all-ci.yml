@@ -49,13 +49,34 @@ env:
   projects_to_build: 'blog' # comma-separated list of projects to build
 
 jobs:
+  env_prep:
+    runs-on: ubuntu-latest
+    name: 'Prepare ENV 🛠️'
+    steps:
+      - name: 'Prepare outputs ⬆️'
+        id: prepare_names
+        run: |
+          echo "bicep_main_file=${{ env.bicep_main_file }}" >> $GITHUB_OUTPUT
+          echo "resource_group=${{ env.resource_group }}" >> $GITHUB_OUTPUT
+          echo "app_name=${{ env.app_name }}" >> $GITHUB_OUTPUT
+          echo "branch_name=${{ env.branch_name }}" >> $GITHUB_OUTPUT
+          echo "projects_to_build=${{ env.projects_to_build }}" >> $GITHUB_OUTPUT
+    outputs:
+      bicep_main_file: ${{ steps.prepare_names.outputs.bicep_main_file }}
+      resource_group: ${{ steps.prepare_names.outputs.resource_group }}
+      app_name: ${{ steps.prepare_names.outputs.app_name }}
+      branch_name: ${{ steps.prepare_names.outputs.branch_name }}
+      projects_to_build: ${{ steps.prepare_names.outputs.projects_to_build }}
+
   prep:
     uses: './.github/workflows/workflow-prep.yml'
     name: 'Prepare 🛠️'
+    needs:
+      - env_prep
     with:
-      branch_name: ${{ env.branch_name }}
-      resource_group: ${{ env.resource_group }}
-      app_name: ${{ env.app_name }}
+      branch_name: ${{ needs.env_prep.outputs.branch_name }}
+      resource_group: ${{ needs.env_prep.outputs.resource_group }}
+      app_name: ${{ needs.env_prep.outputs.app_name }}
 
   lint_biceps:
     if: |
@@ -64,6 +85,7 @@ jobs:
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     needs:
+      - env_prep
       - prep
     name: 'Lint Bicep 💪'
     steps:
@@ -85,7 +107,7 @@ jobs:
             az version
             az bicep install
             az bicep version
-            az bicep lint --file ${{ env.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
+            az bicep lint --file ${{ needs.env_prep.outputs.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
             echo '::group::Bicep linting results'
             cat bicep.sarif
             echo '::endgroup::'

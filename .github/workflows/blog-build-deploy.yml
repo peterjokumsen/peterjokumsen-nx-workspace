@@ -51,15 +51,38 @@ env:
   projects_to_build: 'blog' # comma-separated list of projects to build
 
 jobs:
+  env_prep:
+    runs-on: ubuntu-latest
+    name: 'Prepare ENV 🛠️'
+    steps:
+      - name: 'Prepare outputs ⬆️'
+        id: prepare_names
+        run: |
+          echo "bicep_main_file=${{ env.bicep_main_file }}" >> $GITHUB_OUTPUT
+          echo "resource_group=${{ env.resource_group }}" >> $GITHUB_OUTPUT
+          echo "app_name=${{ env.app_name }}" >> $GITHUB_OUTPUT
+          echo "branch_name=${{ env.branch_name }}" >> $GITHUB_OUTPUT
+          echo "projects_to_build=${{ env.projects_to_build }}" >> $GITHUB_OUTPUT
+          echo "location=${{ env.location }}" >> $GITHUB_OUTPUT
+    outputs:
+      bicep_main_file: ${{ steps.prepare_names.outputs.bicep_main_file }}
+      resource_group: ${{ steps.prepare_names.outputs.resource_group }}
+      app_name: ${{ steps.prepare_names.outputs.app_name }}
+      branch_name: ${{ steps.prepare_names.outputs.branch_name }}
+      projects_to_build: ${{ steps.prepare_names.outputs.projects_to_build }}
+      location: ${{ steps.prepare_names.outputs.location }}
+
   prep:
     uses: './.github/workflows/workflow-prep.yml'
+    needs:
+      - env_prep
     name: 'Prepare 🛠️'
     with:
-      branch_name: ${{ env.branch_name }}
-      resource_group: ${{ env.resource_group }}
-      app_name: ${{ env.app_name }}
-      bicep_main_file: ${{ env.bicep_main_file }}
-      location: ${{ env.location }}
+      branch_name: ${{ needs.env_prep.outputs.branch_name }}
+      resource_group: ${{ needs.env_prep.outputs.resource_group }}
+      app_name: ${{ needs.env_prep.outputs.app_name }}
+      bicep_main_file: ${{ needs.env_prep.outputs.bicep_main_file }}
+      location: ${{ needs.env_prep.outputs.location }}
 
   deploy_bicep:
     if: |
@@ -83,12 +106,15 @@ jobs:
       github.event_name != 'workflow_dispatch' ||
       inputs.test_affected == 'Yes'
     uses: './.github/workflows/workflow-test-affected.yml'
+    needs:
+      - env_prep
     name: 'Test affected 🧪'
     with:
-      project_name: ${{ env.app_name }}
+      project_name: ${{ needs.env_prep.outputs.app_name }}
 
   build_app:
     needs:
+      - env_prep
       - test_affected
     if: |
       needs.test_affected.outputs.is_affected == 'Yes' &&
@@ -98,7 +124,7 @@ jobs:
     uses: './.github/workflows/workflow-build-app.yml'
     name: 'Build app(s) 🏗️'
     with:
-      project_names: 'blog'
+      project_names: ${{ needs.env_prep.outputs.projects_to_build }}
 
   deploy_app:
     needs:
