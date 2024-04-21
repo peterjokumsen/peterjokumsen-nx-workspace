@@ -18,8 +18,8 @@ on:
         options:
           - 'Yes'
           - 'No'
-      test_and_lint:
-        description: 'Test and lint application'
+      test_affected:
+        description: 'Test affected'
         required: false
         default: 'Yes'
         type: 'choice'
@@ -78,43 +78,23 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-  test_and_lint:
+  test_affected:
     if: |
-      (github.event_name != 'workflow_dispatch' || inputs.test_and_lint == 'Yes') &&
-      github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    name: 'Test & lint 🧪'
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-        with:
-          # Number of commits to fetch. 0 indicates all history for all branches and tags.
-          fetch-depth: 0
-          submodules: true
-
-      - name: 'Install dependencies 📦'
-        uses: ./.github/actions/install-deps
-
-      - name: 'Lint all 🧹'
-        run: |
-          echo "running: npx nx run-many -t lint --all"
-          npx nx run-many -t lint --all
-        env:
-          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
-
-      - name: 'Test all 🧪'
-        if: always()
-        run: |
-          echo "running: npx nx run-many -t test -c ci --all"
-          npx nx run-many -t test -c ci --all
-        env:
-          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
+      github.event_name != 'workflow_dispatch' ||
+      inputs.test_affected == 'Yes'
+    uses: './.github/workflows/workflow-test-affected.yml'
+    name: 'Test affected 🧪'
+    with:
+      project_name: ${{ env.app_name }}
 
   build_app:
+    needs:
+      - test_affected
     if: |
-      (github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
+      needs.test_affected.outputs.is_affected == 'Yes' &&
+      ((github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
       github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && github.event.action != 'closed')
+      (github.event_name == 'pull_request' && github.event.action != 'closed'))
     runs-on: ubuntu-latest
     name: 'Build app 🏗️'
     steps:
@@ -140,16 +120,18 @@ jobs:
           path: 'dist'
 
   deploy_app:
-    if: |
-      (github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
-      github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: 'Deploy app 🚀'
     needs:
       - prep
+      - test_affected
       - build_app
       - deploy_bicep
+    if: |
+      needs.test_affected.outputs.is_affected == 'Yes' &&
+      ((github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.action != 'closed'))
+    runs-on: ubuntu-latest
+    name: 'Deploy app 🚀'
     steps:
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
