@@ -10,7 +10,7 @@ on:
       - main
   workflow_dispatch:
     inputs:
-      lint_deploy_bicep:
+      deploy_bicep:
         description: 'Lint & Deploy Bicep files'
         required: false
         default: 'No'
@@ -18,8 +18,8 @@ on:
         options:
           - 'Yes'
           - 'No'
-      test_and_lint:
-        description: 'Test and lint application'
+      test_affected:
+        description: 'Test affected'
         required: false
         default: 'Yes'
         type: 'choice'
@@ -51,210 +51,94 @@ env:
   projects_to_build: 'blog' # comma-separated list of projects to build
 
 jobs:
-  prep:
+  env_prep:
     runs-on: ubuntu-latest
-    name: 'Prepare 🛠️'
+    name: 'Prepare ENV 🛠️'
     steps:
-      - name: 'Prepare names 📝'
+      - name: 'Prepare outputs ⬆️'
         id: prepare_names
         run: |
-          gitSha='${{ github.sha }}'
-          shortSha=${gitSha:0:7}
-          branchName='${{ env.branch_name }}'
-          appName='${{ env.app_name }}'
-          subDomain='${{ env.app_name }}'
-
-          deploymentName="${branchName////-}.$shortSha"
-
-          echo "Deployment name: $deploymentName"
-          echo "generated_name=$deploymentName" >> $GITHUB_OUTPUT
-          echo "Sub-domain: $subDomain"
-          echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
-          echo "App name: $appName"
-          echo "app_name=$appName" >> $GITHUB_OUTPUT
-
-      - name: 'Set group deployment parameters 📝'
-        id: group_deployment_parameters
-        run: |
-          if [ -z "${{ env.bicep_main_file }}" ]; then
-            echo "::error::Bicep main file not found"
-            exit 1
-          fi
-
-          parameters="--resource-group ${{ env.resource_group }} \
-              --name '${{ steps.prepare_names.outputs.generated_name }}' \
-              --template-file ${{ env.bicep_main_file }} \
-              --parameters \
-                  location='${{ env.location }}' \
-                  branch='${{ env.branch_name }}' \
-                  appName='${{ steps.prepare_names.outputs.app_name }}' \
-                  subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
-
-          echo "parameters=$parameters" >> $GITHUB_OUTPUT
-
+          echo "bicep_main_file=${{ env.bicep_main_file }}" >> $GITHUB_OUTPUT
+          echo "resource_group=${{ env.resource_group }}" >> $GITHUB_OUTPUT
+          echo "app_name=${{ env.app_name }}" >> $GITHUB_OUTPUT
+          echo "branch_name=${{ env.branch_name }}" >> $GITHUB_OUTPUT
+          echo "projects_to_build=${{ env.projects_to_build }}" >> $GITHUB_OUTPUT
+          echo "location=${{ env.location }}" >> $GITHUB_OUTPUT
     outputs:
+      bicep_main_file: ${{ steps.prepare_names.outputs.bicep_main_file }}
+      resource_group: ${{ steps.prepare_names.outputs.resource_group }}
       app_name: ${{ steps.prepare_names.outputs.app_name }}
-      parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
+      branch_name: ${{ steps.prepare_names.outputs.branch_name }}
+      projects_to_build: ${{ steps.prepare_names.outputs.projects_to_build }}
+      location: ${{ steps.prepare_names.outputs.location }}
 
-  lint_deploy_bicep:
+  prep:
+    uses: './.github/workflows/workflow-prep.yml'
+    name: 'Prepare 🛠️'
+    needs:
+      - env_prep
+    with:
+      branch_name: ${{ needs.env_prep.outputs.branch_name }}
+      resource_group: ${{ needs.env_prep.outputs.resource_group }}
+      app_name: ${{ needs.env_prep.outputs.app_name }}
+      bicep_main_file: ${{ needs.env_prep.outputs.bicep_main_file }}
+      location: ${{ needs.env_prep.outputs.location }}
+
+  deploy_bicep:
     if: |
-      (github.event_name == 'workflow_dispatch' && inputs.lint_deploy_bicep == 'Yes') ||
+      (github.event_name == 'workflow_dispatch' && inputs.deploy_bicep == 'Yes') ||
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    runs-on: ubuntu-latest
+    uses: './.github/workflows/workflow-bicep-deploy.yml'
+    name: 'Deploy bicep 💪'
     needs:
       - prep
-    name: 'Lint & Deploy Bicep 💪'
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
+    with:
+      parameters: ${{ needs.prep.outputs.parameters }}
+      app_name: ${{ needs.prep.outputs.app_name }}
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'AZ CLI login 🔑'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: 'Lint Bicep 🔍'
-        if: github.event_name != 'push'
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            az version
-            az bicep install
-            az bicep version
-            az bicep lint --file ${{ env.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
-            echo '::group::Bicep linting results'
-            cat bicep.sarif
-            echo '::endgroup::'
-
-      - name: 'Upload SARIF ↗️'
-        if: |
-          (success() || failure()) &&
-          github.event_name != 'push'
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          category: bicep
-          sarif_file: bicep.sarif
-
-      - name: 'Detect changes & validate 📝'
-        if: github.event_name != 'push'
-        id: static_web_app_what_if
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            # https://github.com/Azure/azure-cli/issues/25710
-            az config set bicep.use_binary_from_path=false
-
-            echo "::group::Static Web App what-if"
-            az deployment group what-if \
-              ${{ needs.prep.outputs.parameters }}
-
-            echo "::endgroup::"
-
-            echo "::group::Static Web App validate"
-            az deployment group validate \
-              ${{ needs.prep.outputs.parameters }}
-
-            echo "::endgroup::"
-
-      - name: 'Get API key 🔑'
-        id: static_web_app_apikey
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            apiKey=$(az staticwebapp secrets list \
-              --name '${{ needs.prep.outputs.app_name }}-static-web-app' \
-              | jq -r '.properties.apiKey')
-            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
-
-      - name: 'Deploy bicep for SWA 🚀'
-        if: |
-          github.event_name == 'push' ||
-          steps.static_web_app_apikey.outputs.api_key == ''
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            # https://github.com/Azure/azure-cli/issues/25710
-            az config set bicep.use_binary_from_path=false
-            echo "::group::Static Web App deployment"
-            az deployment group create ${{ needs.prep.outputs.parameters }}
-
-            echo "::endgroup::"
-
-  test_and_lint:
+  test_affected:
     if: |
-      (github.event_name != 'workflow_dispatch' || inputs.test_and_lint == 'Yes') &&
-      github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    name: 'Test & lint 🧪'
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-        with:
-          # Number of commits to fetch. 0 indicates all history for all branches and tags.
-          fetch-depth: 0
-          submodules: true
-
-      - name: 'Install dependencies 📦'
-        uses: ./.github/actions/install-deps
-
-      - name: 'Lint all 🧹'
-        run: |
-          echo "running: npx nx run-many -t lint --all"
-          npx nx run-many -t lint --all
-        env:
-          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
-
-      - name: 'Test all 🧪'
-        if: always()
-        run: |
-          echo "running: npx nx run-many -t test -c ci --all"
-          npx nx run-many -t test -c ci --all
-        env:
-          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
+      github.event_name != 'workflow_dispatch' ||
+      inputs.test_affected == 'Yes'
+    uses: './.github/workflows/workflow-test-affected.yml'
+    name: 'Test affected 🧪'
+    needs:
+      - env_prep
+    with:
+      project_name: ${{ needs.env_prep.outputs.app_name }}
 
   build_app:
+    needs:
+      - env_prep
+      - test_affected
     if: |
-      (github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
+      needs.test_affected.outputs.is_affected == 'Yes' &&
+      ((github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
       github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: 'Build app 🏗️'
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-
-      - name: 'Install dependencies 📦'
-        uses: ./.github/actions/install-deps
-        with:
-          nx-cache-key: 'nx-build'
-
-      - name: 'Build app(s) 🏗️'
-        run: |
-          echo "running: npx nx run-many -t build --projects=${{ env.projects_to_build }}"
-          npx nx run-many -t build --projects=${{ env.projects_to_build }}
-        env:
-          NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
-
-      - name: 'Upload artifacts 🚀'
-        uses: actions/upload-artifact@v4
-        with:
-          name: compiled-app
-          path: 'dist'
+      (github.event_name == 'pull_request' && github.event.action != 'closed'))
+    uses: './.github/workflows/workflow-build-app.yml'
+    name: '🏗️'
+    with:
+      project_names: ${{ needs.env_prep.outputs.projects_to_build }}
 
   deploy_app:
-    if: |
-      (github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
-      github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && github.event.action != 'closed')
-    runs-on: ubuntu-latest
-    name: 'Deploy app 🚀'
     needs:
       - prep
+      - test_affected
       - build_app
-      - lint_deploy_bicep
+      - deploy_bicep
+    if: |
+      needs.test_affected.outputs.is_affected == 'Yes' &&
+      ((github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && github.event.action != 'closed'))
+    runs-on: ubuntu-latest
+    name: 'Deploy app 🚀'
     steps:
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
@@ -309,7 +193,7 @@ jobs:
           interval: 1000
 
   lighthouse_report_job:
-    name: Lighthouse report 💡🏠
+    name: 'Lighthouse report 💡🏠'
     needs:
       - deploy_app
       - wait_for_deployment

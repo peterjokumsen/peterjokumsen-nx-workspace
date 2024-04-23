@@ -1,0 +1,70 @@
+on:
+  workflow_call:
+    inputs:
+      parameters:
+        description: 'Deployment Parameters'
+        required: true
+        type: string
+      app_name:
+        description: 'App name'
+        required: true
+        type: string
+    secrets:
+      AZURE_CLIENT_ID:
+        description: 'Azure Client ID'
+        required: true
+      AZURE_TENANT_ID:
+        description: 'Azure Tenant ID'
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        description: 'Azure Subscription ID'
+        required: true
+
+jobs:
+  lint_deploy_bicep:
+    runs-on: ubuntu-latest
+    name: 'Deploy Bicep 💪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Detect changes & validate 📝'
+        if: github.event_name != 'push'
+        id: static_web_app_what_if
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            # https://github.com/Azure/azure-cli/issues/25710
+            az config set bicep.use_binary_from_path=false
+
+            echo "::group::Static Web App what-if"
+            az deployment group what-if \
+              ${{ inputs.parameters }}
+
+            echo "::endgroup::"
+
+            echo "::group::Static Web App validate"
+            az deployment group validate \
+              ${{ inputs.parameters }}
+
+            echo "::endgroup::"
+
+      - name: 'Deploy bicep 🚀'
+        if: |
+          github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            # https://github.com/Azure/azure-cli/issues/25710
+            az config set bicep.use_binary_from_path=false
+            echo "::group::Static Web App deployment"
+            az deployment group create ${{ inputs.parameters }}
+
+            echo "::endgroup::"
