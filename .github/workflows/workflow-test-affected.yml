@@ -32,7 +32,7 @@ jobs:
         run: |
           base="origin/main"
           if [ "${{ github.ref }}" != "refs/heads/main" ]; then
-            base="origin/main~1"
+            base="HEAD~1"
           fi
 
           echo "using base: $base"
