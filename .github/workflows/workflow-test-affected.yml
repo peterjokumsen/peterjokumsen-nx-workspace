@@ -31,7 +31,7 @@ jobs:
         id: get_base
         run: |
           base="origin/main"
-          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
             base="HEAD~1"
           fi
 
@@ -42,8 +42,8 @@ jobs:
         id: check_affected
         run: |
           base="${{ steps.get_base.outputs.base }}"
-          echo "running: npx nx show projects --affected --base=$base"
-          affected=$(npx nx show projects --base=$base --head=HEAD --plain)
+          echo "running: npx nx show projects --affected --base=$base --plain"
+          affected=$(npx nx show projects --affected --base=$base --plain)
           has_affected="No"
           if [[ "${affected}" == *"${{ inputs.project_name }}"* ]]; then
             has_affected="Yes"
