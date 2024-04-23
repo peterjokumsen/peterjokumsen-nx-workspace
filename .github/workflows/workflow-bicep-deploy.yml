@@ -1,3 +1,4 @@
+name: '[Re-usable workflow] bicep deploy'
 on:
   workflow_call:
     inputs:

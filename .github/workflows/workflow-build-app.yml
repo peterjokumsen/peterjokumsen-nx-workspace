@@ -1,3 +1,4 @@
+name: '[Re-usable workflow] build app'
 on:
   workflow_call:
     inputs:

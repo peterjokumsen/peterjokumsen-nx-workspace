@@ -90,7 +90,7 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
     uses: './.github/workflows/workflow-bicep-deploy.yml'
-    name: 'Deploy bicep 💪'
+    name: 'Infra 💪'
     needs:
       - prep
     with:
@@ -106,7 +106,7 @@ jobs:
       github.event_name != 'workflow_dispatch' ||
       inputs.test_affected == 'Yes'
     uses: './.github/workflows/workflow-test-affected.yml'
-    name: 'Test affected 🧪'
+    name: 'Test 🧪'
     needs:
       - env_prep
     with:
@@ -122,7 +122,7 @@ jobs:
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && github.event.action != 'closed'))
     uses: './.github/workflows/workflow-build-app.yml'
-    name: '🏗️'
+    name: 'Build 🏗️'
     with:
       project_names: ${{ needs.env_prep.outputs.projects_to_build }}
 
@@ -146,7 +146,6 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
       - name: 'Get API key 🔑'
         id: static_web_app_apikey
         uses: azure/CLI@v2

@@ -1,3 +1,4 @@
+name: '[Re-usable workflow] test affected'
 on:
   workflow_call:
     inputs:
