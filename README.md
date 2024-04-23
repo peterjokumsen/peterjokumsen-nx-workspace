@@ -8,7 +8,7 @@ This repository was created as a blog and project to practice skills and techniq
 
 # Functionality to implement
 
-- [ ] Create about me page
-- [ ] Create `Workarounds`, a page to house collection of workarounds I've had to use to tackle issues
-- [ ] Create CI/CD pipeline
+- [x] Create about me page
+- [x] Create `Workarounds`, a page to house collection of workarounds I've had to use to tackle issues
+- [x] Create CI/CD pipeline
 - [ ] Display repo issues in deployed website to show further goals for functionality
