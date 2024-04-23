@@ -67,7 +67,7 @@ jobs:
 
   prep:
     uses: './.github/workflows/workflow-prep.yml'
-    name: '🛠️'
+    name: 'Prepare 🛠️'
     needs:
       - env_prep
     with:

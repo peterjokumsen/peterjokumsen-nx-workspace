@@ -1,5 +1,3 @@
-name: 'Deploy Bicep 💪'
-
 on:
   workflow_call:
     inputs:

@@ -1,5 +1,3 @@
-name: 'Test Affected 🧪'
-
 on:
   workflow_call:
     inputs:

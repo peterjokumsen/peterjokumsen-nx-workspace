@@ -1,5 +1,3 @@
-name: 'Build app(s) 🏗️'
-
 on:
   workflow_call:
     inputs:

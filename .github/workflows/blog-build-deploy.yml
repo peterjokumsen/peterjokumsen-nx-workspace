@@ -74,7 +74,7 @@ jobs:
 
   prep:
     uses: './.github/workflows/workflow-prep.yml'
-    name: '🛠️'
+    name: 'Prepare 🛠️'
     needs:
       - env_prep
     with:
@@ -90,7 +90,7 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
     uses: './.github/workflows/workflow-bicep-deploy.yml'
-    name: '💪'
+    name: 'Deploy bicep 💪'
     needs:
       - prep
     with:
@@ -106,7 +106,7 @@ jobs:
       github.event_name != 'workflow_dispatch' ||
       inputs.test_affected == 'Yes'
     uses: './.github/workflows/workflow-test-affected.yml'
-    name: '🧪'
+    name: 'Test affected 🧪'
     needs:
       - env_prep
     with:
@@ -193,7 +193,7 @@ jobs:
           interval: 1000
 
   lighthouse_report_job:
-    name: Lighthouse report 💡🏠
+    name: 'Lighthouse report 💡🏠'
     needs:
       - deploy_app
       - wait_for_deployment
