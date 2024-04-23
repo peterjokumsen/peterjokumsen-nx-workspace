@@ -74,6 +74,7 @@ jobs:
 
   prep:
     uses: './.github/workflows/workflow-prep.yml'
+    name: '🛠️'
     needs:
       - env_prep
     with:
@@ -89,6 +90,7 @@ jobs:
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
     uses: './.github/workflows/workflow-bicep-deploy.yml'
+    name: '💪'
     needs:
       - prep
     with:
@@ -104,6 +106,7 @@ jobs:
       github.event_name != 'workflow_dispatch' ||
       inputs.test_affected == 'Yes'
     uses: './.github/workflows/workflow-test-affected.yml'
+    name: '🧪'
     needs:
       - env_prep
     with:
@@ -119,6 +122,7 @@ jobs:
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && github.event.action != 'closed'))
     uses: './.github/workflows/workflow-build-app.yml'
+    name: '🏗️'
     with:
       project_names: ${{ needs.env_prep.outputs.projects_to_build }}
 

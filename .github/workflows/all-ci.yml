@@ -46,7 +46,6 @@ env:
   resource_group: 'testing'
   app_name: 'test-workflow'
   branch_name: ${{ github.head_ref || github.ref_name }}
-  projects_to_build: 'blog' # comma-separated list of projects to build
 
 jobs:
   env_prep:
@@ -60,17 +59,15 @@ jobs:
           echo "resource_group=${{ env.resource_group }}" >> $GITHUB_OUTPUT
           echo "app_name=${{ env.app_name }}" >> $GITHUB_OUTPUT
           echo "branch_name=${{ env.branch_name }}" >> $GITHUB_OUTPUT
-          echo "projects_to_build=${{ env.projects_to_build }}" >> $GITHUB_OUTPUT
     outputs:
       bicep_main_file: ${{ steps.prepare_names.outputs.bicep_main_file }}
       resource_group: ${{ steps.prepare_names.outputs.resource_group }}
       app_name: ${{ steps.prepare_names.outputs.app_name }}
       branch_name: ${{ steps.prepare_names.outputs.branch_name }}
-      projects_to_build: ${{ steps.prepare_names.outputs.projects_to_build }}
 
   prep:
     uses: './.github/workflows/workflow-prep.yml'
-    name: 'Prepare 🛠️'
+    name: '🛠️'
     needs:
       - env_prep
     with:
