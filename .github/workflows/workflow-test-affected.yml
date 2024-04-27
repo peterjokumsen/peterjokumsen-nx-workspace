@@ -59,8 +59,9 @@ jobs:
           steps.check_affected.outputs.has_affected == 'Yes' &&
           github.event.action != 'closed'
         run: |
-          echo "running: npx nx affected -t test -c ci"
-          npx nx affected -t test -c ci
+          base="${{ steps.get_base.outputs.base }}"
+          echo "running: npx nx affected -t test -c ci --base=$base"
+          npx nx affected -t test -c ci --base=$base
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
