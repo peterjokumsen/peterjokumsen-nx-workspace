@@ -1,0 +1,7 @@
+<section class="flex h-screen flex-col items-center justify-center gap-6 p-6">
+  <h1 class="text-4xl font-bold">{{ section()?.title }}</h1>
+
+  @for (content of contents(); track content) {
+    <p class="text-lg">{{ content }}</p>
+  }
+</section>
