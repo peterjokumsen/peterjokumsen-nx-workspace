@@ -54,7 +54,7 @@ describe('ArticleNavComponent', () => {
   });
 
   it('should map the provided sections', () => {
-    expect(component.navElements()).toEqual([
+    expect(component?.navElements()).toEqual([
       { id: 'section-1', title: 'Section 1?' },
       { id: 'section-2', title: 'Section 2!' },
     ]);
@@ -67,8 +67,8 @@ describe('ArticleNavComponent', () => {
 
   describe('navigateClick', () => {
     it('should emit the selected section', () => {
-      const section = component.navElements()[0];
-      component.navigateClick.emit(section);
+      const section = component?.navElements()[0];
+      component?.navigateClick.emit(section);
       expect(container.navigatedSections).toEqual([section]);
     });
   });
