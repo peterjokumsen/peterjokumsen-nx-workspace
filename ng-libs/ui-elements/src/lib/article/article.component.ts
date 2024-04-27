@@ -1,5 +1,7 @@
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { PjUiArticleSection } from './models';
 
 @Component({
   selector: 'pj-ui-article',
@@ -7,5 +9,8 @@ import { Component } from '@angular/core';
   imports: [CommonModule],
   template: `<p>article works!</p>`,
   styles: ``,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ArticleComponent {}
+export class ArticleComponent {
+  sections = input<PjUiArticleSection[]>();
+}
