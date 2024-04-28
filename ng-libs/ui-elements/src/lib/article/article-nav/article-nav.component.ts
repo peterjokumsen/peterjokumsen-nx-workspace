@@ -3,12 +3,14 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Output,
   Signal,
   ViewChild,
   computed,
   inject,
   input,
+  signal,
 } from '@angular/core';
 import { PjUiArticleNavElement, PjUiArticleSection } from '../models';
 
@@ -31,6 +33,7 @@ export class ArticleNavComponent {
   navSvc = inject(ArticleNavService);
 
   sections = input<ArticleNavSection[]>();
+  inViewId = signal<string>('');
 
   navElements: Signal<PjUiArticleNavElement[]> = computed(
     () =>
@@ -44,6 +47,22 @@ export class ArticleNavComponent {
 
   @Output()
   navigateClick = new EventEmitter<PjUiArticleNavElement>();
+
+  @HostListener('window:scroll', ['$event'])
+  onScroll() {
+    for (const nav of this.navElements()) {
+      const element = document.getElementById(nav.id);
+      if (!element) continue;
+      const rect = element.getBoundingClientRect();
+      if (rect.top <= 0 && rect.top + rect.height > 0) {
+        if (this.inViewId() !== nav.id) {
+          this.inViewId.update(() => nav.id);
+        }
+
+        break;
+      }
+    }
+  }
 
   private mapToNavElement(section: ArticleNavSection): PjUiArticleNavElement {
     return {

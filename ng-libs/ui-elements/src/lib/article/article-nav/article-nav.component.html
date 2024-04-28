@@ -6,6 +6,7 @@
       <a
         class="nav-button primary-block alt-text rounded border px-4 py-2 font-bold"
         href="#"
+        [ngClass]="{ active: nav.id === inViewId() }"
         (click)="navigateClicked($event, nav)"
       >
         {{ nav.title }}
