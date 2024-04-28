@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { PjUiArticleNavElement, PjUiArticleSection } from './models';
 
-import { ArticleNavComponent } from './article-nav.component';
+import { ArticleNavComponent } from './article-nav';
 import { ArticleNavService } from './services';
 import { ArticleSectionComponent } from './section';
 import { CommonModule } from '@angular/common';

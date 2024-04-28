@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { PjUiArticleNavElement, PjUiArticleSection } from './models';
+import { PjUiArticleNavElement, PjUiArticleSection } from '../models';
 
 import { ArticleNavComponent } from './article-nav.component';
 
