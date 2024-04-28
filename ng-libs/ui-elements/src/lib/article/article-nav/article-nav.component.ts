@@ -10,9 +10,9 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { PjUiArticleNavElement, PjUiArticleSection } from './models';
+import { PjUiArticleNavElement, PjUiArticleSection } from '../models';
 
-import { ArticleNavService } from './services';
+import { ArticleNavService } from '../services';
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faMapLocationDot } from '@fortawesome/free-solid-svg-icons';
