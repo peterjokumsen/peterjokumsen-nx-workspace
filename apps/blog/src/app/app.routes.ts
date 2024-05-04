@@ -9,6 +9,14 @@ export const appRoutes: Route[] = [
     data: { title: 'Home' },
   },
   {
+    path: 'blog',
+    loadChildren: () =>
+      import('@peterjokumsen/blog-container').then(
+        (m) => m.blogContainerRoutes,
+      ),
+    data: { title: 'Blog' },
+  },
+  {
     path: 'about-me',
     loadComponent: () =>
       import('./pages/about-me.component').then((m) => m.AboutMeComponent),
