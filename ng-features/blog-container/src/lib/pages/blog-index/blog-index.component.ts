@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [CommonModule],
-  template: `<p>blog-index works!</p>`,
+  imports: [CommonModule, RouterLink],
+  templateUrl: `blog-index.component.html`,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
