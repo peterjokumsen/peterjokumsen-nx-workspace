@@ -1,0 +1,28 @@
+{
+  "name": "util-fns",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "ts-libs/util-fns/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/esbuild:esbuild",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/ts-libs/util-fns",
+        "main": "ts-libs/util-fns/src/index.ts",
+        "tsConfig": "ts-libs/util-fns/tsconfig.lib.json",
+        "assets": ["ts-libs/util-fns/*.md"],
+        "generatePackageJson": true,
+        "format": ["cjs"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "ts-libs/util-fns/jest.config.ts"
+      }
+    }
+  },
+  "tags": []
+}
