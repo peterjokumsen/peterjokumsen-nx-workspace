@@ -16,7 +16,15 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/blog/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/blog/src/favicon.ico", "apps/blog/src/assets"],
+        "assets": [
+          "apps/blog/src/favicon.ico",
+          "apps/blog/src/assets",
+          {
+            "glob": "staticwebapp\\.config\\.json",
+            "input": "apps/blog",
+            "output": "/"
+          }
+        ],
         "styles": [
           {
             "input": "ng-libs/styles/src/lib/styles/light-theme.scss",
