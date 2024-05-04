@@ -208,6 +208,8 @@ jobs:
           urls: |
             ${{ needs.deploy_app.outputs.deployed_url }}
             ${{ needs.deploy_app.outputs.deployed_url }}/about-me
+            ${{ needs.deploy_app.outputs.deployed_url }}/blog
+            ${{ needs.deploy_app.outputs.deployed_url }}/blog/latest
           configPath: ./.github/lighthouse/lighthousesrc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
