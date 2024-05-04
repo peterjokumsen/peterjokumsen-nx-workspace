@@ -9,22 +9,33 @@ import { PjUiRouterNavigationElement } from './models';
   standalone: true,
   imports: [CommonModule, RouterLinkActive, RouterLink],
   template: `
-    <nav class="flex flex-row-reverse items-end gap-2">
+    <ng-template #titleTemplate let-nav="navElement">
+      {{ nav.title }}
+    </ng-template>
+    <nav class="flex flex-row items-end justify-end gap-2">
       @for (navElement of routes(); track navElement.route) {
         <button
           class="pj-button hidden border-2"
           [routerLink]="navElement.route"
           routerLinkActive="is-active"
+          [routerLinkActiveOptions]="{ exact: isRootElement(navElement) }"
           disabled
         >
-          {{ navElement.title }}
+          <ng-container
+            [ngTemplateOutlet]="titleTemplate"
+            [ngTemplateOutletContext]="{ navElement }"
+          ></ng-container>
         </button>
         <a
           class="pj-button border-2"
           [routerLink]="navElement.route"
           routerLinkActive="is-active"
+          [routerLinkActiveOptions]="{ exact: isRootElement(navElement) }"
         >
-          {{ navElement.title }}
+          <ng-container
+            [ngTemplateOutlet]="titleTemplate"
+            [ngTemplateOutletContext]="{ navElement }"
+          ></ng-container>
         </a>
       }
     </nav>
@@ -34,4 +45,8 @@ import { PjUiRouterNavigationElement } from './models';
 })
 export class RouterNavComponent {
   routes = input<PjUiRouterNavigationElement[]>([]);
+
+  isRootElement(route: PjUiRouterNavigationElement) {
+    return route.route === '/' || route.route === '';
+  }
 }
