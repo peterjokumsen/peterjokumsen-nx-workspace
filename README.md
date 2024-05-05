@@ -1,6 +1,6 @@
 # PeterJokumsen Blog
 
-[![Blog - Build and Deploy 🏗️](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml) [![All - Lint & Test 🧪](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/all-ci.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/all-ci.yml)
+[![Blog - Build and Deploy 🏗️](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml) [![All - Lint & Test 🧪](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/all-ci.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/all-ci.yml) [![codecov](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graph/badge.svg?token=0QX0KNI1R4)](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace)
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
@@ -8,9 +8,24 @@
 
 This repository was created as a blog and project to practice skills and techniques for development.
 
-# Functionality to implement
+# Applications
 
-- [x] Create about me page
-- [x] Create `Workarounds`, a page to house collection of workarounds I've had to use to tackle issues
-- [x] Create CI/CD pipeline
-- [ ] Display repo issues in deployed website to show further goals for functionality
+## Blog
+
+The [`blog`](./apps/blog) application is the initial project, which will be used to write blog posts and articles. Hosted as [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://blog.peterjokumsen.com](https://blog.peterjokumsen.com).
+
+# Libraries
+
+- [`ng-features`](./ng-features/README.md) - Angular "features", lazy-loaded components to contain functionality.
+  - [`blog-container`](./ng-features/blog-container/README.md) - Blog container component, to drive functionality for blog posts.
+- [`ng-libs`](./ng-libs/README.md) - Angular libraries for shared components, services, and utilities.
+  - [`styles`](./ng-libs/styles/README.md) - Shared styles for the workspace.
+  - [`ui-elements`](./ng-libs/ui-elements/README.md) - Shared UI elements, components, and directives.
+- [`ts-libs`](./ts-libs/README.md) - TypeScript libraries for shared functions and utilities.
+  - [`util-fns`](./ts-libs/util-fns/README.md) - Utility functions for the workspace.
+
+# Code coverage
+
+Sunburst graph of code coverage for the workspace:
+
+![codecov coverage graph](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graphs/sunburst.svg?token=0QX0KNI1R4)
