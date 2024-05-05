@@ -5,6 +5,7 @@
     "@angular/common": "^17.2.0",
     "@angular/core": "^17.2.0",
     "@angular/router": "^17.2.0",
+    "@nx/angular": "^18.3.4",
     "@peterjokumsen/ui-elements": "*"
   },
   "dependencies": {},
