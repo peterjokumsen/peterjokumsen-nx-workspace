@@ -144,9 +144,17 @@ jobs:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
       - name: 'Test all 🧪'
-        if: always() && (github.event_name != 'workflow_dispatch' || inputs.lint_code == 'Yes')
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.tests == 'Yes')
         run: |
           echo "running: npx nx run-many -t test -c ci --all"
           npx nx run-many -t test -c ci --all
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
+
+      - name: 'Publish coverage 📊'
+        if: always() && (github.event_name != 'workflow_dispatch' || inputs.tests == 'Yes')
+        uses: codecov/codecov-action@v4
+        with:
+          directory: coverage
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}

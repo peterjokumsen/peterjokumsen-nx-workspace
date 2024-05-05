@@ -3,7 +3,7 @@
   "defaultBase": "main",
   "cacheDirectory": ".nx-cache",
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": ["{projectRoot}/**/*", "sharedGlobals", "ci", "codecov"],
     "production": [
       "default",
       "!{projectRoot}/.eslintrc.json",
@@ -14,7 +14,9 @@
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": [],
+    "ci": ["{workspaceRoot}/.github/workflows/*.yml"],
+    "codecov": ["{workspaceRoot}/.codecov.yml"]
   },
   "targetDefaults": {
     "@angular-devkit/build-angular:application": {

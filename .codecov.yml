@@ -1,0 +1,48 @@
+comment:
+  layout: reach
+  behavior: new
+  require_changes: true
+coverage:
+  range: 0..100
+  round: nearest
+  precision: 1
+  status:
+    patch:
+      default:
+        target: 50%
+        threshold: 10%
+    project:
+      default:
+        target: 50%
+        threshold: 10%
+      app-blog:
+        flags:
+          - app-blog
+      lib-blog-container:
+        flags:
+          - lib-blog-container
+      lib-styles:
+        flags:
+          - lib-styles
+      lib-ui-elements:
+        flags:
+          - lib-ui-elements
+      lib-util-fns:
+        flags:
+          - lib-util-fns
+flags:
+  app-blog:
+    paths:
+      - apps/blog
+  lib-blog-container:
+    paths:
+      - ng-features/blog-container
+  lib-styles:
+    paths:
+      - ng-libs/styles
+  lib-ui-elements:
+    paths:
+      - ng-libs/ui-elements
+  lib-util-fns:
+    paths:
+      - libs/util-fns
