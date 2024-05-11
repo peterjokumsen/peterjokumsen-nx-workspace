@@ -19,7 +19,7 @@
 *.PDF      diff=astextplain
 *.rtf      diff=astextplain
 *.RTF      diff=astextplain
-*.md       text diff=markdown
+*.md       text diff=markdown eol=lf
 *.mdx      text diff=markdown
 *.tex      text diff=tex
 *.adoc     text

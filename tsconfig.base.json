@@ -18,6 +18,7 @@
       "@peterjokumsen/blog-container": [
         "ng-features/blog-container/src/index.ts"
       ],
+      "@peterjokumsen/ng-services": ["ng-libs/services/src/index.ts"],
       "@peterjokumsen/styles": ["ng-libs/styles/src/index.ts"],
       "@peterjokumsen/ui-elements": ["ng-libs/ui-elements/src/index.ts"],
       "@peterjokumsen/util-fns": ["ts-libs/util-fns/src/index.ts"]
