@@ -9,6 +9,7 @@ This library contains services to be used in Angular application(s). The service
 ## Services
 
 - [PjLogger](./src/lib/pj-logger/README.md) - A service to log messages to the console, which will not be logged to console in production mode.
+- [PjBrowserProviders](./src/lib/pj-browser-providers/README.md) - A service to provide browser objects and services to Angular applications.
 
 ## Adding a new service
 
