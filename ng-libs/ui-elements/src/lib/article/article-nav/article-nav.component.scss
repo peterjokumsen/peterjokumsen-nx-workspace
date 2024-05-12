@@ -15,11 +15,11 @@
 }
 
 .nav-button {
-  border-color: var(--primary-alt-color);
+  border-color: var(--primary-color);
 
   &:hover,
   &.active {
-    background-color: var(--primary-alt-color);
+    background-color: var(--primary-color);
     color: var(--primary-bg-color);
     border-color: var(--primary-bg-color);
   }

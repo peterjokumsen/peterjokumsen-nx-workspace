@@ -1,33 +1,51 @@
 @import './variables';
 @import './mixins';
 
+$bg-color: $primary-alt-text-color;
+$color: $primary-bg-color;
+
+$main-bg-color: $dark-bg-color;
+$main-text-color: $dark-text-color;
+
+$accent-bg-color: $accent-color;
+$accent-text-color: $accent-alt-color;
+
+$error-bg-color: $error-color;
+$error-text-color: $error-alt-color;
+
 :root {
   @include set-variables(
     (
-      primary-bg-color: $primary-bg-color,
-      primary-color: $primary-text-color,
-      primary-alt-color: $primary-alt-text-color,
-      bg-color: $dark-bg-color,
-      color: $dark-text-color,
-      accent-bg-color: $accent-color,
-      accent-color: $accent-alt-color,
-      error-bg-color: $error-color,
-      error-color: $error-alt-color,
+      primary-bg-color: $bg-color,
+      primary-color: $color,
+      bg-color: $main-bg-color,
+      color: $main-text-color,
+      accent-bg-color: $accent-bg-color,
+      accent-color: $accent-text-color,
+      error-bg-color: $error-bg-color,
+      error-color: $error-text-color,
     )
   );
 }
 
-.main-block {
-  background-color: var(--bg-color);
-  color: var(--color);
-}
+@include declare-color-classes(
+  $bg-color,
+  $color,
+  $main-bg-color,
+  $main-text-color,
+  $accent-bg-color,
+  $accent-text-color,
+  $error-bg-color,
+  $error-text-color
+);
 
-.accent-block {
-  background-color: var(--accent-bg-color);
-  color: var(--accent-color);
-}
-
-.error-block {
-  background-color: var(--error-bg-color);
-  color: var(--error-color);
-}
+@include declare-block-classes(
+  $bg-color,
+  $color,
+  $main-bg-color,
+  $main-text-color,
+  $accent-bg-color,
+  $accent-text-color,
+  $error-bg-color,
+  $error-text-color
+);

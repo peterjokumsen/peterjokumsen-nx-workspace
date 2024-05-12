@@ -3,14 +3,10 @@
 @tailwind utilities;
 
 @import './variables';
+@import './mixins';
 
-body {
-  background-color: var(--primary-bg-color);
-}
-
-.primary-block {
-  background-color: var(--primary-bg-color);
-  color: var(--primary-color);
+.main-block {
+  @apply w-full;
 }
 
 .pj-header {
@@ -41,12 +37,8 @@ body {
   }
 }
 
-.main-block {
-  @apply w-full;
-}
-
 .pj-footer {
-  @apply mt-auto grid grid-cols-4 py-4 text-center;
+  @apply grid grid-cols-4 gap-2 p-4;
 }
 
 .pj-button {
