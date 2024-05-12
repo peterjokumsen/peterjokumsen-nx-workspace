@@ -43,14 +43,8 @@ describe('ThemeToggleComponent', () => {
   });
 
   describe('buttonLabel', () => {
-    it('should inform of switch to dark mode', () => {
-      expect(component.buttonLabel()).toEqual(expect.stringContaining('dark'));
-    });
-  });
-
-  describe('buttonLabel', () => {
     it('should return a label for the button', () => {
-      expect(component.buttonLabel()).toEqual('Switch to dark theme');
+      expect(component.buttonLabel()).toEqual('Switch to Dark mode');
     });
   });
 

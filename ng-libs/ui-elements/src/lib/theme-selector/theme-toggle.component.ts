@@ -5,12 +5,12 @@ import {
   inject,
   output,
 } from '@angular/core';
-import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { ThemeProviderService } from './services/theme-provider.service';
 import { Themes } from './themes.type';
+import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'pj-ui-theme-toggle',
@@ -18,15 +18,13 @@ import { Themes } from './themes.type';
   imports: [CommonModule, FaIconComponent],
   providers: [ThemeProviderService],
   template: `
-    <button (click)="toggleTheme()" [attr.aria-label]="buttonLabel()">
-      @switch (themeProvider.theme()) {
-        @case ('dark') {
-          <fa-icon [icon]="lightIcon"></fa-icon>
-        }
-        @case ('light') {
-          <fa-icon [icon]="darkIcon"></fa-icon>
-        }
-      }
+    <button
+      class="pj-button primary border-2"
+      (click)="toggleTheme()"
+      [attr.aria-label]="buttonLabel()"
+    >
+      <fa-icon [icon]="icon"></fa-icon>
+      {{ nextThemeLabel() }}
     </button>
   `,
   styles: ``,
@@ -35,16 +33,20 @@ import { Themes } from './themes.type';
 export class ThemeToggleComponent {
   themeProvider = inject(ThemeProviderService);
 
-  darkIcon = faMoon;
-  lightIcon = faSun;
+  icon = faCircleHalfStroke;
 
-  buttonLabel = computed(() => {
+  nextTheme = computed(() => {
     const currentTheme = this.themeProvider.theme();
     this.themeSelected.emit(currentTheme);
-
-    const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-    return `Switch to ${nextTheme} theme`;
+    return currentTheme === 'dark' ? 'light' : 'dark';
   });
+
+  nextThemeLabel = computed(() => {
+    const nextTheme = this.nextTheme();
+    return nextTheme === 'dark' ? 'Dark mode' : 'Light mode';
+  });
+
+  buttonLabel = computed(() => `Switch to ${this.nextThemeLabel()}`);
 
   themeSelected = output<Themes>();
 
