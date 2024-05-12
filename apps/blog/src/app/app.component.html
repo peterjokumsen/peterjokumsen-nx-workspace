@@ -37,10 +37,14 @@
   </div>
 </div>
 <footer class="pj-footer primary-block">
-  <p class="alt-text col-span-4 text-sm font-bold">
+  <div class="footer-top-left col-span-4 md:col-span-2">\</div>
+  <div class="footer-top-center col-span-4 md:col-span-1"></div>
+  <div class="footer-top-right col-span-4 flex justify-end md:col-span-1">
+    <pj-ui-theme-toggle
+      (themeSelected)="selectTheme($event)"
+    ></pj-ui-theme-toggle>
+  </div>
+  <p class="col-span-4 text-center text-sm font-bold">
     © 2024 Peter Jokumsen. All rights reserved.
   </p>
-  <pj-ui-theme-toggle
-    (themeSelected)="selectTheme($event)"
-  ></pj-ui-theme-toggle>
 </footer>
