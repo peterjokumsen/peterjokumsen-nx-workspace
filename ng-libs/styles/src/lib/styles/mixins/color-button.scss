@@ -1,0 +1,11 @@
+@mixin color-button($bg-color, $color) {
+  background-color: $bg-color;
+  border-color: $color;
+  color: $color;
+
+  &:hover {
+    background-color: $color;
+    border-color: $bg-color;
+    color: $bg-color;
+  }
+}

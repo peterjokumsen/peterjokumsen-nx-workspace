@@ -1,0 +1,13 @@
+@mixin set-colors-and-opacity($bg-color, $color) {
+  color: $color;
+  background-color: $bg-color;
+  border-color: $color;
+
+  &.bg-opacity-70 {
+    --pj-bg-opacity: 0.7;
+  }
+
+  &.bg-opacity-50 {
+    --pj-bg-opacity: 0.5;
+  }
+}
