@@ -42,12 +42,8 @@ import { Router } from '@angular/router';
       </div>
     </div>
     <div #aboutMe>
-      @defer (on viewport) {
+      @defer {
         <app-about-me></app-about-me>
-      } @placeholder {
-        <div class="flex min-h-screen items-center justify-center">
-          <div class="text-2xl">Loading...</div>
-        </div>
       }
     </div>
   `,
@@ -65,7 +61,7 @@ export class LandingComponent {
     if (destination === 'blog') {
       await this._router.navigate(['/blog']);
     } else {
-      this.aboutMe.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      this.aboutMe?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
     }
   }
 }
