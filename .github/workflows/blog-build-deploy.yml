@@ -205,9 +205,8 @@ jobs:
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-          urls: |
+          urls: | # all urls to report on
             ${{ needs.deploy_app.outputs.deployed_url }}
-            ${{ needs.deploy_app.outputs.deployed_url }}/about-me
             ${{ needs.deploy_app.outputs.deployed_url }}/blog
             ${{ needs.deploy_app.outputs.deployed_url }}/blog/latest
           configPath: ./.github/lighthouse/lighthousesrc.json
