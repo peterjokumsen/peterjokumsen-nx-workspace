@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
+  selector: 'app-about-me',
   standalone: true,
   imports: [CommonModule, FaIconComponent, ArticleComponent],
   template: ` <pj-ui-article [sections]="content"></pj-ui-article> `,
