@@ -16,10 +16,4 @@ export const appRoutes: Route[] = [
       ),
     data: { title: 'Blog' },
   },
-  {
-    path: 'about-me',
-    loadComponent: () =>
-      import('./pages/about-me.component').then((m) => m.AboutMeComponent),
-    data: { title: 'About Me' },
-  },
 ];
