@@ -55,6 +55,14 @@ describe('[blog] - AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should create nav elements', () => {
+    fixture.detectChanges();
+    expect(component.navElements).toEqual([
+      { route: '', title: 'Home' },
+      { route: 'blog', title: 'Blog' },
+    ]);
+  });
+
   describe('selectTheme', () => {
     describe('when window is available', () => {
       describe('and style element is not found', () => {
