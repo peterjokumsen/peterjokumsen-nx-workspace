@@ -1,0 +1,28 @@
+@import './set-colors';
+
+@mixin declare-block-classes(
+  $bg-color,
+  $color,
+  $main-bg-color,
+  $main-text-color,
+  $accent-bg-color,
+  $accent-text-color,
+  $error-bg-color,
+  $error-text-color
+) {
+  .primary-block {
+    @include set-colors($bg-color, $color);
+  }
+
+  .main-block {
+    @include set-colors($main-bg-color, $main-text-color);
+  }
+
+  .accent-block {
+    @include set-colors($accent-bg-color, $accent-text-color);
+  }
+
+  .error-block {
+    @include set-colors($error-bg-color, $error-text-color);
+  }
+}

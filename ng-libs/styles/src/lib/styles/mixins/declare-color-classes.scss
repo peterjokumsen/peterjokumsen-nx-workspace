@@ -1,0 +1,91 @@
+@import './set-colors-and-opacity';
+@import './color-button';
+
+@mixin declare-color-classes(
+  $bg-color,
+  $color,
+  $main-bg-color,
+  $main-text-color,
+  $accent-bg-color,
+  $accent-text-color,
+  $error-bg-color,
+  $error-text-color
+) {
+  body {
+    background-color: $bg-color;
+  }
+
+  .primary-colors {
+    --pj-bg-opacity: 1;
+
+    @include set-colors-and-opacity(
+      rgba(
+        red($bg-color),
+        green($bg-color),
+        blue($bg-color),
+        var(--pj-bg-opacity)
+      ),
+      $color
+    );
+  }
+
+  .main-colors {
+    --pj-bg-opacity: 1;
+
+    @include set-colors-and-opacity(
+      rgba(
+        red($main-bg-color),
+        green($main-bg-color),
+        blue($main-bg-color),
+        var(--pj-bg-opacity)
+      ),
+      $main-text-color
+    );
+  }
+
+  .accent-colors {
+    --pj-bg-opacity: 1;
+
+    @include set-colors-and-opacity(
+      rgba(
+        red($accent-bg-color),
+        green($accent-bg-color),
+        blue($accent-bg-color),
+        var(--pj-bg-opacity)
+      ),
+      $accent-text-color
+    );
+  }
+
+  .error-colors {
+    --pj-bg-opacity: 1;
+
+    @include set-colors-and-opacity(
+      rgba(
+        red($error-bg-color),
+        green($error-bg-color),
+        blue($error-bg-color),
+        var(--pj-bg-opacity)
+      ),
+      $error-text-color
+    );
+  }
+
+  .pj-button {
+    &.primary {
+      @include color-button($bg-color, $color);
+    }
+
+    &.main {
+      @include color-button($main-bg-color, $main-text-color);
+    }
+
+    &.accent {
+      @include color-button($accent-bg-color, $accent-text-color);
+    }
+
+    &.danger {
+      @include color-button($error-bg-color, $error-text-color);
+    }
+  }
+}
