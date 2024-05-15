@@ -5,6 +5,7 @@ import {
 } from '@peterjokumsen/ng-services';
 
 import { appRoutes } from './app.routes';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 
@@ -14,5 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(appRoutes),
     providePjLogger({ production: !isDevMode() }),
     providePjBrowserProviders(),
+    provideAnimations(),
   ],
 };
