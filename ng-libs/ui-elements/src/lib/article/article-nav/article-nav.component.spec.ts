@@ -73,6 +73,17 @@ describe('ArticleNavComponent', () => {
     });
   });
 
+  describe('when inViewId is set', () => {
+    it('should add back to top element', () => {
+      component?.inViewId.update(() => 'section-1');
+      expect(component?.navElements()).toEqual([
+        { id: '#', title: 'Back to top' },
+        { id: 'section-1', title: 'Section 1?' },
+        { id: 'section-2', title: 'Section 2!' },
+      ]);
+    });
+  });
+
   describe('onScroll', () => {
     let foundElement: HTMLElement;
     let elementRect: DOMRect;

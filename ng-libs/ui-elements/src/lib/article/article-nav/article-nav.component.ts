@@ -35,10 +35,17 @@ export class ArticleNavComponent {
   sections = input<ArticleNavSection[]>();
   inViewId = signal<string>('');
 
-  navElements: Signal<PjUiArticleNavElement[]> = computed(
-    () =>
-      this.sections()?.map((section) => this.mapToNavElement(section)) ?? [],
-  );
+  navElements: Signal<PjUiArticleNavElement[]> = computed(() => {
+    const elements =
+      this.sections()?.map((section) => this.mapToNavElement(section)) ?? [];
+    if (this.inViewId() !== '') {
+      elements.unshift({ id: '#', title: 'Back to top' });
+    } else if (elements?.[0]?.id === '#') {
+      elements.shift();
+    }
+
+    return elements;
+  });
   expandIcon = faMapLocationDot;
   navExpanded = false;
 
