@@ -43,10 +43,10 @@ type ArticleNavSection = Pick<PjUiArticleSection, 'title'>;
         animate(
           300,
           keyframes([
-            style({ offset: 0, transform: 'translateX(200%)', height: 0 }),
-            style({ offset: 0.25, transform: 'translateX(150%)', height: '*' }),
-            style({ offset: 0.5, transform: 'translateX(100%)' }),
-            style({ offset: 0.75, transform: 'translateX(50%)' }),
+            style({ offset: 0, transform: 'translateX(100%)', height: 0 }),
+            style({ offset: 0.25, transform: 'translateX(80%)', height: '*' }),
+            style({ offset: 0.5, transform: 'translateX(60%)' }),
+            style({ offset: 0.75, transform: 'translateX(20%)' }),
             style({ offset: 1, transform: 'translateX(0)' }),
           ]),
         ),
@@ -56,9 +56,9 @@ type ArticleNavSection = Pick<PjUiArticleSection, 'title'>;
           300,
           keyframes([
             style({ offset: 0, transform: 'translateX(0)', height: '*' }),
-            style({ offset: 0.25, transform: 'translateX(100%)' }),
-            style({ offset: 0.5, transform: 'translateX(200%)' }),
-            style({ offset: 0.75, height: '50%' }),
+            style({ offset: 0.25, transform: 'translateX(50%)' }),
+            style({ offset: 0.5, transform: 'translateX(75%)' }),
+            style({ offset: 0.75, transform: 'translateX(100%)', height: 0 }),
             style({ offset: 1, height: 0 }),
           ]),
         ),
