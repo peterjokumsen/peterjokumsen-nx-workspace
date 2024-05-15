@@ -36,7 +36,12 @@ export class ArticleComponent {
   sections = input<PjUiArticleSection[]>();
 
   navigateTo(navElement: PjUiArticleNavElement) {
-    // find elememt by id and scroll to it
+    if (navElement.id === '#') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // find element by id and scroll to it
     const element = document.getElementById(navElement.id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
