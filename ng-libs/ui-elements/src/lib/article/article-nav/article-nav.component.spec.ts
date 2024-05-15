@@ -79,13 +79,24 @@ describe('ArticleNavComponent', () => {
   });
 
   describe('when inViewId is set', () => {
-    it('should add back to top element', () => {
+    beforeEach(() => {
       component?.inViewId.update(() => 'section-1');
+    });
+
+    it('should add back to top element', () => {
       expect(component?.navElements()).toEqual([
         { id: '#', title: 'Back to top' },
         { id: 'section-1', title: 'Section 1?' },
         { id: 'section-2', title: 'Section 2!' },
       ]);
+    });
+
+    describe('and inViewId is cleared', () => {
+      it('should remove back to top element', () => {
+        expect(component?.navElements()[0].id).toBe('#');
+        component?.inViewId.update(() => '');
+        expect(component?.navElements()[0].id).not.toBe('#');
+      });
     });
   });
 
