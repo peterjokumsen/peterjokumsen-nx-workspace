@@ -48,7 +48,7 @@ export class ArticleNavComponent {
   @Output()
   navigateClick = new EventEmitter<PjUiArticleNavElement>();
 
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll')
   onScroll() {
     for (const nav of this.navElements()) {
       const element = document.getElementById(nav.id);
@@ -59,9 +59,11 @@ export class ArticleNavComponent {
           this.inViewId.update(() => nav.id);
         }
 
-        break;
+        return;
       }
     }
+
+    this.inViewId.update(() => '');
   }
 
   private mapToNavElement(section: ArticleNavSection): PjUiArticleNavElement {

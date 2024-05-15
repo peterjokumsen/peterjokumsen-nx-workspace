@@ -72,4 +72,48 @@ describe('ArticleNavComponent', () => {
       expect(container.navigatedSections).toEqual([section]);
     });
   });
+
+  describe('onScroll', () => {
+    let foundElement: HTMLElement;
+    let elementRect: DOMRect;
+
+    beforeEach(() => {
+      document.getElementById = jest
+        .fn()
+        .mockImplementation(() => foundElement);
+    });
+
+    it('should search for element by id', () => {
+      component?.onScroll();
+      expect(document.getElementById).toHaveBeenCalledWith('section-1');
+      expect(document.getElementById).toHaveBeenCalledWith('section-2');
+    });
+
+    describe('when element is found', () => {
+      beforeEach(() => {
+        foundElement = {
+          getBoundingClientRect: jest
+            .fn()
+            .mockImplementation(() => elementRect),
+        } as unknown as HTMLElement;
+      });
+
+      describe('and element is in view', () => {
+        it('should update inViewId', () => {
+          elementRect = { top: 0, height: 10 } as DOMRect;
+          component?.onScroll();
+          expect(component?.inViewId()).toBe('section-1');
+        });
+      });
+
+      describe('and all elements are below view', () => {
+        it('should clear inViewId', () => {
+          component?.inViewId.update(() => 'section-2');
+          elementRect = { top: 10, height: 10 } as DOMRect;
+          component?.onScroll();
+          expect(component?.inViewId()).toEqual('');
+        });
+      });
+    });
+  });
 });
