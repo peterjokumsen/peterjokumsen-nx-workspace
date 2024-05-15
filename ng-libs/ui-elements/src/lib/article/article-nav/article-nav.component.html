@@ -1,6 +1,6 @@
 <ng-template #navTemplate>
   <div
-    class="nav-elements sticky top-0 flex max-h-screen flex-col justify-around gap-2 overflow-y-auto p-2"
+    class="nav-elements sticky top-0 flex max-h-screen flex-col justify-around gap-2 overflow-y-auto overflow-x-clip p-2"
   >
     @for (nav of navElements(); track nav.id) {
       <a
@@ -8,6 +8,7 @@
         href="#"
         [ngClass]="{ active: nav.id === inViewId() }"
         (click)="navigateClicked($event, nav)"
+        [@inOutAnimation]="nav"
       >
         {{ nav.title }}
       </a>

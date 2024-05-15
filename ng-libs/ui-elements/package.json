@@ -2,6 +2,7 @@
   "name": "@peterjokumsen/ui-elements",
   "version": "0.0.1",
   "peerDependencies": {
+    "@angular/animations": "^17.2.0",
     "@angular/common": "^17.2.0",
     "@angular/core": "^17.2.0",
     "@angular/router": "^17.2.0",

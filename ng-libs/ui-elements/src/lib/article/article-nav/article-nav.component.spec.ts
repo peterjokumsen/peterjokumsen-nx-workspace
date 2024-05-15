@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PjUiArticleNavElement, PjUiArticleSection } from '../models';
 
 import { ArticleNavComponent } from './article-nav.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   template: `
@@ -40,7 +41,11 @@ describe('ArticleNavComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ArticleNavComponent, ArticleNavContainerComponent],
+      imports: [
+        ArticleNavComponent,
+        ArticleNavContainerComponent,
+        NoopAnimationsModule,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ArticleNavContainerComponent);
