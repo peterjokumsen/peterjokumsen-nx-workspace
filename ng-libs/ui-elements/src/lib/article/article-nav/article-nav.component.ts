@@ -13,6 +13,14 @@ import {
   signal,
 } from '@angular/core';
 import { PjUiArticleNavElement, PjUiArticleSection } from '../models';
+import {
+  animate,
+  keyframes,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
 import { ArticleNavService } from '../services';
 import { CommonModule } from '@angular/common';
@@ -28,6 +36,35 @@ type ArticleNavSection = Pick<PjUiArticleSection, 'title'>;
   templateUrl: './article-nav.component.html',
   styleUrl: './article-nav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('inOutAnimation', [
+      state('in', style({ transform: 'translateX(0)', height: '*' })),
+      transition(':enter', [
+        animate(
+          300,
+          keyframes([
+            style({ offset: 0, transform: 'translateX(200%)', height: 0 }),
+            style({ offset: 0.25, transform: 'translateX(150%)', height: '*' }),
+            style({ offset: 0.5, transform: 'translateX(100%)' }),
+            style({ offset: 0.75, transform: 'translateX(50%)' }),
+            style({ offset: 1, transform: 'translateX(0)' }),
+          ]),
+        ),
+      ]),
+      transition(':leave', [
+        animate(
+          300,
+          keyframes([
+            style({ offset: 0, transform: 'translateX(0)', height: '*' }),
+            style({ offset: 0.25, transform: 'translateX(100%)' }),
+            style({ offset: 0.5, transform: 'translateX(200%)' }),
+            style({ offset: 0.75, height: '50%' }),
+            style({ offset: 1, height: 0 }),
+          ]),
+        ),
+      ]),
+    ]),
+  ],
 })
 export class ArticleNavComponent {
   navSvc = inject(ArticleNavService);
