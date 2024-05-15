@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ArticleComponent } from '@peterjokumsen/ui-elements';
 import { BlogEntryComponent } from './blog-entry.component';
+import { MockComponent } from 'ng-mocks';
 
 describe('BlogEntryComponent', () => {
   let component: BlogEntryComponent;
@@ -9,7 +11,13 @@ describe('BlogEntryComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BlogEntryComponent],
-    }).compileComponents();
+    })
+      .overrideComponent(BlogEntryComponent, {
+        set: {
+          imports: [MockComponent(ArticleComponent)],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(BlogEntryComponent);
     component = fixture.componentInstance;
