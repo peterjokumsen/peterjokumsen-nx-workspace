@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { AboutMeComponent } from '../../components/about-me';
 import { ElementRef } from '@angular/core';
 import { LandingComponent } from './landing.component';
+import { MockComponent } from 'ng-mocks';
+import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
 import { Router } from '@angular/router';
 
 describe('LandingComponent', () => {
@@ -17,7 +20,16 @@ describe('LandingComponent', () => {
     await TestBed.configureTestingModule({
       imports: [LandingComponent],
       providers: [{ provide: Router, useValue: routerSpy }],
-    }).compileComponents();
+    })
+      .overrideComponent(LandingComponent, {
+        set: {
+          imports: [
+            MockComponent(AboutMeComponent),
+            MockComponent(PageIntroductionComponent),
+          ],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(LandingComponent);
     component = fixture.componentInstance;

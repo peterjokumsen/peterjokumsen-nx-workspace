@@ -5,6 +5,10 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
+import {
+  IntroductionCallToAction,
+  PageIntroductionComponent,
+} from '@peterjokumsen/ui-elements';
 
 import { AboutMeComponent } from '../../components/about-me';
 import { CommonModule } from '@angular/common';
@@ -12,48 +16,42 @@ import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AboutMeComponent],
+  imports: [CommonModule, AboutMeComponent, PageIntroductionComponent],
   template: `
-    <div class="background flex min-h-screen flex-col items-start">
-      <div
-        class="main-colors m-5 items-center rounded border-2 bg-opacity-50 p-12"
-      >
-        <div class="font-bold">
-          <h1 class="mb-16 justify-start text-3xl">👋 Hi there!</h1>
-          <p>Welcome to my blog!</p>
-          <p>This is a work in progress, feel free to look around!</p>
-          <div class="actions mt-8 flex flex-col gap-4">
-            <a
-              href="#"
-              class="pj-button primary"
-              (click)="navigateTo('blog', $event)"
-            >
-              Go to blog
-            </a>
-            <a
-              href="#"
-              class="pj-button main"
-              (click)="navigateTo('about-me', $event)"
-            >
-              More about me
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+    <pj-ui-page-introduction
+      [paragraphs]="introductionContent"
+      [actions]="introductionActions"
+    ></pj-ui-page-introduction>
+
     <div #aboutMe>
       @defer {
         <app-about-me></app-about-me>
       }
     </div>
   `,
-  styleUrl: 'landing.component.scss',
+  styles: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent {
   private _router = inject(Router);
 
   @ViewChild('aboutMe') aboutMe!: ElementRef;
+
+  introductionContent = [
+    'Welcome to my blog!',
+    'This is a work in progress, please feel free to look around.',
+  ];
+  introductionActions: IntroductionCallToAction[] = [
+    {
+      label: 'Go to blog',
+      onClick: (e) => this.navigateTo('blog', e),
+    },
+    {
+      label: 'More about me',
+      onClick: (e) => this.navigateTo('about-me', e),
+      type: 'main',
+    },
+  ];
 
   async navigateTo(destination: 'blog' | 'about-me', event: Event) {
     event.preventDefault();
