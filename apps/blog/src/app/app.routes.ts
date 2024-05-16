@@ -1,7 +1,6 @@
 import { Route } from '@angular/router';
 
 export const appRoutes: Route[] = [
-  { path: '', pathMatch: 'full', redirectTo: 'home' },
   {
     path: '',
     loadComponent: () =>
@@ -14,6 +13,19 @@ export const appRoutes: Route[] = [
       import('@peterjokumsen/blog-container').then(
         (m) => m.blogContainerRoutes,
       ),
-    data: { title: 'Blog' },
+    // data: { title: 'Blog' },
+  },
+  {
+    path: 'development-notes',
+    loadComponent: () =>
+      import('./pages/development-notes').then(
+        (m) => m.DevelopmentNotesComponent,
+      ),
+    data: { title: 'Development Notes' },
+  },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./pages/not-found').then((m) => m.NotFoundComponent),
   },
 ];

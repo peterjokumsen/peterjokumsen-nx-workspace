@@ -209,6 +209,8 @@ jobs:
             ${{ needs.deploy_app.outputs.deployed_url }}
             ${{ needs.deploy_app.outputs.deployed_url }}/blog
             ${{ needs.deploy_app.outputs.deployed_url }}/blog/latest
+            ${{ needs.deploy_app.outputs.deployed_url }}/development-notes
+            ${{ needs.deploy_app.outputs.deployed_url }}/random/url/that/does/not/exist
           configPath: ./.github/lighthouse/lighthousesrc.json
           uploadArtifacts: true
           temporaryPublicStorage: true
