@@ -5,7 +5,7 @@ export const appRoutes: Route[] = [
   {
     path: '',
     loadComponent: () =>
-      import('./pages/landing.component').then((m) => m.LandingComponent),
+      import('./pages/landing').then((m) => m.LandingComponent),
     data: { title: 'Home' },
   },
   {

@@ -6,7 +6,7 @@ import {
   inject,
 } from '@angular/core';
 
-import { AboutMeComponent } from './about-me.component';
+import { AboutMeComponent } from '../../components/about-me';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
