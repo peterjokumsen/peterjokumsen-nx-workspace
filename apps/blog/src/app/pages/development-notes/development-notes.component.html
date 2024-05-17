@@ -1,1 +1,17 @@
-<p>development-notes</p>
+<pj-ui-page-introduction
+  introductionTitle="Development Notes 📝"
+  [paragraphs]="[
+    'This page is a collection of notes and thoughts on the development of this application.',
+    'And an alternate approach to documentation on libraries in use.',
+    'Which I hope to then leverage into the proper blog posts, in future.'
+  ]"
+  [style]="{
+    url: '/assets/development_notes_background.webp',
+    position: 'right'
+  }"
+  actions="Check out notes"
+  (callToAction)="content.scrollIntoView({ behavior: 'smooth' })"
+></pj-ui-page-introduction>
+<div #content>
+  <pj-ui-article [sections]="sections"></pj-ui-article>
+</div>

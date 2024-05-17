@@ -1,6 +1,11 @@
+import {
+  ArticleComponent,
+  PageIntroductionComponent,
+} from '@peterjokumsen/ui-elements';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DevelopmentNotesComponent } from './development-notes.component';
+import { MockComponent } from 'ng-mocks';
 
 describe('DevelopmentNotesComponent', () => {
   let component: DevelopmentNotesComponent;
@@ -9,7 +14,16 @@ describe('DevelopmentNotesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DevelopmentNotesComponent],
-    }).compileComponents();
+    })
+      .overrideComponent(DevelopmentNotesComponent, {
+        set: {
+          imports: [
+            MockComponent(PageIntroductionComponent),
+            MockComponent(ArticleComponent),
+          ],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(DevelopmentNotesComponent);
     component = fixture.componentInstance;
