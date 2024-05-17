@@ -41,34 +41,22 @@ describe('LandingComponent', () => {
   });
 
   describe('navigateTo', () => {
-    let eventSpy: jest.Mocked<Event>;
-
-    beforeEach(() => {
-      eventSpy = { preventDefault: jest.fn() } as unknown as jest.Mocked<Event>;
-    });
-
-    it('should prevent the default event', async () => {
-      await component.navigateTo('blog', eventSpy);
-
-      expect(eventSpy.preventDefault).toHaveBeenCalled();
-    });
-
-    describe('when destination is "blog"', () => {
+    describe('when action id is "blog"', () => {
       it('should navigate to the blog page', async () => {
-        await component.navigateTo('blog', eventSpy);
+        await component.navigateTo({ id: 'blog', label: '' });
 
         expect(routerSpy.navigate).toHaveBeenCalledWith(['/blog']);
       });
     });
 
-    describe('when destination is "about-me"', () => {
-      it('should scroll to about-me', async () => {
+    describe('when action id is "about-me"', () => {
+      it('should scroll to "aboutMe"', async () => {
         const scrollSpy = jest.fn();
         component.aboutMe = {
           nativeElement: { scrollIntoView: scrollSpy },
         } as unknown as ElementRef;
 
-        await component.navigateTo('about-me', eventSpy);
+        await component.navigateTo({ id: 'about-me', label: '' });
 
         expect(scrollSpy).toHaveBeenCalledWith({ behavior: 'smooth' });
       });
