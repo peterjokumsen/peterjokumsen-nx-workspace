@@ -18,7 +18,7 @@ import { Router } from '@angular/router';
   imports: [CommonModule, PageIntroductionComponent],
   template: `
     <pj-ui-page-introduction
-      title="🫣 Oops!"
+      introductionTitle="🫣 Oops!"
       [paragraphs]="paragraphs"
       [style]="backgroundStyle"
       [actions]="[{ label: 'Go home' }]"
