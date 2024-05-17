@@ -3,6 +3,7 @@ import {
   Component,
   computed,
   input,
+  output,
 } from '@angular/core';
 import {
   IntroductionBackgroundStyle,
@@ -33,7 +34,7 @@ import { CommonModule } from '@angular/common';
               <a
                 href="#"
                 class="pj-button {{ action.type || 'primary' }} text-center"
-                (click)="action.onClick($event)"
+                (click)="onClick($event, action)"
               >
                 {{ action.label }}
               </a>
@@ -57,9 +58,9 @@ export class PageIntroductionComponent {
   title = input('👋 Hi there!');
   style = input<IntroductionBackgroundStyle | undefined>({});
   paragraphs = input<string[]>([]);
-  actions = input<
-    IntroductionCallToAction | IntroductionCallToAction[] | undefined
-  >();
+  actions = input<IntroductionCallToAction[] | undefined>();
+
+  callToAction = output<IntroductionCallToAction>();
 
   backgroundStyle = computed(() => {
     const style = this.style();
@@ -92,4 +93,9 @@ export class PageIntroductionComponent {
 
     return Array.isArray(actions) ? actions : [actions];
   });
+
+  onClick(event: Event, action: IntroductionCallToAction) {
+    event.preventDefault();
+    this.callToAction.emit(action);
+  }
 }

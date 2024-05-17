@@ -1,5 +1,5 @@
 export interface IntroductionCallToAction {
+  id?: string;
   label: string;
-  onClick: (e: Event) => void;
   type?: 'primary' | 'main' | 'accent' | 'danger';
 }
