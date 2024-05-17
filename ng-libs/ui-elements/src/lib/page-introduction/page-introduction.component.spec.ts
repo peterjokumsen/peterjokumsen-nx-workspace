@@ -1,8 +1,11 @@
 import { Component, ViewChild } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  IntroductionBackgroundStyle,
+  IntroductionCallToAction,
+} from './models';
 
-import { IntroductionCallToAction } from './models';
-import { PageIntroductionComponent } from './page-introduction.component';
+import { PageIntroductionComponent } from './';
 
 @Component({
   template: `
@@ -10,6 +13,7 @@ import { PageIntroductionComponent } from './page-introduction.component';
       [title]="title"
       [paragraphs]="paragraphs"
       [actions]="actions"
+      [style]="style"
     ></pj-ui-page-introduction>
   `,
 })
@@ -17,6 +21,7 @@ class PageIntroductionComponentTestHostComponent {
   title = 'Title';
   paragraphs = ['Hello'];
   actions: IntroductionCallToAction | IntroductionCallToAction[] | undefined;
+  style: IntroductionBackgroundStyle | undefined;
 
   @ViewChild(PageIntroductionComponent)
   pageIntroductionComponent!: PageIntroductionComponent;
@@ -25,6 +30,13 @@ class PageIntroductionComponentTestHostComponent {
 describe('PageIntroductionComponent', () => {
   let component: PageIntroductionComponent;
   let fixture: ComponentFixture<PageIntroductionComponent>;
+
+  const defaultStyle: IntroductionBackgroundStyle = {
+    url: '/assets/intro_background.webp',
+    size: 'cover',
+    repeat: 'no-repeat',
+    position: 'top',
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -56,6 +68,25 @@ describe('PageIntroductionComponent', () => {
   describe('actions', () => {
     it('should default to undefined', () => {
       expect(component.actions()).toBeUndefined();
+    });
+  });
+
+  describe('styles', () => {
+    it('should default to expected', () => {
+      expect(component.style()).toEqual({});
+    });
+  });
+
+  describe('backgroundStyle', () => {
+    it('should default to original default', () => {
+      expect(component.backgroundStyle()).toEqual(
+        [
+          `background-image:url("${defaultStyle.url}")`,
+          `background-size:${defaultStyle.size}`,
+          `background-repeat:${defaultStyle.repeat}`,
+          `background-position:${defaultStyle.position}`,
+        ].join(';'),
+      );
     });
   });
 
@@ -178,6 +209,71 @@ describe('PageIntroductionComponent', () => {
           });
         });
       });
+    });
+
+    describe('and style', () => {
+      describe('is undefined', () => {
+        it('should have backgroundStyle as empty string', () => {
+          expect(
+            hostComponent.pageIntroductionComponent.backgroundStyle(),
+          ).toEqual('');
+        });
+      });
+
+      const customStyle: IntroductionBackgroundStyle = {
+        url: 'test-url',
+        size: 'contain',
+        repeat: 'repeat',
+        position: 'bottom',
+      };
+
+      describe('when style is set', () => {
+        it('should compute expected for "backgroundStyle"', () => {
+          hostComponent.style = {
+            ...customStyle,
+          };
+          hostFixture.detectChanges();
+          expect(
+            hostComponent.pageIntroductionComponent.backgroundStyle(),
+          ).toEqual(
+            [
+              'background-image:url("test-url")',
+              'background-size:contain',
+              'background-repeat:repeat',
+              'background-position:bottom',
+            ].join(';'),
+          );
+        });
+      });
+
+      describe.each(
+        Object.entries(customStyle) as Array<
+          [keyof IntroductionBackgroundStyle, string]
+        >,
+      )(
+        'has "%s" property defined',
+        (key: keyof IntroductionBackgroundStyle, value: string) => {
+          it(`should use value "${value}" with defaults`, () => {
+            hostComponent.style = { [key]: value };
+            hostFixture.detectChanges();
+
+            const expectedValues = {
+              ...defaultStyle,
+              [key]: value,
+            };
+            expect(
+              hostComponent.pageIntroductionComponent.backgroundStyle(),
+            ).toEqual(
+              [
+                `background-image:url("${expectedValues.url}")`,
+                `background-size:${expectedValues.size}`,
+                `background-repeat:${expectedValues.repeat}`,
+                `background-position:${expectedValues.position}`,
+              ].join(';'),
+            );
+          });
+        },
+      );
     });
   });
 });
