@@ -20,7 +20,7 @@ import { PageIntroductionComponent } from './';
 class PageIntroductionComponentTestHostComponent {
   title = 'Title';
   paragraphs = ['Hello'];
-  actions: IntroductionCallToAction[] | undefined;
+  actions: string | IntroductionCallToAction[] = [];
   style: IntroductionBackgroundStyle | undefined;
 
   @ViewChild(PageIntroductionComponent)
@@ -137,15 +137,17 @@ describe('PageIntroductionComponent', () => {
     });
 
     describe('and actions', () => {
+      const actionsSelector = '.actions';
+
       describe('is undefined', () => {
         it('should not render actions', () => {
           const actions =
-            hostFixture.nativeElement.querySelectorAll('.actions');
+            hostFixture.nativeElement.querySelectorAll(actionsSelector);
           expect(actions.length).toEqual(0);
         });
       });
 
-      describe('is set', () => {
+      describe('is set as array', () => {
         let actionAnchors: HTMLAnchorElement[];
 
         beforeEach(() => {
@@ -155,7 +157,7 @@ describe('PageIntroductionComponent', () => {
           ];
           hostFixture.detectChanges();
           const [actionElement] =
-            hostFixture.nativeElement.querySelectorAll('.actions');
+            hostFixture.nativeElement.querySelectorAll(actionsSelector);
           actionAnchors = actionElement?.querySelectorAll('a');
         });
 
@@ -185,6 +187,26 @@ describe('PageIntroductionComponent', () => {
           });
         });
       });
+
+      describe('is set as string', () => {
+        let actionAnchor: HTMLAnchorElement;
+
+        beforeEach(() => {
+          hostComponent.actions = 'Test';
+          hostFixture.detectChanges();
+          const [actionsElement] =
+            hostFixture.nativeElement.querySelectorAll(actionsSelector);
+          actionAnchor = actionsElement?.querySelector('a');
+        });
+
+        it('should render action', () => {
+          expect(actionAnchor).toBeDefined();
+        });
+
+        it('should use string as action label', () => {
+          expect(actionAnchor.textContent).toContain('Test');
+        });
+      });
     });
 
     describe('and style', () => {
@@ -203,7 +225,7 @@ describe('PageIntroductionComponent', () => {
         position: 'bottom',
       };
 
-      describe('when style is set', () => {
+      describe('is set', () => {
         it('should compute expected for "backgroundStyle"', () => {
           hostComponent.style = {
             ...customStyle,
@@ -220,36 +242,36 @@ describe('PageIntroductionComponent', () => {
             ].join(';'),
           );
         });
+
+        describe.each(
+          Object.entries(customStyle) as Array<
+            [keyof IntroductionBackgroundStyle, string]
+          >,
+        )(
+          'has "%s" property defined',
+          (key: keyof IntroductionBackgroundStyle, value: string) => {
+            it(`should use value "${value}" with defaults`, () => {
+              hostComponent.style = { [key]: value };
+              hostFixture.detectChanges();
+
+              const expectedValues = {
+                ...defaultStyle,
+                [key]: value,
+              };
+              expect(
+                hostComponent.pageIntroductionComponent.backgroundStyle(),
+              ).toEqual(
+                [
+                  `background-image:url("${expectedValues.url}")`,
+                  `background-size:${expectedValues.size}`,
+                  `background-repeat:${expectedValues.repeat}`,
+                  `background-position:${expectedValues.position}`,
+                ].join(';'),
+              );
+            });
+          },
+        );
       });
-
-      describe.each(
-        Object.entries(customStyle) as Array<
-          [keyof IntroductionBackgroundStyle, string]
-        >,
-      )(
-        'has "%s" property defined',
-        (key: keyof IntroductionBackgroundStyle, value: string) => {
-          it(`should use value "${value}" with defaults`, () => {
-            hostComponent.style = { [key]: value };
-            hostFixture.detectChanges();
-
-            const expectedValues = {
-              ...defaultStyle,
-              [key]: value,
-            };
-            expect(
-              hostComponent.pageIntroductionComponent.backgroundStyle(),
-            ).toEqual(
-              [
-                `background-image:url("${expectedValues.url}")`,
-                `background-size:${expectedValues.size}`,
-                `background-repeat:${expectedValues.repeat}`,
-                `background-position:${expectedValues.position}`,
-              ].join(';'),
-            );
-          });
-        },
-      );
     });
   });
 });
