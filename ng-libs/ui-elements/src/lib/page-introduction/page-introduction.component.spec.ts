@@ -20,7 +20,7 @@ import { PageIntroductionComponent } from './';
 class PageIntroductionComponentTestHostComponent {
   title = 'Title';
   paragraphs = ['Hello'];
-  actions: IntroductionCallToAction | IntroductionCallToAction[] | undefined;
+  actions: IntroductionCallToAction[] | undefined;
   style: IntroductionBackgroundStyle | undefined;
 
   @ViewChild(PageIntroductionComponent)
@@ -145,67 +145,43 @@ describe('PageIntroductionComponent', () => {
         });
       });
 
-      describe('has', () => {
-        const action: IntroductionCallToAction = {
-          label: 'Go to blog',
-          onClick: jest.fn(),
-        };
+      describe('is set', () => {
+        let actionAnchors: HTMLAnchorElement[];
 
-        describe('single action', () => {
-          let actionAnchor: HTMLAnchorElement;
-
-          beforeEach(() => {
-            hostComponent.actions = action;
-            hostFixture.detectChanges();
-            const actions =
-              hostFixture.nativeElement.querySelectorAll('.actions');
-            const [actionElement] = actions;
-            actionAnchor = actionElement?.querySelector('a');
-          });
-
-          it('should render action as anchor', () => {
-            expect(actionAnchor).toBeTruthy();
-          });
-
-          it('should use label in content', () => {
-            expect(actionAnchor.textContent).toContain(action.label);
-          });
-
-          it('should use action onClick when clicked', () => {
-            actionAnchor.click();
-            expect(action.onClick).toHaveBeenCalledWith(expect.any(MouseEvent));
-          });
-
-          it('should default type to "primary"', () => {
-            expect(actionAnchor.classList).toContain('pj-button');
-            expect(actionAnchor.classList).toContain('primary');
-          });
+        beforeEach(() => {
+          hostComponent.actions = [
+            { label: 'First action' },
+            { label: 'Second action', type: 'main' },
+          ];
+          hostFixture.detectChanges();
+          const [actionElement] =
+            hostFixture.nativeElement.querySelectorAll('.actions');
+          actionAnchors = actionElement?.querySelectorAll('a');
         });
 
-        describe('multiple actions', () => {
-          let actionAnchors: HTMLAnchorElement[];
+        it('should render actions', () => {
+          expect(actionAnchors).toBeDefined();
+          expect(actionAnchors.length).toEqual(2);
+        });
 
-          beforeEach(() => {
-            hostComponent.actions = [
-              action,
-              { label: 'Second action', type: 'main', onClick: action.onClick },
-            ];
-            hostFixture.detectChanges();
-            const actions =
-              hostFixture.nativeElement.querySelectorAll('.actions');
-            expect(actions.length).toEqual(1);
-            const [actionElement] = actions;
-            actionAnchors = actionElement.querySelectorAll('a');
-          });
+        it('should use default action type for styling', () => {
+          expect(actionAnchors[0].textContent).toContain('First action');
+          expect(actionAnchors[0].classList).toContain('primary');
+        });
 
-          it('should render actions', () => {
-            expect(actionAnchors.length).toEqual(2);
-            expect(actionAnchors[0].textContent).toContain('Go to blog');
-            expect(actionAnchors[1].textContent).toContain('Second action');
-          });
+        it('should use action type for styling', () => {
+          expect(actionAnchors[1].textContent).toContain('Second action');
+          expect(actionAnchors[1].classList).toContain('main');
+        });
 
-          it('should use action type for styling', () => {
-            expect(actionAnchors[1].classList).toContain('main');
+        describe('when clicked', () => {
+          it('should emit action', () => {
+            const spy = jest.spyOn(
+              hostComponent.pageIntroductionComponent.callToAction,
+              'emit',
+            );
+            actionAnchors[0].click();
+            expect(spy).toHaveBeenCalledWith({ label: 'First action' });
           });
         });
       });
