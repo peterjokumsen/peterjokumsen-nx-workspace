@@ -10,7 +10,7 @@ import { PageIntroductionComponent } from './';
 @Component({
   template: `
     <pj-ui-page-introduction
-      [title]="title"
+      [introductionTitle]="introductionTitle"
       [paragraphs]="paragraphs"
       [actions]="actions"
       [style]="style"
@@ -20,7 +20,7 @@ import { PageIntroductionComponent } from './';
   `,
 })
 class PageIntroductionComponentTestHostComponent {
-  title = 'Title';
+  introductionTitle = 'Title';
   paragraphs = ['Hello'];
   actions: string | IntroductionCallToAction[] = [];
   style: IntroductionBackgroundStyle | undefined;
@@ -55,9 +55,9 @@ describe('PageIntroductionComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('title', () => {
+  describe('introductionTitle', () => {
     it('should have a default value', () => {
-      expect(component.title()).toEqual('👋 Hi there!');
+      expect(component.introductionTitle()).toEqual('👋 Hi there!');
     });
   });
 
@@ -116,11 +116,11 @@ describe('PageIntroductionComponent', () => {
       expect(extraContent).toBeTruthy();
     });
 
-    describe('and title is set', () => {
-      it('should have title', () => {
-        expect(hostComponent.pageIntroductionComponent.title()).toEqual(
-          'Title',
-        );
+    describe('and introductionTitle is set', () => {
+      it('should have introductionTitle', () => {
+        expect(
+          hostComponent.pageIntroductionComponent.introductionTitle(),
+        ).toEqual('Title');
       });
     });
 
