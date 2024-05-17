@@ -14,7 +14,9 @@ import { PageIntroductionComponent } from './';
       [paragraphs]="paragraphs"
       [actions]="actions"
       [style]="style"
-    ></pj-ui-page-introduction>
+    >
+      <p class="extra-content">Custom paragraph</p>
+    </pj-ui-page-introduction>
   `,
 })
 class PageIntroductionComponentTestHostComponent {
@@ -107,6 +109,13 @@ describe('PageIntroductionComponent', () => {
       expect(hostComponent?.pageIntroductionComponent).toBeTruthy();
     });
 
+    it('should render extra content', () => {
+      const extraContent = hostFixture.nativeElement.querySelector(
+        'pj-ui-page-introduction .extra-content',
+      );
+      expect(extraContent).toBeTruthy();
+    });
+
     describe('and title is set', () => {
       it('should have title', () => {
         expect(hostComponent.pageIntroductionComponent.title()).toEqual(
@@ -129,10 +138,12 @@ describe('PageIntroductionComponent', () => {
       });
 
       it('should render content as paragraph elements', () => {
-        const paragraphs = hostFixture.nativeElement.querySelectorAll('p');
+        const paragraphs = hostFixture.nativeElement.querySelectorAll(
+          '.introduction-content',
+        );
         expect(paragraphs.length).toEqual(2);
-        expect(paragraphs[0].textContent).toEqual('Hello');
-        expect(paragraphs[1].textContent).toEqual('World');
+        expect(paragraphs[0].textContent).toContain('Hello');
+        expect(paragraphs[1].textContent).toContain('World');
       });
     });
 

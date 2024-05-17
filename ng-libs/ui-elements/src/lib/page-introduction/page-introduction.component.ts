@@ -26,8 +26,9 @@ import { CommonModule } from '@angular/common';
       >
         <h1 class="mb-8 justify-start text-3xl font-bold">{{ title() }}</h1>
         @for (paragraph of paragraphs(); track paragraph) {
-          <p class="mb-6 text-xl">{{ paragraph }}</p>
+          <p class="introduction-content mb-6 text-xl">{{ paragraph }}</p>
         }
+        <ng-content />
         @if (callToActions().length > 0) {
           <div class="actions mt-8 flex flex-col gap-4">
             @for (action of callToActions(); track action.label) {
