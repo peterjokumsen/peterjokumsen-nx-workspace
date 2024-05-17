@@ -41,11 +41,11 @@ describe('LandingComponent', () => {
   });
 
   describe('navigateTo', () => {
-    describe('when action id is "blog"', () => {
-      it('should navigate to the blog page', async () => {
-        await component.navigateTo({ id: 'blog', label: '' });
+    describe('when action id is "development-notes"', () => {
+      it('should navigate to the development-notes page', async () => {
+        await component.navigateTo({ id: 'development-notes', label: '' });
 
-        expect(routerSpy.navigate).toHaveBeenCalledWith(['/blog']);
+        expect(routerSpy.navigate).toHaveBeenCalledWith(['/development-notes']);
       });
     });
 
