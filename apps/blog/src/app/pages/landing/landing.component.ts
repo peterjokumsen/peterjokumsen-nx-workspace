@@ -44,8 +44,8 @@ export class LandingComponent {
   ];
   introductionActions: IntroductionCallToAction[] = [
     {
-      id: 'blog',
-      label: 'Go to blog',
+      id: 'development-notes',
+      label: 'Peruse notes',
     },
     {
       id: 'about-me',
@@ -55,8 +55,8 @@ export class LandingComponent {
   ];
 
   async navigateTo(action: IntroductionCallToAction) {
-    if (action.id === 'blog') {
-      await this._router.navigate(['/blog']);
+    if (action.id === 'development-notes') {
+      await this._router.navigate(['/development-notes']);
     } else {
       this.aboutMe?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
     }
