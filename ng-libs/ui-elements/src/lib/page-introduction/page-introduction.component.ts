@@ -58,7 +58,7 @@ export class PageIntroductionComponent {
   title = input('👋 Hi there!');
   style = input<IntroductionBackgroundStyle | undefined>({});
   paragraphs = input<string[]>([]);
-  actions = input<IntroductionCallToAction[] | undefined>();
+  actions = input<string | IntroductionCallToAction[]>();
 
   callToAction = output<IntroductionCallToAction>();
 
@@ -89,6 +89,8 @@ export class PageIntroductionComponent {
     const actions = this.actions();
     if (!actions) {
       return [];
+    } else if (typeof actions === 'string') {
+      return [{ label: actions }];
     }
 
     return Array.isArray(actions) ? actions : [actions];
