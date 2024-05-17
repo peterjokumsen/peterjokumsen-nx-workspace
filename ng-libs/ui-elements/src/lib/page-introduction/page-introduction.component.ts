@@ -24,7 +24,9 @@ import { CommonModule } from '@angular/common';
       <div
         class="main-colors m-5 items-center rounded border-2 bg-opacity-50 p-12"
       >
-        <h1 class="mb-8 justify-start text-3xl font-bold">{{ title() }}</h1>
+        <h1 class="mb-8 justify-start text-3xl font-bold">
+          {{ introductionTitle() }}
+        </h1>
         @for (paragraph of paragraphs(); track paragraph) {
           <p class="introduction-content mb-6 text-xl">{{ paragraph }}</p>
         }
@@ -56,7 +58,7 @@ export class PageIntroductionComponent {
     position: 'top',
   };
 
-  title = input('👋 Hi there!');
+  introductionTitle = input('👋 Hi there!');
   style = input<IntroductionBackgroundStyle | undefined>({});
   paragraphs = input<string[]>([]);
   actions = input<string | IntroductionCallToAction[]>();
