@@ -4,9 +4,12 @@ import {
   computed,
   input,
 } from '@angular/core';
+import {
+  IntroductionBackgroundStyle,
+  IntroductionCallToAction,
+} from './models';
 
 import { CommonModule } from '@angular/common';
-import { IntroductionCallToAction } from './models';
 
 @Component({
   selector: 'pj-ui-page-introduction',
@@ -14,7 +17,7 @@ import { IntroductionCallToAction } from './models';
   imports: [CommonModule],
   template: `
     <div
-      class="background flex min-h-screen flex-col items-start"
+      class="flex min-h-screen flex-col items-start"
       [attr.style]="backgroundStyle()"
     >
       <div
@@ -40,24 +43,47 @@ import { IntroductionCallToAction } from './models';
       </div>
     </div>
   `,
-  styles: `
-    .background {
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: top;
-    }
-  `,
+  styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageIntroductionComponent {
-  title = input('👋 Hi there!');
-  backgroundUrl = input('/assets/pug_1280.webp');
-  paragraphs = input<string[]>([]);
-  actions = input<IntroductionCallToAction | IntroductionCallToAction[]>();
+  private readonly _defaultStyle: IntroductionBackgroundStyle = {
+    url: '/assets/intro_background.webp',
+    size: 'cover',
+    repeat: 'no-repeat',
+    position: 'top',
+  };
 
-  backgroundStyle = computed(
-    () => `background-image: url('${this.backgroundUrl()}')`,
-  );
+  title = input('👋 Hi there!');
+  style = input<IntroductionBackgroundStyle | undefined>({});
+  paragraphs = input<string[]>([]);
+  actions = input<
+    IntroductionCallToAction | IntroductionCallToAction[] | undefined
+  >();
+
+  backgroundStyle = computed(() => {
+    const style = this.style();
+    if (!style) {
+      return '';
+    }
+
+    const styleStrings = Object.entries(this._defaultStyle).reduce(
+      (acc: string[], [key, defaultValue]) => {
+        let styleKey: string = key;
+        let value: string =
+          style[key as keyof IntroductionBackgroundStyle] ?? defaultValue ?? '';
+        if (key === 'url') {
+          value = `url("${style.url || value}")`;
+          styleKey = 'image';
+        }
+
+        acc.push(`background-${styleKey}:${value}`);
+        return acc;
+      },
+      [],
+    );
+    return styleStrings.join(';');
+  });
   callToActions = computed(() => {
     const actions = this.actions();
     if (!actions) {
