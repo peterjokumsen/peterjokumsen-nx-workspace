@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
     <pj-ui-page-introduction
       [paragraphs]="introductionContent"
       [actions]="introductionActions"
+      (callToAction)="navigateTo($event)"
     ></pj-ui-page-introduction>
 
     <div #aboutMe>
@@ -43,20 +44,18 @@ export class LandingComponent {
   ];
   introductionActions: IntroductionCallToAction[] = [
     {
+      id: 'blog',
       label: 'Go to blog',
-      onClick: (e) => this.navigateTo('blog', e),
     },
     {
+      id: 'about-me',
       label: 'More about me',
-      onClick: (e) => this.navigateTo('about-me', e),
       type: 'main',
     },
   ];
 
-  async navigateTo(destination: 'blog' | 'about-me', event: Event) {
-    event.preventDefault();
-
-    if (destination === 'blog') {
+  async navigateTo(action: IntroductionCallToAction) {
+    if (action.id === 'blog') {
       await this._router.navigate(['/blog']);
     } else {
       this.aboutMe?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
