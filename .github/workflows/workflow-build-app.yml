@@ -20,10 +20,22 @@ jobs:
         with:
           nx-cache-key: 'nx-build-${{ inputs.project_names }}'
 
+      - name: 'Set configuration'
+        id: set-configuration
+        run: |
+          echo "Setting up configuration for build step"
+          build_configuration="production"
+          branch_name="${{ github.ref }}"
+          if [ $branch_name != 'refs/main' ]; then
+            build_configuration="staging"
+          fi
+          echo "$build_configuration is the configuration for branch $branch_name"
+          echo "build_configuration=$build_configuration" >> $GITHUB_OUTPUT
+
       - name: 'Build app(s) 🏗️'
         run: |
-          echo "running: npx nx run-many -t build --projects=${{ inputs.project_names }}"
-          npx nx run-many -t build --projects=${{ inputs.project_names }}
+          echo "running: npx nx run-many -t build --projects=${{ inputs.project_names }} --configuration=${{ steps.set-configuration.outputs.build_configuration }}"
+          npx nx run-many -t build --projects=${{ inputs.project_names }} --configuration=${{ steps.set-configuration.outputs.build_configuration }}
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
