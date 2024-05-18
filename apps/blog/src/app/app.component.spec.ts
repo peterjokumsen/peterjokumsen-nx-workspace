@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { MockComponent } from 'ng-mocks';
 import { PjBrowserProviders } from '@peterjokumsen/ng-services';
 
-describe('[blog] - AppComponent', () => {
+describe(`[blog] - ${AppComponent.name}`, () => {
   let fixture: ComponentFixture<AppComponent>;
   let component: AppComponent;
 
