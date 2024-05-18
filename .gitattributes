@@ -28,7 +28,7 @@
 *.csv      text eol=crlf
 *.tab      text
 *.tsv      text
-*.txt      text
+*.txt      text eol=lf
 *.sql      text
 *.epub     diff=astextplain
 
