@@ -27,22 +27,14 @@ jobs:
         uses: ./.github/actions/install-deps
 
       - name: 'Get base 📦'
-        id: get_base
-        run: |
-          base="origin/main"
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            base="HEAD~1"
-          fi
-
-          echo "using base: $base"
-          echo "base=$base" >> $GITHUB_OUTPUT
+        uses: nrwl/nx-set-shas@v4
 
       - name: 'Check affected 🔍'
         id: check_affected
         run: |
           base="${{ steps.get_base.outputs.base }}"
-          echo "running: npx nx show projects --affected --base=$base --plain"
-          affected=$(npx nx show projects --affected --base=$base --plain)
+          echo "running: npx nx show projects --affected"
+          affected=$(npx nx show projects --affected --plain)
           has_affected="No"
           if [[ "${affected}" == *"${{ inputs.project_name }}"* ]]; then
             has_affected="Yes"
@@ -59,9 +51,8 @@ jobs:
           steps.check_affected.outputs.has_affected == 'Yes' &&
           github.event.action != 'closed'
         run: |
-          base="${{ steps.get_base.outputs.base }}"
-          echo "running: npx nx affected -t test -c ci --base=$base"
-          npx nx affected -t test -c ci --base=$base
+          echo "running: npx nx affected -t test -c ci"
+          npx nx affected -t test -c ci
         env:
           NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
 
