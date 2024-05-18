@@ -32,7 +32,6 @@ jobs:
       - name: 'Check affected 🔍'
         id: check_affected
         run: |
-          base="${{ steps.get_base.outputs.base }}"
           echo "running: npx nx show projects --affected"
           affected=$(npx nx show projects --affected --plain)
           has_affected="No"
