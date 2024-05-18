@@ -59,6 +59,35 @@
               "maximumError": "4kb"
             }
           ],
+          "assets": [
+            {
+              "glob": "robots\\.txt",
+              "input": "apps/blog/src/robots/production",
+              "output": "/"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "staging": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "assets": [
+            {
+              "glob": "robots\\.txt",
+              "input": "apps/blog/src/robots/staging",
+              "output": "/"
+            }
+          ],
           "outputHashing": "all"
         },
         "development": {
