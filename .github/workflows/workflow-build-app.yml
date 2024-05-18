@@ -26,7 +26,7 @@ jobs:
           echo "Setting up configuration for build step"
           build_configuration="production"
           branch_name="${{ github.ref }}"
-          if [ $branch_name != 'refs/main' ]; then
+          if [ $branch_name != 'refs/heads/main' ]; then
             build_configuration="staging"
           fi
           echo "$build_configuration is the configuration for branch $branch_name"
