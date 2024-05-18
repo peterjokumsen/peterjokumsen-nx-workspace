@@ -23,6 +23,11 @@
             "glob": "staticwebapp\\.config\\.json",
             "input": "apps/blog",
             "output": "/"
+          },
+          {
+            "glob": "robots\\.txt",
+            "input": "apps/blog/src/robots/production",
+            "output": "/"
           }
         ],
         "styles": [
@@ -59,13 +64,6 @@
               "maximumError": "4kb"
             }
           ],
-          "assets": [
-            {
-              "glob": "robots\\.txt",
-              "input": "apps/blog/src/robots/production",
-              "output": "/"
-            }
-          ],
           "outputHashing": "all"
         },
         "staging": {
@@ -82,6 +80,13 @@
             }
           ],
           "assets": [
+            "apps/blog/src/favicon.ico",
+            "apps/blog/src/assets",
+            {
+              "glob": "staticwebapp\\.config\\.json",
+              "input": "apps/blog",
+              "output": "/"
+            },
             {
               "glob": "robots\\.txt",
               "input": "apps/blog/src/robots/staging",
