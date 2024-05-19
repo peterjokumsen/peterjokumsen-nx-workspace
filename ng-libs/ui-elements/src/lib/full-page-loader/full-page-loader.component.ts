@@ -9,18 +9,22 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
   standalone: true,
   imports: [CommonModule, FaIconComponent],
   template: `
-    <fa-icon [icon]="spinnerIcon" size="3x" animation="spin-pulse"></fa-icon>
+    <div class="loader-container">
+      <fa-icon [icon]="spinnerIcon" size="3x" animation="spin-pulse"></fa-icon>
+    </div>
   `,
   styles: `
-    :host {
+    .loader-container {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       width: 100vw;
       color: #1a202c;
+    }
 
-      @media (prefers-color-scheme: dark) {
+    @media (prefers-color-scheme: dark) {
+      .loader-container {
         color: #f7fafc;
       }
     }
