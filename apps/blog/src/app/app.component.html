@@ -1,52 +1,62 @@
-<header class="primary-block pj-header content">
-  <div class="pj-header-title content">
-    <div class="pj-header-title-logo">
-      <img ngSrc="assets/logo-150.webp" alt="logo" height="150" width="150" />
+<ng-template #themeToggleTemplate>
+  <pj-ui-theme-toggle
+    (themeSelected)="selectTheme($event)"
+  ></pj-ui-theme-toggle>
+</ng-template>
+@defer (when styleLoaded) {
+  <header class="primary-block pj-header content">
+    <div class="pj-header-title content">
+      <div class="pj-header-title-logo">
+        <img ngSrc="assets/logo-150.webp" alt="logo" height="150" width="150" />
+      </div>
+      <div class="pj-header-title-heading">
+        <h1>Peter Jokumsen</h1>
+        <h2 class="alt-text">An intentional software developer</h2>
+        <p>
+          <fa-icon class="mr-2" [icon]="codeIcon" aria-label="Code"></fa-icon>
+          using
+          <img
+            class="mx-2"
+            ngSrc="assets/icons/c-sharp.svg"
+            width="32"
+            height="32"
+            alt="C#"
+            aria-label="C Sharp"
+          />
+          &amp;
+          <img
+            class="ml-2"
+            ngSrc="assets/icons/typescript.svg"
+            width="32"
+            height="32"
+            alt="Typescript"
+            aria-label="Typescript"
+          />
+        </p>
+      </div>
     </div>
-    <div class="pj-header-title-heading">
-      <h1>Peter Jokumsen</h1>
-      <h2 class="alt-text">An intentional software developer</h2>
-      <p>
-        <fa-icon class="mr-2" [icon]="codeIcon" aria-label="Code"></fa-icon>
-        using
-        <img
-          class="mx-2"
-          ngSrc="assets/icons/c-sharp.svg"
-          width="32"
-          height="32"
-          alt="C#"
-          aria-label="C Sharp"
-        />
-        &amp;
-        <img
-          class="ml-2"
-          ngSrc="assets/icons/typescript.svg"
-          width="32"
-          height="32"
-          alt="Typescript"
-          aria-label="Typescript"
-        />
+    <pj-ui-router-nav [routes]="navElements"></pj-ui-router-nav>
+  </header>
+  <div class="main-block">
+    <div class="content min-h-screen">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  @defer {
+    <footer class="pj-footer primary-block">
+      <div class="footer-top-left col-span-4 md:col-span-2"></div>
+      <div class="footer-top-center col-span-4 md:col-span-1"></div>
+      <div class="footer-top-right col-span-4 flex justify-end md:col-span-1">
+        <ng-container *ngTemplateOutlet="themeToggleTemplate"></ng-container>
+      </div>
+      <p class="col-span-4 text-center text-sm font-bold">
+        © 2024 Peter Jokumsen. All rights reserved.
       </p>
-    </div>
+    </footer>
+  }
+} @placeholder {
+  <pj-ui-full-page-loader />
+  <div class="hidden">
+    <ng-container *ngTemplateOutlet="themeToggleTemplate"></ng-container>
   </div>
-  <pj-ui-router-nav [routes]="navElements"></pj-ui-router-nav>
-</header>
-<div class="main-block">
-  <div class="content min-h-screen">
-    <router-outlet></router-outlet>
-  </div>
-</div>
-@defer {
-  <footer class="pj-footer primary-block">
-    <div class="footer-top-left col-span-4 md:col-span-2"></div>
-    <div class="footer-top-center col-span-4 md:col-span-1"></div>
-    <div class="footer-top-right col-span-4 flex justify-end md:col-span-1">
-      <pj-ui-theme-toggle
-        (themeSelected)="selectTheme($event)"
-      ></pj-ui-theme-toggle>
-    </div>
-    <p class="col-span-4 text-center text-sm font-bold">
-      © 2024 Peter Jokumsen. All rights reserved.
-    </p>
-  </footer>
 }

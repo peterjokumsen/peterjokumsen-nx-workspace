@@ -1,14 +1,15 @@
 import { Component, OnInit, inject } from '@angular/core';
 import {
+  FullPageLoaderComponent,
   PjUiRouterNavigationElement,
   RouterNavComponent,
   ThemeToggleComponent,
   Themes,
 } from '@peterjokumsen/ui-elements';
+import { NgOptimizedImage, NgTemplateOutlet } from '@angular/common';
 import { Route, RouterOutlet } from '@angular/router';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { NgOptimizedImage } from '@angular/common';
 import { PjBrowserProviders } from '@peterjokumsen/ng-services';
 import { appRoutes } from './app.routes';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
@@ -22,6 +23,8 @@ import { pjFilterMap } from '@peterjokumsen/util-fns';
     NgOptimizedImage,
     RouterNavComponent,
     ThemeToggleComponent,
+    FullPageLoaderComponent,
+    NgTemplateOutlet,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -32,6 +35,7 @@ export class AppComponent implements OnInit {
 
   readonly navElements: PjUiRouterNavigationElement[] = [];
   codeIcon = faCode;
+  styleLoaded = false;
 
   private createNavElement(route: Route): PjUiRouterNavigationElement {
     return {
@@ -60,5 +64,6 @@ export class AppComponent implements OnInit {
     if (!styleElement) return;
 
     styleElement.href = `${theme}-theme.css`;
+    this.styleLoaded = true;
   }
 }
