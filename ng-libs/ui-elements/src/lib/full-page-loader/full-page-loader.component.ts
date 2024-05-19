@@ -19,10 +19,8 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
       height: 100vh;
       width: 100vw;
       color: #1a202c;
-      background-color: #f7fafc;
 
       @media (prefers-color-scheme: dark) {
-        background-color: #1a202c;
         color: #f7fafc;
       }
     }
