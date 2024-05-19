@@ -5,18 +5,17 @@ import {
   inject,
   output,
 } from '@angular/core';
+import { PjTheme, PjThemes } from '@peterjokumsen/ng-services';
 
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { ThemeProviderService } from './services/theme-provider.service';
-import { Themes } from './themes.type';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'pj-ui-theme-toggle',
   standalone: true,
   imports: [CommonModule, FaIconComponent],
-  providers: [ThemeProviderService],
   template: `
     <button
       class="pj-button primary border-2"
@@ -31,12 +30,13 @@ import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ThemeToggleComponent {
-  themeProvider = inject(ThemeProviderService);
+  private _themeProvider = inject(PjTheme);
+  private _currentTheme = toSignal(this._themeProvider.theme$);
 
   icon = faCircleHalfStroke;
 
   nextTheme = computed(() => {
-    const currentTheme = this.themeProvider.theme();
+    const currentTheme = this._currentTheme() ?? 'dark';
     this.themeSelected.emit(currentTheme);
     return currentTheme === 'dark' ? 'light' : 'dark';
   });
@@ -48,10 +48,10 @@ export class ThemeToggleComponent {
 
   buttonLabel = computed(() => `Switch to ${this.nextThemeLabel()}`);
 
-  themeSelected = output<Themes>();
+  themeSelected = output<PjThemes>();
 
   toggleTheme() {
-    const nextTheme = this.themeProvider.theme() === 'dark' ? 'light' : 'dark';
-    this.themeProvider.setTheme(nextTheme);
+    const nextTheme = this._currentTheme() === 'dark' ? 'light' : 'dark';
+    this.themeSelected.emit(nextTheme);
   }
 }
