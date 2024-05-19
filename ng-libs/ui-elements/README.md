@@ -9,6 +9,7 @@ This library is meant as a collection of reusable UI elements.
 ## Components
 
 - [ArticleComponent `pj-ui-article`](./src/lib/article/article.component.ts)
+- [FullPageLoader `pj-ui-full-page-loader`](./src/lib/full-page-loader/full-page-loader.component.ts)
 - [PageIntroduction `pj-ui-page-introduction`](./src/lib/page-introduction/page-introduction.component.ts)
 - [RouterNav `pj-ui-router-nav`](./src/lib/router-nav/router-nav.component.ts)
 - [ThemeToggle `pj-ui-theme-toggle`](./src/lib/theme-toggle/theme-toggle.component.ts)
