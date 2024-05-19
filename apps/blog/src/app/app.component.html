@@ -1,8 +1,3 @@
-<ng-template #themeToggleTemplate>
-  <pj-ui-theme-toggle
-    (themeSelected)="selectTheme($event)"
-  ></pj-ui-theme-toggle>
-</ng-template>
 @defer (when styleLoaded) {
   <header class="primary-block pj-header content">
     <div class="pj-header-title content">
@@ -47,7 +42,7 @@
       <div class="footer-top-left col-span-4 md:col-span-2"></div>
       <div class="footer-top-center col-span-4 md:col-span-1"></div>
       <div class="footer-top-right col-span-4 flex justify-end md:col-span-1">
-        <ng-container *ngTemplateOutlet="themeToggleTemplate"></ng-container>
+        <pj-ui-theme-toggle (themeSelected)="selectTheme($event)" />
       </div>
       <p class="col-span-4 text-center text-sm font-bold">
         © 2024 Peter Jokumsen. All rights reserved.
@@ -56,7 +51,4 @@
   }
 } @placeholder {
   <pj-ui-full-page-loader />
-  <div class="hidden">
-    <ng-container *ngTemplateOutlet="themeToggleTemplate"></ng-container>
-  </div>
 }
