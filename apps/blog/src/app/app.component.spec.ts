@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
+  FullPageLoaderComponent,
   RouterNavComponent,
   ThemeToggleComponent,
 } from '@peterjokumsen/ui-elements';
@@ -36,12 +37,17 @@ describe(`[blog] - ${AppComponent.name}`, () => {
     })
       .overrideComponent(AppComponent, {
         remove: {
-          imports: [RouterNavComponent, ThemeToggleComponent],
+          imports: [
+            RouterNavComponent,
+            ThemeToggleComponent,
+            FullPageLoaderComponent,
+          ],
         },
         add: {
           imports: [
             MockComponent(RouterNavComponent),
             MockComponent(ThemeToggleComponent),
+            MockComponent(FullPageLoaderComponent),
           ],
         },
       })
