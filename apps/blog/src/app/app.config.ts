@@ -2,6 +2,7 @@ import { ApplicationConfig, isDevMode } from '@angular/core';
 import {
   providePjBrowserProviders,
   providePjLogger,
+  providePjTheme,
 } from '@peterjokumsen/ng-services';
 
 import { appRoutes } from './app.routes';
@@ -11,10 +12,11 @@ import { provideRouter } from '@angular/router';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAnimations(),
     provideClientHydration(),
     provideRouter(appRoutes),
-    providePjLogger({ production: !isDevMode() }),
     providePjBrowserProviders(),
-    provideAnimations(),
+    providePjLogger({ production: !isDevMode() }),
+    providePjTheme(),
   ],
 };

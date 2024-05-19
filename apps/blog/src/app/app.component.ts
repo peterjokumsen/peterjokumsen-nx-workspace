@@ -4,16 +4,16 @@ import {
   PjUiRouterNavigationElement,
   RouterNavComponent,
   ThemeToggleComponent,
-  Themes,
 } from '@peterjokumsen/ui-elements';
 import { NgOptimizedImage, NgTemplateOutlet } from '@angular/common';
+import { PjTheme, PjThemes } from '@peterjokumsen/ng-services';
 import { Route, RouterOutlet } from '@angular/router';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { PjBrowserProviders } from '@peterjokumsen/ng-services';
 import { appRoutes } from './app.routes';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { pjFilterMap } from '@peterjokumsen/util-fns';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
@@ -31,7 +31,8 @@ import { pjFilterMap } from '@peterjokumsen/util-fns';
   styles: ``,
 })
 export class AppComponent implements OnInit {
-  private _browserProvider = inject(PjBrowserProviders);
+  private _themeService = inject(PjTheme);
+  private _currentTheme = toSignal(this._themeService.theme$);
 
   readonly navElements: PjUiRouterNavigationElement[] = [];
   codeIcon = faCode;
@@ -45,6 +46,12 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
+    const theme = this._currentTheme();
+    if (theme) {
+      this._themeService.setTheme(theme);
+      this.styleLoaded = true;
+    }
+
     this.navElements.push(
       ...pjFilterMap(
         appRoutes,
@@ -54,16 +61,8 @@ export class AppComponent implements OnInit {
     );
   }
 
-  selectTheme(theme: Themes) {
-    const window = this._browserProvider.window;
-    if (!window) return;
-
-    const styleElement = window.document.getElementById(
-      'theme-style',
-    ) as HTMLLinkElement;
-    if (!styleElement) return;
-
-    styleElement.href = `${theme}-theme.css`;
-    this.styleLoaded = true;
+  selectTheme(theme: PjThemes): void {
+    if (theme === this._currentTheme()) return;
+    this._themeService.setTheme(theme);
   }
 }
