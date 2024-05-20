@@ -7,6 +7,14 @@
 
 .main-block {
   @apply w-full;
+
+  a.link {
+    color: var(--primary-color);
+  }
+}
+
+a.link {
+  text-decoration: underline;
 }
 
 .pj-header {
