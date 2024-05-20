@@ -36,5 +36,12 @@ export class AboutMeComponent {
         "I will cover topics such as programming languages, frameworks, tools, best practices, workarounds that I've found and some completely unrelated topics too.",
       ],
     },
+    {
+      title: 'Where is the repository for this blog?',
+      content: [
+        'The repository for this blog is available on GitHub.',
+        'You can find it at [peterjokumsen/peterjokumsen-nx-workspace](https://github.com/peterjokumsen/peterjokumsen-nx-workspace?tab=readme-ov-file#peterjokumsen-blog).',
+      ],
+    },
   ];
 }
