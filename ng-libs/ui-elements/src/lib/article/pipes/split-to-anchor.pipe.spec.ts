@@ -66,7 +66,7 @@ describe('SplitToAnchorPipe', () => {
       });
 
       it('should return value with anchor tag', () => {
-        expect(result).toEqual('Hello to <a href="#">value</a>');
+        expect(result).toEqual('Hello to <a href="#" class="link">value</a>');
       });
 
       it('should sanitize url', () => {
@@ -78,7 +78,7 @@ describe('SplitToAnchorPipe', () => {
 
       it('should bypass security for anchor tag', () => {
         expect(domSanitizer.bypassSecurityTrustHtml).toHaveBeenCalledWith(
-          'Hello to <a href="#">value</a>',
+          'Hello to <a href="#" class="link">value</a>',
         );
       });
     });
@@ -92,7 +92,7 @@ describe('SplitToAnchorPipe', () => {
 
       it('should return value with anchor tags', () => {
         expect(result).toEqual(
-          'Hello to <a href="#">first link</a> and <a href="https://website.com" target="_blank">second link</a>',
+          'Hello to <a href="#" class="link">first link</a> and <a href="https://website.com" target="_blank" class="link">second link</a>',
         );
       });
     });

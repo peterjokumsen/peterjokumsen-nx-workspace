@@ -22,7 +22,7 @@ export class SplitToAnchorPipe implements PipeTransform {
       const target = sanitizedUrl?.startsWith('http') ? ' target="_blank"' : '';
       value = value.replace(
         fullMatch,
-        `<a href="${sanitizedUrl}"${target}>${text}</a>`,
+        `<a href="${sanitizedUrl}"${target} class="link">${text}</a>`,
       );
     }
 
