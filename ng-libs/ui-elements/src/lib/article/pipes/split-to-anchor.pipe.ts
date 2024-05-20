@@ -1,6 +1,5 @@
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Pipe, PipeTransform, SecurityContext, inject } from '@angular/core';
-
-import { DomSanitizer } from '@angular/platform-browser';
 
 @Pipe({
   name: 'splitToAnchor',
@@ -9,19 +8,24 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class SplitToAnchorPipe implements PipeTransform {
   private _sanitizer = inject(DomSanitizer);
 
-  transform(value: string): string {
+  transform(value: string | string[] | undefined): string | SafeHtml {
+    if (!value) return '';
+    if (Array.isArray(value)) value = value.join(' ');
+
     const regex = /\[(.*?)\]\((.*?)\)/g;
     const matches = value.match(regex);
     for (const match of matches ?? []) {
       const [fullMatch, text, url] = match.match(/\[(.*?)\]\((.*?)\)/) ?? [];
       if (!fullMatch) continue;
 
+      const sanitizedUrl = this._sanitizer.sanitize(SecurityContext.URL, url);
+      const target = sanitizedUrl?.startsWith('http') ? ' target="_blank"' : '';
       value = value.replace(
         fullMatch,
-        `<a href="${this._sanitizer.sanitize(SecurityContext.URL, url)}">${text}</a>`,
+        `<a href="${sanitizedUrl}"${target}>${text}</a>`,
       );
     }
 
-    return value;
+    return this._sanitizer.bypassSecurityTrustHtml(value);
   }
 }
