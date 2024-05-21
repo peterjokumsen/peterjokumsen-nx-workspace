@@ -96,5 +96,24 @@ describe(TransformArticleContentPipe.name, () => {
         );
       });
     });
+
+    describe('when value has image markdown', () => {
+      beforeEach(() => {
+        result = pipe.transform('![alt text](/image.jpg)');
+      });
+
+      it('should return value with img tag', () => {
+        expect(result).toEqual(
+          '<img srcSet="/image.jpg" alt="alt text" class="image" />',
+        );
+      });
+
+      it('should sanitize image source', () => {
+        expect(domSanitizer.sanitize).toHaveBeenCalledWith(
+          SecurityContext.URL,
+          '/image.jpg',
+        );
+      });
+    });
   });
 });
