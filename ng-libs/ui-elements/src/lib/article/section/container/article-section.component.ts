@@ -7,12 +7,12 @@ import {
 import { PjUiArticleSection, PjUiContent } from '../../models';
 
 import { CommonModule } from '@angular/common';
-import { SplitToAnchorPipe } from '../../pipes';
+import { TransformArticleContentPipe } from '../../pipes';
 
 @Component({
   selector: 'pj-ui-article-section',
   standalone: true,
-  imports: [CommonModule, SplitToAnchorPipe],
+  imports: [CommonModule, TransformArticleContentPipe],
   templateUrl: './article-section.component.html',
   styleUrl: './article-section.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

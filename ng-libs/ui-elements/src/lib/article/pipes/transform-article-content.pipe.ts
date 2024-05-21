@@ -2,10 +2,10 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Pipe, PipeTransform, SecurityContext, inject } from '@angular/core';
 
 @Pipe({
-  name: 'splitToAnchor',
+  name: 'transformArticleContent',
   standalone: true,
 })
-export class SplitToAnchorPipe implements PipeTransform {
+export class TransformArticleContentPipe implements PipeTransform {
   private _sanitizer = inject(DomSanitizer);
 
   transform(value: string | string[] | undefined): string | SafeHtml {
