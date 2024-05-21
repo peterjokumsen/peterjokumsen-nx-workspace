@@ -1,1 +1,1 @@
-export * from './split-to-anchor.pipe';
+export * from './transform-article-content.pipe';

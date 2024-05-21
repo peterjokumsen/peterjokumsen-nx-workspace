@@ -1,11 +1,11 @@
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 import { SecurityContext } from '@angular/core';
-import { SplitToAnchorPipe } from './split-to-anchor.pipe';
 import { TestBed } from '@angular/core/testing';
+import { TransformArticleContentPipe } from './transform-article-content.pipe';
 
-describe('SplitToAnchorPipe', () => {
-  let pipe: SplitToAnchorPipe;
+describe(TransformArticleContentPipe.name, () => {
+  let pipe: TransformArticleContentPipe;
   let domSanitizer: Partial<jest.Mocked<DomSanitizer>>;
 
   beforeEach(() => {
@@ -20,11 +20,11 @@ describe('SplitToAnchorPipe', () => {
       providers: [
         // keep split
         { provide: DomSanitizer, useValue: domSanitizer },
-        SplitToAnchorPipe,
+        TransformArticleContentPipe,
       ],
     });
 
-    pipe = TestBed.inject(SplitToAnchorPipe);
+    pipe = TestBed.inject(TransformArticleContentPipe);
   });
 
   it('should be created', () => {

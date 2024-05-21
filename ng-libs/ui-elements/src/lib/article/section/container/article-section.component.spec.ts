@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArticleSectionComponent } from './article-section.component';
 import { MockPipe } from 'ng-mocks';
-import { SplitToAnchorPipe } from '../../pipes';
+import { TransformArticleContentPipe } from '../../pipes';
 
 describe('ArticleSectionComponent', () => {
   let component: ArticleSectionComponent;
@@ -14,7 +14,7 @@ describe('ArticleSectionComponent', () => {
     })
       .overrideComponent(ArticleSectionComponent, {
         set: {
-          imports: [MockPipe(SplitToAnchorPipe)],
+          imports: [MockPipe(TransformArticleContentPipe)],
         },
       })
       .compileComponents();
