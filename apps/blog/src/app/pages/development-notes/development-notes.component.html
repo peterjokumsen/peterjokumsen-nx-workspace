@@ -10,8 +10,10 @@
     position: 'right'
   }"
   actions="Check out notes"
-  (callToAction)="content.scrollIntoView({ behavior: 'smooth' })"
+  (callToAction)="content?.scrollIntoView({ behavior: 'smooth' })"
 ></pj-ui-page-introduction>
 <div #content>
-  <pj-ui-article [sections]="sections"></pj-ui-article>
+  @defer {
+    <pj-ui-article [sections]="sections"></pj-ui-article>
+  }
 </div>
