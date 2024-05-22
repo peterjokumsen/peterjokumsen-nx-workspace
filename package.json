@@ -28,6 +28,7 @@
     "@angular/platform-browser-dynamic": "17.3.7",
     "@angular/platform-server": "17.3.7",
     "@angular/router": "17.3.7",
+    "@angular/service-worker": "17.3.7",
     "@angular/ssr": "17.3.6",
     "@fortawesome/angular-fontawesome": "^0.14.1",
     "@fortawesome/fontawesome-svg-core": "^6.4.2",
