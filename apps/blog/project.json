@@ -19,6 +19,7 @@
         "assets": [
           "apps/blog/src/favicon.ico",
           "apps/blog/src/assets",
+          "apps/blog/src/manifest.webmanifest",
           {
             "glob": "staticwebapp\\.config\\.json",
             "input": "apps/blog",
@@ -28,8 +29,7 @@
             "glob": "robots\\.txt",
             "input": "apps/blog/src/robots/production",
             "output": "/"
-          },
-          "apps/blog/src/manifest.webmanifest"
+          }
         ],
         "styles": [
           {
@@ -84,6 +84,7 @@
           "assets": [
             "apps/blog/src/favicon.ico",
             "apps/blog/src/assets",
+            "apps/blog/src/manifest.webmanifest",
             {
               "glob": "staticwebapp\\.config\\.json",
               "input": "apps/blog",
