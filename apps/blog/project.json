@@ -28,7 +28,8 @@
             "glob": "robots\\.txt",
             "input": "apps/blog/src/robots/production",
             "output": "/"
-          }
+          },
+          "apps/blog/src/manifest.webmanifest"
         ],
         "styles": [
           {
@@ -64,7 +65,8 @@
               "maximumError": "4kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "serviceWorker": "apps/blog/ngsw-config.json"
         },
         "staging": {
           "budgets": [
