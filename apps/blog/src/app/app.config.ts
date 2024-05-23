@@ -1,5 +1,6 @@
 import { ApplicationConfig, isDevMode } from '@angular/core';
 import {
+  providePjArticleParser,
   providePjBrowserProviders,
   providePjLogger,
   providePjTheme,
@@ -23,5 +24,6 @@ export const appConfig: ApplicationConfig = {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
     }),
+    providePjArticleParser(),
   ],
 };
