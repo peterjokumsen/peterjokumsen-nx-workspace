@@ -1,1 +1,3 @@
-export type PjUiContent = string;
+import { PjArticleContent } from '@peterjokumsen/ng-services';
+
+export type PjUiContent = PjArticleContent;
