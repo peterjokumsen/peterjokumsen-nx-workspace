@@ -1,9 +1,9 @@
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { PjTheme, PjThemes } from './';
 
 import { Injectable } from '@angular/core';
 import { PjBrowserProviders } from '../pj-browser-providers';
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable()
 class PjThemeExposed extends PjTheme {
