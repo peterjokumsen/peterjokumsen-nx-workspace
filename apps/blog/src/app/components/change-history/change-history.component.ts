@@ -4,10 +4,10 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { PjArticleParser, PjLogger } from '@peterjokumsen/ng-services';
 
 import { ArticleComponent } from '@peterjokumsen/ui-elements';
 import { CommonModule } from '@angular/common';
+import { PjArticleParser } from '@peterjokumsen/ng-services';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
