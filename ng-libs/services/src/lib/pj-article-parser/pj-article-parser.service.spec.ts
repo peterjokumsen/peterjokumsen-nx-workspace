@@ -1,3 +1,5 @@
+import { LogFns, PjLogger } from '../pj-logger';
+
 import { PjArticle } from './models';
 import { PjArticleParser } from './';
 import { TestBed } from '@angular/core/testing';
@@ -10,6 +12,19 @@ describe('PjArticleParserService', () => {
     TestBed.configureTestingModule({
       providers: [
         // keep split
+        {
+          provide: PjLogger,
+          useValue: jest.mocked<PjLogger>({
+            get to(): LogFns {
+              return jest.mocked<LogFns>({
+                group: jest.fn(),
+                groupEnd: jest.fn(),
+                info: jest.fn(),
+                log: jest.fn(),
+              } as unknown as LogFns);
+            },
+          }),
+        },
         PjArticleParser,
       ],
     });
@@ -33,16 +48,16 @@ describe('PjArticleParserService', () => {
 
         beforeEach(async () => {
           result = await useFromSource(`
-# Page title
+          # Page title
 
-## Section 1
+          ## Section 1
 
-A new section.
-To show.
+          A new section.
+          To show.
 
-## Section 2
+          ## Section 2
 
-Another section.
+          Another section.
           `);
         });
 
