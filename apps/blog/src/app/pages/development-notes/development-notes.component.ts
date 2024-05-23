@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { ChangeHistoryComponent } from '../../components/change-history/change-history.component';
+import { ChangeHistoryComponent } from '../../components/change-history';
 import { CommonModule } from '@angular/common';
 import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
 
