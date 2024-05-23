@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ArticleComponent } from '@peterjokumsen/ui-elements';
 import { ChangeHistoryComponent } from './change-history.component';
+import { MockComponent } from 'ng-mocks';
 
 describe('ChangeHistoryComponent', () => {
   let component: ChangeHistoryComponent;
@@ -9,7 +11,13 @@ describe('ChangeHistoryComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ChangeHistoryComponent],
-    }).compileComponents();
+    })
+      .overrideComponent(ChangeHistoryComponent, {
+        set: {
+          imports: [MockComponent(ArticleComponent)],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(ChangeHistoryComponent);
     component = fixture.componentInstance;
