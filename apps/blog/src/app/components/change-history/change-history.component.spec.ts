@@ -1,9 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  PjArticle,
-  PjArticleParser,
-  PjLogger,
-} from '@peterjokumsen/ng-services';
+import { PjArticle, PjArticleParser } from '@peterjokumsen/ng-services';
 
 import { ArticleComponent } from '@peterjokumsen/ui-elements';
 import { ChangeHistoryComponent } from './change-history.component';
