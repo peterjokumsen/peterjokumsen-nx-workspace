@@ -19,6 +19,7 @@ The [`blog`](./apps/blog) application is the initial project, which will be used
 - [`ng-features`](./ng-features/README.md) - Angular "features", lazy-loaded components to contain functionality.
   - [`blog-container`](./ng-features/blog-container/README.md) - Blog container component, to drive functionality for blog posts.
 - [`ng-libs`](./ng-libs/README.md) - Angular libraries for shared components, services, and utilities.
+  - [`services`](./ng-libs/services/README.md) - Shared Angular services for the workspace.
   - [`styles`](./ng-libs/styles/README.md) - Shared styles for the workspace.
   - [`ui-elements`](./ng-libs/ui-elements/README.md) - Shared UI elements, components, and directives.
 - [`ts-libs`](./ts-libs/README.md) - TypeScript libraries for shared functions and utilities.
