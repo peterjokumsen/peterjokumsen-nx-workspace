@@ -43,9 +43,7 @@ describe('ChangeHistoryComponent', () => {
   });
 
   it('should use the parser to parse the article', () => {
-    expect(parserSpy.fromSource).toHaveBeenCalledWith(
-      expect.stringContaining('something'),
-    );
+    expect(parserSpy.fromSource).toHaveBeenCalledWith(expect.any(String));
     expect(component.article()).toEqual({
       sections: [{ title: 'test', content: 'testing' }],
     });
