@@ -1,7 +1,7 @@
 name: 'Something went wrong 🫣'
 description: 'Report an issue, help me improve'
 title: '[🐛]: '
-labels: ['🐛 bug']
+labels: ['🐛 bug', '🩹 triage']
 assignees:
   - peterjokumsen
 body:
