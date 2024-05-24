@@ -117,17 +117,23 @@ The following languages are (to be) supported for syntax highlighting:
 
 Lists are parsed from `*` or `-` and are converted to a list tag.
 
+[GitHub issue](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/issues/48)
+
 > Lists are not _yet_ supported.
 
 ### Quotes
 
 Quotes are parsed from `>` and are converted to a quote tag.
 
+[GitHub issue](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/issues/49)
+
 > Quotes are not _yet_ supported.
 
 ### Horizontal rules
 
 Horizontal rules are parsed from `---` and are converted to a horizontal rule tag.
+
+[GitHub issue](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/issues/50)
 
 > Horizontal rules are not _yet_ supported.
 
@@ -158,6 +164,8 @@ Strikethrough is parsed from `~~` and are converted to a strikethrough tag.
 ### Inline code
 
 Inline code is parsed from `` `code` `` and are converted to an inline code tag.
+
+[GitHub issue](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/issues/51)
 
 > Inline code is not _yet_ supported.
 
