@@ -64,6 +64,8 @@ export class AppComponent {
 
 Titles are parsed from `#` to `######` and mark the start of a section for article generated.
 
+[GitHub issue](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/issues/42)
+
 > Nesting sections is not _yet_ supported (using `##` inside a `#` section)
 
 ### Text
@@ -74,17 +76,23 @@ Text is parsed as is.
 
 Links are parsed from `[text](url)` and are converted to an anchor tag.
 
+[GitHub issue](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/issues/43)
+
 > Links are not _yet_ supported. Although it will be handled by `PjUiArticle` component.
 
 ### Images
 
 Images are parsed from `![alt text](url)` and are converted to an image tag.
 
+[GitHub issue](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/issues/44)
+
 > Images are not _yet_ supported. Although it will be handled by `PjUiArticle` component.
 
 ### Code blocks
 
 Code blocks are parsed from lines starting with ` ```(language) ` and ended with a line starting with ` ``` `, this generates a block of code with syntax highlighting for the specific `(language)` used.
+
+[GitHub issue](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/issues/45)
 
 > Code blocks is not _yet_ supported.
 
