@@ -8,6 +8,7 @@ This library contains services to be used in Angular application(s). The service
 
 ## Services
 
+- [PjArticleParser](./src/lib/pj-article-parser/README.md) - A service to parse articles from a source of a string value representing markdown.
 - [PjLogger](./src/lib/pj-logger/README.md) - A service to log messages to the console, which will not be logged to console in production mode.
 - [PjBrowserProviders](./src/lib/pj-browser-providers/README.md) - A service to provide browser objects and services to Angular applications.
 - [PjTheme](./src/lib/pj-theme/README.md) - A service to provide theme related functionality to Angular applications.
