@@ -1,0 +1,35 @@
+name: '💡 Eureka!'
+description: 'Suggest an idea for this project'
+title: '[💡]: '
+labels: ['💡 enhancement']
+assignees:
+  - peterjokumsen
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this suggestion! 🥳
+  - type: textarea
+    attributes:
+      label: Improvement summary
+      description: What is the basic summary of the change?
+      placeholder: It would be nice to see...
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Possible solution
+      description: Do you have a proposed solution for this?
+      placeholder: |
+        Could possibly flip `x` for `y`
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional details
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
