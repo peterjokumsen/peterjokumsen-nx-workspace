@@ -1,0 +1,54 @@
+name: 'Something went wrong 🫣'
+description: 'Report an issue, help me improve'
+title: '[🐛]: '
+labels: ['🐛 bug']
+assignees:
+  - peterjokumsen
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    attributes:
+      label: Problem summary
+      description: Please describe the issue you encountered
+      placeholder: |
+        When I do `x`, `y` happens.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: What should have happened?
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. In this environment...
+        1. With this config...
+        1. Run '...'
+        1. See error...
+    validations:
+      required: false
+  - type: textarea
+    id: possible-solution
+    attributes:
+      label: Possible solution
+      description: Do you have a proposed solution for this?
+      placeholder: |
+        Could possibly flip `x` for `y`
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional details
+      description: |
+        Links? References? Anything that will give us more context about the issue you are encountering!
+
+        Tip: You can attach images or log files by clicking this area to highlight it and then dragging files in.
+    validations:
+      required: false
