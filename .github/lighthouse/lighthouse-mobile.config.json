@@ -1,0 +1,9 @@
+{
+  "ci": {
+    "collect": {
+      "settings": {
+        "configPath": "./.github/lighthouse/lighthouse-mobile-config.js"
+      }
+    }
+  }
+}

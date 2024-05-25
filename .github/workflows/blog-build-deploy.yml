@@ -164,7 +164,7 @@ jobs:
             ${{ needs.deploy_app.outputs.deployed_url }}
             ${{ needs.deploy_app.outputs.deployed_url }}/development-notes
             ${{ needs.deploy_app.outputs.deployed_url }}/random/url/that/does/not/exist
-          configPath: ./.github/lighthouse/lighthousesrc.json
+          configPath: ./.github/lighthouse/lighthouse-mobile.config.json
           uploadArtifacts: true
           temporaryPublicStorage: true
           runs: 1
@@ -174,14 +174,15 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const lighthouseCommentMaker = require('./.github/lighthouse/lighthouseCommentMaker.js');
+            const reportParser = require('./.github/lighthouse/lighthouse-report.parser.js');
 
             const lighthouseOutputs = {
               manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
-              links: ${{ steps.lighthouse_audit.outputs.links }}
+              links: ${{ steps.lighthouse_audit.outputs.links }},
+              formFactor: 'mobile'
             };
 
-            const comment = lighthouseCommentMaker({ lighthouseOutputs });
+            const comment = reportParser({ lighthouseOutputs });
             core.setOutput("comment", comment);
 
       - name: Add Lighthouse stats as comment ✍️

@@ -22,48 +22,8 @@
  * @typedef {Object} LighthouseOutputs
  * @prop {Record<string, string>} links
  * @prop {Manifest[]} manifest
+ * @prop {'mobile' | 'desktop' | undefined} formFactor
  */
-
-// const formatScore = (/** @type { number } */ score) => Math.round(score * 100);
-// const emojiScore = (/** @type { number } */ score) =>
-//   score >= 0.9 ? '🟢' : score >= 0.5 ? '🟠' : '🔴';
-
-// const scoreRow = (
-//   /** @type { string } */ label,
-//   /** @type { number } */ score,
-// ) => `| ${emojiScore(score)} ${label} | ${formatScore(score)} |`;
-
-// /**
-//  * @param {LighthouseOutputs} lighthouseOutputs
-//  */
-// function makeComment(lighthouseOutputs) {
-//   const dataWeNeed = lighthouseOutputs.manifest.map((mani, index) => ({
-//     ...mani,
-//     reportUrl: lighthouseOutputs.links[mani.url],
-//   }));
-
-//   const comment = `## ⚡️🏠 Lighthouse report
-// ${dataWeNeed
-//   .map(
-//     (data) => `
-// We ran Lighthouse against [${data.url}](${
-//       data.url
-//     }) and produced this [report](${data.reportUrl}). Here's the summary:
-
-// | Category | Score |
-// | -------- | ----- |
-// ${scoreRow('Performance', data.summary.performance)}
-// ${scoreRow('Accessibility', data.summary.accessibility)}
-// ${scoreRow('Best practices', data.summary['best-practices'])}
-// ${scoreRow('SEO', data.summary.seo)}
-// ${scoreRow('PWA', data.summary.pwa)}
-// `,
-//   )
-//   .join('')}
-// `;
-
-//   return comment;
-// }
 
 /** @typedef {Record<'performance' | 'accessibility' | 'best-practices' | 'seo' | 'pwa', number>} LighthouseSummary */
 
@@ -80,7 +40,7 @@ const summaryKeys = {
 const scoreEntry = (rawScore) => {
   const score = Math.round(rawScore * 100);
   // eslint-disable-next-line no-nested-ternary
-  const scoreIcon = score >= 90 ? '🟢' : score >= 50 ? '🟠' : '🔴';
+  const scoreIcon = score >= 85 ? '🟢' : score >= 50 ? '🟠' : '🔴';
   return `${scoreIcon} ${score}`;
 };
 
@@ -121,11 +81,13 @@ const createMarkdownTableHeader = () => [
 /**
  * @param {LighthouseOutputs} lighthouseOutputs
  */
-const createLighthouseReport = ({ links, manifest }) => {
-  console.log('links');
-  console.log(links);
-  console.log('manifest');
-  console.log(manifest);
+const createLighthouseReport = ({ links, manifest, formFactor }) => {
+  const logGroup = 'Creating lighthouse report comment';
+  console.group(logGroup);
+  console.time(logGroup);
+  console.log('links: %o', links);
+  console.log('manifest: %o', manifest);
+  console.log('formFactor: %s', formFactor);
 
   const tableHeader = createMarkdownTableHeader();
   const tableBody = manifest.map((result) => {
@@ -141,12 +103,16 @@ const createLighthouseReport = ({ links, manifest }) => {
     });
   });
   const comment = [
-    '### ⚡️ Lighthouse report for the deploy preview of this PR',
+    `### ⚡️ Lighthouse "${formFactor ?? 'mobile'}" report for the deploy preview of this PR`,
     '',
     ...tableHeader,
     ...tableBody,
     '',
   ];
+
+  console.timeEnd(logGroup);
+  console.groupEnd();
+
   return comment.join('\n');
 };
 
