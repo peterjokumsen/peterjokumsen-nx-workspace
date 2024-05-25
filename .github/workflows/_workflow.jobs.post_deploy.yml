@@ -19,7 +19,7 @@ jobs:
   wait_for_deployment:
     name: 'Wait for deployment ⌚'
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
-    runs-on: ubuntu-latestK
+    runs-on: ubuntu-latest
     steps:
       - name: 'Wait for preview ${{ inputs.deployment_url }} ⌚'
         uses: nev7n/wait_for_response@v1
