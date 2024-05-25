@@ -1,15 +1,5 @@
 name: 'Install Dependencies 🪇'
 description: 'Install dependencies and set NX cache'
-inputs:
-  nx-cache-key:
-    description: 'Key to use for NX cache'
-    required: false
-    default: 'nx'
-
-outputs:
-  nx-cache-hit:
-    description: 'Whether the nx cache was hit or not'
-    value: ${{ steps.nx_cache.outputs.cache-hit }}
 
 runs:
   using: 'composite'
@@ -17,17 +7,6 @@ runs:
     - uses: volta-cli/action@v4
       with:
         package-json-path: '${{ github.workspace }}/package.json'
-
-    - name: Use NX cache if available
-      id: nx_cache
-      uses: actions/cache@v4
-      with:
-        path: '.nx-cache'
-        key: "${{ runner.os }}-${{ inputs.nx-cache-key }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('libs/**/src/**') }}-${{ hashFiles('apps/**/src/**') }}"
-        restore-keys: |
-          ${{ runner.os }}-${{ inputs.nx-cache-key }}-${{ hashFiles('**/package-lock.json') }}-${{ hashFiles('libs/**/src/**') }}
-          ${{ runner.os }}-${{ inputs.nx-cache-key }}-${{ hashFiles('**/package-lock.json') }}
-          ${{ runner.os }}-${{ inputs.nx-cache-key }}
 
     - name: Use the package manager cache if available
       uses: actions/cache@v4
