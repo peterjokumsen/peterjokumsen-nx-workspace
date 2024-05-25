@@ -41,4 +41,4 @@ const getLighthouseConfig = ({ isMobile }) => {
   };
 };
 
-export { getLighthouseConfig };
+module.exports = { getLighthouseConfig };
