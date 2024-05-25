@@ -33,7 +33,9 @@ on:
         required: true
 
     outputs:
-      uploaded_artifacts: ${{ jobs.test_and_lint.outputs.uploaded }}
+      uploaded_artifacts:
+        description: 'Artifacts in build_location after building affected'
+        value: ${{ jobs.test_and_lint.outputs.uploaded }}
 
 permissions:
   id-token: write
