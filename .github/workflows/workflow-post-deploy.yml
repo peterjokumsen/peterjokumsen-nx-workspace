@@ -1,0 +1,95 @@
+name: '[Re-usable workflow] post deployment'
+on:
+  workflow_call:
+    inputs:
+      deployment_url:
+        description: 'Deployment URL'
+        required: true
+        type: string
+      audit_urls:
+        description: 'Urls to test'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  wait_for_deployment:
+    name: 'Wait for deployment ⌚'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Wait for preview ${{ inputs.deployment_url }} ⌚'
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: '${{ inputs.deployment_url }}'
+          responseCode: 200
+          timeout: 300000
+          interval: 1000
+
+  lighthouse_report_job_matrix:
+    name: 'Lighthouse report (${{ matrix.form_factor }}) 💡🏠'
+    strategy:
+      matrix:
+        form_factor:
+          - mobile
+          - desktop
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Audit URLs 🧐
+        id: lighthouse_audit
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: ${{ parameters.audit_urls }}
+          configPath: ./.github/lighthouse/lighthouse-${{ matrix.form_factor }}.config.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 1
+
+      - name: Format lighthouse score
+        id: format_lighthouse_score
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const lighthouseCommentMaker = require('./.github/lighthouse/lighthouseCommentMaker.js');
+
+            const lighthouseOutputs = {
+              manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
+              links: ${{ steps.lighthouse_audit.outputs.links }},
+              formFactor: ${{ matrix.form_factor }},
+            };
+
+            const comment = lighthouseCommentMaker({ lighthouseOutputs });
+            core.setOutput("comment", comment);
+
+      - name: Add Lighthouse stats as comment ✍️
+        id: comment_to_pr
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          number: ${{ github.event.pull_request.number }}
+          header: lighthouse_${{ matrix.form_factor }}
+          message: ${{ steps.format_lighthouse_score.outputs.comment }}
+
+  end_to_end_tests:
+    name: 'End-to-end tests 🧪'
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Placeholder for end-to-end tests 🧪'
+        run: echo "No end-to-end tests configured, yet."
+      # - name: 'Checkout 📥'
+      #   uses: actions/checkout@v4
+
+      # - name: 'Install dependencies 📦'
+      #   uses: ./.github/actions/install-deps
+
+      # - name: 'Run end-to-end tests 🧪'
+      #   run: |
+      #     echo "running: npx nx run-many -t e2e --all"
+      #     npx nx run-many -t e2e --all
+      #   env:
+      #     NX_REJECT_UNKNOWN_LOCAL_CACHE: 0
