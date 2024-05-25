@@ -1,4 +1,4 @@
-name: 'Blog - Build and Deploy 🏗️'
+name: '[🚀] Blog build & deploy'
 
 on:
   push:
