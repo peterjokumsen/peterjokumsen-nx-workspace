@@ -1,4 +1,4 @@
-name: '[Re-usable workflow] test affected'
+name: '[Re-usable workflow] check_if_affected'
 on:
   workflow_call:
     inputs:
@@ -25,9 +25,6 @@ jobs:
 
       - name: 'Install dependencies 📦'
         uses: ./.github/actions/install-deps
-
-      - name: 'Get base 📦'
-        uses: nrwl/nx-set-shas@v4
 
       - name: 'Check affected 🔍'
         id: check_affected

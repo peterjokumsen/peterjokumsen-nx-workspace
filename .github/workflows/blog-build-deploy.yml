@@ -67,12 +67,12 @@ jobs:
       build_location: 'dist/apps/blog'
     secrets: inherit
 
-  deploy_bicep:
+  infra:
     if: |
       (github.event_name == 'workflow_dispatch' && inputs.deploy_bicep == 'Yes') ||
-      (github.event_name == 'pull_request' && github.event.action != 'closed') ||
+      github.event_name == 'pull_request' ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    uses: './.github/workflows/workflow-bicep-deploy.yml'
+    uses: './.github/workflows/_workflow.jobs.infra.yml'
     name: 'Infra 💪'
     needs:
       - prep
@@ -133,7 +133,7 @@ jobs:
       deployed_url: ${{ steps.publish_swa.outputs.static_web_app_url }}
 
   post_deploy:
-    uses: './.github/workflows/workflow-post-deploy.yml'
+    uses: './.github/workflows/_workflow.jobs.post_deploy.yml'
     name: 'Post deploy 🚀'
     needs:
       - deploy_app
@@ -143,33 +143,3 @@ jobs:
         ${{ needs.deploy_app.outputs.deployed_url }}/
         ${{ needs.deploy_app.outputs.deployed_url }}/development-notes
         ${{ needs.deploy_app.outputs.deployed_url }}/not/found
-
-  close_preview:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: 'Cleanup staging 💥'
-    needs:
-      - prep
-    steps:
-      - name: 'AZ CLI login 🔑'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: 'Get API Key 🔑'
-        id: static_web_app_apikey
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            apiKey=$(az staticwebapp secrets list \
-              --name '${{ needs.prep.outputs.app_name }}-static-web-app' \
-              | jq -r '.properties.apiKey')
-            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
-
-      - name: 'Destroy staging environment 💥'
-        uses: Azure/static-web-apps-deploy@v1
-        with:
-          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
-          action: 'close'
