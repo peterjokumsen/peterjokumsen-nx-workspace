@@ -118,19 +118,19 @@ jobs:
         id: run_affected
         run: |
           npx nx affected:build --base=$GITHUB_SHA --head=$GITHUB_SHA
-          compiled_files=""
+          compiled_files="No"
           if [ -d "${{ inputs.build_location }}" ]; then
-            compiled_files="true"
+            compiled_files="Yes"
           fi
 
-          echo "output $compiled_files"
+          echo "output [$compiled_files]"
           echo "compiled_files=$compiled_files" >> $GITHUB_OUTPUT
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
       - name: 'Upload artifacts 🚀'
         uses: actions/upload-artifact@v4
-        if: steps.run_affected.outputs.compiled_files != ''
+        if: steps.run_affected.outputs.compiled_files != 'No'
         with:
           name: compiled-app
           path: ${{ inputs.build_location }}
