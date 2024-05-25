@@ -1,0 +1,139 @@
+name: '[♻️] lint_test_build_affected'
+
+on:
+  workflow_call:
+    inputs:
+      build_location:
+        description: 'Where the app is compiled to, to be published as artifact'
+        required: true
+        type: string
+      bicep_parameters:
+        description: 'Bicep Deployment Parameters'
+        required: true
+        type: string
+      bicep_main_file:
+        description: 'Bicep Main File'
+        type: string
+        default: './.biceps/main.bicep'
+    secrets:
+      AZURE_CLIENT_ID:
+        description: 'Azure Client ID'
+        required: true
+      AZURE_TENANT_ID:
+        description: 'Azure Tenant ID'
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        description: 'Azure Subscription ID'
+        required: true
+      NX_CLOUD_ACCESS_TOKEN:
+        description: 'Nx Cloud Access Token'
+        required: true
+      CODECOV_TOKEN:
+        description: 'Codecov Token'
+        required: true
+
+    outputs:
+      uploaded_artifacts: ${{ jobs.test_and_lint.outputs.uploaded }}
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  lint_biceps:
+    if: |
+      (github.event_name == 'pull_request' && github.event.action != 'closed') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    name: 'Lint Bicep 💪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Lint Bicep 🔍'
+        if: github.event_name != 'push'
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az version
+            az bicep install
+            az bicep version
+            az bicep lint --file ${{ inputs.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
+            echo '::group::Bicep linting results'
+            cat bicep.sarif
+            echo '::endgroup::'
+
+      - name: 'Upload SARIF ↗️'
+        if: |
+          (success() || failure()) &&
+          github.event_name != 'push'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          category: bicep
+          sarif_file: bicep.sarif
+
+  test_and_lint:
+    if: |
+      github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: 'Test & lint 🧪'
+    outputs:
+      uploaded: ${{ steps.run_affected.outputs.has_compiled != '' }}
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+        with:
+          # Number of commits to fetch. 0 indicates all history for all branches and tags.
+          fetch-depth: 0
+          submodules: true
+
+      - name: 'Install dependencies 📦'
+        uses: ./.github/actions/install-deps
+
+      - name: 'Set SHAs 📝'
+        uses: nrwl/nx-set-shas@v4
+
+      - name: 'Check formatting 📐'
+        run: npx nx-cloud record -- nx format:check
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Lint, Test, Build affected 🧪'
+        id: run_affected
+        run: |
+          npx nx affected -t lint test build
+          files=$(ls -al ${{ inputs.build_location }})
+          echo $files
+          echo "has_compiled=$files" >> $GITHUB_OUTPUT
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Upload artifacts 🚀'
+        uses: actions/upload-artifact@v4
+        if: steps.run_affected.outputs.has_compiled != ''
+        with:
+          name: compiled-app
+          path: ${{ inputs.build_location }}
+
+      - name: 'Lint, Test, Build all 🧪'
+        run: npx nx run-many -t lint test build
+        if: github.event_name == 'push'
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Publish coverage 📊'
+        if: always()
+        uses: codecov/codecov-action@v4
+        with:
+          directory: coverage
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}

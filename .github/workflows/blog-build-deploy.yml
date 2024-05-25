@@ -48,7 +48,6 @@ env:
   app_name: blog
   prod_branch: 'main'
   branch_name: ${{ github.head_ref || github.ref_name }}
-  projects_to_build: 'blog' # comma-separated list of projects to build
 
 jobs:
   env_prep:
@@ -62,14 +61,12 @@ jobs:
           echo "resource_group=${{ env.resource_group }}" >> $GITHUB_OUTPUT
           echo "app_name=${{ env.app_name }}" >> $GITHUB_OUTPUT
           echo "branch_name=${{ env.branch_name }}" >> $GITHUB_OUTPUT
-          echo "projects_to_build=${{ env.projects_to_build }}" >> $GITHUB_OUTPUT
           echo "location=${{ env.location }}" >> $GITHUB_OUTPUT
     outputs:
       bicep_main_file: ${{ steps.prepare_names.outputs.bicep_main_file }}
       resource_group: ${{ steps.prepare_names.outputs.resource_group }}
       app_name: ${{ steps.prepare_names.outputs.app_name }}
       branch_name: ${{ steps.prepare_names.outputs.branch_name }}
-      projects_to_build: ${{ steps.prepare_names.outputs.projects_to_build }}
       location: ${{ steps.prepare_names.outputs.location }}
 
   prep:
@@ -83,6 +80,20 @@ jobs:
       app_name: ${{ needs.env_prep.outputs.app_name }}
       bicep_main_file: ${{ needs.env_prep.outputs.bicep_main_file }}
       location: ${{ needs.env_prep.outputs.location }}
+
+  lint_test_build:
+    if: |
+      (github.event_name == 'workflow_dispatch' && inputs.test_affected == 'Yes') ||
+      (github.event_name == 'pull_request' && github.event.action != 'closed') ||
+      (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    uses: './.github/workflows/_workflow.jobs.lint_test_build_affected.yml'
+    name: 'Test 🧪'
+    needs:
+      - prep
+    with:
+      bicep_parameters: ${{ needs.prep.outputs.parameters }}
+      bicep_main_file: ${{ env.bicep_main_file }}
+      build_location: 'dist/apps/blog'
 
   deploy_bicep:
     if: |
@@ -101,42 +112,16 @@ jobs:
       AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
       AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-  test_affected:
-    if: |
-      github.event_name != 'workflow_dispatch' ||
-      inputs.test_affected == 'Yes'
-    uses: './.github/workflows/workflow-test-affected.yml'
-    name: 'Test 🧪'
-    needs:
-      - env_prep
-    with:
-      project_name: ${{ needs.env_prep.outputs.app_name }}
-
-  build_app:
-    needs:
-      - env_prep
-      - test_affected
-    if: |
-      needs.test_affected.outputs.is_affected == 'Yes' &&
-      ((github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
-      github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && github.event.action != 'closed'))
-    uses: './.github/workflows/workflow-build-app.yml'
-    name: 'Build 🏗️'
-    with:
-      project_names: ${{ needs.env_prep.outputs.projects_to_build }}
-
   deploy_app:
     needs:
       - prep
-      - test_affected
-      - build_app
+      - lint_test_build
       - deploy_bicep
     if: |
-      needs.test_affected.outputs.is_affected == 'Yes' &&
-      ((github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
+      needs.lint_test_build.outputs.uploaded_artifacts &&
+      (github.event_name == 'workflow_dispatch' && inputs.build_and_deploy == 'Yes') ||
       github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && github.event.action != 'closed'))
+      (github.event_name == 'pull_request' && github.event.action != 'closed')
     runs-on: ubuntu-latest
     name: 'Deploy app 🚀'
     steps:
@@ -146,6 +131,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
       - name: 'Get API key 🔑'
         id: static_web_app_apikey
         uses: azure/CLI@v2
@@ -170,7 +156,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: 'upload'
-          app_location: 'dist/apps/blog/browser'
+          app_location: 'dist/browser'
           api_location: '' # Empty for now, no API to deploy
           skip_app_build: true
 
