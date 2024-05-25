@@ -44,7 +44,7 @@ jobs:
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v11
         with:
-          urls: ${{ parameters.audit_urls }}
+          urls: ${{ inputs.audit_urls }}
           configPath: ./.github/lighthouse/lighthouse-${{ matrix.form_factor }}.config.json
           uploadArtifacts: true
           temporaryPublicStorage: true
