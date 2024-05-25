@@ -20,8 +20,8 @@
       ],
       "@peterjokumsen/ng-services": ["ng-libs/services/src/index.ts"],
       "@peterjokumsen/styles": ["ng-libs/styles/src/index.ts"],
-      "@peterjokumsen/ui-elements": ["ng-libs/ui-elements/src/index.ts"],
-      "@peterjokumsen/util-fns": ["ts-libs/util-fns/src/index.ts"]
+      "@peterjokumsen/ts-utils": ["ts-libs/ts-utils/src/index.ts"],
+      "@peterjokumsen/ui-elements": ["ng-libs/ui-elements/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp", ".nx-cache"]

@@ -1,0 +1,26 @@
+{
+  "name": "ts-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "ts-libs/ts-utils/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/ts-libs/ts-utils",
+        "main": "ts-libs/ts-utils/src/index.ts",
+        "tsConfig": "ts-libs/ts-utils/tsconfig.lib.json",
+        "assets": ["ts-libs/ts-utils/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "ts-libs/ts-utils/jest.config.ts"
+      }
+    }
+  }
+}

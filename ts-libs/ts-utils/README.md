@@ -1,4 +1,4 @@
-# Utility Functions (util-fns)
+# ts-utils
 
 This library was generated with [Nx](https://nx.dev).
 
@@ -10,11 +10,11 @@ All functions should be pure functions, meaning they should not have any side ef
 
 ## Building
 
-Run `nx build utils` to build the library.
+Run `nx build ts-utils` to build the library.
 
 ## Running unit tests
 
-Run `nx test utils` to execute the unit tests via [Jest](https://jestjs.io).
+Run `nx test ts-utils` to execute the unit tests via [Jest](https://jestjs.io).
 
 ## Functions
 
