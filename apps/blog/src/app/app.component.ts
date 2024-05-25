@@ -12,7 +12,7 @@ import { Route, RouterOutlet } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { appRoutes } from './app.routes';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
-import { pjFilterMap } from '@peterjokumsen/util-fns';
+import { pjFilterMap } from '@peterjokumsen/ts-utils';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
