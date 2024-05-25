@@ -118,8 +118,11 @@ jobs:
         id: run_affected
         run: |
           npx nx affected:build --base=$GITHUB_SHA --head=$GITHUB_SHA
-          # check if ${{ inputs.build_location }} has files
-          compiled_files=$(ls -A ${{ inputs.build_location }})
+          compiled_files=""
+          if [ -d "${{ inputs.build_location }}" ]; then
+            compiled_files="true"
+          fi
+
           echo "output $compiled_files"
           echo "compiled_files=$compiled_files" >> $GITHUB_OUTPUT
         env:
