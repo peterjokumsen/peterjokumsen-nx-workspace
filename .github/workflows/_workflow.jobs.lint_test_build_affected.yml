@@ -135,8 +135,8 @@ jobs:
           name: compiled-app
           path: ${{ inputs.build_location }}
 
-      - name: 'Lint, Test, Build all 🧪'
-        run: npx nx run-many -t lint test build
+      - name: 'Lint, Test all 🧪'
+        run: npx nx run-many -t lint test
         if: github.event_name == 'push'
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
