@@ -65,6 +65,12 @@ jobs:
       bicep_parameters: ${{ needs.prep.outputs.parameters }}
       bicep_main_file: ${{ needs.prep.outputs.bicep_main_file }}
       build_location: 'dist/apps/blog'
+    secrets:
+      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   deploy_bicep:
     if: |
