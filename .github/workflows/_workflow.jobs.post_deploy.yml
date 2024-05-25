@@ -1,4 +1,4 @@
-name: '[Re-usable workflow] post_deploy'
+name: '[♻️] post_deploy'
 on:
   workflow_call:
     inputs:

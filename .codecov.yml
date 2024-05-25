@@ -1,5 +1,5 @@
 comment:
-  layout: 'condensed_header, condensed_files, condensed_footer'
+  layout: 'condensed_header, condensed_files, flags, condensed_footer'
   behavior: once
   require_changes: true
 coverage:
@@ -11,33 +11,40 @@ coverage:
       default:
         target: auto
         threshold: 5%
+        flags:
+          - app-blog
+          - lib-ng-blog-container
+          - lib-ng-services
+          - lib-ng-styles
+          - lib-ng-ui-elements
+          - lib-ts-utils
     project:
       default:
         target: auto
         threshold: 5%
         flags:
           - app-blog
-          - lib-blog-container
+          - lib-ng-blog-container
           - lib-ng-services
-          - lib-styles
-          - lib-ui-elements
+          - lib-ng-styles
+          - lib-ng-ui-elements
           - lib-ts-utils
 flags:
   app-blog:
     paths:
       - apps/blog
-  lib-blog-container:
+  lib-ng-blog-container:
     paths:
       - ng-features/blog-container
-  lib-styles:
-    paths:
-      - ng-libs/styles
-  lib-ui-elements:
-    paths:
-      - ng-libs/ui-elements
-  lib-util-fns:
-    paths:
-      - ts-libs/ts-utils
   lib-ng-services:
     paths:
       - ng-libs/services
+  lib-ng-styles:
+    paths:
+      - ng-libs/styles
+  lib-ng-ui-elements:
+    paths:
+      - ng-libs/ui-elements
+  lib-ts-utils:
+    paths:
+      - ts-libs/ts-utils

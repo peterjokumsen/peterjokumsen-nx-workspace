@@ -47,6 +47,7 @@
 # *.svg    binary
 *.eps      binary
 
+*.js       text eol=lf
 *.ts       text eol=lf
 *.scss     text eol=lf
 *.html     text eol=lf
