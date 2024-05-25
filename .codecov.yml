@@ -1,35 +1,27 @@
 comment:
-  layout: reach
-  behavior: new
+  layout: 'condensed_header, condensed_files, condensed_footer'
+  behavior: once
   require_changes: true
 coverage:
-  range: 0..100
-  round: nearest
-  precision: 1
+  range: 70..100
+  round: down
+  precision: 2
   status:
     patch:
       default:
-        target: 50%
-        threshold: 10%
+        target: auto
+        threshold: 5%
     project:
       default:
-        target: 50%
-        threshold: 10%
-      app-blog:
+        target: auto
+        threshold: 5%
         flags:
           - app-blog
-      lib-blog-container:
-        flags:
           - lib-blog-container
-      lib-styles:
-        flags:
+          - lib-ng-services
           - lib-styles
-      lib-ui-elements:
-        flags:
           - lib-ui-elements
-      lib-util-fns:
-        flags:
-          - lib-util-fns
+          - lib-ts-utils
 flags:
   app-blog:
     paths:
@@ -45,4 +37,7 @@ flags:
       - ng-libs/ui-elements
   lib-util-fns:
     paths:
-      - libs/util-fns
+      - ts-libs/ts-utils
+  lib-ng-services:
+    paths:
+      - ng-libs/services
