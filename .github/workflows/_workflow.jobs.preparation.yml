@@ -1,4 +1,4 @@
-name: '[Re-usable workflow] prepare'
+name: '[♻️] preparation'
 on:
   workflow_call:
     inputs:
@@ -32,6 +32,9 @@ on:
       parameters:
         description: 'Deployment parameters'
         value: ${{ jobs.prep.outputs.parameters }}
+      bicep_main_file:
+        description: 'Bicep main file'
+        value: ${{ inputs.bicep_main_file }}
 
 permissions:
   contents: read
