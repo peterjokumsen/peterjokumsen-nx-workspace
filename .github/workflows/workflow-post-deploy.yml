@@ -37,6 +37,8 @@ jobs:
           - mobile
           - desktop
     runs-on: ubuntu-latest
+    needs:
+      - wait_for_deployment
     steps:
       - uses: actions/checkout@v4
 
@@ -78,6 +80,8 @@ jobs:
     name: 'End-to-end tests 🧪'
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
     runs-on: ubuntu-latest
+    needs:
+      - wait_for_deployment
     steps:
       - name: 'Placeholder for end-to-end tests 🧪'
         run: echo "No end-to-end tests configured, yet."
