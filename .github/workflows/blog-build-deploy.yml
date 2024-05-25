@@ -41,45 +41,16 @@ permissions:
   pull-requests: write
   security-events: write
 
-env:
-  bicep_main_file: ./.biceps/main.bicep
-  resource_group: blog-rg
-  location: westeurope
-  app_name: blog
-  prod_branch: 'main'
-  branch_name: ${{ github.head_ref || github.ref_name }}
-
 jobs:
-  env_prep:
-    runs-on: ubuntu-latest
-    name: 'Prepare ENV 🛠️'
-    steps:
-      - name: 'Prepare outputs ⬆️'
-        id: prepare_names
-        run: |
-          echo "bicep_main_file=${{ env.bicep_main_file }}" >> $GITHUB_OUTPUT
-          echo "resource_group=${{ env.resource_group }}" >> $GITHUB_OUTPUT
-          echo "app_name=${{ env.app_name }}" >> $GITHUB_OUTPUT
-          echo "branch_name=${{ env.branch_name }}" >> $GITHUB_OUTPUT
-          echo "location=${{ env.location }}" >> $GITHUB_OUTPUT
-    outputs:
-      bicep_main_file: ${{ steps.prepare_names.outputs.bicep_main_file }}
-      resource_group: ${{ steps.prepare_names.outputs.resource_group }}
-      app_name: ${{ steps.prepare_names.outputs.app_name }}
-      branch_name: ${{ steps.prepare_names.outputs.branch_name }}
-      location: ${{ steps.prepare_names.outputs.location }}
-
   prep:
-    uses: './.github/workflows/workflow-prep.yml'
+    uses: './.github/workflows/_workflow.jobs.preparation.yml'
     name: 'Prepare 🛠️'
-    needs:
-      - env_prep
     with:
-      branch_name: ${{ needs.env_prep.outputs.branch_name }}
-      resource_group: ${{ needs.env_prep.outputs.resource_group }}
-      app_name: ${{ needs.env_prep.outputs.app_name }}
-      bicep_main_file: ${{ needs.env_prep.outputs.bicep_main_file }}
-      location: ${{ needs.env_prep.outputs.location }}
+      bicep_main_file: ./.biceps/main.bicep
+      resource_group: blog-rg
+      location: westeurope
+      app_name: blog
+      branch_name: ${{ github.head_ref || github.ref_name }}
 
   lint_test_build:
     if: |
@@ -92,7 +63,7 @@ jobs:
       - prep
     with:
       bicep_parameters: ${{ needs.prep.outputs.parameters }}
-      bicep_main_file: ${{ env.bicep_main_file }}
+      bicep_main_file: ${{ needs.prep.outputs.bicep_main_file }}
       build_location: 'dist/apps/blog'
 
   deploy_bicep:
