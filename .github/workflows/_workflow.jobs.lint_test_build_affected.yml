@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Test & lint 🧪'
     outputs:
-      uploaded: ${{ steps.run_affected.outputs.has_compiled != '' }}
+      uploaded: ${{ steps.run_affected.outputs.compiled_files }}
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
@@ -113,13 +113,13 @@ jobs:
           npx nx affected -t lint test build
           files=$(ls -al ${{ inputs.build_location }})
           echo $files
-          echo "has_compiled=$files" >> $GITHUB_OUTPUT
+          echo "compiled_files=$files" >> $GITHUB_OUTPUT
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
       - name: 'Upload artifacts 🚀'
         uses: actions/upload-artifact@v4
-        if: steps.run_affected.outputs.has_compiled != ''
+        if: steps.run_affected.outputs.compiled_files != ''
         with:
           name: compiled-app
           path: ${{ inputs.build_location }}
