@@ -4,7 +4,7 @@
  * @param {boolean | undefined} param0.isMobile
  * @returns {{settings: {skipAudits: string[]}, extends: string, passes: [{gatherers: string[], passName: string},{gatherers: string[], networkQuietThresholdMs: number, passName: string, recordTrace: boolean, useThrottling: boolean}]}}
  */
-export function getLighthouseConfig({ isMobile }) {
+const getLighthouseConfig = ({ isMobile }) => {
   // audits can be found here:
   // https://github.com/GoogleChrome/lighthouse/blob/eba2a4d19c5786dc37e993858ff4b663181f81e5/lighthouse-core/config/default-config.js#L174
   const skipAudits = [
@@ -39,4 +39,6 @@ export function getLighthouseConfig({ isMobile }) {
     settings,
     passes,
   };
-}
+};
+
+export { getLighthouseConfig };
