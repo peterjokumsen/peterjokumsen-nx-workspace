@@ -1,4 +1,4 @@
-name: '[Re-usable workflow] bicep deploy'
+name: '[Re-usable workflow] infra'
 on:
   workflow_call:
     inputs:
