@@ -89,7 +89,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 'Test & lint 🧪'
     outputs:
-      uploaded: ${{ steps.run_affected.outputs.compiled_files }}
+      uploaded: ${{ steps.build_affected.outputs.compiled_files }}
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
@@ -110,12 +110,21 @@ jobs:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
       - name: 'Lint, Test affected 🧪'
-        run: npx nx affected -t lint test build
+        id: test_affected
+        run: |
+          npx nx affected -t lint test build
+          coverage_reports="No"
+          if [ -d "coverage" ]; then
+            coverage_reports="Yes"
+          fi
+
+          echo "output [$coverage_reports]"
+          echo "coverage_reports=$coverage_reports" >> $GITHUB_OUTPUT
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
       - name: 'Build affected 🏗️'
-        id: run_affected
+        id: build_affected
         run: |
           npx nx affected:build --base=$GITHUB_SHA --head=$GITHUB_SHA
           compiled_files="No"
@@ -130,7 +139,7 @@ jobs:
 
       - name: 'Upload artifacts 🚀'
         uses: actions/upload-artifact@v4
-        if: steps.run_affected.outputs.compiled_files != 'No'
+        if: steps.build_affected.outputs.compiled_files != 'No'
         with:
           name: compiled-app
           path: ${{ inputs.build_location }}
@@ -142,7 +151,8 @@ jobs:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
       - name: 'Publish coverage 📊'
-        if: always()
+        if: github.event_name == 'push' ||
+          steps.test_affected.outputs.coverage_reports == 'Yes'
         uses: codecov/codecov-action@v4
         with:
           directory: coverage
