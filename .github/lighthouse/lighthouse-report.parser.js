@@ -103,7 +103,7 @@ const createLighthouseReport = ({ links, manifest, formFactor }) => {
     });
   });
   const comment = [
-    `### ⚡️ Lighthouse "${formFactor ?? 'mobile'}" report for the deploy preview of this PR`,
+    `### ⚡️ Lighthouse "${formFactor || 'mobile'}" report for the deploy preview of this PR`,
     '',
     ...tableHeader,
     ...tableBody,
