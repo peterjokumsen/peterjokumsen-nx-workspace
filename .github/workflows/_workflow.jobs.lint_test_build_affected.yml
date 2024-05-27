@@ -129,8 +129,16 @@ jobs:
       - name: 'Build affected 🏗️'
         id: build_affected
         run: |
-          echo "::group::nx affected:build --base=$GITHUB_SHA --head=$GITHUB_SHA"
-          npx nx affected:build --base=$GITHUB_SHA --head=$GITHUB_SHA
+          echo "Setting up configuration for build step"
+          build_configuration="production"
+          branch_name="${{ github.ref }}"
+          if [ "$branch_name" != "refs/heads/main" ]; then
+            build_configuration="staging"
+          fi
+          echo "$build_configuration is the configuration for branch $branch_name"
+
+          echo "::group::nx affected -t build --configuration=$build_configuration"
+          npx nx affected -t build --configuration=$build_configuration
           echo "::endgroup::"
           compiled_files="No"
           if [ -d "${{ inputs.build_location }}" ]; then
