@@ -31,8 +31,8 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styles: ``,
 })
 export class AppComponent implements OnInit {
-  private _themeService = inject(PjTheme);
-  private _currentTheme = toSignal(this._themeService.theme$);
+  private _theme = inject(PjTheme);
+  private _currentTheme = toSignal(this._theme.theme$);
 
   readonly navElements: PjUiRouterNavigationElement[] = [];
   codeIcon = faCode;
@@ -48,7 +48,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     const theme = this._currentTheme();
     if (theme) {
-      this._themeService.setTheme(theme);
+      this._theme.setTheme(theme);
       this.styleLoaded = true;
     }
 
@@ -63,6 +63,6 @@ export class AppComponent implements OnInit {
 
   selectTheme(theme: PjThemes): void {
     if (theme === this._currentTheme()) return;
-    this._themeService.setTheme(theme);
+    this._theme.setTheme(theme);
   }
 }
