@@ -7,8 +7,8 @@ module.exports = {
       'canonical', // for staging sites this will always be incorrect
       'is-crawlable', // for staging sites the x-robots-tag: none is served to prevent the staging site being indexed
       // 'maskable-icon',
-      // 'valid-source-maps',
-      // 'unsized-images',
+      'valid-source-maps',
+      'unsized-images',
       // 'offline-start-url',
     ],
   },

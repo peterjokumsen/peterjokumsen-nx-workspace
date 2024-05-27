@@ -30,12 +30,7 @@ jobs:
           interval: 1000
 
   lighthouse_report_job_matrix:
-    name: 'Lighthouse report (${{ matrix.form_factor }}) 💡🏠'
-    strategy:
-      matrix:
-        form_factor:
-          - mobile
-          - desktop
+    name: 'Lighthouse report 💡🏠'
     runs-on: ubuntu-latest
     needs:
       - wait_for_deployment
@@ -47,12 +42,12 @@ jobs:
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: ${{ inputs.audit_urls }}
-          configPath: ./.github/lighthouse/lighthouse-${{ matrix.form_factor }}.config.json
+          configPath: ./.github/lighthouse/lighthouse.config.json
           uploadArtifacts: true
           temporaryPublicStorage: true
           runs: 1
 
-      - name: Format lighthouse score
+      - name: 'Format lighthouse score ✏️'
         id: format_lighthouse_score
         uses: actions/github-script@v7
         with:
@@ -62,7 +57,6 @@ jobs:
             const lighthouseOutputs = {
               manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
               links: ${{ steps.lighthouse_audit.outputs.links }},
-              formFactor: '${{ matrix.form_factor }}',
             };
 
             const comment = lighthouseCommentMaker({ lighthouseOutputs });
@@ -73,7 +67,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ github.event.pull_request.number }}
-          header: lighthouse_${{ matrix.form_factor }}
+          header: lighthouse
           message: ${{ steps.format_lighthouse_score.outputs.comment }}
 
   end_to_end_tests:

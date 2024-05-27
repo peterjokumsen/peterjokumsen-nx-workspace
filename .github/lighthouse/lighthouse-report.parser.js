@@ -22,7 +22,6 @@
  * @typedef {Object} LighthouseOutputs
  * @prop {Record<string, string>} links
  * @prop {Manifest[]} manifest
- * @prop {'mobile' | 'desktop' | undefined} formFactor
  */
 
 /** @typedef {Record<'performance' | 'accessibility' | 'best-practices' | 'seo' | 'pwa', number>} LighthouseSummary */
@@ -81,11 +80,10 @@ const createMarkdownTableHeader = () => [
 /**
  * @param {LighthouseOutputs} lighthouseOutputs
  */
-const createLighthouseReport = ({ links, manifest, formFactor }) => {
+const createLighthouseReport = ({ links, manifest }) => {
   console.group('Creating lighthouse report comment');
   console.log('links: %o', links);
   console.log('manifest: %o', manifest);
-  console.log('formFactor: %s', formFactor);
 
   const tableHeader = createMarkdownTableHeader();
   const tableBody = manifest.map((result) => {
@@ -101,7 +99,7 @@ const createLighthouseReport = ({ links, manifest, formFactor }) => {
     });
   });
   const comment = [
-    `### ⚡️ Lighthouse "${formFactor || 'mobile'}" report for the deploy preview of this PR`,
+    `### ⚡️ Lighthouse report for the deploy preview of this PR`,
     '',
     ...tableHeader,
     ...tableBody,
@@ -114,6 +112,7 @@ const createLighthouseReport = ({ links, manifest, formFactor }) => {
 };
 
 module.exports = ({ lighthouseOutputs }) => {
+  console.log('exampleOutput: %o', _exampleOutputs);
   return createLighthouseReport(lighthouseOutputs);
 };
 
