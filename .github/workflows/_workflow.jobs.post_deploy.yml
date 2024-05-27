@@ -62,7 +62,7 @@ jobs:
             const lighthouseOutputs = {
               manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
               links: ${{ steps.lighthouse_audit.outputs.links }},
-              formFactor: ${{ matrix.form_factor }},
+              formFactor: '${{ matrix.form_factor }}',
             };
 
             const comment = lighthouseCommentMaker({ lighthouseOutputs });
