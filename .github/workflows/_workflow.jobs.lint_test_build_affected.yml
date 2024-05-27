@@ -111,8 +111,9 @@ jobs:
 
       - name: 'Lint, Test affected 🧪'
         id: test_affected
+        if: github.event_name != 'push'
         run: |
-          echo "::group::Linting, Testing affected"
+          echo "::group::nx affected -t lint test --configuration=ci"
           npx nx affected -t lint test --configuration=ci
           echo "::endgroup::"
           coverage_reports="No"
@@ -128,7 +129,7 @@ jobs:
       - name: 'Build affected 🏗️'
         id: build_affected
         run: |
-          echo "::group::Building affected"
+          echo "::group::nx affected:build --base=$GITHUB_SHA --head=$GITHUB_SHA"
           npx nx affected:build --base=$GITHUB_SHA --head=$GITHUB_SHA
           echo "::endgroup::"
           compiled_files="No"
