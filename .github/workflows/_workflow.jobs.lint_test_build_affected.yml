@@ -112,13 +112,15 @@ jobs:
       - name: 'Lint, Test affected 🧪'
         id: test_affected
         run: |
-          npx nx affected -t lint test build
+          echo "::group::Linting, Testing affected"
+          npx nx affected -t lint test --configuration=ci
+          echo "::endgroup::"
           coverage_reports="No"
           if [ -d "coverage" ]; then
             coverage_reports="Yes"
           fi
 
-          echo "output [$coverage_reports]"
+          echo "output [coverage_reports=$coverage_reports]"
           echo "coverage_reports=$coverage_reports" >> $GITHUB_OUTPUT
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
@@ -126,13 +128,15 @@ jobs:
       - name: 'Build affected 🏗️'
         id: build_affected
         run: |
+          echo "::group::Building affected"
           npx nx affected:build --base=$GITHUB_SHA --head=$GITHUB_SHA
+          echo "::endgroup::"
           compiled_files="No"
           if [ -d "${{ inputs.build_location }}" ]; then
             compiled_files="Yes"
           fi
 
-          echo "output [$compiled_files]"
+          echo "output [compiled_files=$compiled_files]"
           echo "compiled_files=$compiled_files" >> $GITHUB_OUTPUT
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
@@ -145,13 +149,14 @@ jobs:
           path: ${{ inputs.build_location }}
 
       - name: 'Lint, Test all 🧪'
-        run: npx nx run-many -t lint test
+        run: npx nx run-many -t lint test --configuration=ci
         if: github.event_name == 'push'
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
       - name: 'Publish coverage 📊'
-        if: github.event_name == 'push' ||
+        if: |
+          github.event_name == 'push' ||
           steps.test_affected.outputs.coverage_reports == 'Yes'
         uses: codecov/codecov-action@v4
         with:
