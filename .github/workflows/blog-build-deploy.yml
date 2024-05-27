@@ -128,6 +128,8 @@ jobs:
           app_location: 'dist/browser'
           api_location: '' # Empty for now, no API to deploy
           skip_app_build: true
+    outputs:
+      deployed_url: ${{ steps.publish_swa.outputs.static_web_app_url }}
 
   close_deployed:
     needs:
@@ -157,7 +159,7 @@ jobs:
       - name: Close Pull Request
         uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
         with:
-          azure_static_web_apps_api_token: ${{ steps/static_web_app_apikey.outputs.api_key }}
+          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
           action: 'close'
 
   post_deploy:
