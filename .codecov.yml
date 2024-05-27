@@ -11,40 +11,62 @@ coverage:
       default:
         target: auto
         threshold: 5%
+      app_blog:
         flags:
-          - app-blog
-          - lib-ng-blog-container
-          - lib-ng-services
-          - lib-ng-styles
-          - lib-ng-ui-elements
-          - lib-ts-utils
+          - app_blog
+      ng-features_blog-container:
+        flags:
+          - ng-features_blog-container
+      ng-libs_services:
+        flags:
+          - ng-libs_services
+      ng-libs_styles:
+        flags:
+          - ng-libs_styles
+      ng-libs_ui-elements:
+        flags:
+          - ng-libs_ui-elements
+      ts-libs_ts-utils:
+        flags:
+          - ts-libs_ts-utils
     project:
       default:
         target: auto
         threshold: 5%
+      app_blog:
         flags:
-          - app-blog
-          - lib-ng-blog-container
-          - lib-ng-services
-          - lib-ng-styles
-          - lib-ng-ui-elements
-          - lib-ts-utils
+          - app_blog
+      ng-features_blog-container:
+        flags:
+          - ng-features_blog-container
+      ng-libs_services:
+        flags:
+          - ng-libs_services
+      ng-libs_styles:
+        flags:
+          - ng-libs_styles
+      ng-libs_ui-elements:
+        flags:
+          - ng-libs_ui-elements
+      ts-libs_ts-utils:
+        flags:
+          - ts-libs_ts-utils
 flags:
-  app-blog:
+  app_blog:
     paths:
       - apps/blog
-  lib-ng-blog-container:
+  ng-features_blog-container:
     paths:
       - ng-features/blog-container
-  lib-ng-services:
+  ng-libs_services:
     paths:
       - ng-libs/services
-  lib-ng-styles:
+  ng-libs_styles:
     paths:
       - ng-libs/styles
-  lib-ng-ui-elements:
+  ng-libs_ui-elements:
     paths:
       - ng-libs/ui-elements
-  lib-ts-utils:
+  ts-libs_ts-utils:
     paths:
       - ts-libs/ts-utils
