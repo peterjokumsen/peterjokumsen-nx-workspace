@@ -82,9 +82,7 @@ const createMarkdownTableHeader = () => [
  * @param {LighthouseOutputs} lighthouseOutputs
  */
 const createLighthouseReport = ({ links, manifest, formFactor }) => {
-  const logGroup = 'Creating lighthouse report comment';
-  console.group(logGroup);
-  console.time(logGroup);
+  console.group('Creating lighthouse report comment');
   console.log('links: %o', links);
   console.log('manifest: %o', manifest);
   console.log('formFactor: %s', formFactor);
@@ -110,7 +108,6 @@ const createLighthouseReport = ({ links, manifest, formFactor }) => {
     '',
   ];
 
-  console.timeEnd(logGroup);
   console.groupEnd();
 
   return comment.join('\n');
