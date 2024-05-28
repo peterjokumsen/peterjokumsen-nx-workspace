@@ -1,4 +1,10 @@
-$primary-bg-color: #ff70b0;
+@use '@angular/material' as mat;
+
+$primary-palette: mat.$pink-palette;
+$accent-palette: mat.$green-palette;
+$warn-palette: mat.$red-palette;
+
+$primary-bg-color: mat.get-color-from-palette($primary-palette, 500);
 $primary-text-color: #161816;
 $primary-alt-text-color: #353540;
 

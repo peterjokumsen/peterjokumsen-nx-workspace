@@ -1,0 +1,98 @@
+@use '@angular/material' as mat;
+
+@import './declare-color-classes';
+@import './declare-block-classes';
+@import './set-variables';
+
+@function get-palette($theme, $color) {
+  @return map-get(map-get($theme, color), $color);
+}
+
+@function get-color($palette, $hue) {
+  @return mat.get-color-from-palette($palette, $hue);
+}
+
+@mixin generate-from-theme($theme) {
+  @include mat.all-component-themes($theme);
+
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    margin: 0;
+    font-family: Montserrat, 'Helvetica Neue', sans-serif;
+  }
+
+  $primary-palette: get-palette($theme, primary);
+  $accent-palette: get-palette($theme, accent);
+  $warn-palette: get-palette($theme, warn);
+
+  $primary: get-color($primary-palette, 'default');
+  $primary-contrast: get-color($primary-palette, default-contrast);
+  $accent: get-color($accent-palette, 'default');
+  $accent-contrast: get-color($accent-palette, default-contrast);
+  $warn: get-color($warn-palette, 'default');
+  $warn-contrast: get-color($warn-palette, default-contrast);
+  $bg-color: null;
+  $color: null;
+  $main-bg-color: map-get(map-get($theme, background), background);
+  $main-text-color: map-get(map-get($theme, foreground), text);
+  $accent-bg-color: null;
+  $accent-text-color: null;
+  $error-bg-color: null;
+  $error-text-color: null;
+
+  @if map-get($theme, is-dark) {
+    $bg-color: $primary-contrast;
+    $color: $primary;
+    $accent-bg-color: $accent-contrast;
+    $accent-text-color: $accent;
+    $error-bg-color: $warn-contrast;
+    $error-text-color: $warn;
+  } @else {
+    $bg-color: $primary;
+    $color: $primary-contrast;
+    $accent-bg-color: $accent;
+    $accent-text-color: $accent-contrast;
+    $error-bg-color: $warn;
+    $error-text-color: $warn-contrast;
+  }
+
+  :root {
+    @include set-variables(
+      (
+        primary-bg-color: $bg-color,
+        primary-color: $color,
+        bg-color: $main-bg-color,
+        color: $main-text-color,
+        accent-bg-color: $accent-bg-color,
+        accent-color: $accent-text-color,
+        error-bg-color: $error-bg-color,
+        error-color: $error-text-color,
+      )
+    );
+  }
+
+  @include declare-color-classes(
+    $bg-color,
+    $color,
+    $main-bg-color,
+    $main-text-color,
+    $accent-bg-color,
+    $accent-text-color,
+    $error-bg-color,
+    $error-text-color
+  );
+
+  @include declare-block-classes(
+    $bg-color,
+    $color,
+    $main-bg-color,
+    $main-text-color,
+    $accent-bg-color,
+    $accent-text-color,
+    $error-bg-color,
+    $error-text-color
+  );
+}
