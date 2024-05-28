@@ -1,51 +1,23 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
 @import './variables';
 @import './mixins';
 
-$bg-color: $primary-bg-color;
-$color: $primary-alt-text-color;
+@include mat.core();
 
-$main-bg-color: $light-bg-color;
-$main-text-color: $light-text-color;
-
-$accent-bg-color: $accent-color;
-$accent-text-color: $accent-alt-color;
-
-$error-bg-color: $error-alt-color;
-$error-text-color: $error-color;
-
-:root {
-  @include set-variables(
-    (
-      primary-bg-color: $bg-color,
-      primary-color: $color,
-      bg-color: $main-bg-color,
-      color: $main-text-color,
-      accent-bg-color: $accent-bg-color,
-      accent-color: $accent-text-color,
-      error-bg-color: $error-bg-color,
-      error-color: $error-text-color,
-    )
-  );
-}
-
-@include declare-color-classes(
-  $bg-color,
-  $color,
-  $main-bg-color,
-  $main-text-color,
-  $accent-bg-color,
-  $accent-text-color,
-  $error-bg-color,
-  $error-text-color
+// Available color palettes: https://material.io/design/color/
+$theme: mat.define-light-theme(
+  (
+    color: (
+      primary: mat.define-palette($primary-palette, 400),
+      accent: mat.define-palette($accent-palette),
+      warn: mat.define-palette($warn-palette),
+    ),
+    typography: mat.define-typography-config(),
+    density: 0,
+  )
 );
 
-@include declare-block-classes(
-  $bg-color,
-  $color,
-  $main-bg-color,
-  $main-text-color,
-  $accent-bg-color,
-  $accent-text-color,
-  $error-bg-color,
-  $error-text-color
-);
+@include generate-from-theme($theme);

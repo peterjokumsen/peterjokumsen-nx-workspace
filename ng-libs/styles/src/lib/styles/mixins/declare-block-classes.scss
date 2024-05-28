@@ -11,7 +11,11 @@
   $error-text-color
 ) {
   .primary-block {
-    @include set-colors($bg-color, $color);
+    @if (type-of($bg-color) == 'color' and alpha($bg-color) == 1) {
+      @include set-colors($bg-color, $color);
+    } @else {
+      color: $color;
+    }
   }
 
   .main-block {
