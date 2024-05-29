@@ -10,6 +10,10 @@ on:
         description: 'App name'
         required: true
         type: string
+      bicep_main_file:
+        description: 'Bicep Main File'
+        type: string
+        default: './.biceps/main.bicep'
     secrets:
       AZURE_CLIENT_ID:
         description: 'Azure Client ID'
@@ -22,9 +26,45 @@ on:
         required: true
 
 jobs:
-  lint_deploy_bicep:
+  lint_biceps:
+    if: github.event_name != 'push' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: 'Lint Bicep 💪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Lint Bicep 🔍'
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            az version
+            az bicep install
+            az bicep version
+            az bicep lint --file ${{ inputs.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
+            echo '::group::Bicep linting results'
+            cat bicep.sarif
+            echo '::endgroup::'
+
+      - name: 'Upload SARIF ↗️'
+        if: |
+          success() || failure()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          category: bicep
+          sarif_file: bicep.sarif
+
+  deploy_bicep:
     runs-on: ubuntu-latest
     name: 'Deploy Bicep 💪'
+    if: github.event.action != 'closed'
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
