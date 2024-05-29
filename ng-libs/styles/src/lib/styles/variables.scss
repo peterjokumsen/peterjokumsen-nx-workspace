@@ -1,21 +1,34 @@
 @use '@angular/material' as mat;
 
-$primary-palette: mat.$pink-palette;
-$accent-palette: mat.$green-palette;
-$warn-palette: mat.$red-palette;
+$primary-palette-base: mat.$pink-palette;
+$primary-default-hue: 300;
+$primary-lighter-hue: 200;
+$primary-darker-hue: 400;
+$primary-palette: mat.define-palette(
+  $primary-palette-base,
+  $primary-default-hue,
+  $primary-lighter-hue,
+  $primary-darker-hue
+);
 
-$primary-bg-color: mat.get-color-from-palette($primary-palette, 500);
-$primary-text-color: #161816;
-$primary-alt-text-color: #353540;
+$accent-palette-base: mat.$amber-palette;
+$accent-default-hue: 500;
+$accent-lighter-hue: 100;
+$accent-darker-hue: 700;
+$accent-palette: mat.define-palette(
+  $accent-palette-base,
+  $accent-default-hue,
+  $accent-lighter-hue,
+  $accent-darker-hue
+);
 
-$accent-color: #f6e05e;
-$accent-alt-color: #1a202c;
-
-$error-color: #990f0f;
-$error-alt-color: #f0f0f0;
-
-$dark-bg-color: #1a202c;
-$dark-text-color: #f7fafc;
-
-$light-bg-color: #f7fafc;
-$light-text-color: #1a202c;
+$warn-palette-base: mat.$red-palette;
+$warn-default-hue: 500;
+$warn-lighter-hue: 100;
+$warn-darker-hue: 700;
+$warn-palette: mat.define-palette(
+  $warn-palette-base,
+  $warn-default-hue,
+  $warn-lighter-hue,
+  $warn-darker-hue
+);
