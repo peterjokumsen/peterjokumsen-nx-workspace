@@ -62,8 +62,6 @@ jobs:
     needs:
       - prep
     with:
-      bicep_parameters: ${{ needs.prep.outputs.parameters }}
-      bicep_main_file: ${{ needs.prep.outputs.bicep_main_file }}
       build_location: 'dist/apps/blog'
     secrets: inherit
 
@@ -79,10 +77,8 @@ jobs:
     with:
       parameters: ${{ needs.prep.outputs.parameters }}
       app_name: ${{ needs.prep.outputs.app_name }}
-    secrets:
-      AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-      AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-      AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      bicep_main_file: ${{ needs.prep.outputs.bicep_main_file }}
+    secrets: inherit
 
   deploy_app:
     needs:
