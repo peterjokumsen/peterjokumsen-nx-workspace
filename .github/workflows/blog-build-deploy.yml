@@ -43,8 +43,8 @@ permissions:
 
 jobs:
   prep:
+    name: '🛠️'
     uses: './.github/workflows/_workflow.jobs.preparation.yml'
-    name: 'Prepare 🛠️'
     with:
       bicep_main_file: './.biceps/main.bicep'
       resource_group: 'blog-rg'
@@ -57,10 +57,10 @@ jobs:
       (github.event_name == 'workflow_dispatch' && inputs.test_affected == 'Yes') ||
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    uses: './.github/workflows/_workflow.jobs.lint_test_build_affected.yml'
-    name: 'Test 🧪'
+    name: '🧪'
     needs:
       - prep
+    uses: './.github/workflows/_workflow.jobs.lint_test_build_affected.yml'
     with:
       build_location: 'dist/apps/blog'
     secrets: inherit
@@ -70,10 +70,10 @@ jobs:
       (github.event_name == 'workflow_dispatch' && inputs.deploy_bicep == 'Yes') ||
       github.event_name == 'pull_request' ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
-    uses: './.github/workflows/_workflow.jobs.infra.yml'
-    name: 'Infra 💪'
+    name: '🏭'
     needs:
       - prep
+    uses: './.github/workflows/_workflow.jobs.infra.yml'
     with:
       parameters: ${{ needs.prep.outputs.parameters }}
       app_name: ${{ needs.prep.outputs.app_name }}
@@ -160,7 +160,7 @@ jobs:
 
   post_deploy:
     uses: './.github/workflows/_workflow.jobs.post_deploy.yml'
-    name: 'Post deploy 🚀'
+    name: '🧪 🚀'
     needs:
       - deploy_app
     with:
