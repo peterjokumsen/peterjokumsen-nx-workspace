@@ -28,7 +28,7 @@
   $accent-palette: get-palette($theme, accent);
   $warn-palette: get-palette($theme, warn);
 
-  $primary: get-color($primary-palette, 'default');
+  $primary: get-color($primary-palette, 'lighter');
   $primary-contrast: get-color($primary-palette, default-contrast);
   $accent: get-color($accent-palette, 'default');
   $accent-contrast: get-color($accent-palette, default-contrast);

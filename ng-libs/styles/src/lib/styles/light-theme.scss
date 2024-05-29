@@ -11,9 +11,9 @@
 $theme: mat.define-light-theme(
   (
     color: (
-      primary: mat.define-palette($primary-palette, 400),
-      accent: mat.define-palette($accent-palette),
-      warn: mat.define-palette($warn-palette),
+      primary: $primary-palette,
+      accent: $accent-palette,
+      warn: $warn-palette,
     ),
     typography: mat.define-typography-config(),
     density: 0,
