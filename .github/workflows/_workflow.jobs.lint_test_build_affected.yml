@@ -3,6 +3,10 @@ name: '[♻️] lint_test_build_affected'
 on:
   workflow_call:
     inputs:
+      project_name:
+        description: 'Project name'
+        required: true
+        type: string
       build_location:
         description: 'Where the app is compiled to, to be published as artifact'
         required: true
@@ -27,7 +31,7 @@ on:
     outputs:
       uploaded_artifacts:
         description: 'Artifacts in build_location after building affected'
-        value: ${{ jobs.test_and_lint.outputs.uploaded }}
+        value: ${{ jobs.build_affected.outputs.uploaded }}
 
 permissions:
   id-token: write
@@ -36,11 +40,110 @@ permissions:
   security-events: write
 
 jobs:
+  is_affected:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: 'Check if affected 🧪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+        with:
+          # Number of commits to fetch. 0 indicates all history for all branches and tags.
+          fetch-depth: 0
+          submodules: true
+
+      - name: 'Install dependencies 📦'
+        uses: ./.github/actions/install-deps
+
+      - name: 'Set SHAs 📝'
+        id: set_base
+        uses: nrwl/nx-set-shas@v4
+
+      - name: 'Check if affected 🧪'
+        id: is_affected
+        run: |
+          echo "::group::nx show projects --type app --affected"
+          affected_projects=$(npx nx show projects --type app --affected)
+          echo $affected_projects
+          project_name="${{ inputs.project_name }}"
+          echo "::endgroup::"
+          projected_affected="No"
+          echo ""
+          echo "Checking if $project_name is affected"
+          if [[ $affected_projects == *$project_name* ]]; then
+            projected_affected="Yes"
+          fi
+
+          echo "output [projected_affected=$projected_affected]"
+          echo "projected_affected=$projected_affected" >> $GITHUB_OUTPUT
+
+    outputs:
+      projected_affected: ${{ steps.is_affected.outputs.projected_affected }}
+      nx_base: ${{ steps.set_base.outputs.base }}
+
   test_and_lint:
+    needs: is_affected
     if: |
-      github.event.action != 'closed'
+      needs.is_affected.outputs.projected_affected == 'Yes'
+      && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: 'Test & lint 🧪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+        with:
+          # Number of commits to fetch. 0 indicates all history for all branches and tags.
+          fetch-depth: 0
+          submodules: true
+
+      - name: 'Install dependencies 📦'
+        uses: ./.github/actions/install-deps
+
+      - name: 'Check formatting 📐'
+        run: npx nx-cloud record -- nx format:check
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Lint, Test affected 🧪'
+        id: test_affected
+        if: github.event_name != 'push'
+        run: |
+          echo "::group::nx affected -t lint test --configuration=ci --base=${{ needs.is_affected.outputs.nx_base }}"
+          npx nx affected -t lint test --configuration=ci --base=${{ needs.is_affected.outputs.nx_base }}
+          echo "::endgroup::"
+          coverage_reports="No"
+          if [ -d "coverage" ]; then
+            coverage_reports="Yes"
+          fi
+
+          echo "output [coverage_reports=$coverage_reports]"
+          echo "coverage_reports=$coverage_reports" >> $GITHUB_OUTPUT
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Lint, Test all 🧪'
+        run: npx nx run-many -t lint test --configuration=ci
+        if: github.event_name == 'push'
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Publish coverage 📊'
+        if: |
+          github.event_name == 'push' ||
+          steps.test_affected.outputs.coverage_reports == 'Yes'
+        uses: codecov/codecov-action@v4
+        with:
+          directory: coverage
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  build_affected:
+    needs: is_affected
+    if: |
+      needs.is_affected.outputs.projected_affected == 'Yes'
+      && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: 'Build affected 🏗️'
     outputs:
       uploaded: ${{ steps.build_affected.outputs.compiled_files }}
     steps:
@@ -54,31 +157,6 @@ jobs:
       - name: 'Install dependencies 📦'
         uses: ./.github/actions/install-deps
 
-      - name: 'Set SHAs 📝'
-        uses: nrwl/nx-set-shas@v4
-
-      - name: 'Check formatting 📐'
-        run: npx nx-cloud record -- nx format:check
-        env:
-          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-
-      - name: 'Lint, Test affected 🧪'
-        id: test_affected
-        if: github.event_name != 'push'
-        run: |
-          echo "::group::nx affected -t lint test --configuration=ci"
-          npx nx affected -t lint test --configuration=ci
-          echo "::endgroup::"
-          coverage_reports="No"
-          if [ -d "coverage" ]; then
-            coverage_reports="Yes"
-          fi
-
-          echo "output [coverage_reports=$coverage_reports]"
-          echo "coverage_reports=$coverage_reports" >> $GITHUB_OUTPUT
-        env:
-          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-
       - name: 'Build affected 🏗️'
         id: build_affected
         run: |
@@ -90,8 +168,8 @@ jobs:
           fi
           echo "$build_configuration is the configuration for branch $branch_name"
 
-          echo "::group::nx affected -t build --configuration=$build_configuration"
-          npx nx affected -t build --configuration=$build_configuration
+          echo "::group::nx affected -t build --configuration=$build_configuration --base=${{ needs.is_affected.outputs.nx_base }}"
+          npx nx affected -t build --configuration=$build_configuration --base=${{ needs.is_affected.outputs.nx_base }}
           echo "::endgroup::"
           compiled_files="No"
           if [ -d "${{ inputs.build_location }}" ]; then
@@ -109,19 +187,3 @@ jobs:
         with:
           name: compiled-app
           path: ${{ inputs.build_location }}
-
-      - name: 'Lint, Test all 🧪'
-        run: npx nx run-many -t lint test --configuration=ci
-        if: github.event_name == 'push'
-        env:
-          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-
-      - name: 'Publish coverage 📊'
-        if: |
-          github.event_name == 'push' ||
-          steps.test_affected.outputs.coverage_reports == 'Yes'
-        uses: codecov/codecov-action@v4
-        with:
-          directory: coverage
-          verbose: true
-          token: ${{ secrets.CODECOV_TOKEN }}
