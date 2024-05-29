@@ -2,35 +2,27 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
+import { MatAnchor } from '@angular/material/button';
 import { PjUiRouterNavigationElement } from './models';
 
 @Component({
   selector: 'pj-ui-router-nav',
   standalone: true,
-  imports: [CommonModule, RouterLinkActive, RouterLink],
+  imports: [CommonModule, RouterLinkActive, RouterLink, MatAnchor],
   template: `
     <ng-template #titleTemplate let-nav="navElement">
       {{ nav.title }}
     </ng-template>
     <nav class="flex flex-row items-end justify-end gap-2">
       @for (navElement of routes(); track navElement.route) {
-        <button
-          class="pj-button hidden border-2"
-          [routerLink]="navElement.route"
-          routerLinkActive="is-active"
-          [routerLinkActiveOptions]="{ exact: isRootElement(navElement) }"
-          disabled
-        >
-          <ng-container
-            [ngTemplateOutlet]="titleTemplate"
-            [ngTemplateOutletContext]="{ navElement }"
-          ></ng-container>
-        </button>
         <a
-          class="pj-button border-2"
+          mat-raised-button
+          [color]="'primary'"
           [routerLink]="navElement.route"
           routerLinkActive="is-active"
           [routerLinkActiveOptions]="{ exact: isRootElement(navElement) }"
+          #rla="routerLinkActive"
+          [disabled]="rla.isActive"
         >
           <ng-container
             [ngTemplateOutlet]="titleTemplate"

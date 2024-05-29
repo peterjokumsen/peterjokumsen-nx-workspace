@@ -2,28 +2,6 @@ nav {
   height: 100%;
 }
 
-a {
-  &.is-active {
-    display: none;
-  }
-
-  &:hover {
-    background-color: var(--primary-color);
-    color: var(--primary-bg-color);
-    border-color: var(--primary-bg-color);
-  }
-}
-
-a,
-button {
-  border-color: var(--primary-color);
-}
-
-button {
-  background-color: var(--primary-color);
-  color: var(--primary-bg-color);
-
-  &.is-active {
-    display: inline-block;
-  }
+a.is-active {
+  color: var(--primary-color);
 }
