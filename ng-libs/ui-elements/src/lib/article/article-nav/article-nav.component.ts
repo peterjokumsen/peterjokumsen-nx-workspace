@@ -12,6 +12,8 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { MatButton, MatMiniFabButton } from '@angular/material/button';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { PjUiArticleNavElement, PjUiArticleSection } from '../models';
 import {
   animate,
@@ -32,7 +34,15 @@ type ArticleNavSection = Pick<PjUiArticleSection, 'title'>;
 @Component({
   selector: 'pj-ui-article-nav',
   standalone: true,
-  imports: [CommonModule, FaIconComponent],
+  imports: [
+    CommonModule,
+    FaIconComponent,
+    MatMenuTrigger,
+    MatMenu,
+    MatMenuItem,
+    MatButton,
+    MatMiniFabButton,
+  ],
   templateUrl: './article-nav.component.html',
   styleUrl: './article-nav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -55,10 +65,10 @@ type ArticleNavSection = Pick<PjUiArticleSection, 'title'>;
         animate(
           300,
           keyframes([
-            style({ offset: 0, transform: 'translateX(0)', height: '*' }),
+            style({ offset: 0, transform: 'translateX(0)' }),
             style({ offset: 0.25, transform: 'translateX(50%)' }),
             style({ offset: 0.5, transform: 'translateX(75%)' }),
-            style({ offset: 0.75, transform: 'translateX(100%)', height: 0 }),
+            style({ offset: 0.75, transform: 'translateX(100%)', height: '*' }),
             style({ offset: 1, height: 0 }),
           ]),
         ),
@@ -67,7 +77,7 @@ type ArticleNavSection = Pick<PjUiArticleSection, 'title'>;
   ],
 })
 export class ArticleNavComponent {
-  navSvc = inject(ArticleNavService);
+  private _navSvc = inject(ArticleNavService);
 
   sections = input<ArticleNavSection[]>();
   inViewId = signal<string>('');
@@ -112,30 +122,12 @@ export class ArticleNavComponent {
 
   private mapToNavElement(section: ArticleNavSection): PjUiArticleNavElement {
     return {
-      id: this.navSvc.generateId(section.title),
+      id: this._navSvc.generateId(section.title),
       title: section.title,
     };
   }
 
-  showOrHideToc(forceHide = false) {
-    const element = this.navShowHide?.nativeElement as HTMLElement;
-    if (!element) return;
-
-    if (element.classList.contains('show')) {
-      this.navExpanded = false;
-      element.classList.remove('show');
-      return;
-    }
-
-    if (forceHide) return;
-
-    this.navExpanded = true;
-    element.classList.add('show');
-  }
-
-  navigateClicked(event: MouseEvent, nav: PjUiArticleNavElement) {
-    event.preventDefault();
-    this.showOrHideToc(true);
+  navigateClicked(nav: PjUiArticleNavElement) {
     this.navigateClick.emit(nav);
   }
 }
