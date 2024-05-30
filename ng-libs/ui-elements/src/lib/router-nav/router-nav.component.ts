@@ -10,8 +10,8 @@ import { PjUiRouterNavigationElement } from './models';
   standalone: true,
   imports: [CommonModule, RouterLinkActive, RouterLink, MatAnchor],
   template: `
-    <ng-template #titleTemplate let-nav="navElement">
-      {{ nav.title }}
+    <ng-template #titleTemplate let-nav="navElement" let-isActive="isActive">
+      <span [ngClass]="{ 'font-bold': isActive }"> {{ nav.title }} </span>
     </ng-template>
     <nav class="flex flex-row items-end justify-end gap-2">
       @for (navElement of routes(); track navElement.route) {
@@ -26,7 +26,7 @@ import { PjUiRouterNavigationElement } from './models';
         >
           <ng-container
             [ngTemplateOutlet]="titleTemplate"
-            [ngTemplateOutletContext]="{ navElement }"
+            [ngTemplateOutletContext]="{ navElement, isActive: rla.isActive }"
           ></ng-container>
         </a>
       }
