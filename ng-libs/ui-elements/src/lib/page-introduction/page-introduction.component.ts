@@ -11,11 +11,12 @@ import {
 } from './models';
 
 import { CommonModule } from '@angular/common';
+import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'pj-ui-page-introduction',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MatButton],
   template: `
     <div
       class="flex min-h-screen flex-col items-start"
@@ -34,13 +35,15 @@ import { CommonModule } from '@angular/common';
         @if (callToActions().length > 0) {
           <div class="actions mt-8 flex flex-col gap-4">
             @for (action of callToActions(); track action.label) {
-              <a
-                href="#"
-                class="pj-button {{ action.type || 'primary' }} text-center"
-                (click)="onClick($event, action)"
+              <button
+                mat-raised-button
+                type="button"
+                [color]="action.type || 'primary'"
+                class="text-center"
+                (click)="onClick(action)"
               >
-                {{ action.label }}
-              </a>
+                <span class="text-xl font-bold">{{ action.label }}</span>
+              </button>
             }
           </div>
         }
@@ -99,8 +102,7 @@ export class PageIntroductionComponent {
     return Array.isArray(actions) ? actions : [actions];
   });
 
-  onClick(event: Event, action: IntroductionCallToAction) {
-    event.preventDefault();
+  onClick(action: IntroductionCallToAction) {
     this.callToAction.emit(action);
   }
 }

@@ -169,22 +169,22 @@ describe('PageIntroductionComponent', () => {
           hostFixture.detectChanges();
           const [actionElement] =
             hostFixture.nativeElement.querySelectorAll(actionsSelector);
-          actionAnchors = actionElement?.querySelectorAll('a');
+          actionAnchors = actionElement?.querySelectorAll('button');
         });
 
         it('should render actions', () => {
-          expect(actionAnchors).toBeDefined();
+          expect(actionAnchors).toBeTruthy();
           expect(actionAnchors.length).toEqual(2);
         });
 
         it('should use default action type for styling', () => {
           expect(actionAnchors[0].textContent).toContain('First action');
-          expect(actionAnchors[0].classList).toContain('primary');
+          expect(actionAnchors[0].classList).toContain('mat-primary');
         });
 
         it('should use action type for styling', () => {
           expect(actionAnchors[1].textContent).toContain('Second action');
-          expect(actionAnchors[1].classList).toContain('main');
+          expect(actionAnchors[1].classList).toContain('mat-main');
         });
 
         describe('when clicked', () => {
@@ -207,11 +207,11 @@ describe('PageIntroductionComponent', () => {
           hostFixture.detectChanges();
           const [actionsElement] =
             hostFixture.nativeElement.querySelectorAll(actionsSelector);
-          actionAnchor = actionsElement?.querySelector('a');
+          actionAnchor = actionsElement?.querySelector('button');
         });
 
         it('should render action', () => {
-          expect(actionAnchor).toBeDefined();
+          expect(actionAnchor).toBeTruthy();
         });
 
         it('should use string as action label', () => {
