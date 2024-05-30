@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PjTheme, PjThemes } from '@peterjokumsen/ng-services';
 
 import { BehaviorSubject } from 'rxjs';
-import { OutputEmitterRef } from '@angular/core';
 import { ThemeToggleComponent } from './theme-toggle.component';
 
 describe('ThemeToggleComponent', () => {
@@ -28,20 +27,11 @@ describe('ThemeToggleComponent', () => {
 
     fixture = TestBed.createComponent(ThemeToggleComponent);
     component = fixture.componentInstance;
-    component.themeSelected = {
-      emit: jest.fn(),
-    } as unknown as OutputEmitterRef<PjThemes>;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  describe('themeSelected', () => {
-    it('should emit the current theme', () => {
-      expect(component.themeSelected.emit).toHaveBeenCalledWith('light');
-    });
   });
 
   describe('buttonLabel', () => {
@@ -53,7 +43,7 @@ describe('ThemeToggleComponent', () => {
   describe('toggleTheme', () => {
     it('should toggle the theme', () => {
       component.toggleTheme();
-      expect(component.themeSelected.emit).toHaveBeenCalledWith('dark');
+      expect(themeSpy.setTheme).toHaveBeenCalledWith('dark');
     });
   });
 });
