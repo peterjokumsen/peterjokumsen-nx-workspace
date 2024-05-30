@@ -3,14 +3,13 @@ import {
   Component,
   computed,
   inject,
-  output,
 } from '@angular/core';
-import { PjTheme, PjThemes } from '@peterjokumsen/ng-services';
 
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MatMiniFabButton } from '@angular/material/button';
 import { MatTooltip } from '@angular/material/tooltip';
+import { PjTheme } from '@peterjokumsen/ng-services';
 import { faCircleHalfStroke } from '@fortawesome/free-solid-svg-icons';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -41,7 +40,6 @@ export class ThemeToggleComponent {
 
   nextTheme = computed(() => {
     const currentTheme = this._currentTheme() ?? 'dark';
-    this.themeSelected.emit(currentTheme);
     return currentTheme === 'dark' ? 'light' : 'dark';
   });
 
@@ -51,9 +49,6 @@ export class ThemeToggleComponent {
   });
 
   buttonLabel = computed(() => `Switch to ${this.nextThemeLabel()}`);
-
-  // to be removed
-  themeSelected = output<PjThemes>();
 
   toggleTheme() {
     const nextTheme = this._currentTheme() === 'dark' ? 'light' : 'dark';
