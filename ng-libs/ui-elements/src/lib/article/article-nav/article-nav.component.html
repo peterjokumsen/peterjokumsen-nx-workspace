@@ -1,40 +1,36 @@
-<ng-template #navTemplate>
-  <div
-    class="nav-elements sticky top-0 flex max-h-screen flex-col justify-around gap-2 overflow-y-auto overflow-x-clip p-2"
-  >
-    @for (nav of navElements(); track nav.id) {
-      <a
-        class="nav-button primary-block alt-text rounded border px-4 py-2 font-bold"
-        href="#"
-        [ngClass]="{ active: nav.id === inViewId() }"
-        (click)="navigateClicked($event, nav)"
-        [@inOutAnimation]="nav"
-      >
-        {{ nav.title }}
-      </a>
-    }
-  </div>
+<ng-template #navElementTitleTemplate let-element="nav">
+  {{ element.title }}
 </ng-template>
 <div class="content grid grid-cols-5">
   <div
     #content
     class="col-span-5 md:col-span-3 md:col-start-1 lg:col-span-2 lg:col-start-2"
   >
-    <div class="sticky top-1 col-span-5 md:hidden">
+    <div class="sticky top-2 col-span-5 md:hidden">
       <div class="control m-5 flex justify-end">
         <button
-          class="nav-button primary-block rounded p-2 px-4"
-          [ngClass]="{ active: navExpanded }"
-          (click)="showOrHideToc()"
+          mat-mini-fab
+          type="button"
+          [matMenuTriggerFor]="navMenu"
+          [color]="'primary'"
           aria-label="Show or hide page navigation"
         >
           <fa-icon [icon]="expandIcon"></fa-icon>
         </button>
-      </div>
-      <div #navShowHide class="show-hide">
-        <div class="primary-block mt-2 rounded-2xl border-2 p-4">
-          <ng-container *ngTemplateOutlet="navTemplate"></ng-container>
-        </div>
+        <mat-menu #navMenu="matMenu" [xPosition]="'before'">
+          @for (nav of navElements(); track nav.id) {
+            <button
+              mat-menu-item
+              type="button"
+              [disabled]="nav.id === inViewId()"
+              (click)="navigateClicked(nav)"
+            >
+              <ng-container
+                *ngTemplateOutlet="navElementTitleTemplate; context: { nav }"
+              ></ng-container>
+            </button>
+          }
+        </mat-menu>
       </div>
     </div>
     <ng-content></ng-content>
@@ -42,6 +38,22 @@
   <div
     class="col-span-2 col-start-4 hidden md:block lg:col-span-1 lg:col-start-5"
   >
-    <ng-container *ngTemplateOutlet="navTemplate"></ng-container>
+    <div
+      class="nav-elements sticky top-0 flex max-h-screen flex-col justify-around gap-2 overflow-y-auto overflow-x-clip p-2"
+    >
+      @for (nav of navElements(); track nav.id) {
+        <button
+          mat-raised-button
+          type="button"
+          [color]="nav.id === inViewId() ? 'primary' : ''"
+          (click)="navigateClicked(nav)"
+          [@inOutAnimation]="nav"
+        >
+          <ng-container
+            *ngTemplateOutlet="navElementTitleTemplate; context: { nav }"
+          ></ng-container>
+        </button>
+      }
+    </div>
   </div>
 </div>
