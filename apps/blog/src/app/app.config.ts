@@ -1,7 +1,7 @@
 import { ApplicationConfig, isDevMode } from '@angular/core';
 import {
   providePjArticleParser,
-  providePjBrowserProviders,
+  providePjBrowserTools,
   providePjLogger,
   providePjTheme,
 } from '@peterjokumsen/ng-services';
@@ -17,7 +17,7 @@ export const appConfig: ApplicationConfig = {
     provideAnimationsAsync(),
     provideClientHydration(),
     provideRouter(appRoutes),
-    providePjBrowserProviders(),
+    providePjBrowserTools(),
     providePjLogger({ production: !isDevMode() }),
     providePjTheme(),
     provideServiceWorker('ngsw-worker.js', {
