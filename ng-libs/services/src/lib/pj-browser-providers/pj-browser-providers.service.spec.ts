@@ -111,6 +111,83 @@ describe(PjBrowserProviders.name, () => {
           expect(service.localStorage).toBe(localStorage);
         });
       });
+
+      describe('getOrCreateLinkElement', () => {
+        describe('when "window" is null', () => {
+          it('should return null', () => {
+            jest.spyOn(service, 'window', 'get').mockReturnValue(null);
+            const element = service.getOrCreateLinkElement('test-id');
+            expect(element).toBeFalsy();
+          });
+        });
+
+        describe('when "window" is defined', () => {
+          let foundElement: HTMLLinkElement | null;
+          let result: HTMLLinkElement | null;
+
+          beforeEach(() => {
+            jest.spyOn(service, 'window', 'get').mockReturnValue(window);
+            checkPlatformSpy.mockReturnValue(true);
+            window.document.getElementById = jest.fn(() => foundElement);
+            window.document.head.appendChild = jest.fn();
+          });
+
+          it('should use getElementById', () => {
+            foundElement = {} as HTMLLinkElement;
+            service.getOrCreateLinkElement('test-id');
+            expect(window.document.getElementById).toHaveBeenCalledWith(
+              'test-id',
+            );
+          });
+
+          describe('and "getElementById" has value', () => {
+            beforeEach(() => {
+              foundElement = { id: '123' } as HTMLLinkElement;
+              result = service.getOrCreateLinkElement('test-id');
+            });
+
+            it('should return found element', () => {
+              expect(result?.id).toBe('123');
+            });
+
+            it('should not appendChild to document head', () => {
+              expect(window.document.head.appendChild).not.toHaveBeenCalled();
+            });
+          });
+
+          describe('and "getElementById" returns undefined', () => {
+            let generatedElement: HTMLLinkElement;
+            beforeEach(() => {
+              foundElement = null;
+              generatedElement = { id: '123' } as HTMLLinkElement;
+              window.document.createElement = jest
+                .fn()
+                .mockReturnValue(generatedElement);
+              result = service.getOrCreateLinkElement('test-id');
+            });
+
+            it('should set id of generated element', () => {
+              expect(generatedElement.id).toEqual('test-id');
+            });
+
+            it('should return generated element', () => {
+              expect(result).toEqual(generatedElement);
+            });
+
+            it('should create the element', () => {
+              expect(window.document.createElement).toHaveBeenCalledWith(
+                'link',
+              );
+            });
+
+            it('should append element to head', () => {
+              expect(window.document.head.appendChild).toHaveBeenCalledWith(
+                generatedElement,
+              );
+            });
+          });
+        });
+      });
     },
   );
 });
