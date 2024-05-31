@@ -4,8 +4,8 @@ import { PjLogger } from '../pj-logger';
 import { isPlatformBrowser } from '@angular/common';
 
 @Injectable()
-export class PjBrowserProviders {
-  private readonly _name = PjBrowserProviders.name;
+export class PjBrowserTools {
+  private readonly _name = PjBrowserTools.name;
   private _logger = inject(PjLogger, { optional: true });
   private _platformId = inject(PLATFORM_ID, { optional: true });
   private _localStorage: Storage | null | undefined;

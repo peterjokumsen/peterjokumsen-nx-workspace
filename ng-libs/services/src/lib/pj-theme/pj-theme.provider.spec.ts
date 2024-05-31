@@ -1,12 +1,12 @@
 import { PjTheme, providePjTheme } from './';
 
-import { PjBrowserProviders } from '../pj-browser-providers';
+import { PjBrowserTools } from '../pj-browser-tools';
 import { TestBed } from '@angular/core/testing';
 
 describe('providePjTheme', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [PjBrowserProviders, providePjTheme()],
+      providers: [PjBrowserTools, providePjTheme()],
     });
   });
 
