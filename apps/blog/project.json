@@ -42,6 +42,11 @@
             "bundleName": "dark-theme",
             "inject": false
           },
+          {
+            "input": "ng-libs/styles/src/lib/styles/initial-theme.scss",
+            "bundleName": "initial-theme",
+            "inject": false
+          },
           "ng-libs/styles/src/lib/styles/global.scss"
         ],
         "scripts": [],
