@@ -12,8 +12,23 @@
   @return mat.get-color-from-palette($palette, $hue);
 }
 
-@mixin generate-from-theme($theme) {
-  @include mat.all-component-themes($theme);
+@mixin generate-from-theme-base($theme) {
+  @include mat.core-base($theme);
+  @include mat.core-density($theme);
+  @include mat.core-typography($theme);
+
+  @include mat.button-base($theme);
+  @include mat.button-density($theme);
+  @include mat.button-typography($theme);
+}
+
+@mixin generate-from-theme($theme, $initial: false) {
+  @if ($initial == false) {
+    @include mat.all-component-themes($theme);
+  } @else {
+    @include mat.core-color($theme);
+    @include mat.button-color($theme);
+  }
 
   html,
   body {
