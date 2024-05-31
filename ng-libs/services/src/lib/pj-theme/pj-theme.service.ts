@@ -32,18 +32,15 @@ export class PjTheme {
   }
 
   setTheme(theme: PjThemes): void {
-    if (!this._provider.window) return;
-    let styleElement = this._provider.window.document?.getElementById(
-      'theme-style',
-    ) as HTMLLinkElement;
+    const styleElement = this._provider.getOrCreateLinkElement('theme-style');
     if (!styleElement) {
-      styleElement = this._provider.window.document.createElement('link');
-      styleElement.id = 'theme-style';
-      styleElement.rel = 'stylesheet';
-      this._provider.window.document.head.appendChild(styleElement);
+      return;
     }
 
-    styleElement.href = `${theme}-theme.css`;
+    if (styleElement.href?.includes(theme) !== true) {
+      styleElement.href = `${theme}-theme.css`;
+    }
+
     this._provider.localStorage?.setItem('theme', theme);
     this._themeSubject.next(theme);
   }
