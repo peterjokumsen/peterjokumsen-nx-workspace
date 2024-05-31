@@ -1,7 +1,7 @@
 import { BehaviorSubject, map } from 'rxjs';
 import { Injectable, inject } from '@angular/core';
 
-import { PjBrowserProviders } from '../pj-browser-providers';
+import { PjBrowserTools } from '../pj-browser-tools';
 import { PjThemes } from './models';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class PjTheme {
     undefined,
   );
 
-  private _provider = inject(PjBrowserProviders);
+  private _provider = inject(PjBrowserTools);
 
   theme$ = this._themeSubject
     .asObservable()

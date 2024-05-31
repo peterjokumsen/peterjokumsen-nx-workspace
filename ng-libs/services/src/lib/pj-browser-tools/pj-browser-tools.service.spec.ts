@@ -1,10 +1,10 @@
 import { PLATFORM_ID } from '@angular/core';
-import { PjBrowserProviders } from './';
+import { PjBrowserTools } from './';
 import { PjLogger } from '../pj-logger';
 import { TestBed } from '@angular/core/testing';
 
-describe(PjBrowserProviders.name, () => {
-  let service: PjBrowserProviders;
+describe(PjBrowserTools.name, () => {
+  let service: PjBrowserTools;
 
   let checkPlatformSpy: jest.SpyInstance<boolean>;
 
@@ -14,10 +14,10 @@ describe(PjBrowserProviders.name, () => {
         providers: [
           // keep split
           { provide: PLATFORM_ID, useValue: undefined },
-          PjBrowserProviders,
+          PjBrowserTools,
         ],
       });
-      service = TestBed.inject(PjBrowserProviders);
+      service = TestBed.inject(PjBrowserTools);
     });
 
     it('should be created', () => {
@@ -39,7 +39,7 @@ describe(PjBrowserProviders.name, () => {
         providers: [
           // keep split
           { provide: PLATFORM_ID, useFactory: () => platformId },
-          PjBrowserProviders,
+          PjBrowserTools,
         ],
       });
     });
@@ -47,7 +47,7 @@ describe(PjBrowserProviders.name, () => {
     describe.each(['browser', 'server'])('as "%s"', (id: string) => {
       it(`should return ${id === 'browser'}`, () => {
         platformId = id;
-        service = TestBed.inject(PjBrowserProviders);
+        service = TestBed.inject(PjBrowserTools);
         expect(service.usingBrowser()).toEqual(id === 'browser');
       });
     });
@@ -70,10 +70,10 @@ describe(PjBrowserProviders.name, () => {
               provide: PjLogger,
               useValue: logger,
             },
-            PjBrowserProviders,
+            PjBrowserTools,
           ],
         });
-        service = TestBed.inject(PjBrowserProviders);
+        service = TestBed.inject(PjBrowserTools);
       });
 
       it('should be created', () => {

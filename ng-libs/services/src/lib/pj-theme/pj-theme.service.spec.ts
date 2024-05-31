@@ -1,7 +1,7 @@
 import { PjTheme, PjThemes } from './';
 
 import { Injectable } from '@angular/core';
-import { PjBrowserProviders } from '../pj-browser-providers';
+import { PjBrowserTools } from '../pj-browser-tools';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 
@@ -20,7 +20,7 @@ describe(`${PjTheme.name}`, () => {
   let service: PjThemeExposed;
   let windowSpy: Partial<jest.Mocked<Window>>;
   let localStorageSpy: Partial<jest.Mocked<Storage>>;
-  let browserProviderSpy: Partial<jest.Mocked<PjBrowserProviders>>;
+  let browserProviderSpy: Partial<jest.Mocked<PjBrowserTools>>;
 
   beforeEach(() => {
     windowSpy = {
@@ -43,7 +43,7 @@ describe(`${PjTheme.name}`, () => {
     TestBed.configureTestingModule({
       providers: [
         // keep split
-        { provide: PjBrowserProviders, useValue: browserProviderSpy },
+        { provide: PjBrowserTools, useValue: browserProviderSpy },
         PjThemeExposed,
       ],
     });
