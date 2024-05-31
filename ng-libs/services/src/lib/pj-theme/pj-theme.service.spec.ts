@@ -18,42 +18,32 @@ class PjThemeExposed extends PjTheme {
 
 describe(`${PjTheme.name}`, () => {
   let service: PjThemeExposed;
-  let windowSpy:
-    | (Partial<Window & jest.Mocked<Window>> & {
-        document: jest.Mocked<Document>;
-      })
-    | null;
+  let windowSpy: Partial<jest.Mocked<Window>>;
   let localStorageSpy: Partial<jest.Mocked<Storage>>;
-  let providerSpy: Partial<PjBrowserProviders>;
+  let browserProviderSpy: Partial<jest.Mocked<PjBrowserProviders>>;
 
   beforeEach(() => {
     windowSpy = {
-      document: {
-        getElementById: jest.fn(),
-        createElement: jest.fn(),
-        head: {
-          appendChild: jest.fn(),
-        },
-      } as unknown as jest.Mocked<Document>,
       matchMedia: jest.fn(),
     };
     localStorageSpy = {
       getItem: jest.fn(),
       setItem: jest.fn(),
     };
-    providerSpy = {
-      get window() {
-        return windowSpy as Window | null;
-      },
+    browserProviderSpy = {
       get localStorage() {
         return localStorageSpy as Storage | null;
       },
+      get window() {
+        return windowSpy as Window;
+      },
+      getOrCreateLinkElement: jest.fn(),
     };
 
     TestBed.configureTestingModule({
       providers: [
         // keep split
-        { provide: PjBrowserProviders, useValue: providerSpy },
+        { provide: PjBrowserProviders, useValue: browserProviderSpy },
         PjThemeExposed,
       ],
     });
@@ -113,8 +103,9 @@ describe(`${PjTheme.name}`, () => {
       styleElement = {
         id: 'theme-style',
       } as unknown as HTMLLinkElement;
-      if (!windowSpy) fail('windowSpy should be defined for test');
-      windowSpy.document.getElementById.mockImplementation(() => styleElement);
+      browserProviderSpy.getOrCreateLinkElement?.mockImplementation(
+        () => styleElement,
+      );
     });
 
     it('should emit theme', async () => {
@@ -129,52 +120,21 @@ describe(`${PjTheme.name}`, () => {
       expect(localStorageSpy.setItem).toHaveBeenCalledWith('theme', 'dark');
     });
 
-    describe('when window is available', () => {
-      describe('and style element is not found', () => {
-        it.each(['dark', 'light'])(
-          'should create "%s" style element',
-          (theme) => {
-            if (!windowSpy) fail('windowSpy should be defined for test');
-            styleElement = null;
-            const linkElement = {} as HTMLLinkElement;
-            windowSpy.document.createElement.mockReturnValue(linkElement);
-
-            service.setTheme(theme as PjThemes);
-
-            expect(windowSpy.document.getElementById).toHaveBeenCalledWith(
-              'theme-style',
-            );
-            expect(windowSpy.document.createElement).toHaveBeenCalledWith(
-              'link',
-            );
-            expect(windowSpy.document.head.appendChild).toHaveBeenCalledWith(
-              linkElement,
-            );
-            expect(linkElement.id).toEqual('theme-style');
-            expect(linkElement.rel).toEqual('stylesheet');
-            expect(linkElement.href).toEqual(`${theme}-theme.css`);
-          },
-        );
-      });
-
-      describe('and style element is found', () => {
-        it.each(['light', 'dark'])(
-          'should change theme to "%s"',
-          (theme: string) => {
-            service.setTheme(theme as PjThemes);
-
-            expect(windowSpy?.document.getElementById).toHaveBeenCalledWith(
-              'theme-style',
-            );
-            expect(styleElement?.href).toBe(`${theme}-theme.css`);
-          },
-        );
-      });
+    it('should use "getOrCreateLinkElement"', () => {
+      service.setTheme('dark');
+      expect(browserProviderSpy.getOrCreateLinkElement).toHaveBeenCalledWith(
+        'theme-style',
+      );
     });
 
-    describe('when window is not available', () => {
+    it('should set href in link element', () => {
+      service.setTheme('dark');
+      expect(styleElement?.href).toEqual('dark-theme.css');
+    });
+
+    describe('when link element is null', () => {
       it('should not throw error', () => {
-        windowSpy = null;
+        styleElement = null;
         expect(() => service.setTheme('light')).not.toThrow();
       });
     });
