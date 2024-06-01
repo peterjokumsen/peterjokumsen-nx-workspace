@@ -11,8 +11,9 @@ This library is meant as a central place to store all the styles that are shared
 The styles in this library are organized in the following way:
 
 - [`global.scss`](./src/lib/styles/global.scss) - This file contains the global styles that should be applied to the entire application.
-- [`light-theme.scss`](./src/lib/styles/light-theme.scss) - This file contains the styles for the light theme.
-- [`dark-theme.scss`](./src/lib/styles/dark-theme.scss) - This file contains the styles for the dark theme.
+- [`theme-base.scss`](./src/lib/styles/theme-base.scss) - This file contains `typography`, `density`, and `structural` styles.
+- [`light-theme.scss`](./src/lib/styles/light-theme.scss) - This file contains the `color` styles for the light theme.
+- [`dark-theme.scss`](./src/lib/styles/dark-theme.scss) - This file contains the `color` styles for the dark theme.
 
 Mixins are stored in the [`mixins`](./src/lib/styles/mixins) folder. Each mixin is stored in its own file, with the file named the same as the mixin. And imported in [`mixins.scss`](./src/lib/styles/mixins.scss) file, to be imported by any other stylesheets.
 
@@ -39,6 +40,11 @@ Update `project.json` in your application to have the following `targets.build.o
             "bundleName": "dark-theme",
             "inject": false
           },
+          {
+            "input": "ng-libs/styles/src/lib/styles/theme-base.scss",
+            "bundleName": "theme-base",
+            "inject": false
+          },
           "ng-libs/styles/src/lib/styles/global.scss"
         ]
       }
@@ -54,7 +60,9 @@ This will include `global.scss` into the application's styles, and will create t
 <html lang="en">
   <head>
     <!-- ... -->
-    <link id="theme-style" rel="stylesheet" type="text/css" href="light-theme.css" />
+    <link id="theme-base" rel="stylesheet" type="text/css" href="theme-base.css" />
+    <link id="light-theme" type="text/css" href="light-theme.css" />
+    <link id="dark-theme" rel="stylesheet" type="text/css" href="dark-theme.css" />
     <!-- ... -->
   </head>
   <body>
@@ -63,7 +71,9 @@ This will include `global.scss` into the application's styles, and will create t
 </html>
 ```
 
-The above HTML will include the light theme in the application. To adjust the theming to `dark-theme.css`, you can change the `href` in your application, or manually changing the `link` tag in the `index.html` file.
+The above HTML will include the `theme-base` styles, dark and light themes in the application. With the dark theme link `rel` set to `'stylesheet'` to have it used as the initial theme.
+
+To adjust the theming to use `light-theme.css`, you can adjust the `rel` for `#light-theme` to `'stylesheet'` and for `#dark-theme` to `''`.
 
 ### Example of changing theme in Angular
 
@@ -85,8 +95,10 @@ export class AppComponent {
     // Check if the current platform is browser, to avoid errors in server-side rendering
     if (!isPlatformBrowser(this._platformId)) return;
 
-    const themeLink = document.getElementById('theme-style') as HTMLLinkElement;
-    themeLink.href = `${theme}-theme.css`;
+    const themes = [document.getElementById('light-theme') as HTMLLinkElement, document.getElementById('dark-theme') as HTMLLinkElement];
+    for (const theme of themes) {
+      theme.rel = theme.id.includes(theme) ? 'stylesheet' : '';
+    }
   }
 }
 ```

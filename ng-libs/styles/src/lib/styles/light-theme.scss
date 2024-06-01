@@ -7,4 +7,4 @@
 
 @include mat.core();
 
-@include generate-from-theme($light-theme);
+@include generate-from-theme-colors($light-theme);

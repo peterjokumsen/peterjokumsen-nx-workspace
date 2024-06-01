@@ -67,16 +67,6 @@
 }
 
 @mixin generate-from-theme-base($theme) {
-  @include mat.core-base($theme);
-  @include mat.core-density($theme);
-  @include mat.core-typography($theme);
-
-  @include mat.button-base($theme);
-  @include mat.button-density($theme);
-  @include mat.button-typography($theme);
-}
-
-@mixin generate-root-base() {
   html,
   body {
     height: 100%;
@@ -86,33 +76,17 @@
     margin: 0;
     font-family: Montserrat, 'Helvetica Neue', sans-serif;
   }
+
+  @include mat.all-component-bases($theme);
+  @include mat.all-component-densities($theme);
+  @include mat.all-component-typographies($theme);
 }
 
-@mixin generate-root-elements($theme) {
-  @include declare-body-color(get-colors-from-theme($theme));
-}
-
-@mixin generate-from-theme($theme, $initial: false) {
-  $is-dark: map-get($theme, is-dark);
-  @if ($initial == false) {
-    @include mat.all-component-themes($theme);
-
-    @include generate-root-base();
-    @include generate-root-elements($theme);
-
-    .theme-loaded {
-      @if ($is-dark) {
-        content: 'dark-loaded';
-      } @else {
-        content: 'light-loaded';
-      }
-    }
-  } @else {
-    @include mat.core-color($theme);
-    @include mat.button-color($theme);
-  }
-
+@mixin generate-from-theme-colors($theme) {
   $colors: get-colors-from-theme($theme);
+
+  @include declare-body-color($colors);
+  @include mat.all-component-colors($theme);
 
   :root {
     @include set-variables($colors);
