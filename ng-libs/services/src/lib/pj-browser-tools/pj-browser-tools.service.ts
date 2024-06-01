@@ -13,7 +13,7 @@ export class PjBrowserTools {
 
   get window(): Window | null {
     if (this._window !== undefined) return this._window;
-    this._logger?.to.group('%s.window', this._name);
+    this._logger?.to.group(`${this._name}.window`);
     this._logger?.to.log('PLATFORM_ID: "%s"', this._platformId);
     if (this.usingBrowser()) {
       this._logger?.to.log('Browser platform detected');
@@ -28,7 +28,7 @@ export class PjBrowserTools {
 
   get localStorage(): Storage | null {
     if (this._localStorage !== undefined) return this._localStorage;
-    this._logger?.to.group('%s.localStorage', this._name);
+    this._logger?.to.group(`${this._name}.localStorage`);
     this._logger?.to.log('PLATFORM_ID: "%s"', this._platformId);
     if (this.usingBrowser()) {
       this._logger?.to.log('Browser platform detected');
@@ -46,7 +46,7 @@ export class PjBrowserTools {
   }
 
   getOrCreateLinkElement(id: string): HTMLLinkElement | null {
-    this._logger?.to.group('%s.getOrCreateLinkElement("%s")', this._name, id);
+    this._logger?.to.group(`${this._name}.getOrCreateLinkElement("${id}")`);
     const currentWindow = this.window;
     if (!currentWindow) {
       this._logger?.to.log(
