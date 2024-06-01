@@ -1,32 +1,30 @@
 @import './set-colors';
 
-@mixin declare-block-classes(
-  $bg-color,
-  $color,
-  $main-bg-color,
-  $main-text-color,
-  $accent-bg-color,
-  $accent-text-color,
-  $error-bg-color,
-  $error-text-color
-) {
+@mixin _declare-block($color-map) {
+  $bg-color: map-get($color-map, 'background');
+  $color: map-get($color-map, 'foreground');
+
+  @if (type-of($bg-color) == 'color' and alpha($bg-color) == 1) {
+    @include set-colors($color-map);
+  } @else {
+    color: $color;
+  }
+}
+
+@mixin declare-block-classes($colors) {
   .primary-block {
-    @if (type-of($bg-color) == 'color' and alpha($bg-color) == 1) {
-      @include set-colors($bg-color, $color);
-    } @else {
-      color: $color;
-    }
+    @include _declare-block($colors);
   }
 
   .main-block {
-    @include set-colors($main-bg-color, $main-text-color);
+    @include set-colors(map-get($colors, 'main'));
   }
 
   .accent-block {
-    @include set-colors($accent-bg-color, $accent-text-color);
+    @include set-colors(map-get($colors, 'accent'));
   }
 
   .error-block {
-    @include set-colors($error-bg-color, $error-text-color);
+    @include set-colors(map-get($colors, 'error'));
   }
 }
