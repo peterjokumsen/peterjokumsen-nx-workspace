@@ -7,4 +7,4 @@
 
 @include mat.core();
 
-@include generate-from-theme-colors($dark-theme);
+@include generate-from-theme-base($dark-theme);
