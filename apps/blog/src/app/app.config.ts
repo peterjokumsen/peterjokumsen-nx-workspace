@@ -1,6 +1,7 @@
 import { ApplicationConfig, isDevMode } from '@angular/core';
 import {
   providePjArticleParser,
+  providePjHttpTools,
   providePjLogger,
 } from '@peterjokumsen/ng-services';
 
@@ -9,13 +10,17 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { provideClientHydration } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
+import { withFetch } from '@angular/common/http';
+
+const config = { production: !isDevMode() };
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimationsAsync(),
     provideClientHydration(),
     provideRouter(appRoutes),
-    providePjLogger({ production: !isDevMode() }),
+    providePjHttpTools(config, withFetch()),
+    providePjLogger(config),
     provideServiceWorker('ngsw-worker.js', {
       enabled: !isDevMode(),
       registrationStrategy: 'registerWhenStable:30000',
