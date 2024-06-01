@@ -43,8 +43,8 @@
             "inject": false
           },
           {
-            "input": "ng-libs/styles/src/lib/styles/initial-theme.scss",
-            "bundleName": "initial-theme",
+            "input": "ng-libs/styles/src/lib/styles/theme-base.scss",
+            "bundleName": "theme-base",
             "inject": false
           },
           "ng-libs/styles/src/lib/styles/global.scss"
