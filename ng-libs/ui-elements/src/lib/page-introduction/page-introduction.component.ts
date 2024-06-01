@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
 } from '@angular/core';
@@ -9,6 +10,10 @@ import {
   IntroductionBackgroundStyle,
   IntroductionCallToAction,
 } from './models';
+import {
+  PjBrowserTools,
+  providePjBrowserTools,
+} from '@peterjokumsen/ng-services';
 
 import { CommonModule } from '@angular/common';
 import { MatButton } from '@angular/material/button';
@@ -17,6 +22,7 @@ import { MatButton } from '@angular/material/button';
   selector: 'pj-ui-page-introduction',
   standalone: true,
   imports: [CommonModule, MatButton],
+  providers: [providePjBrowserTools()],
   template: `
     <div
       class="flex min-h-screen flex-col items-start"
@@ -61,6 +67,8 @@ export class PageIntroductionComponent {
     position: 'top',
   };
 
+  private _browserTools = inject(PjBrowserTools);
+
   introductionTitle = input('👋 Hi there!');
   style = input<IntroductionBackgroundStyle | undefined>({});
   paragraphs = input<string[]>([]);
@@ -80,7 +88,7 @@ export class PageIntroductionComponent {
         let value: string =
           style[key as keyof IntroductionBackgroundStyle] ?? defaultValue ?? '';
         if (key === 'url') {
-          value = `url("${style.url || value}")`;
+          value = this.prepareBackgroundUrl(style.url || value);
           styleKey = 'image';
         }
 
@@ -91,6 +99,7 @@ export class PageIntroductionComponent {
     );
     return styleStrings.join(';');
   });
+
   callToActions = computed(() => {
     const actions = this.actions();
     if (!actions) {
@@ -101,6 +110,20 @@ export class PageIntroductionComponent {
 
     return Array.isArray(actions) ? actions : [actions];
   });
+
+  private prepareBackgroundUrl(urlValue: string): string {
+    const linkElement = this._browserTools.getOrCreateLinkElement(
+      'introduction-background',
+    );
+    if (linkElement) {
+      linkElement.href = urlValue;
+      linkElement.as = 'image';
+      linkElement.fetchPriority = 'high';
+      linkElement.rel = 'preload';
+    }
+
+    return `url("${urlValue}")`;
+  }
 
   onClick(action: IntroductionCallToAction) {
     this.callToAction.emit(action);

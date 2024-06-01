@@ -6,6 +6,7 @@ import {
 } from './models';
 
 import { PageIntroductionComponent } from './';
+import { PjBrowserTools } from '@peterjokumsen/ng-services';
 
 @Component({
   template: `
@@ -32,6 +33,8 @@ class PageIntroductionComponentTestHostComponent {
 describe('PageIntroductionComponent', () => {
   let component: PageIntroductionComponent;
   let fixture: ComponentFixture<PageIntroductionComponent>;
+  let browserToolSpy: Partial<jest.Mocked<PjBrowserTools>>;
+  let linkElement: HTMLLinkElement;
 
   const defaultStyle: IntroductionBackgroundStyle = {
     url: '/assets/intro_background.webp',
@@ -41,10 +44,25 @@ describe('PageIntroductionComponent', () => {
   };
 
   beforeEach(async () => {
+    browserToolSpy = {
+      getOrCreateLinkElement: jest.fn(),
+    };
+    linkElement = {} as unknown as HTMLLinkElement;
+    browserToolSpy.getOrCreateLinkElement?.mockReturnValue(linkElement);
+
     await TestBed.configureTestingModule({
       imports: [PageIntroductionComponent],
       declarations: [PageIntroductionComponentTestHostComponent],
-    }).compileComponents();
+    })
+      .overrideComponent(PageIntroductionComponent, {
+        set: {
+          providers: [
+            // keep split
+            { provide: PjBrowserTools, useValue: browserToolSpy },
+          ],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(PageIntroductionComponent);
     component = fixture.componentInstance;
@@ -88,6 +106,18 @@ describe('PageIntroductionComponent', () => {
           `background-repeat:${defaultStyle.repeat}`,
           `background-position:${defaultStyle.position}`,
         ].join(';'),
+      );
+    });
+
+    it('should generate link element for background image', () => {
+      component.backgroundStyle();
+      expect(linkElement).toEqual(
+        expect.objectContaining({
+          rel: 'preload',
+          fetchPriority: 'high',
+          as: 'image',
+          href: defaultStyle.url,
+        }),
       );
     });
   });
