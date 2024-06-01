@@ -91,3 +91,10 @@ This implementation of `PjLogger` service will not log messages, and will be use
 ### DebugLoggerService implementation
 
 This implementation of `PjLogger` service will log messages to the console, and will be used when `production` property is set to `false`.
+
+#### Overrides
+
+|  Function  | Override description                                                                             |
+| :--------: | ------------------------------------------------------------------------------------------------ |
+|  `group`   | When called, will start a timer (`console.time`) using the same title as the group title used.   |
+| `groupEnd` | When called, will end timer for last group created, if no group title found, will not end timer. |

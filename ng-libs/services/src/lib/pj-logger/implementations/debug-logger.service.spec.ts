@@ -1,4 +1,5 @@
 import { DebugLoggerService } from './debug-logger.service';
+import { LogFns } from '../';
 import { TestBed } from '@angular/core/testing';
 
 describe(DebugLoggerService.name, () => {
@@ -17,7 +18,54 @@ describe(DebugLoggerService.name, () => {
 
   describe('to', () => {
     it('should use console', () => {
-      expect(service.to).toBe(console);
+      const expectedConsole: Partial<LogFns> = {
+        log: console.log,
+      };
+      expect(service.to).toEqual(expect.objectContaining(expectedConsole));
+    });
+
+    describe('group override', () => {
+      beforeEach(() => {
+        console.time = jest.fn();
+        console.timeEnd = jest.fn();
+        console.group = jest.fn();
+        console.groupEnd = jest.fn();
+      });
+
+      describe('calling group', () => {
+        it('should use console time and group', () => {
+          service.to.group('title');
+          expect(console.time).toHaveBeenCalledWith('title');
+          expect(console.group).toHaveBeenCalledWith('title');
+        });
+      });
+
+      describe('calling groupEnd', () => {
+        it('should use console groupEnd', () => {
+          service.to.groupEnd();
+          expect(console.groupEnd).toHaveBeenCalled();
+        });
+
+        describe('without group being called', () => {
+          it('should not use console timeEnd', () => {
+            service.to.groupEnd();
+            expect(console.timeEnd).not.toHaveBeenCalled();
+          });
+        });
+
+        describe('after group called', () => {
+          const groupTitle = 'title';
+
+          beforeEach(() => {
+            service.to.group(groupTitle);
+          });
+
+          it('should use console timeEnd', () => {
+            service.to.groupEnd();
+            expect(console.timeEnd).toHaveBeenCalledWith(groupTitle);
+          });
+        });
+      });
     });
   });
 });
