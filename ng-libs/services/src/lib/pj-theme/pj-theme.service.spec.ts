@@ -98,14 +98,17 @@ describe(`${PjTheme.name}`, () => {
 
   describe('setTheme', () => {
     let styleElement: HTMLLinkElement | null;
+    let styleElements: HTMLLinkElement[];
 
     beforeEach(() => {
-      styleElement = {
-        id: 'theme-style',
-      } as unknown as HTMLLinkElement;
-      browserProviderSpy.getOrCreateLinkElement?.mockImplementation(
-        () => styleElement,
-      );
+      styleElements = [];
+      styleElement = {} as unknown as HTMLLinkElement;
+      browserProviderSpy.getOrCreateLinkElement?.mockImplementation((id) => {
+        if (!styleElement) return null;
+        const element = { ...styleElement, id };
+        styleElements.push(element);
+        return element;
+      });
     });
 
     it('should emit theme', async () => {
@@ -120,17 +123,22 @@ describe(`${PjTheme.name}`, () => {
       expect(localStorageSpy.setItem).toHaveBeenCalledWith('theme', 'dark');
     });
 
-    it('should use "getOrCreateLinkElement"', () => {
-      service.setTheme('dark');
-      expect(browserProviderSpy.getOrCreateLinkElement).toHaveBeenCalledWith(
-        'theme-style',
-      );
-    });
-
-    it('should set href in link element', () => {
-      service.setTheme('dark');
-      expect(styleElement?.href).toEqual('dark-theme.css');
-    });
+    it.each(['light', 'dark'])(
+      'should set links to have correct rel for "%s"',
+      (theme) => {
+        service.setTheme(theme as 'dark' | 'light');
+        expect(styleElements).toEqual([
+          expect.objectContaining({
+            id: 'light-theme',
+            rel: theme === 'light' ? 'stylesheet' : '',
+          }),
+          expect.objectContaining({
+            id: 'dark-theme',
+            rel: theme === 'dark' ? 'stylesheet' : '',
+          }),
+        ]);
+      },
+    );
 
     describe('when link element is null', () => {
       it('should not throw error', () => {
