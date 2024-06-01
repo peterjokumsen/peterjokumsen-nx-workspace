@@ -32,13 +32,14 @@ export class PjTheme {
   }
 
   setTheme(theme: PjThemes): void {
-    const styleElement = this._provider.getOrCreateLinkElement('theme-style');
-    if (!styleElement) {
-      return;
-    }
+    const links = [
+      this._provider.getOrCreateLinkElement('light-theme'),
+      this._provider.getOrCreateLinkElement('dark-theme'),
+    ];
 
-    if (styleElement.href?.includes(theme) !== true) {
-      styleElement.href = `${theme}-theme.css`;
+    for (const link of links) {
+      if (!link) continue;
+      link.rel = link.id.includes(theme) ? 'stylesheet' : '';
     }
 
     this._provider.localStorage?.setItem('theme', theme);
