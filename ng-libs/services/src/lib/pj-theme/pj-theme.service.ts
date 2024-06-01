@@ -10,22 +10,23 @@ export class PjTheme {
     undefined,
   );
 
-  private _provider = inject(PjBrowserTools);
+  private _browserTools = inject(PjBrowserTools);
 
   theme$ = this._themeSubject
     .asObservable()
     .pipe(map((theme) => theme || this.getTheme()));
 
   protected getTheme(): PjThemes {
-    let theme = this._provider.localStorage?.getItem('theme') as
+    let theme = this._browserTools.localStorage?.getItem('theme') as
       | PjThemes
       | undefined;
     if (theme) {
       return theme;
     }
 
-    theme = this._provider.window?.matchMedia('(prefers-color-scheme: dark)')
-      .matches
+    theme = this._browserTools.window?.matchMedia(
+      '(prefers-color-scheme: dark)',
+    ).matches
       ? 'dark'
       : 'light';
     return theme;
@@ -33,8 +34,8 @@ export class PjTheme {
 
   setTheme(theme: PjThemes): void {
     const links = [
-      this._provider.getOrCreateLinkElement('light-theme'),
-      this._provider.getOrCreateLinkElement('dark-theme'),
+      this._browserTools.getOrCreateLinkElement('light-theme'),
+      this._browserTools.getOrCreateLinkElement('dark-theme'),
     ];
 
     for (const link of links) {
@@ -42,7 +43,7 @@ export class PjTheme {
       link.rel = link.id.includes(theme) ? 'stylesheet' : '';
     }
 
-    this._provider.localStorage?.setItem('theme', theme);
+    this._browserTools.localStorage?.setItem('theme', theme);
     this._themeSubject.next(theme);
   }
 }
