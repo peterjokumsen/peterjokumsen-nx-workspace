@@ -7,12 +7,23 @@
 
 @include mat.core();
 
-@include generate-from-theme-base($light-theme);
+.initial-theme {
+  @include generate-root-base();
+  @include generate-from-theme-base($light-theme);
+}
 
 @media (prefers-color-scheme: dark) {
-  @include generate-from-theme($dark-theme, true);
+  @include generate-root-elements($dark-theme);
+
+  .initial-theme {
+    @include generate-from-theme($dark-theme, true);
+  }
 }
 
 @media (prefers-color-scheme: light) {
-  @include generate-from-theme($light-theme, true);
+  @include generate-root-elements($light-theme);
+
+  .initial-theme {
+    @include generate-from-theme($light-theme, true);
+  }
 }

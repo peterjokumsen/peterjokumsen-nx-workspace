@@ -1,14 +1,18 @@
-@mixin set-variables($map) {
-  $primary-keys: 'primary-bg-color', 'primary-color';
-  $theme-keys: 'bg-color', 'color', 'accent-bg-color', 'accent-color',
-    'error-bg-color', 'error-color';
-  $required-keys: join($primary-keys, $theme-keys);
+@mixin set-variables($colors) {
+  $main: map-get($colors, 'main');
+  $accent: map-get($colors, 'accent');
+  $error: map-get($colors, 'error');
 
-  @each $required-key in $primary-keys {
-    @if not map-has-key($map, $required-key) {
-      @error "Key `#{$required-key}` is missing in the map.";
-    }
-  }
+  $map: (
+    primary-bg-color: map-get($colors, 'background'),
+    primary-color: map-get($colors, 'foreground'),
+    bg-color: map-get($main, 'background'),
+    color: map-get($main, 'foreground'),
+    accent-bg-color: map-get($accent, 'background'),
+    accent-color: map-get($accent, 'foreground'),
+    error-bg-color: map-get($error, 'background'),
+    error-color: map-get($error, 'foreground'),
+  );
 
   @each $key, $value in $map {
     --#{$key}: #{$value};

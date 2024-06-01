@@ -12,33 +12,7 @@
   @return mat.get-color-from-palette($palette, $hue);
 }
 
-@mixin generate-from-theme-base($theme) {
-  @include mat.core-base($theme);
-  @include mat.core-density($theme);
-  @include mat.core-typography($theme);
-
-  @include mat.button-base($theme);
-  @include mat.button-density($theme);
-  @include mat.button-typography($theme);
-}
-
-@mixin generate-from-theme($theme, $initial: false) {
-  @if ($initial == false) {
-    @include mat.all-component-themes($theme);
-  } @else {
-    @include mat.core-color($theme);
-    @include mat.button-color($theme);
-  }
-
-  html,
-  body {
-    height: 100%;
-  }
-  body {
-    margin: 0;
-    font-family: Montserrat, 'Helvetica Neue', sans-serif;
-  }
-
+@function get-colors-from-theme($theme) {
   $primary-palette: get-palette($theme, primary);
   $accent-palette: get-palette($theme, accent);
   $warn-palette: get-palette($theme, warn);
@@ -58,7 +32,7 @@
   $error-bg-color: null;
   $error-text-color: null;
 
-  @if map-get($theme, is-dark) {
+  @if (map-get($theme, 'is-dark')) {
     $bg-color: $primary-contrast;
     $color: $primary;
     $accent-bg-color: $accent-contrast;
@@ -74,40 +48,77 @@
     $error-text-color: $warn-contrast;
   }
 
-  :root {
-    @include set-variables(
-      (
-        primary-bg-color: $bg-color,
-        primary-color: $color,
-        bg-color: $main-bg-color,
-        color: $main-text-color,
-        accent-bg-color: $accent-bg-color,
-        accent-color: $accent-text-color,
-        error-bg-color: $error-bg-color,
-        error-color: $error-text-color,
-      )
-    );
+  @return (
+    'background': $bg-color,
+    'foreground': $color,
+    'main': (
+      'background': $main-bg-color,
+      'foreground': $main-text-color,
+    ),
+    'accent': (
+      'background': $accent-bg-color,
+      'foreground': $accent-text-color,
+    ),
+    'error': (
+      'background': $error-bg-color,
+      'foreground': $error-text-color,
+    )
+  );
+}
+
+@mixin generate-from-theme-base($theme) {
+  @include mat.core-base($theme);
+  @include mat.core-density($theme);
+  @include mat.core-typography($theme);
+
+  @include mat.button-base($theme);
+  @include mat.button-density($theme);
+  @include mat.button-typography($theme);
+}
+
+@mixin generate-root-base() {
+  html,
+  body {
+    height: 100%;
   }
 
-  @include declare-color-classes(
-    $bg-color,
-    $color,
-    $main-bg-color,
-    $main-text-color,
-    $accent-bg-color,
-    $accent-text-color,
-    $error-bg-color,
-    $error-text-color
-  );
+  body {
+    margin: 0;
+    font-family: Montserrat, 'Helvetica Neue', sans-serif;
+  }
+}
 
-  @include declare-block-classes(
-    $bg-color,
-    $color,
-    $main-bg-color,
-    $main-text-color,
-    $accent-bg-color,
-    $accent-text-color,
-    $error-bg-color,
-    $error-text-color
-  );
+@mixin generate-root-elements($theme) {
+  @include declare-body-color(get-colors-from-theme($theme));
+}
+
+@mixin generate-from-theme($theme, $initial: false) {
+  $is-dark: map-get($theme, is-dark);
+  @if ($initial == false) {
+    @include mat.all-component-themes($theme);
+
+    @include generate-root-base();
+    @include generate-root-elements($theme);
+
+    .theme-loaded {
+      @if ($is-dark) {
+        content: 'dark-loaded';
+      } @else {
+        content: 'light-loaded';
+      }
+    }
+  } @else {
+    @include mat.core-color($theme);
+    @include mat.button-color($theme);
+  }
+
+  $colors: get-colors-from-theme($theme);
+
+  :root {
+    @include set-variables($colors);
+  }
+
+  @include declare-color-classes($colors);
+
+  @include declare-block-classes($colors);
 }

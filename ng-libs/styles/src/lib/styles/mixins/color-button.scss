@@ -1,4 +1,7 @@
-@mixin color-button($bg-color, $color) {
+@mixin color-button($color-map) {
+  $bg-color: map-get($color-map, 'background');
+  $color: map-get($color-map, 'foreground');
+
   background-color: $bg-color;
   border-color: $color;
   color: $color;
