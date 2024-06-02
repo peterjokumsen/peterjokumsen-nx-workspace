@@ -128,36 +128,15 @@ jobs:
     outputs:
       deployed_url: ${{ steps.publish_swa.outputs.static_web_app_url }}
 
-  close_deployed:
+  clean_pull_request:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    uses: './.github/workflows/_workflow.jobs.clean_pull_request.yml'
+    name: '🧹'
     needs:
       - prep
-    if: |
-      github.event_name == 'pullrequest' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    name: 'Close staging 🧹'
-    steps:
-      - name: 'AZ CLI login 🔑'
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: 'Get API key 🔑'
-        id: static_web_app_apikey
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            apiKey=$(az staticwebapp secrets list \
-              --name '${{ needs.prep.outputs.app_name }}-static-web-app' \
-              | jq -r '.properties.apiKey')
-            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
-
-      - name: Close Pull Request
-        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
-        with:
-          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
-          action: 'close'
+    with:
+      app_name: ${{ needs.prep.outputs.app_name }}
+    secrets: inherit
 
   post_deploy:
     uses: './.github/workflows/_workflow.jobs.post_deploy.yml'
