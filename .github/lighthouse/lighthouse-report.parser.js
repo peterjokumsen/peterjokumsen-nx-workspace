@@ -81,10 +81,6 @@ const createMarkdownTableHeader = () => [
  * @param {LighthouseOutputs} lighthouseOutputs
  */
 const createLighthouseReport = ({ links, manifest }) => {
-  console.group('Creating lighthouse report comment');
-  console.log('links: %o', links);
-  console.log('manifest: %o', manifest);
-
   const tableHeader = createMarkdownTableHeader();
   const tableBody = manifest.map((result) => {
     const testUrl = /** @type {string} */ (
@@ -105,8 +101,6 @@ const createLighthouseReport = ({ links, manifest }) => {
     ...tableBody,
     '',
   ];
-
-  console.groupEnd();
 
   return comment.join('\n');
 };
