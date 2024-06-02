@@ -1,3 +1,6 @@
+# This workflow executes linting, validation, and deployment for infrastructure
+# When a action is pull request, it lints and validates the bicep files
+# When a action is push is made to the main branch, it deploys the bicep files
 name: '[♻️] infra'
 on:
   workflow_call:
@@ -26,8 +29,9 @@ on:
         required: true
 
 jobs:
+  # lint bicep files when a pull request is opened or synchronized
   lint_biceps:
-    if: github.event_name != 'push' && github.event.action != 'closed'
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: 'Lint Bicep 💪'
     steps:
@@ -61,10 +65,10 @@ jobs:
           category: bicep
           sarif_file: bicep.sarif
 
+  # deploy bicep files when a pull request is opened or synchronized, or when a push is made to the main branch
   deploy_bicep:
     runs-on: ubuntu-latest
     name: 'Deploy Bicep 💪'
-    if: github.event.action != 'closed'
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4

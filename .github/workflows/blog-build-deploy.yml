@@ -1,5 +1,5 @@
+# Workflow to build and deploy the blog application
 name: '[🚀] Blog'
-
 on:
   push:
     branches:
@@ -16,6 +16,7 @@ permissions:
   security-events: write
 
 jobs:
+  # prepare the deployment parameters
   prep:
     name: '🛠️'
     uses: './.github/workflows/_workflow.jobs.preparation.yml'
@@ -26,6 +27,7 @@ jobs:
       app_name: 'blog'
       branch_name: ${{ github.head_ref || github.ref_name }}
 
+  # lint, test, and build the blog application
   lint_test_build:
     if: |
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
@@ -39,6 +41,7 @@ jobs:
       build_location: 'dist/apps/blog'
     secrets: inherit
 
+  # deploy static web app using /.biceps/main.bicep
   infra:
     if: |
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
@@ -53,6 +56,7 @@ jobs:
       bicep_main_file: ${{ needs.prep.outputs.bicep_main_file }}
     secrets: inherit
 
+  # deploy the blog application
   deploy_app:
     needs:
       - prep
@@ -100,6 +104,7 @@ jobs:
     outputs:
       deployed_url: ${{ steps.publish_swa.outputs.static_web_app_url }}
 
+  # clean up the staging deployment
   clean_pull_request:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     uses: './.github/workflows/_workflow.jobs.clean_pull_request.yml'
@@ -110,6 +115,7 @@ jobs:
       app_name: ${{ needs.prep.outputs.app_name }}
     secrets: inherit
 
+  # run post deployment checks
   post_deploy:
     uses: './.github/workflows/_workflow.jobs.post_deploy.yml'
     name: '🧪 🚀'
