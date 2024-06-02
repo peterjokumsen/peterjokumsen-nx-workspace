@@ -1,5 +1,5 @@
-# Workflow to build and deploy the blog application
 name: '[🚀] Blog'
+# Workflow to build and deploy the blog application
 on:
   push:
     branches:

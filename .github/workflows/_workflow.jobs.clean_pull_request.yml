@@ -1,7 +1,7 @@
+name: '[♻️] clean_pull_request'
 # This workflow is triggered by the main workflow and executes the cleanup of the deployed static web app
 # Expect the calling workflow to handle the condition for when to run this workflow
 # e.g. `if: github.event_name == 'pull_request' && github.event.action == 'closed'`
-name: '[♻️] clean_pull_request'
 on:
   workflow_call:
     inputs:
