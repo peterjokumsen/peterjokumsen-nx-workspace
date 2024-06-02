@@ -8,32 +8,6 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
-  workflow_dispatch:
-    inputs:
-      deploy_bicep:
-        description: 'Lint & Deploy Bicep files'
-        required: false
-        default: 'No'
-        type: 'choice'
-        options:
-          - 'Yes'
-          - 'No'
-      test_affected:
-        description: 'Test affected'
-        required: false
-        default: 'Yes'
-        type: 'choice'
-        options:
-          - 'Yes'
-          - 'No'
-      build_and_deploy:
-        description: 'Build and deploy application'
-        required: false
-        default: 'Yes'
-        type: 'choice'
-        options:
-          - 'Yes'
-          - 'No'
 
 permissions:
   id-token: write
@@ -54,7 +28,6 @@ jobs:
 
   lint_test_build:
     if: |
-      (github.event_name == 'workflow_dispatch' && inputs.test_affected == 'Yes') ||
       (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
     name: '🧪 | 🏗️'
@@ -68,8 +41,7 @@ jobs:
 
   infra:
     if: |
-      (github.event_name == 'workflow_dispatch' && inputs.deploy_bicep == 'Yes') ||
-      github.event_name == 'pull_request' ||
+      (github.event_name == 'pull_request' && github.event.action != 'closed') ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
     name: '🏭'
     needs:
