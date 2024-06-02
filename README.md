@@ -1,6 +1,6 @@
 # PeterJokumsen Blog
 
-[![Blog - Build and Deploy 🏗️](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml) [![All - Lint & Test 🧪](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/all-ci.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/all-ci.yml) [![codecov](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graph/badge.svg?token=0QX0KNI1R4)](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace)
+[![codecov](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graph/badge.svg?token=0QX0KNI1R4)](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace)
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
@@ -11,6 +11,10 @@ This repository was created as a blog and project to practice skills and techniq
 # Applications
 
 ## Blog
+
+<a alt="Peter Jokumsen Blog" href="https://blog.peterjokumsen.com" target="_blank" rel="noreferrer"><img src="https://blog.peterjokumsen.com/assets/logo-150.webp" width="150"></a>
+
+[![Blog](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml)
 
 The [`blog`](./apps/blog) application is the initial project, which will be used to write blog posts and articles. Hosted as [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://blog.peterjokumsen.com](https://blog.peterjokumsen.com).
 
@@ -23,7 +27,7 @@ The [`blog`](./apps/blog) application is the initial project, which will be used
   - [`styles`](./ng-libs/styles/README.md) - Shared styles for the workspace.
   - [`ui-elements`](./ng-libs/ui-elements/README.md) - Shared UI elements, components, and directives.
 - [`ts-libs`](./ts-libs/README.md) - TypeScript libraries for shared functions and utilities.
-  - [`util-fns`](./ts-libs/util-fns/README.md) - Utility functions for the workspace.
+  - [`ts-utils`](./ts-libs/ts-utils/README.md) - Utility functions for the workspace.
 
 # Code coverage
 
