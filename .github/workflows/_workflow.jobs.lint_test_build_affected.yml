@@ -1,5 +1,5 @@
+# This workflow executes the linting, testing, and building of the affected applications
 name: '[♻️] lint_test_build_affected'
-
 on:
   workflow_call:
     inputs:
@@ -40,6 +40,8 @@ permissions:
   security-events: write
 
 jobs:
+  # check if the provided application is affected by the latest changes made
+  # outputs the result to be used by subsequent jobs, and the base SHA to be used for affected commands
   is_affected:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
@@ -81,6 +83,9 @@ jobs:
       projected_affected: ${{ steps.is_affected.outputs.projected_affected }}
       nx_base: ${{ steps.set_base.outputs.base }}
 
+  # test and lint the affected libraries/applications, when the project is affected
+  # will only test/lint affected when workflow is triggered by a pull_request
+  # will test all when workflow is triggered by a push
   test_and_lint:
     needs: is_affected
     if: |
@@ -137,6 +142,8 @@ jobs:
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
 
+  # build the project when it is affected by the latest changes
+  # will publish the compiled files as 'compiled-app' artifact
   build_affected:
     needs: is_affected
     if: |

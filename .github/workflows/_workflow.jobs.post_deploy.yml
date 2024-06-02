@@ -1,3 +1,4 @@
+# This workflow executes post deployment tasks
 name: '[♻️] post_deploy'
 on:
   workflow_call:
@@ -16,6 +17,7 @@ permissions:
   pull-requests: write
 
 jobs:
+  # wait for the deployment to return a successful response
   wait_for_deployment:
     name: 'Wait for deployment ⌚'
     if: github.event.action != 'closed'
@@ -29,6 +31,9 @@ jobs:
           timeout: 300000
           interval: 1000
 
+  # run lighthouse audit on the provided URLs
+  # and output the results as a comment on the PR
+  # uses config from .github/lighthouse/lighthouse.config.json
   lighthouse_report_job_matrix:
     name: 'Lighthouse report 💡🏠'
     runs-on: ubuntu-latest
@@ -74,6 +79,7 @@ jobs:
           header: lighthouse
           message: ${{ steps.format_lighthouse_score.outputs.comment }}
 
+  # placeholder for end-to-end tests
   end_to_end_tests:
     name: 'End-to-end tests 🧪'
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
