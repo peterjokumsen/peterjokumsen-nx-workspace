@@ -1,5 +1,5 @@
-# This workflow prepares parameters for the deployment job
 name: '[♻️] preparation'
+# This workflow prepares parameters for the deployment job
 on:
   workflow_call:
     inputs:

@@ -1,5 +1,5 @@
-# This workflow executes the linting, testing, and building of the affected applications
 name: '[♻️] lint_test_build_affected'
+# This workflow executes the linting, testing, and building of the affected applications
 on:
   workflow_call:
     inputs:

@@ -1,7 +1,7 @@
+name: '[♻️] infra'
 # This workflow executes linting, validation, and deployment for infrastructure
 # When a action is pull request, it lints and validates the bicep files
 # When a action is push is made to the main branch, it deploys the bicep files
-name: '[♻️] infra'
 on:
   workflow_call:
     inputs:

@@ -1,5 +1,5 @@
-# This workflow executes post deployment tasks
 name: '[♻️] post_deploy'
+# This workflow executes post deployment tasks
 on:
   workflow_call:
     inputs:
