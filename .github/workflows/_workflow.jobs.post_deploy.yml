@@ -18,7 +18,7 @@ permissions:
 jobs:
   wait_for_deployment:
     name: 'Wait for deployment ⌚'
-    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     steps:
       - name: 'Wait for preview ${{ inputs.deployment_url }} ⌚'
@@ -62,8 +62,12 @@ jobs:
             const comment = lighthouseCommentMaker({ lighthouseOutputs });
             core.setOutput("comment", comment);
 
+      - name: 'Output lighthouse report 📤'
+        run: echo "${{ steps.format_lighthouse_score.outputs.comment }}" >> $GITHUB_STEP_SUMMARY
+
       - name: Add Lighthouse stats as comment ✍️
         id: comment_to_pr
+        if: github.event_name == 'pull_request'
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ github.event.pull_request.number }}
