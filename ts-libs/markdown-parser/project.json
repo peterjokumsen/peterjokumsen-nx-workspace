@@ -1,0 +1,26 @@
+{
+  "name": "markdown-parser",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "ts-libs/markdown-parser/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/ts-libs/markdown-parser",
+        "main": "ts-libs/markdown-parser/src/index.ts",
+        "tsConfig": "ts-libs/markdown-parser/tsconfig.lib.json",
+        "assets": ["ts-libs/markdown-parser/*.md"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "ts-libs/markdown-parser/jest.config.ts"
+      }
+    }
+  }
+}
