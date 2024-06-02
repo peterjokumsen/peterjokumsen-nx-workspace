@@ -39,7 +39,7 @@ jobs:
         with:
           inlineScript: |
             apiKey=$(az staticwebapp secrets list \
-              --name '${{ inpus.app_name }}-static-web-app' \
+              --name '${{ inputs.app_name }}-static-web-app' \
               | jq -r '.properties.apiKey')
             echo "api_key=$apiKey" >> $GITHUB_OUTPUT
 
