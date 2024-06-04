@@ -10,6 +10,10 @@ This library is meant to act as a parser of Markdown text. It will take in a str
 >
 > _Which could also be an interesting project to play with._ 🤔
 
+## Functions
+
+- [`parseMarkdown`](src/lib/README.md)
+
 ## Building
 
 Run `nx build markdown-parser` to build the library.
