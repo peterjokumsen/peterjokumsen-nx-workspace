@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatCard, MatCardContent, MatCardHeader } from '@angular/material/card';
+import { MockComponent, MockDirective, MockPipe } from 'ng-mocks';
 import { PjArticle, PjArticleParser } from '@peterjokumsen/ng-services';
 
 import { ArticleComponent } from '@peterjokumsen/ui-elements';
 import { ChangeHistoryComponent } from './change-history.component';
-import { MockComponent } from 'ng-mocks';
+import { JsonPipe } from '@angular/common';
 import { of } from 'rxjs';
 
 describe('ChangeHistoryComponent', () => {
@@ -28,7 +30,13 @@ describe('ChangeHistoryComponent', () => {
     })
       .overrideComponent(ChangeHistoryComponent, {
         set: {
-          imports: [MockComponent(ArticleComponent)],
+          imports: [
+            MockComponent(ArticleComponent),
+            MockComponent(MatCard),
+            MockComponent(MatCardHeader),
+            MockDirective(MatCardContent),
+            MockPipe(JsonPipe),
+          ],
         },
       })
       .compileComponents();
