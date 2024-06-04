@@ -1,1 +1,1 @@
-export * from './lib/markdown-parser';
+export * from './lib/parse-markdown';
