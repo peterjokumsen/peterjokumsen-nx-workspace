@@ -32,3 +32,13 @@ Get the level of the heading for the line being read. This is used to determine 
 ```typescript
 const headingLevel = getHeadingLevel(line);
 ```
+
+## `lineHas`
+
+Check if the line contains `tag` passed in
+
+**Usage**
+
+```typescript
+const containsImageTag = hasImage(line);
+```
