@@ -8,4 +8,5 @@ export type MarkdownContentType =
   | 'horizontal-rule'
   | 'image'
   | 'link'
-  | 'paragraph';
+  | 'paragraph'
+  | 'text';

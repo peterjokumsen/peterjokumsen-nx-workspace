@@ -38,6 +38,11 @@ export interface MarkdownHorizontalRule extends HasMarkdownContentType {
   type: 'horizontal-rule';
 }
 
+export interface MarkdownText extends HasMarkdownContentType {
+  type: 'text';
+  content: string;
+}
+
 export interface MarkdownImage extends HasMarkdownContentType {
   type: 'image';
   src: string;
@@ -66,4 +71,5 @@ export type MarkdownContent =
   | MarkdownImage
   | MarkdownLink
   | MarkdownSection
+  | MarkdownText
   | MarkdownParagraph;
