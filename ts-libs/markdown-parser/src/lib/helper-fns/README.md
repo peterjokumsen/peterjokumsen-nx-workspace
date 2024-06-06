@@ -42,3 +42,24 @@ Check if the line contains `tag` passed in
 ```typescript
 const containsImageTag = hasImage(line);
 ```
+
+## `splitRichContent`
+
+Used to split tokenized string into rich content and plain text. Will use the passed in mapping to resolve token into content, and any other strings will be turned into plain text content.
+
+**Usage**
+
+```typescript
+const content = splitRichContent('H*ll-', {
+  '*': { src: '/world', content: 'e', type: 'image' },
+  '-': { type: 'link', alt: 'o', href: '/hello' },
+});
+
+// content = [
+//   { type: 'text', content: 'H' },
+//   { type: 'image', src: '/world', content: 'e' },
+//   { type: 'text', content: 'l' },
+//   { type: 'text', content: 'l' },
+//   { type: 'link', alt: 'o', href: '/hello' },
+// ];
+```

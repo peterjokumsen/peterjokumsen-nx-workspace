@@ -100,3 +100,16 @@ Function to use when the content type is `'section'`.
 Will take the starting line as the title of the section, push the lines until the next section or the end of the Markdown as the content of the section, and return the section.
 
 When a line being read is of type `'section'`, will check the header level Using [getHeaderLevel](../helper-fns/README.md#getheaderlevel), and if the header level is greater than the current header level, will recursively call `readSection` to get the child section. And if the header level is less than or equal to the current header level, will return the section, with a start index that should get the calling function to read the new section.
+
+### `matchRichContent`
+
+Function to use to return matches found by the tag passed in. The provided `matched` property should be swapped outh with a token to symbolize the content.
+
+**Usage**
+
+```typescript
+for (const { content, matched } of matchRichContent('link', '[hello](/world)')) {
+  // content = { type: 'link', alt: 'hello', href: '/world' }
+  // matched = '[hello](/world)'
+|
+```
