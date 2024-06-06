@@ -29,6 +29,9 @@ coverage:
       ts-libs_ts-utils:
         flags:
           - ts-libs_ts-utils
+      ts-libs_markdown-parser:
+        flags:
+          - ts-libs_markdown-parser
     project:
       default:
         target: auto
@@ -51,6 +54,9 @@ coverage:
       ts-libs_ts-utils:
         flags:
           - ts-libs_ts-utils
+      ts-libs_markdown-parser:
+        flags:
+          - ts-libs_markdown-parser
 flags:
   app_blog:
     paths:
@@ -70,3 +76,6 @@ flags:
   ts-libs_ts-utils:
     paths:
       - ts-libs/ts-utils
+  ts-libs_markdown-parser:
+    paths:
+      - ts-libs/markdown-parser
