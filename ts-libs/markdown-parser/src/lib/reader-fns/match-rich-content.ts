@@ -5,7 +5,7 @@ import { regexPatterns } from '../helper-fns/regex-patterns';
 
 export function matchRichContent(
   type: RichContentType,
-  content: string,
+  rawContent: string,
 ): MatchedContent[] {
   const pattern = regexPatterns[type];
   const result: MatchedContent[] = [];
@@ -13,7 +13,7 @@ export function matchRichContent(
     return result;
   }
 
-  const matches = content.matchAll(new RegExp(pattern, 'g'));
+  const matches = rawContent.matchAll(new RegExp(pattern, 'g'));
   if (!matches) {
     return result;
   }

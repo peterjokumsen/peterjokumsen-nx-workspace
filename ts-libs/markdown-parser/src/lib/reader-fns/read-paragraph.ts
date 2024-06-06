@@ -5,8 +5,22 @@ import { lineHas, splitRichContent } from '../helper-fns';
 import { matchRichContent } from './match-rich-content';
 
 export function readParagraph(lines: string[], start: number): ReadResult {
+  const contentTypes: RichContentType[] = ['image', 'link'];
   let line = lines[start];
-  if (!lineHas('image', line) && !lineHas('link', line)) {
+
+  const richContentMap: { [key: string]: MatchedContent } = {};
+  for (const type of contentTypes) {
+    if (!lineHas(type, line)) continue;
+    const richContentMatches = matchRichContent(type, line);
+    let typeCount = 0;
+    for (const { matched, content } of richContentMatches) {
+      const key = `__${type}_${typeCount++}__`;
+      richContentMap[key] = { matched, content };
+      line = line.split(matched).join(key);
+    }
+  }
+
+  if (!Object.keys(richContentMap).length) {
     return {
       content: {
         type: 'paragraph',
@@ -16,28 +30,15 @@ export function readParagraph(lines: string[], start: number): ReadResult {
     };
   }
 
-  const content: MarkdownContent[] = [];
-  const richContent: { [key: string]: MatchedContent } = {};
-  const contentTypes: RichContentType[] = ['image', 'link'];
-  for (const type of contentTypes) {
-    const richContentMatches = matchRichContent(type, line);
-    let typeCount = 0;
-    for (const { matched, content } of richContentMatches) {
-      const key = `__${type}_${typeCount++}__`;
-      richContent[key] = { matched, content };
-      line = line.replace(new RegExp(`(${matched})`, 'g'), key);
-    }
-  }
-
-  for (const { content } of Object.values(richContent)) {
+  for (const { content } of Object.values(richContentMap)) {
     if (content.type !== 'link' || Array.isArray(content.content)) continue;
-    content.content = splitRichContent(content.content, richContent);
+    content.content = splitRichContent(content.content, richContentMap);
   }
 
   return {
     content: {
       type: 'paragraph',
-      content: splitRichContent(line, richContent),
+      content: splitRichContent(line, richContentMap),
     },
     nextStart: start,
   };
