@@ -1,7 +1,7 @@
-import { MarkdownContent, RichContentType } from '../models';
+import { regexContentFns, regexPatterns } from '../helper-fns';
 
 import { MatchedContent } from '../_models';
-import { regexPatterns } from '../helper-fns/regex-patterns';
+import { RichContentType } from '../models';
 
 export function matchRichContent(
   type: RichContentType,
@@ -19,31 +19,11 @@ export function matchRichContent(
   }
 
   for (const match of matches) {
-    const [matched, first, second] = match ?? ['', '', ''];
-    if (!matched || result.some(({ matched: found }) => found === matched))
+    const { matched, content } = regexContentFns[type](match);
+    if (!matched || result.some(({ matched: found }) => found === matched)) {
       continue;
-
-    let content: MarkdownContent;
-    switch (type) {
-      case 'image':
-        content = {
-          type: 'image',
-          alt: first,
-          src: second,
-        };
-        break;
-      case 'link':
-        content = {
-          type: 'link',
-          content: first,
-          href: second,
-        };
-        break;
-      default:
-        throw new Error(
-          `Unknown type '${type}' specified for matchRichContent`,
-        );
     }
+
     result.push({ matched, content });
   }
 
