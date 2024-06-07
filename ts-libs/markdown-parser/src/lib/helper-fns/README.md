@@ -18,10 +18,7 @@ const type = getContentType(line);
 > - `'list'`
 > - `'ordered-list'`
 > - `'quote'`
-> - `'code'`
 > - `'horizontal-rule'`
-> - `'image'`
-> - `'link'`
 
 ## `getHeaderLevel`
 
@@ -35,12 +32,18 @@ const headingLevel = getHeaderLevel(line);
 
 ## `lineHas`
 
-Check if the line contains `tag` passed in
+Check if the line contains `tag` passed in.
+
+### Supported tags
+
+- `'image'`
+- `'link'`
+- `'code'` **(Not yet implemented)**
 
 **Usage**
 
 ```typescript
-const containsImageTag = hasImage(line);
+const containsImageTag = lineHas('image', line);
 ```
 
 ## `splitRichContent`
@@ -63,3 +66,9 @@ const content = splitRichContent('H*ll-', {
 //   { type: 'link', alt: 'o', href: '/hello' },
 // ];
 ```
+
+## Regex Utilities
+
+### `regexPatterns`
+
+Map of regex patterns by type. Used to match content in the line being read.
