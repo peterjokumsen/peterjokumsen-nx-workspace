@@ -103,7 +103,13 @@ When a line being read is of type `'section'`, will check the header level Using
 
 ### `matchRichContent`
 
-Function to use to return matches found by the tag passed in. The provided `matched` property should be swapped outh with a token to symbolize the content.
+Function to use to return matches found by the tag passed in. The provided `matched` property should be swapped out with a token to symbolize the content.
+
+### Supported tags
+
+- `'image'`
+- `'link'`
+- `'code'` **(Not yet implemented)**
 
 **Usage**
 
