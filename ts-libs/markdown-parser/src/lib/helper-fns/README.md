@@ -72,3 +72,7 @@ const content = splitRichContent('H*ll-', {
 ### `regexPatterns`
 
 Map of regex patterns by type. Used to match content in the line being read.
+
+### `regexContentFns`
+
+Map of functions that take in a match and return the content object for the match, including the matched string.
