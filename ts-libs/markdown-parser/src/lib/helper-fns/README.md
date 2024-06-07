@@ -30,7 +30,7 @@ Get the level of the heading for the line being read. This is used to determine 
 **Usage**
 
 ```typescript
-const headingLevel = getHeadingLevel(line);
+const headingLevel = getHeaderLevel(line);
 ```
 
 ## `lineHas`
