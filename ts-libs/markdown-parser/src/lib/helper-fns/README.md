@@ -30,6 +30,18 @@ Get the level of the heading for the line being read. This is used to determine 
 const headingLevel = getHeaderLevel(line);
 ```
 
+## `isRichContentString`
+
+Check if the string is a rich content string. Rich content strings are strings that contain tokens that need to be resolved into content.
+
+**Usage**
+
+```typescript
+const matchedRichContent = { matched: 'image', content: { type: 'image', src: '/world' } };
+isRichContentString('hello world', { '*': matchedRichContent }); // false
+isRichContentString('hello *world*', { '*': matchedRichContent }); // true
+```
+
 ## `lineHas`
 
 Check if the line contains `tag` passed in.
