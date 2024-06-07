@@ -115,7 +115,7 @@ Function to use to return matches found by the tag passed in. The provided `matc
 
 ```typescript
 for (const { content, matched } of matchRichContent('link', '[hello](/world)')) {
-  // content = { type: 'link', alt: 'hello', href: '/world' }
-  // matched = '[hello](/world)'
-|
+  console.log(content); // { type: 'link', alt: 'hello', href: '/world' }
+  console.log(matched); // '[hello](/world)'
+}
 ```
