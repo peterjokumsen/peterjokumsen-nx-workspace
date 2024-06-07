@@ -1,14 +1,14 @@
-import { MarkdownContent, RichContentType } from '../models';
-import { MatchedContent, ReadResult } from '../_models';
+import { ReadResult, RichContentMap } from '../_models';
 import { lineHas, splitRichContent } from '../helper-fns';
 
+import { RichContentType } from '../models';
 import { matchRichContent } from './match-rich-content';
 
 export function readParagraph(lines: string[], start: number): ReadResult {
   const contentTypes: RichContentType[] = ['image', 'link'];
   let line = lines[start];
 
-  const richContentMap: { [key: string]: MatchedContent } = {};
+  const richContentMap: RichContentMap = {};
   for (const type of contentTypes) {
     if (!lineHas(type, line)) continue;
     const richContentMatches = matchRichContent(type, line);

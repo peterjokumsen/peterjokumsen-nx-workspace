@@ -1,9 +1,9 @@
 import { MarkdownContent } from '../models';
-import { MatchedContent } from '../_models';
+import { RichContentMap } from '../_models';
 
 export function splitRichContent(
   rawContent: string,
-  richContentMap: { [key: string]: MatchedContent },
+  richContentMap: RichContentMap,
 ): MarkdownContent[] {
   const result: MarkdownContent[] = [];
   const contentKeys = Object.keys(richContentMap).join('|');
