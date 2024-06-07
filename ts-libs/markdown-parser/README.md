@@ -14,6 +14,11 @@ This library is meant to act as a parser of Markdown text. It will take in a str
 
 - [`parseMarkdown`](src/lib/README.md)
 
+## Internal functions
+
+- [`helper-fns`](src/lib/helper-fns/README.md)
+- [`reader-fns`](src/lib/reader-fns/README.md)
+
 ## Building
 
 Run `nx build markdown-parser` to build the library.
