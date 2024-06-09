@@ -18,9 +18,7 @@
       "@peterjokumsen/blog-container": [
         "ng-features/blog-container/src/index.ts"
       ],
-      "@peterjokumsen/markdown-parser": [
-        "ts-libs/markdown-parser/src/index.ts"
-      ],
+      "@peterjokumsen/md-parser": ["ts-libs/md-parser/src/index.ts"],
       "@peterjokumsen/ng-services": ["ng-libs/services/src/index.ts"],
       "@peterjokumsen/styles": ["ng-libs/styles/src/index.ts"],
       "@peterjokumsen/ts-utils": ["ts-libs/ts-utils/src/index.ts"],
