@@ -10,6 +10,8 @@ or design documents. -->
 request. Provide details on the approach taken to address the problem
 and any notable implementation details. -->
 
+-
+
 ## Checklist
 
 - [ ] I have added comments to code in hard-to-understand areas
@@ -35,11 +37,6 @@ solves. -->
 
 <!-- Instructions on how to test the changes made in the pull
 request, helping reviewers validate the code. -->
-
-## Special notes for your reviewer
-
-<!-- If there are any specific instructions or considerations you
-want to highlight for the reviewer, include them in this section. -->
 
 </details>
 <!-- End of Optional Sections -->
