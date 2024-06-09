@@ -70,7 +70,10 @@ jobs:
       - lint_test_build
       - infra
     if: |
-      needs.lint_test_build.outputs.uploaded_artifacts == 'Yes' && github.event.action != 'closed'
+      always() &&
+      (needs.prep.outputs.infra_affected == 'No' || needs.infra.result == 'success') &&
+      needs.lint_test_build.outputs.uploaded_artifacts == 'Yes' &&
+      github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: 'Deploy app 🚀'
     steps:
