@@ -138,12 +138,14 @@ jobs:
           echo "output [project_affected=$project_affected]"
           echo "project_affected=$project_affected" >> $GITHUB_OUTPUT
 
-      - name: 'Check if infra affected 🧪'
+      - name: 'Check if infra affected 🏗️'
         id: check_biceps
         run: |
-          echo "::group::nx affected --target=infra"
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          base="${{ steps.set_base.outputs.base }}"
+          echo "::group::git diff --name-only $base HEAD"
+          CHANGED_FILES=$(git diff --name-only $base HEAD)
           echo "Changed files: $CHANGED_FILES"
+          echo "::endgroup::"
           if [[ $CHANGED_FILES == *".bicep"* ]]; then
             echo "infra_affected=Yes" >> $GITHUB_OUTPUT
             echo "infra_affected=Yes"
