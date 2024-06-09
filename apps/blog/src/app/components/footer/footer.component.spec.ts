@@ -20,11 +20,11 @@ describe(FooterComponent.name, () => {
 
     await TestBed.configureTestingModule({
       imports: [FooterComponent],
+      providers: [{ provide: PjTheme, useValue: themeSpy }],
     })
       .overrideComponent(FooterComponent, {
         set: {
           imports: [MockComponent(ThemeToggleComponent)],
-          providers: [{ provide: PjTheme, useValue: themeSpy }],
         },
       })
       .compileComponents();
