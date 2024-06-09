@@ -38,7 +38,7 @@
 
 /**
  * @typedef {Object} CoreSummary
- * @prop {summaryAddRaw} summaryAddRaw
+ * @prop {summaryAddRaw} addRaw
  * @prop {write} write
  */
 
@@ -123,7 +123,7 @@ const createLighthouseReport = ({ links, manifest }, coreSummary) => {
   ];
 
   for (const line of commentLines) {
-    coreSummary.summaryAddRaw(line, true);
+    coreSummary.addRaw(line, true);
   }
 
   coreSummary.write();
