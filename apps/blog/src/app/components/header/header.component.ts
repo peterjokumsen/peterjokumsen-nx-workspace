@@ -103,6 +103,10 @@ export class HeaderComponent {
         documentHeight,
         headerHeight,
       );
+      if (!pastHeader) {
+        this.expanded = false;
+      }
+
       this.windowPastHeader.update(() => pastHeader);
     }
   }
