@@ -24,6 +24,24 @@
  * @prop {Manifest[]} manifest
  */
 
+/**
+ * @typedef {function} summaryAddRaw
+ * @param {string} rawString
+ * @param {boolean} useEOL
+ * @returns {void}
+ */
+
+/**
+ * @typedef {function} write
+ * @returns {void}
+ */
+
+/**
+ * @typedef {Object} CoreSummary
+ * @prop {summaryAddRaw} summaryAddRaw
+ * @prop {write} write
+ */
+
 /** @typedef {Record<'performance' | 'accessibility' | 'best-practices' | 'seo' | 'pwa', number>} LighthouseSummary */
 
 /** @type {Record<keyof LighthouseSummary, string>} */
@@ -79,8 +97,10 @@ const createMarkdownTableHeader = () => [
 
 /**
  * @param {LighthouseOutputs} lighthouseOutputs
+ * @param {CoreSummary} coreSummary
+ * @returns {string}
  */
-const createLighthouseReport = ({ links, manifest }) => {
+const createLighthouseReport = ({ links, manifest }, coreSummary) => {
   const tableHeader = createMarkdownTableHeader();
   const tableBody = manifest.map((result) => {
     const testUrl = /** @type {string} */ (
@@ -94,7 +114,7 @@ const createLighthouseReport = ({ links, manifest }) => {
       reportUrl: reportPublicUrl,
     });
   });
-  const comment = [
+  const commentLines = [
     `### ⚡️ Lighthouse report for the deploy preview of this PR`,
     '',
     ...tableHeader,
@@ -102,12 +122,18 @@ const createLighthouseReport = ({ links, manifest }) => {
     '',
   ];
 
-  return comment.join('\n');
+  for (const line of commentLines) {
+    coreSummary.summaryAddRaw(line, true);
+  }
+
+  coreSummary.write();
+
+  return commentLines.join('\n');
 };
 
-module.exports = ({ lighthouseOutputs }) => {
+module.exports = ({ lighthouseOutputs }, coreSummary) => {
   console.log('exampleOutput: %o', _exampleOutputs);
-  return createLighthouseReport(lighthouseOutputs);
+  return createLighthouseReport(lighthouseOutputs, coreSummary);
 };
 
 /** @type {LighthouseOutputs} */
