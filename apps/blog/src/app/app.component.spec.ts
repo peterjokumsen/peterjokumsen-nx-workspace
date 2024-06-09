@@ -7,6 +7,7 @@ import {
 
 import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer';
+import { HeaderComponent } from './components/header';
 import { MockComponent } from 'ng-mocks';
 
 describe(`[blog] - ${AppComponent.name}`, () => {
@@ -23,6 +24,7 @@ describe(`[blog] - ${AppComponent.name}`, () => {
             RouterNavComponent,
             FooterComponent,
             FullPageLoaderComponent,
+            HeaderComponent,
           ],
         },
         add: {
@@ -30,6 +32,7 @@ describe(`[blog] - ${AppComponent.name}`, () => {
             MockComponent(RouterNavComponent),
             MockComponent(ThemeToggleComponent),
             MockComponent(FooterComponent),
+            MockComponent(HeaderComponent),
           ],
         },
       })
