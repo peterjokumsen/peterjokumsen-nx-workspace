@@ -9,6 +9,9 @@ import { AppComponent } from './app.component';
 import { FooterComponent } from './components/footer';
 import { HeaderComponent } from './components/header';
 import { MockComponent } from 'ng-mocks';
+import { PjBrowserTools } from '@peterjokumsen/ng-services';
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
 
 describe(`[blog] - ${AppComponent.name}`, () => {
   let fixture: ComponentFixture<AppComponent>;
@@ -17,6 +20,10 @@ describe(`[blog] - ${AppComponent.name}`, () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [AppComponent],
+      providers: [
+        { provide: PjBrowserTools, useValue: {} },
+        { provide: Router, useValue: { events: of() } },
+      ],
     })
       .overrideComponent(AppComponent, {
         remove: {
