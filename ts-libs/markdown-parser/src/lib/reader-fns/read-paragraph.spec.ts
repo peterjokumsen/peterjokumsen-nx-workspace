@@ -1,6 +1,5 @@
-import { lineHas, splitRichContent } from '../helper-fns';
+import { isRichContentString, lineHas, splitRichContent } from '../helper-fns';
 
-import { MarkdownContent } from '../models';
 import { matchRichContent } from './match-rich-content';
 import { readParagraph } from './read-paragraph';
 
@@ -38,10 +37,14 @@ describe('readParagraph', () => {
   });
 
   describe('when line has rich content', () => {
+    let isRichContentStringSpy: jest.MockedFunction<typeof isRichContentString>;
     let splitRichContentSpy: jest.MockedFunction<typeof splitRichContent>;
     let matchRichContentSpy: jest.MockedFunction<typeof matchRichContent>;
 
     beforeEach(() => {
+      isRichContentStringSpy = jest
+        .mocked(isRichContentString)
+        .mockName('isRichContentString');
       splitRichContentSpy = jest
         .mocked(splitRichContent)
         .mockName('splitRichContent');
@@ -59,6 +62,7 @@ describe('readParagraph', () => {
       it('should replace matched with keys used', () => {
         const lines = ['', 'a bc c d', ''];
         lineHasSpy.mockReturnValue(true);
+        isRichContentStringSpy.mockReturnValue(true);
         splitRichContentSpy.mockReturnValue([]);
         matchRichContentSpy.mockImplementation((type) => {
           if (type === 'image') {

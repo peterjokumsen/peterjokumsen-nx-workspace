@@ -130,7 +130,7 @@ describe('parseMarkdown', () => {
               },
               {
                 type: 'link',
-                content: [{ type: 'text', content: 'link' }],
+                content: 'link',
                 href: '/link',
               },
               {
@@ -163,7 +163,7 @@ describe('parseMarkdown', () => {
             content: [
               {
                 type: 'link',
-                content: [{ type: 'text', content: 'link' }],
+                content: 'link',
                 href: '/link',
               },
             ],
