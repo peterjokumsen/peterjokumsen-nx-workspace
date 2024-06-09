@@ -59,6 +59,7 @@ jobs:
       parameters: ${{ needs.prep.outputs.parameters }}
       app_name: ${{ needs.prep.outputs.app_name }}
       bicep_main_file: ${{ needs.prep.outputs.bicep_main_file }}
+      infra_affected: ${{ needs.prep.outputs.infra_affected }}
     secrets: inherit
 
   # deploy the blog application
