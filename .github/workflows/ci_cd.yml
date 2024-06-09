@@ -1,5 +1,8 @@
-name: '[🚀] Blog'
-# Workflow to build and deploy the blog application
+name: '[🧪🏗️🚀] CI/CD'
+# Workflow to build, test, lint, and deploy application(s)
+#   When more applications added to the monorepo, will
+#   try to use strategies to include new applications in
+#   this workflow. Should be fun.
 on:
   push:
     branches:
@@ -39,6 +42,8 @@ jobs:
     with:
       project_name: 'blog'
       build_location: 'dist/apps/blog'
+      project_affected: ${{ needs.prep.outputs.app_affected }}
+      nx_base: ${{ needs.prep.outputs.nx_base }}
     secrets: inherit
 
   # deploy static web app using /.biceps/main.bicep
