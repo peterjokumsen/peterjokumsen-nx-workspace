@@ -1,5 +1,5 @@
 import { ReadResult, RichContentMap } from '../_models';
-import { lineHas, splitRichContent } from '../helper-fns';
+import { isRichContentString, lineHas, splitRichContent } from '../helper-fns';
 
 import { RichContentType } from '../models';
 import { matchRichContent } from './match-rich-content';
@@ -31,7 +31,8 @@ export function readParagraph(lines: string[], start: number): ReadResult {
   }
 
   for (const { content } of Object.values(richContentMap)) {
-    if (content.type !== 'link' || Array.isArray(content.content)) continue;
+    if (content.type !== 'link') continue;
+    if (!isRichContentString(content.content, richContentMap)) continue;
     content.content = splitRichContent(content.content, richContentMap);
   }
 
