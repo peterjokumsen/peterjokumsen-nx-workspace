@@ -1,4 +1,4 @@
-# markdown-parser
+# md-parser
 
 This library was generated with [Nx](https://nx.dev).
 
@@ -21,8 +21,8 @@ This library is meant to act as a parser of Markdown text. It will take in a str
 
 ## Building
 
-Run `nx build markdown-parser` to build the library.
+Run `nx build md-parser` to build the library.
 
 ## Running unit tests
 
-Run `nx test markdown-parser` to execute the unit tests via [Jest](https://jestjs.io).
+Run `nx test md-parser` to execute the unit tests via [Jest](https://jestjs.io).

@@ -9,7 +9,7 @@ import { MatCard, MatCardContent, MatCardHeader } from '@angular/material/card';
 import { ArticleComponent } from '@peterjokumsen/ui-elements';
 import { CommonModule } from '@angular/common';
 import { PjArticleParser } from '@peterjokumsen/ng-services';
-import { parseMarkdown } from '@peterjokumsen/markdown-parser';
+import { parseMarkdown } from '@peterjokumsen/md-parser';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
