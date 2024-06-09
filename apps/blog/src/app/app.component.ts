@@ -9,8 +9,8 @@ import { Route, RouterOutlet } from '@angular/router';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { FooterComponent } from './components/footer';
+import { HeaderComponent } from './components/header';
 import { appRoutes } from './app.routes';
-import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { pjFilterMap } from '@peterjokumsen/ts-utils';
 
 @Component({
@@ -23,6 +23,7 @@ import { pjFilterMap } from '@peterjokumsen/ts-utils';
     FullPageLoaderComponent,
     NgTemplateOutlet,
     FooterComponent,
+    HeaderComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -30,7 +31,6 @@ import { pjFilterMap } from '@peterjokumsen/ts-utils';
 })
 export class AppComponent implements OnInit {
   readonly navElements: PjUiRouterNavigationElement[] = [];
-  codeIcon = faCode;
 
   private createNavElement(route: Route): PjUiRouterNavigationElement {
     return {
