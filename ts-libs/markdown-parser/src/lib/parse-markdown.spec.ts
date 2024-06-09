@@ -116,7 +116,7 @@ describe('parseMarkdown', () => {
     });
   });
 
-  fdescribe(`when reading image-and-link.md`, () => {
+  describe(`when reading image-and-link.md`, () => {
     testMarkdownFile('image-and-link.md', {
       expectedTitles: ['Test link and image'],
       expectedContents: [
@@ -153,7 +153,7 @@ describe('parseMarkdown', () => {
     });
   });
 
-  fdescribe(`when reading link-only.md`, () => {
+  describe(`when reading link-only.md`, () => {
     testMarkdownFile('link-only.md', {
       expectedTitles: ['Line with only link'],
       expectedContents: [
@@ -173,7 +173,7 @@ describe('parseMarkdown', () => {
     });
   });
 
-  fdescribe(`when reading image-only.md`, () => {
+  describe(`when reading image-only.md`, () => {
     testMarkdownFile('image-only.md', {
       expectedTitles: ['Line with only image'],
       expectedContents: [
@@ -193,7 +193,7 @@ describe('parseMarkdown', () => {
     });
   });
 
-  fdescribe(`when reading link-with-image.md`, () => {
+  describe(`when reading link-with-image.md`, () => {
     testMarkdownFile('link-with-image.md', {
       expectedTitles: ['Image as link content'],
       expectedContents: [
