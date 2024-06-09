@@ -11,6 +11,10 @@ on:
         description: 'Where the app is compiled to, to be published as artifact'
         required: true
         type: string
+      infra_affected:
+        description: 'Is the infra affected by the latest changes? (Yes/No)'
+        required: true
+        type: string
       project_affected:
         description: 'Is the project affected by the latest changes? (Yes/No)'
         required: true
@@ -110,7 +114,7 @@ jobs:
   # will publish the compiled files as 'compiled-app' artifact
   build_affected:
     if: |
-      inputs.project_affected == 'Yes'
+      inputs.project_affected == 'Yes' || inputs.infra_affected == 'Yes'
       && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: 'Build affected 🏗️'
@@ -119,10 +123,6 @@ jobs:
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
-        with:
-          # Number of commits to fetch. 0 indicates all history for all branches and tags.
-          fetch-depth: 0
-          submodules: true
 
       - name: 'Install dependencies 📦'
         uses: ./.github/actions/install-deps
@@ -138,8 +138,8 @@ jobs:
           fi
           echo "$build_configuration is the configuration for branch $branch_name"
 
-          echo "::group::nx affected -t build --configuration=$build_configuration --base=${{ inputs.nx_base }}"
-          npx nx affected -t build --configuration=$build_configuration --base=${{ inputs.nx_base }}
+          echo "::group::nx run ${{ inputs.project_name }}:build:$build_configuration"
+          npx nx run ${{ inputs.project_name }}:build:$build_configuration
           echo "::endgroup::"
           compiled_files="No"
           if [ -d "${{ inputs.build_location }}" ]; then
