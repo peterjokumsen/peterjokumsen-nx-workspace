@@ -1,9 +1,8 @@
+import { getContentType, getHeaderLevel } from '../helper-fns';
+
 import { MarkdownSection } from '../models';
 import { ReadResult } from '../_models';
 import { contentReaders } from './content-readers';
-import { getContentType } from '../helper-fns';
-import { getHeaderLevel } from '../helper-fns';
-import { readParagraph } from './read-paragraph';
 
 export function readSection(lines: string[], start: number): ReadResult {
   const currentHeaderLevel = getHeaderLevel(lines[start]);
