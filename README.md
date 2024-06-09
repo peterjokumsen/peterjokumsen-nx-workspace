@@ -48,9 +48,9 @@ Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/stati
 
 [`ts-libs/**`](./ts-libs/README.md) is a collection of TypeScript libraries, meant to be shared functions and utilities.
 
-### ts-libs/markdown-parser
+### ts-libs/md-parser
 
-[`ts-libs/markdown-parser`](./ts-libs/markdown-parser/README.md) is a parser for Markdown text.
+[`ts-libs/md-parser`](./ts-libs/md-parser/README.md) is a parser for Markdown text.
 
 ### ts-libs/ts-utils
 
