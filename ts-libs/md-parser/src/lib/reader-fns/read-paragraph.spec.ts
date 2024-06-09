@@ -59,7 +59,7 @@ describe('readParagraph', () => {
     });
 
     describe('when line has link and image', () => {
-      it('should replace matched with keys used', () => {
+      it('should use helpers as expected', () => {
         const lines = ['', 'a bc c d', ''];
         lineHasSpy.mockReturnValue(true);
         isRichContentStringSpy.mockReturnValue(true);
@@ -91,7 +91,7 @@ describe('readParagraph', () => {
         });
 
         // Act
-        const result = readParagraph(lines, 1);
+        readParagraph(lines, 1);
 
         expect(lineHasSpy).toHaveBeenCalledWith('image', 'a bc c d');
         expect(matchRichContentSpy).toHaveBeenCalledWith('image', 'a bc c d');
