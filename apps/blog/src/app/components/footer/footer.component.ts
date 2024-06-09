@@ -4,13 +4,9 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
-import {
-  PjTheme,
-  providePjBrowserTools,
-  providePjTheme,
-} from '@peterjokumsen/ng-services';
 
 import { CommonModule } from '@angular/common';
+import { PjTheme } from '@peterjokumsen/ng-services';
 import { ThemeToggleComponent } from '@peterjokumsen/ui-elements';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -18,7 +14,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   selector: 'app-footer',
   standalone: true,
   imports: [CommonModule, ThemeToggleComponent],
-  providers: [providePjBrowserTools(), providePjTheme()],
+  providers: [],
   template: `
     <footer class="pj-footer primary-block">
       <div class="footer-top-left col-span-4 md:col-span-2"></div>
