@@ -131,6 +131,10 @@ jobs:
     name: '🧪 🚀'
     needs:
       - deploy_app
+    if: |
+      always() &&
+      needs.deploy_app.result == 'success' &&
+      github.event.action != 'closed'
     with:
       deployment_url: ${{ needs.deploy_app.outputs.deployed_url }}
       audit_urls: |
