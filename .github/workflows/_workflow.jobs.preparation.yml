@@ -40,6 +40,9 @@ on:
       app_affected:
         description: 'Is the app affected by the latest changes? (Yes/No)'
         value: ${{ jobs.is_affected.outputs.project_affected }}
+      infra_affected:
+        description: 'Is the infra affected by the latest changes? (Yes/No)'
+        value: ${{ jobs.is_affected.outputs.infra_affected }}
       nx_base:
         description: 'Base SHA for nx commands'
         value: ${{ jobs.is_affected.outputs.nx_base }}
@@ -117,6 +120,24 @@ jobs:
         id: set_base
         uses: nrwl/nx-set-shas@v4
 
+      - name: 'Check if affected 🧪'
+        id: is_affected
+        run: |
+          echo "::group::nx show projects --type app --affected"
+          affected_projects=$(npx nx show projects --type app --affected)
+          echo $affected_projects
+          project_name="${{ inputs.app_name }}"
+          echo "::endgroup::"
+          project_affected="No"
+          echo ""
+          echo "Checking if $project_name is affected"
+          if [[ $affected_projects == *$project_name* ]]; then
+            project_affected="Yes"
+          fi
+
+          echo "output [project_affected=$project_affected]"
+          echo "project_affected=$project_affected" >> $GITHUB_OUTPUT
+
       - name: 'Check if infra affected 🧪'
         id: check_biceps
         run: |
@@ -133,4 +154,5 @@ jobs:
 
     outputs:
       project_affected: ${{ steps.is_affected.outputs.project_affected }}
+      infra_affected: ${{ steps.check_biceps.outputs.infra_affected }}
       nx_base: ${{ steps.set_base.outputs.base }}
