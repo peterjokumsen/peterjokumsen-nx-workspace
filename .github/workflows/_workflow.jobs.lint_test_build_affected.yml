@@ -11,6 +11,14 @@ on:
         description: 'Where the app is compiled to, to be published as artifact'
         required: true
         type: string
+      project_affected:
+        description: 'Is the project affected by the latest changes? (Yes/No)'
+        required: true
+        type: string
+      nx_base:
+        description: 'Base SHA for nx commands'
+        required: true
+        type: string
     secrets:
       AZURE_CLIENT_ID:
         description: 'Azure Client ID'
@@ -40,56 +48,12 @@ permissions:
   security-events: write
 
 jobs:
-  # check if the provided application is affected by the latest changes made
-  # outputs the result to be used by subsequent jobs, and the base SHA to be used for affected commands
-  is_affected:
-    if: github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    name: 'Check if affected 🧪'
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-        with:
-          # Number of commits to fetch. 0 indicates all history for all branches and tags.
-          fetch-depth: 0
-          submodules: true
-
-      - name: 'Install dependencies 📦'
-        uses: ./.github/actions/install-deps
-
-      - name: 'Set SHAs 📝'
-        id: set_base
-        uses: nrwl/nx-set-shas@v4
-
-      - name: 'Check if affected 🧪'
-        id: is_affected
-        run: |
-          echo "::group::nx show projects --type app --affected"
-          affected_projects=$(npx nx show projects --type app --affected)
-          echo $affected_projects
-          project_name="${{ inputs.project_name }}"
-          echo "::endgroup::"
-          projected_affected="No"
-          echo ""
-          echo "Checking if $project_name is affected"
-          if [[ $affected_projects == *$project_name* ]]; then
-            projected_affected="Yes"
-          fi
-
-          echo "output [projected_affected=$projected_affected]"
-          echo "projected_affected=$projected_affected" >> $GITHUB_OUTPUT
-
-    outputs:
-      projected_affected: ${{ steps.is_affected.outputs.projected_affected }}
-      nx_base: ${{ steps.set_base.outputs.base }}
-
   # test and lint the affected libraries/applications, when the project is affected
   # will only test/lint affected when workflow is triggered by a pull_request
   # will test all when workflow is triggered by a push
   test_and_lint:
-    needs: is_affected
     if: |
-      needs.is_affected.outputs.projected_affected == 'Yes'
+      inputs.project_affected == 'Yes'
       && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: 'Test & lint 🧪'
@@ -113,8 +77,8 @@ jobs:
         id: test_affected
         if: github.event_name != 'push'
         run: |
-          echo "::group::nx affected -t lint test --configuration=ci --base=${{ needs.is_affected.outputs.nx_base }}"
-          npx nx affected -t lint test --configuration=ci --base=${{ needs.is_affected.outputs.nx_base }}
+          echo "::group::nx affected -t lint test --configuration=ci --base=${{ inputs.nx_base }}"
+          npx nx affected -t lint test --configuration=ci --base=${{ inputs.nx_base }}
           echo "::endgroup::"
           coverage_reports="No"
           if [ -d "coverage" ]; then
@@ -145,9 +109,8 @@ jobs:
   # build the project when it is affected by the latest changes
   # will publish the compiled files as 'compiled-app' artifact
   build_affected:
-    needs: is_affected
     if: |
-      needs.is_affected.outputs.projected_affected == 'Yes'
+      inputs.project_affected == 'Yes'
       && github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: 'Build affected 🏗️'
@@ -175,8 +138,8 @@ jobs:
           fi
           echo "$build_configuration is the configuration for branch $branch_name"
 
-          echo "::group::nx affected -t build --configuration=$build_configuration --base=${{ needs.is_affected.outputs.nx_base }}"
-          npx nx affected -t build --configuration=$build_configuration --base=${{ needs.is_affected.outputs.nx_base }}
+          echo "::group::nx affected -t build --configuration=$build_configuration --base=${{ inputs.nx_base }}"
+          npx nx affected -t build --configuration=$build_configuration --base=${{ inputs.nx_base }}
           echo "::endgroup::"
           compiled_files="No"
           if [ -d "${{ inputs.build_location }}" ]; then
