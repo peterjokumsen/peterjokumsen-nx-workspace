@@ -17,6 +17,19 @@ a.link {
   text-decoration: underline;
 }
 
+.splash {
+  @media (prefers-color-scheme: light) {
+    background-color: map-get(
+      map-get($light-theme, 'background'),
+      'background'
+    );
+  }
+
+  @media (prefers-color-scheme: dark) {
+    background-color: map-get(map-get($dark-theme, 'background'), 'background');
+  }
+}
+
 .pj-header {
   @apply m-auto grid grid-cols-1 p-2 md:grid-cols-2;
 
