@@ -75,7 +75,8 @@
             }
           ],
           "outputHashing": "all",
-          "serviceWorker": "apps/blog/ngsw-config.json"
+          "serviceWorker": "apps/blog/ngsw-config.json",
+          "appShell": true
         },
         "staging": {
           "budgets": [
