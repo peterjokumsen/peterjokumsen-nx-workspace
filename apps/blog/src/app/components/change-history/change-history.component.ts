@@ -4,24 +4,16 @@ import {
   computed,
   inject,
 } from '@angular/core';
-import { MatCard, MatCardContent, MatCardHeader } from '@angular/material/card';
 
 import { ArticleComponent } from '@peterjokumsen/ui-elements';
 import { CommonModule } from '@angular/common';
 import { PjArticleParser } from '@peterjokumsen/ng-services';
-import { parseMarkdown } from '@peterjokumsen/md-parser';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-change-history',
   standalone: true,
-  imports: [
-    CommonModule,
-    ArticleComponent,
-    MatCard,
-    MatCardHeader,
-    MatCardContent,
-  ],
+  imports: [CommonModule, ArticleComponent],
   templateUrl: './change-history.component.html',
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,5 +34,4 @@ There are quite a number of pieces I would like to get in place to complete this
 
   article = toSignal(this._parser.fromSource(this._markdown));
   sections = computed(() => this.article()?.sections ?? []);
-  parsed = parseMarkdown(this._markdown);
 }
