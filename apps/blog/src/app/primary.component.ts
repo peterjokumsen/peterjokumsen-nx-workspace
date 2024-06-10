@@ -11,7 +11,7 @@ import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { FooterComponent } from './components/footer';
 import { HeaderComponent } from './components/header';
-import { appRoutes } from './app.routes';
+import { childRoutes } from './app.routes';
 import { filter } from 'rxjs';
 import { pjFilterMap } from '@peterjokumsen/ts-utils';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -28,11 +28,10 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     FooterComponent,
     HeaderComponent,
   ],
-  selector: 'app-root',
-  templateUrl: './app.component.html',
+  templateUrl: './primary.component.html',
   styles: ``,
 })
-export class AppComponent implements OnInit {
+export class PrimaryComponent implements OnInit {
   private _logger = inject(PjLogger, { optional: true });
   private _browserTools = inject(PjBrowserTools);
   private _router = inject(Router);
@@ -56,7 +55,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.navElements.push(
       ...pjFilterMap(
-        appRoutes,
+        childRoutes,
         (route) => route.data?.['title'],
         (route) => this.createNavElement(route),
       ),
