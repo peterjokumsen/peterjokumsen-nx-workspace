@@ -2,39 +2,40 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostListener,
   ViewChild,
   inject,
   input,
   signal,
 } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { MatAnchor, MatFabButton } from '@angular/material/button';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 import {
   PjUiRouterNavigationElement,
   RouterNavComponent,
 } from '@peterjokumsen/ui-elements';
-import {
-  animate,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
-import { faChevronRight, faCode } from '@fortawesome/free-solid-svg-icons';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { MatFabButton } from '@angular/material/button';
+import { faCode } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-header',
   standalone: true,
   imports: [
     CommonModule,
-    FaIconComponent,
     NgOptimizedImage,
     RouterNavComponent,
     MatFabButton,
+    MatMenu,
+    MatMenuItem,
+    RouterLink,
+    MatAnchor,
+    RouterLinkActive,
+    MatMenuTrigger,
+    FaIconComponent,
   ],
   templateUrl: './header.component.html',
   styles: `
@@ -58,20 +59,6 @@ import { MatFabButton } from '@angular/material/button';
         animate('300ms', style({ transform: 'translateX(-100%)' })),
       ]),
     ]),
-    trigger('expandOrCollapse', [
-      transition(':enter', [
-        style({ transform: 'translateX(-100%)' }),
-        animate('0.4s', style({ transform: 'translateX(0)' })),
-      ]),
-      transition(':leave', [
-        animate('300ms', style({ transform: 'translateX(-100%)' })),
-      ]),
-    ]),
-    trigger('rotateExpanded', [
-      state('true', style({ transform: 'rotate(180deg)' })),
-      state('false', style({ transform: 'rotate(0deg)' })),
-      transition('true <=> false', animate('0.4s')),
-    ]),
   ],
 })
 export class HeaderComponent {
@@ -84,12 +71,8 @@ export class HeaderComponent {
   codeIcon = faCode;
   navElements = input<PjUiRouterNavigationElement[]>([]);
 
-  expanded = false;
-  chevronIcon = faChevronRight;
-
   @ViewChild('primaryHeader', { static: true }) primaryHeader?: ElementRef;
 
-  @HostListener('window:scroll')
   onScroll() {
     const windowScrollY = this._browserTools?.window?.scrollY ?? 0;
     const documentHeight =
@@ -97,16 +80,6 @@ export class HeaderComponent {
     const headerHeight = this.primaryHeader?.nativeElement.clientHeight ?? 0;
     const pastHeader = windowScrollY > documentHeight + headerHeight;
     if (this.windowPastHeader() !== pastHeader) {
-      this._logger?.to.log(
-        'Window: %s, Document: %s, Header: %s',
-        windowScrollY,
-        documentHeight,
-        headerHeight,
-      );
-      if (!pastHeader) {
-        this.expanded = false;
-      }
-
       this.windowPastHeader.update(() => pastHeader);
     }
   }
