@@ -47,7 +47,11 @@
             "bundleName": "theme-base",
             "inject": false
           },
-          "ng-libs/styles/src/lib/styles/global.scss"
+          {
+            "input": "ng-libs/styles/src/lib/styles/global.scss",
+            "bundleName": "global",
+            "inject": false
+          }
         ],
         "scripts": [],
         "server": "apps/blog/src/main.server.ts",
