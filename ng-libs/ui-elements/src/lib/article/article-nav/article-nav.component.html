@@ -6,32 +6,30 @@
     #content
     class="col-span-5 md:col-span-3 md:col-start-1 lg:col-span-2 lg:col-start-2"
   >
-    <div class="sticky top-2 col-span-5 md:hidden">
-      <div class="control m-5 flex justify-end">
-        <button
-          mat-mini-fab
-          type="button"
-          [matMenuTriggerFor]="navMenu"
-          [color]="'primary'"
-          aria-label="Show or hide page navigation"
-        >
-          <fa-icon [icon]="expandIcon"></fa-icon>
-        </button>
-        <mat-menu #navMenu="matMenu" [xPosition]="'before'">
-          @for (nav of navElements(); track nav.id) {
-            <button
-              mat-menu-item
-              type="button"
-              [disabled]="nav.id === inViewId()"
-              (click)="navigateClicked(nav)"
-            >
-              <ng-container
-                *ngTemplateOutlet="navElementTitleTemplate; context: { nav }"
-              ></ng-container>
-            </button>
-          }
-        </mat-menu>
-      </div>
+    <div class="sticky top-4 float-right m-4 inline-block md:hidden">
+      <button
+        mat-mini-fab
+        type="button"
+        [matMenuTriggerFor]="navMenu"
+        [color]="'primary'"
+        aria-label="Show or hide page navigation"
+      >
+        <fa-icon [icon]="expandIcon"></fa-icon>
+      </button>
+      <mat-menu #navMenu="matMenu" [xPosition]="'before'">
+        @for (nav of navElements(); track nav.id) {
+          <button
+            mat-menu-item
+            type="button"
+            [disabled]="nav.id === inViewId()"
+            (click)="navigateClicked(nav)"
+          >
+            <ng-container
+              *ngTemplateOutlet="navElementTitleTemplate; context: { nav }"
+            ></ng-container>
+          </button>
+        }
+      </mat-menu>
     </div>
     <ng-content></ng-content>
   </div>
