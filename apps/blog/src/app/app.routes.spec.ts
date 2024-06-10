@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
-import { appRoutes } from './app.routes';
+import { childRoutes } from './app.routes';
 
-describe('appRoutes', () => {
+describe('childRoutes', () => {
   describe.each([
     // keep split
     '',
@@ -11,7 +11,7 @@ describe('appRoutes', () => {
     let route: Route | undefined;
 
     beforeEach(() => {
-      route = appRoutes.find((r) => r.path === path);
+      route = childRoutes.find((r) => r.path === path);
     });
 
     it('should be defined', () => {
@@ -31,7 +31,7 @@ describe('appRoutes', () => {
     let lastRoute: Route;
 
     beforeEach(() => {
-      lastRoute = appRoutes[appRoutes.length - 1];
+      lastRoute = childRoutes[childRoutes.length - 1];
     });
 
     it('should be a wildcard route to display not-found component', () => {
