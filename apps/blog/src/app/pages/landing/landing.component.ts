@@ -1,42 +1,27 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  ViewChild,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import {
   IntroductionCallToAction,
   PageIntroductionComponent,
 } from '@peterjokumsen/ui-elements';
 
-import { AboutMeComponent } from '../../components/about-me';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, AboutMeComponent, PageIntroductionComponent],
+  imports: [CommonModule, PageIntroductionComponent],
   template: `
     <pj-ui-page-introduction
       [paragraphs]="introductionContent"
       [actions]="introductionActions"
       (callToAction)="navigateTo($event)"
     ></pj-ui-page-introduction>
-
-    <div #aboutMe>
-      @defer {
-        <app-about-me></app-about-me>
-      }
-    </div>
   `,
   styles: '',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingComponent {
   private _router = inject(Router);
-
-  @ViewChild('aboutMe') aboutMe!: ElementRef;
 
   introductionContent = [
     'Welcome to my blog!',
@@ -55,10 +40,6 @@ export class LandingComponent {
   ];
 
   async navigateTo(action: IntroductionCallToAction) {
-    if (action.id === 'development-notes') {
-      await this._router.navigate(['/development-notes']);
-    } else {
-      this.aboutMe?.nativeElement?.scrollIntoView({ behavior: 'smooth' });
-    }
+    await this._router.navigate([action.id]);
   }
 }
