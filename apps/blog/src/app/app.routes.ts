@@ -1,7 +1,6 @@
 import {
   providePjArticleParser,
   providePjBrowserTools,
-  providePjHttpTools,
   providePjLogger,
   providePjTheme,
 } from '@peterjokumsen/ng-services';
@@ -9,7 +8,6 @@ import {
 import { PrimaryComponent } from './primary.component';
 import { Route } from '@angular/router';
 import { isDevMode } from '@angular/core';
-import { withFetch } from '@angular/common/http';
 
 const config = { production: !isDevMode() };
 
@@ -48,7 +46,6 @@ export const appRoutes: Route[] = [
     providers: [
       providePjArticleParser(),
       providePjBrowserTools(),
-      providePjHttpTools({ production: !isDevMode() }, withFetch()),
       providePjLogger(config),
       providePjTheme(),
     ],
