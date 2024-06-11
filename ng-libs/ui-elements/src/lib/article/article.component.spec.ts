@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ArticleComponent } from './article.component';
+import { ArticleNavComponent } from './article-nav';
+import { MockComponent } from 'ng-mocks';
 
 describe('ArticleComponent', () => {
   let component: ArticleComponent;
@@ -9,7 +11,13 @@ describe('ArticleComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ArticleComponent],
-    }).compileComponents();
+    })
+      .overrideComponent(ArticleComponent, {
+        set: {
+          imports: [MockComponent(ArticleNavComponent)],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(ArticleComponent);
     component = fixture.componentInstance;
