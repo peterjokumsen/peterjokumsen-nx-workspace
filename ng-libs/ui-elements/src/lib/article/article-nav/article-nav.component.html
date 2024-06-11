@@ -38,6 +38,7 @@
   >
     <div
       class="nav-elements sticky top-0 flex max-h-screen flex-col justify-around gap-2 overflow-y-auto overflow-x-clip p-2"
+      @list
     >
       @for (nav of navElements(); track nav.id) {
         <button

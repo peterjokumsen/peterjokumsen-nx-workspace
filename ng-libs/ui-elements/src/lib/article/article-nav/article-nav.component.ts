@@ -17,7 +17,10 @@ import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { PjUiArticleNavElement, PjUiArticleSection } from '../models';
 import {
   animate,
+  animateChild,
   keyframes,
+  query,
+  stagger,
   state,
   style,
   transition,
@@ -47,16 +50,18 @@ type ArticleNavSection = Pick<PjUiArticleSection, 'title'>;
   styleUrl: './article-nav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
+    trigger('list', [
+      transition('* => *', [
+        query('@inOutAnimation', stagger(50, animateChild())),
+      ]),
+    ]),
     trigger('inOutAnimation', [
       state('in', style({ transform: 'translateX(0)', height: '*' })),
       transition(':enter', [
         animate(
           300,
           keyframes([
-            style({ offset: 0, transform: 'translateX(100%)', height: 0 }),
-            style({ offset: 0.25, transform: 'translateX(80%)', height: '*' }),
-            style({ offset: 0.5, transform: 'translateX(60%)' }),
-            style({ offset: 0.75, transform: 'translateX(20%)' }),
+            style({ offset: 0, transform: 'translateX(100%)' }),
             style({ offset: 1, transform: 'translateX(0)' }),
           ]),
         ),
