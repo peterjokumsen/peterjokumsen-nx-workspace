@@ -22,33 +22,11 @@ import { RouterOutlet } from '@angular/router';
         animate('300ms', style({ opacity: 0 })),
       ]),
     ]),
-    trigger('coinFlip', [
-      transition(':enter', [
-        animate(
-          '600ms',
-          keyframes([
-            style({
-              transform: 'rotateY(180deg) translate(1000%, 1000%)',
-              scale: 1.5,
-            }),
-            style({
-              transform: 'rotateY(0) translate(100%, 100%)',
-              scale: 1.2,
-            }),
-            style({
-              transform: 'rotateY(180deg) translateX(10%) translateY(10%)',
-              scale: 1.3,
-            }),
-            style({ transform: 'rotateY(0) translate(5% 5%)', scale: 1 }),
-          ]),
-        ),
-      ]),
-    ]),
   ],
   template: `
     @defer {
       <router-outlet></router-outlet>
-    } @loading (minimum 650ms) {
+    } @loading (minimum 500ms) {
       <div @fadeOut class="splash">
         <img
           @coinFlip
@@ -67,6 +45,26 @@ import { RouterOutlet } from '@angular/router';
       top: 0;
       left: 0;
       right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      @keyframes heartbeat {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      img {
+        display: block;
+        animation: heartbeat 500ms infinite;
+      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

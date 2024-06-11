@@ -1,6 +1,7 @@
 import {
   providePjArticleParser,
   providePjBrowserTools,
+  providePjHttpTools,
   providePjLogger,
   providePjTheme,
 } from '@peterjokumsen/ng-services';
@@ -8,6 +9,7 @@ import {
 import { PrimaryComponent } from './primary.component';
 import { Route } from '@angular/router';
 import { isDevMode } from '@angular/core';
+import { withFetch } from '@angular/common/http';
 
 const config = { production: !isDevMode() };
 
@@ -17,6 +19,11 @@ export const childRoutes: Route[] = [
     loadComponent: () =>
       import('./pages/landing').then((m) => m.LandingComponent),
     data: { title: 'Home' },
+  },
+  {
+    path: 'about-me',
+    loadComponent: () =>
+      import('./pages/about-me').then((m) => m.AboutMeComponent),
   },
   {
     path: 'development-notes',
@@ -41,6 +48,7 @@ export const appRoutes: Route[] = [
     providers: [
       providePjArticleParser(),
       providePjBrowserTools(),
+      providePjHttpTools({ production: !isDevMode() }, withFetch()),
       providePjLogger(config),
       providePjTheme(),
     ],
