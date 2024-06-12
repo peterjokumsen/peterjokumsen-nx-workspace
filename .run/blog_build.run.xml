@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="blog:build" type="NxRunConfigurationType">
+    <option name="nx-projects" value="blog" />
+    <option name="nx-targets" value="build" />
+    <option name="nx-target-configuration" value="" />
+    <envs />
+    <option name="arguments" value="" />
+    <method v="2" />
+  </configuration>
+</component>
