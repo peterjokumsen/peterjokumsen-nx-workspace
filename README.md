@@ -1,6 +1,6 @@
 # PeterJokumsen `Nx` Workspace
 
-[![codecov](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graph/badge.svg?token=0QX0KNI1R4)](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace)
+[![codecov](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graph/badge.svg?token=0QX0KNI1R4)](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace) [![Blog](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/ci_cd.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/ci_cd.yml)
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a> ✨ **This workspace has been generated using [Nx, Smart Monorepos · Fast CI.](https://nx.dev)** ✨
 
@@ -10,7 +10,7 @@ This repository is meant as a playground of sorts, that I've created as a collec
 
 ## Blog
 
-<a alt="Peter Jokumsen Blog" href="https://blog.peterjokumsen.com" target="_blank" rel="noreferrer"><img src="https://blog.peterjokumsen.com/assets/logo-150.webp" width="150"></a> [![Blog](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml/badge.svg?branch=main)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/blog-build-deploy.yml)
+<a alt="Peter Jokumsen Blog" href="https://blog.peterjokumsen.com" target="_blank" rel="noreferrer"><img src="https://blog.peterjokumsen.com/assets/logo-150.webp" width="150"></a>
 
 Application, located in [`apps/blog`](./apps/blog), is the initial project, to be used as a blog to share with posts and articles.
 
