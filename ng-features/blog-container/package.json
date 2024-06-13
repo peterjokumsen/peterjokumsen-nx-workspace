@@ -2,10 +2,10 @@
   "name": "@peterjokumsen/blog-container",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^17.2.0",
-    "@angular/core": "^17.2.0",
-    "@angular/router": "^17.2.0",
-    "@nx/angular": "^18.3.4",
+    "@angular/common": "^18.0.3",
+    "@angular/core": "^18.0.3",
+    "@angular/router": "^18.0.3",
+    "@nx/angular": "^19.3.0",
     "@peterjokumsen/ui-elements": "*"
   },
   "dependencies": {},
