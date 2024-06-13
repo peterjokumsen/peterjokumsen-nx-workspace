@@ -72,6 +72,7 @@ jobs:
     if: |
       always() &&
       (needs.prep.outputs.infra_affected == 'No' || needs.infra.result == 'success') &&
+      needs.lint_test_build.result == 'success' &&
       needs.lint_test_build.outputs.uploaded_artifacts == 'Yes' &&
       github.event.action != 'closed'
     runs-on: ubuntu-latest
