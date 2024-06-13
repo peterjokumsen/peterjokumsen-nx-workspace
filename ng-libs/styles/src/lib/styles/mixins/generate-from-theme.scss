@@ -9,7 +9,7 @@
 }
 
 @function get-color($palette, $hue) {
-  @return mat.get-color-from-palette($palette, $hue);
+  @return mat.m2-get-color-from-palette($palette, $hue);
 }
 
 @function get-colors-from-theme($theme) {
