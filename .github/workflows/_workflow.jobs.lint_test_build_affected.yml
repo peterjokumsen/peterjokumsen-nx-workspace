@@ -64,10 +64,10 @@ jobs:
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
-        with:
-          # Number of commits to fetch. 0 indicates all history for all branches and tags.
-          fetch-depth: 0
-          submodules: true
+
+      - name: 'Fetch main branch 🌿'
+        run: |
+          git rev-parse --verify main || git remote set-branches origin main && git fetch --depth 1 origin main && git branch main origin/main
 
       - name: 'Install dependencies 📦'
         uses: ./.github/actions/install-deps
