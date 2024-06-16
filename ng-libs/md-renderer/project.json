@@ -1,0 +1,36 @@
+{
+  "name": "md-renderer",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "ng-features/md-renderer/src",
+  "prefix": "pj-mdr",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "ng-features/md-renderer/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "ng-features/md-renderer/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "ng-features/md-renderer/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "ng-features/md-renderer/jest.config.ts"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  }
+}
