@@ -1,1 +1,1 @@
-export * from './lib/ts-md-models';
+export * from './lib';
