@@ -9,19 +9,23 @@ describe('parseMarkdown', () => {
   describe('when the markdown is empty', () => {
     it('should return an empty section', () => {
       const result = parseMarkdown('');
-      expect(result).toEqual([
-        {
-          type: 'section',
-          title: '',
-          content: [],
-        },
-      ]);
+      expect(result).toEqual({
+        sections: [
+          {
+            type: 'section',
+            title: '',
+            content: [],
+          },
+        ],
+      });
     });
   });
 
   describe('when the markdown has carriage returns', () => {
     it('should strip "\r" character and return expected', () => {
-      const result = parseMarkdown('# A Title\r\n\r\nSome Content');
+      const { sections: result } = parseMarkdown(
+        '# A Title\r\n\r\nSome Content',
+      );
       expect(result.length).toEqual(1);
       const section = result[0];
       expect(section).toEqual({
@@ -53,7 +57,8 @@ describe('parseMarkdown', () => {
         path.join(__dirname, `./test-mds/${fileName}`),
         'utf-8',
       );
-      sections = parseMarkdown(markdown);
+      const result = parseMarkdown(markdown);
+      sections = result.sections;
     });
 
     const multiple = expectation.expectedTitles.length > 1;
