@@ -1,6 +1,6 @@
 import { getContentType, getHeaderLevel } from '../helper-fns';
 
-import { MarkdownSection } from '../models';
+import { MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { ReadResult } from '../_models';
 import { contentReaders } from './content-readers';
 

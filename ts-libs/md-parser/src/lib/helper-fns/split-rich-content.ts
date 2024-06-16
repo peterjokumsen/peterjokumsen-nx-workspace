@@ -1,4 +1,4 @@
-import { MarkdownContent } from '../models';
+import { MarkdownContent } from '@peterjokumsen/ts-md-models';
 import { RichContentMap } from '../_models';
 
 export function splitRichContent(

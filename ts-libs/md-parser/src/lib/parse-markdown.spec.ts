@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { MarkdownContent, MarkdownSection } from './models';
+import { MarkdownContent, MarkdownSection } from '@peterjokumsen/ts-md-models';
 
 import { parseMarkdown } from './';
 

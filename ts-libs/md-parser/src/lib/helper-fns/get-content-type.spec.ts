@@ -1,4 +1,4 @@
-import { MarkdownContentType } from '../models';
+import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
 import { getContentType } from './';
 
 interface TestCase {

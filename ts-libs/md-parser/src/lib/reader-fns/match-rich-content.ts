@@ -1,7 +1,7 @@
 import { regexContentFns, regexPatterns } from '../helper-fns';
 
 import { MatchedContent } from '../_models';
-import { RichContentType } from '../models';
+import { RichContentType } from '@peterjokumsen/ts-md-models';
 
 export function matchRichContent(
   type: RichContentType,

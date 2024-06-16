@@ -1,4 +1,4 @@
-import { MarkdownContentType } from '../models';
+import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
 
 export function getContentType(line: string): MarkdownContentType {
   const trimmedLine = line.trimStart();

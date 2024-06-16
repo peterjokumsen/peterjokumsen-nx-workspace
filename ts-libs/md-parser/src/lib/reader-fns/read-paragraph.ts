@@ -1,7 +1,7 @@
 import { ReadResult, RichContentMap } from '../_models';
 import { isRichContentString, lineHas, splitRichContent } from '../helper-fns';
 
-import { RichContentType } from '../models';
+import { RichContentType } from '@peterjokumsen/ts-md-models';
 import { matchRichContent } from './match-rich-content';
 
 export function readParagraph(lines: string[], start: number): ReadResult {
