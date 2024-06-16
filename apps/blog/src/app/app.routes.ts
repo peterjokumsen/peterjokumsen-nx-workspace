@@ -1,15 +1,6 @@
-import {
-  providePjArticleParser,
-  providePjBrowserTools,
-  providePjLogger,
-  providePjTheme,
-} from '@peterjokumsen/ng-services';
-
 import { PrimaryComponent } from './primary.component';
 import { Route } from '@angular/router';
-import { isDevMode } from '@angular/core';
-
-const config = { production: !isDevMode() };
+import { providePjArticleParser } from '@peterjokumsen/ng-services';
 
 export const childRoutes: Route[] = [
   {
@@ -43,11 +34,6 @@ export const appRoutes: Route[] = [
     path: '',
     component: PrimaryComponent,
     loadChildren: () => childRoutes,
-    providers: [
-      providePjArticleParser(),
-      providePjBrowserTools(),
-      providePjLogger(config),
-      providePjTheme(),
-    ],
+    providers: [providePjArticleParser()],
   },
 ];
