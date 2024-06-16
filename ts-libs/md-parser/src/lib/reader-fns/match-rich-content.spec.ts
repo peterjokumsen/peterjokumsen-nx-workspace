@@ -1,4 +1,4 @@
-import { MarkdownContent, RichContentType } from '../models';
+import { MarkdownContent, RichContentType } from '@peterjokumsen/ts-md-models';
 
 import { matchRichContent } from './match-rich-content';
 

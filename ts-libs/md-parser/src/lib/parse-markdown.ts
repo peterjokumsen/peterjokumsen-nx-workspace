@@ -1,4 +1,4 @@
-import { MarkdownSection } from './models';
+import { MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { readMarkdown } from './reader-fns';
 
 export function parseMarkdown(markdown: string): MarkdownSection[] {

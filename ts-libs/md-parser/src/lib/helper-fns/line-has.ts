@@ -1,4 +1,4 @@
-import { RichContentType } from '../models';
+import { RichContentType } from '@peterjokumsen/ts-md-models';
 import { regexPatterns } from './regex-patterns';
 
 export function lineHas(tag: RichContentType, line: string): boolean {

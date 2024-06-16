@@ -1,4 +1,4 @@
-import { MarkdownContentType } from '../models';
+import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
 import { ReadContentFn } from '../_models';
 import { contentReaders } from './content-readers';
 import { getContentType } from '../helper-fns';
