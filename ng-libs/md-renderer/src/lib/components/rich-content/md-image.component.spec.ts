@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MdContentService } from '../../services';
 import { MdImageComponent } from './md-image.component';
 
-describe('ParagraphImageComponent', () => {
+describe('MdImageComponent', () => {
   let component: MdImageComponent;
   let fixture: ComponentFixture<MdImageComponent>;
   let contentSpy: Partial<jest.Mocked<MdContentService>>;

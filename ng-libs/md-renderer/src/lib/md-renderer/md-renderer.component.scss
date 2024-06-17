@@ -1,0 +1,38 @@
+$mobile: 768px;
+
+.markdown-document {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 20px;
+
+  @media (min-width: $mobile) {
+    flex-direction: row-reverse;
+  }
+
+  & .markdown-contents {
+    border: 1px solid red;
+    flex: 1;
+    margin: 0 auto;
+
+    & section {
+      max-width: 800px;
+    }
+
+    @media (min-width: $mobile) {
+      margin: 0 20px 0 0;
+    }
+  }
+
+  & .markdown-navigation {
+    border: 1px solid pink;
+
+    @media (min-width: $mobile) {
+      display: block;
+      width: 360px;
+      max-height: calc(100vh - 40px);
+      position: sticky;
+      top: 20px;
+    }
+  }
+}
