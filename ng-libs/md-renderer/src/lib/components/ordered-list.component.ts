@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { MarkdownContentType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { CommonModule } from '@angular/common';
 import { HasContent } from './has-content.directive';
 import { ParagraphComponent } from './paragraph.component';
-import { mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 @Component({
   selector: 'pj-mdr-ordered-list',
@@ -12,7 +12,7 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
   template: `
     @if (orderedList()) {
       <ol>
-        @for (element of orderedList(); track element.type) {
+        @for (element of orderedList(); track element.id) {
           <li>
             <pj-mdr-paragraph [content]="element"></pj-mdr-paragraph>
           </li>
@@ -24,6 +24,8 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrderedListComponent extends HasContent {
+  protected override _contentType: MarkdownContentType = 'ordered-list';
+
   orderedList = computed(() => {
     const content = this.contentComputed();
     if (!content) {
@@ -32,7 +34,7 @@ export class OrderedListComponent extends HasContent {
     }
 
     if (mdModelCheck('ordered-list', content)) {
-      return content.content;
+      return content.content.map((c) => this._mdContentService.mapContent(c));
     }
 
     this._logger?.to.warn(
