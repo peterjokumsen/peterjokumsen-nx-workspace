@@ -53,7 +53,6 @@ import { ParagraphComponent } from './paragraph.component';
     .section {
       min-height: 100vh;
       display: flex;
-      align-content: center;
       justify-content: center;
       flex-direction: column;
       gap: 1rem;

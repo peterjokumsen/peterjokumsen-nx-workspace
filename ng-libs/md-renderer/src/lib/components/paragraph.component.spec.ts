@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MdContentService } from '../services';
+import { MdRichContentComponent } from './rich-content';
+import { MockComponent } from 'ng-mocks';
 import { ParagraphComponent } from './paragraph.component';
 
 describe('ParagraphComponent', () => {
@@ -19,7 +21,13 @@ describe('ParagraphComponent', () => {
         // providers
         { provide: MdContentService, useValue: contentSpy },
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(ParagraphComponent, {
+        set: {
+          imports: [MockComponent(MdRichContentComponent)],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(ParagraphComponent);
     component = fixture.componentInstance;

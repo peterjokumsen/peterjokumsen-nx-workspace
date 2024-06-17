@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MdContentService } from '../../services';
 import { MdTextComponent } from './md-text.component';
 
-describe('ParagraphTextComponent', () => {
+describe('MdTextComponent', () => {
   let component: MdTextComponent;
   let fixture: ComponentFixture<MdTextComponent>;
   let contentSpy: Partial<jest.Mocked<MdContentService>>;

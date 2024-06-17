@@ -1,1 +1,23 @@
-<p>table-of-contents works!</p>
+<div @list class="table-of-contents">
+  @if (inViewSectionId() !== '') {
+    <button
+      mat-raised-button
+      color="primary"
+      @inOutAnimation
+      (click)="sectionClick.emit('')"
+    >
+      Back to top
+    </button>
+  }
+  @for (section of sections(); track section.id) {
+    <button
+      mat-raised-button
+      color="primary"
+      @inOutAnimation
+      [disabled]="section.id === inViewSectionId()"
+      (click)="sectionClick.emit(section.id)"
+    >
+      {{ section.title }}
+    </button>
+  }
+</div>

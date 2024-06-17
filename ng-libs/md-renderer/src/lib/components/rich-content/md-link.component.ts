@@ -1,10 +1,15 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
-import { MarkdownContentType, mdModelCheck } from '@peterjokumsen/ts-md-models';
+import {
+  MarkdownContent,
+  MarkdownContentType,
+  mdModelCheck,
+} from '@peterjokumsen/ts-md-models';
 
 import { CommonModule } from '@angular/common';
 import { HasContent } from '../has-content.directive';
 import { MdImageComponent } from './md-image.component';
 import { MdTextComponent } from './md-text.component';
+import { WithId } from '../../models';
 
 @Component({
   selector: 'pj-mdr-md-link',
@@ -16,17 +21,13 @@ import { MdTextComponent } from './md-text.component';
         @if (linkContentIsSimple()) {
           {{ linkContent() }}
         } @else {
-          @for (element of linkContents(); track element.type) {
+          @for (element of linkContents(); track element.id) {
             @switch (element.type) {
               @case ('text') {
-                <pj-mdr-paragraph-text
-                  [content]="element"
-                ></pj-mdr-paragraph-text>
+                <pj-mdr-md-text [content]="element" />
               }
               @case ('image') {
-                <pj-mdr-paragraph-image
-                  [content]="element"
-                ></pj-mdr-paragraph-image>
+                <pj-mdr-md-image [content]="element" />
               }
               @default {
                 <span>Unsupported content type</span>
@@ -63,10 +64,10 @@ export class MdLinkComponent extends HasContent {
     return link.content;
   });
 
-  linkContents = computed(() => {
+  linkContents = computed<WithId<MarkdownContent>[]>(() => {
     const content = this.linkContent();
     if (!content || typeof content === 'string') return [];
-    return content;
+    return content.map((c) => this._mdContentService.mapContent(c));
   });
 
   linkContentIsSimple = computed(() => {
