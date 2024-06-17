@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { MarkdownContentType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { CommonModule } from '@angular/common';
 import { HasContent } from './has-content.directive';
 import { ParagraphComponent } from './paragraph.component';
-import { mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 @Component({
   selector: 'pj-mdr-list',
@@ -11,8 +11,10 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
   imports: [CommonModule, ParagraphComponent],
   template: `
     <ul>
-      @for (listElement of listElements(); track listElement) {
-        <li><pj-mdr-paragraph [content]="listElement" /></li>
+      @for (listElement of listElements(); track listElement.id) {
+        <li>
+          <pj-mdr-paragraph [content]="listElement" />
+        </li>
       }
     </ul>
   `,
@@ -20,14 +22,17 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ListComponent extends HasContent {
+  protected override _contentType: MarkdownContentType = 'list';
+
   listElements = computed(() => {
-    const content = this.content();
+    const content = this.contentComputed();
     if (!content) {
       this._logger?.to.warn('No content provided for list component');
       return [];
     }
+
     if (mdModelCheck('list', content)) {
-      return content.content;
+      return content.content.map((c) => this._mdContentService.mapContent(c));
     }
 
     this._logger?.to.warn(

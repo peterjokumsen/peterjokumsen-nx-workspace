@@ -1,13 +1,8 @@
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from '@angular/core';
-import {
-  MarkdownContent,
+  MarkdownContentType,
   MarkdownParagraph,
+  MarkdownText,
   mdModelCheck,
 } from '@peterjokumsen/ts-md-models';
 
@@ -15,7 +10,6 @@ import { CommonModule } from '@angular/common';
 import { HasContent } from './has-content.directive';
 import { ParagraphLinkComponent } from './paragraph-link.component';
 import { ParagraphTextComponent } from './paragraph-text.component';
-import { PjLogger } from '@peterjokumsen/ng-services';
 
 @Component({
   selector: 'pj-mdr-paragraph',
@@ -45,22 +39,21 @@ import { PjLogger } from '@peterjokumsen/ng-services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ParagraphComponent extends HasContent {
-  paragraph = computed(() => {
-    const content = this.content();
-    if (!content) {
-      this._logger?.to.warn('No content provided for paragraph component');
-      return null;
-    }
-    if (!mdModelCheck('paragraph', content)) {
-      this._logger?.to.warn(
-        `"%o" content provided for paragraph component, incompatible for paragraph.`,
-        content,
-      );
-      return null;
-    }
+  protected override _contentType: MarkdownContentType = 'paragraph';
 
-    return content;
+  paragraph = computed(() => {
+    const content = this.contentComputed();
+    if (!content) return null;
+    if (mdModelCheck('text', content)) return content;
+    if (mdModelCheck('paragraph', content)) return content;
+
+    this._logger?.to.warn(
+      `"%o" content provided for paragraph component, incompatible for paragraph.`,
+      content,
+    );
+    return null;
   });
+
   simpleParagraph = computed(() => {
     const paragraph = this.paragraph();
     if (!paragraph) return null;

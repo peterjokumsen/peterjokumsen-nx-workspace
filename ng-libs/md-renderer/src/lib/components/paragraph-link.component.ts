@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { MarkdownContentType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { CommonModule } from '@angular/common';
 import { HasContent } from './has-content.directive';
 import { ParagraphImageComponent } from './paragraph-image.component';
 import { ParagraphTextComponent } from './paragraph-text.component';
-import { mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 @Component({
   selector: 'pj-mdr-paragraph-link',
@@ -41,13 +41,11 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ParagraphLinkComponent extends HasContent {
+  protected override _contentType: MarkdownContentType = 'link';
+
   link = computed(() => {
     const content = this.contentComputed();
-    if (!content) {
-      this._logger?.to.warn('No content provided for paragraph-link component');
-      return null;
-    }
-
+    if (!content) return null;
     if (mdModelCheck('link', content)) {
       return content;
     }

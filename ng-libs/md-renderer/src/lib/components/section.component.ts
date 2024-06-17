@@ -2,12 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { ListComponent } from './list.component';
 import { MarkdownSection } from '@peterjokumsen/ts-md-models';
+import { MdContentService } from '../services';
 import { OrderedListComponent } from './ordered-list.component';
 import { ParagraphComponent } from './paragraph.component';
 
@@ -22,8 +24,10 @@ import { ParagraphComponent } from './paragraph.component';
   ],
   template: `
     <section class="section">
-      <h2>{{ title }}</h2>
-      @for (element of elements(); track element.type) {
+      @if (title()) {
+        <h2>{{ title() }}</h2>
+      }
+      @for (element of elements(); track element.id) {
         @switch (element.type) {
           @case ('paragraph') {
             <pj-mdr-paragraph [content]="element"></pj-mdr-paragraph>
@@ -53,9 +57,12 @@ import { ParagraphComponent } from './paragraph.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SectionComponent {
+  private _mdContentService = inject(MdContentService);
+
   section = input<MarkdownSection>();
   title = computed(() => this.section()?.title);
   elements = computed(() => {
-    return this.section()?.content;
+    const sections = this.section()?.content ?? [];
+    return sections.map((s) => this._mdContentService.mapContent(s));
   });
 }
