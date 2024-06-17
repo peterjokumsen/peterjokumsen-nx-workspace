@@ -52,6 +52,11 @@ import { ParagraphComponent } from './paragraph.component';
   styles: `
     .section {
       min-height: 100vh;
+      display: flex;
+      align-content: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1rem;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,36 +1,26 @@
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import {
+  MarkdownContent,
   MarkdownContentType,
-  MarkdownParagraph,
-  MarkdownText,
   mdModelCheck,
 } from '@peterjokumsen/ts-md-models';
 
 import { CommonModule } from '@angular/common';
 import { HasContent } from './has-content.directive';
-import { ParagraphLinkComponent } from './paragraph-link.component';
-import { ParagraphTextComponent } from './paragraph-text.component';
+import { MdRichContentComponent } from './rich-content';
+import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-paragraph',
   standalone: true,
-  imports: [CommonModule, ParagraphTextComponent, ParagraphLinkComponent],
+  imports: [CommonModule, MdRichContentComponent],
   template: `
     <div class="md-paragraph">
       @if (simpleParagraph()) {
         <p class="simple-paragraph">{{ simpleParagraph() }}</p>
       } @else {
         <p class="rich-paragraph">
-          @for (element of richElements(); track element.type) {
-            @switch (element.type) {
-              @case ('text') {
-                <pj-mdr-paragraph-text [content]="element" />
-              }
-              @case ('link') {
-                <pj-mdr-paragraph-link [content]="element" />
-              }
-            }
-          }
+          <pj-mdr-md-rich-content [elements]="richElements()" />
         </p>
       }
     </div>
@@ -63,14 +53,14 @@ export class ParagraphComponent extends HasContent {
     return null;
   });
 
-  richElements = computed(() => {
+  richElements = computed<WithId<MarkdownContent>[]>(() => {
     const paragraph = this.paragraph();
-    if (!paragraph) return null;
+    if (!paragraph) return [];
     if (typeof paragraph.content === 'string') {
-      return null;
+      return [];
     }
 
     this._logger?.to.log('Rich elements: %o', paragraph.content);
-    return paragraph.content;
+    return paragraph.content.map((pc) => this._mdContentService.mapContent(pc));
   });
 }

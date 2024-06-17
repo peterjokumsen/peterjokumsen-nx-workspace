@@ -2,32 +2,32 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MarkdownContentType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { CommonModule } from '@angular/common';
-import { HasContent } from './has-content.directive';
+import { HasContent } from '../has-content.directive';
 
 @Component({
-  selector: 'pj-mdr-paragraph-image',
+  selector: 'pj-mdr-md-text',
   standalone: true,
   imports: [CommonModule],
   template: `
-    @if (image()) {
-      <img [src]="image()?.src" [alt]="image()?.alt" />
+    @if (textContent()) {
+      <span>{{ textContent() }}</span>
     }
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ParagraphImageComponent extends HasContent {
-  protected override _contentType: MarkdownContentType = 'image';
+export class MdTextComponent extends HasContent {
+  protected override _contentType: MarkdownContentType = 'text';
 
-  image = computed(() => {
+  textContent = computed(() => {
     const content = this.contentComputed();
     if (!content) return null;
-    if (mdModelCheck('image', content)) {
-      return content;
+    if (mdModelCheck('text', content)) {
+      return content.content;
     }
 
     this._logger?.to.warn(
-      `"%o" content provided for paragraph-image component, incompatible for image.`,
+      `"%o" content provided for paragraph-text component, incompatible for text.`,
       content,
     );
     return null;
