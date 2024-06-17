@@ -2,14 +2,14 @@ import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { MarkdownContentType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { CommonModule } from '@angular/common';
-import { HasContent } from './has-content.directive';
-import { ParagraphImageComponent } from './paragraph-image.component';
-import { ParagraphTextComponent } from './paragraph-text.component';
+import { HasContent } from '../has-content.directive';
+import { MdImageComponent } from './md-image.component';
+import { MdTextComponent } from './md-text.component';
 
 @Component({
-  selector: 'pj-mdr-paragraph-link',
+  selector: 'pj-mdr-md-link',
   standalone: true,
-  imports: [CommonModule, ParagraphTextComponent, ParagraphImageComponent],
+  imports: [CommonModule, MdTextComponent, MdImageComponent],
   template: `
     @if (link()) {
       <a [href]="linkHref()" class="md-paragraph-link">
@@ -40,7 +40,7 @@ import { ParagraphTextComponent } from './paragraph-text.component';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ParagraphLinkComponent extends HasContent {
+export class MdLinkComponent extends HasContent {
   protected override _contentType: MarkdownContentType = 'link';
 
   link = computed(() => {

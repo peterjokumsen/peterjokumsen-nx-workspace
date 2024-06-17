@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MdContentService } from '../services';
-import { ParagraphTextComponent } from './paragraph-text.component';
+import { MdContentService } from '../../services';
+import { MdLinkComponent } from './md-link.component';
 
-describe('ParagraphTextComponent', () => {
-  let component: ParagraphTextComponent;
-  let fixture: ComponentFixture<ParagraphTextComponent>;
+describe('ParagraphLinkComponent', () => {
+  let component: MdLinkComponent;
+  let fixture: ComponentFixture<MdLinkComponent>;
   let contentSpy: Partial<jest.Mocked<MdContentService>>;
 
   beforeEach(async () => {
@@ -14,14 +14,14 @@ describe('ParagraphTextComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ParagraphTextComponent],
+      imports: [MdLinkComponent],
       providers: [
         // providers
         { provide: MdContentService, useValue: contentSpy },
       ],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(ParagraphTextComponent);
+    fixture = TestBed.createComponent(MdLinkComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
