@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MdRichContentComponent } from './md-rich-content.component';
+import { MdWrapperComponent } from './md-wrapper.component';
 
-describe('MdRichContentComponent', () => {
-  let component: MdRichContentComponent;
-  let fixture: ComponentFixture<MdRichContentComponent>;
+describe('MdWrapperComponent', () => {
+  let component: MdWrapperComponent;
+  let fixture: ComponentFixture<MdWrapperComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MdRichContentComponent],
+      imports: [MdWrapperComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MdRichContentComponent);
+    fixture = TestBed.createComponent(MdWrapperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

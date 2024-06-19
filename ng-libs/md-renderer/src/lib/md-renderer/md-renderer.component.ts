@@ -14,43 +14,25 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MarkdownAst, MarkdownSection } from '@peterjokumsen/ts-md-models';
 
+import { MdComponentMapService } from '../services';
 import { MdContentService } from '../services';
+import { MdSectionDirective } from '../directives/md-section.directive';
+import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { SectionComponent } from '../components';
 import { TableOfContentsComponent } from '../toc/table-of-contents.component';
 import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-md-renderer',
   standalone: true,
-  imports: [CommonModule, SectionComponent, TableOfContentsComponent],
-  providers: [MdContentService],
-  template: `
-    <div class="markdown-document">
-      <div class="markdown-navigation">
-        @defer {
-          <pj-mdr-table-of-contents
-            [sections]="sections()"
-            [inViewSectionId]="intersectingSectionId()"
-            (sectionClick)="onNavigationClick($event)"
-          />
-        } @placeholder {
-          <div class="navigation-placeholder"></div>
-        }
-      </div>
-      <div class="markdown-contents">
-        @for (section of sections(); track section.id) {
-          <div #sectionAnchor class="section-anchor" id="{{ section.id }}">
-            @defer (on viewport) {
-              <pj-mdr-section [section]="section"></pj-mdr-section>
-            } @placeholder {
-              <div class="placeholder" style="height: 100vh"></div>
-            }
-          </div>
-        }
-      </div>
-    </div>
-  `,
+  imports: [
+    CommonModule,
+    TableOfContentsComponent,
+    MdSectionDirective,
+    MdWrapperComponent,
+  ],
+  providers: [MdContentService, MdComponentMapService],
+  templateUrl: './md-renderer.component.html',
   styleUrl: './md-renderer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -75,9 +57,12 @@ export class MdRendererComponent implements AfterViewInit {
       (entries) => {
         const intersecting = entries.find((e) => e.isIntersecting);
         const id = intersecting?.target.id ?? '';
-        this.intersectingSectionId.update(() => id);
+        if (id) {
+          this._logger?.to.log('Intersecting section:', id, entries);
+          this.intersectingSectionId.update(() => id);
+        }
       },
-      { threshold: 0.5, root: window.document },
+      { threshold: 0.75, root: window.document },
     );
     for (const section of this.sectionAnchors ?? []) {
       observer.observe(section.nativeElement);
