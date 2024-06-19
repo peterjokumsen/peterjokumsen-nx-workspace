@@ -1,0 +1,27 @@
+<div class="markdown-document">
+  <div class="markdown-navigation">
+    @defer {
+      <pj-mdr-table-of-contents
+        [sections]="sections()"
+        [inViewSectionId]="intersectingSectionId()"
+        (sectionClick)="onNavigationClick($event)"
+      />
+    } @placeholder {
+      <div class="navigation-placeholder"></div>
+    }
+  </div>
+  <div class="markdown-contents">
+    @for (section of sections(); track section.id) {
+      <div #sectionAnchor class="section-anchor" id="{{ section.id }}">
+        @defer (on viewport) {
+          <pj-mdr-md-wrapper
+            [pjMdrMdSection]="section"
+            class="section"
+          ></pj-mdr-md-wrapper>
+        } @placeholder {
+          <div class="section placeholder"></div>
+        }
+      </div>
+    }
+  </div>
+</div>
