@@ -8,7 +8,7 @@ export class DebugLoggerService extends PjLogger {
   private readonly _console: LogFns = {
     ...console,
     group: (title) => {
-      console.group(title);
+      console.groupCollapsed(title);
       console.time(title);
       this._titles.push(title);
     },
