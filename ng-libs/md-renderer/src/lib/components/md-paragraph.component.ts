@@ -8,15 +8,21 @@ import {
 import { CommonModule } from '@angular/common';
 import { HasContent } from '../has-content';
 import { MarkdownContent } from '@peterjokumsen/ts-md-models';
+import { MdContentInjectionDirective } from '../directives/md-content-injection.directive';
 import { MdContentService } from '../services';
+import { MdWrapperComponent } from './md-wrapper.component';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-md-paragraph',
   standalone: true,
-  imports: [CommonModule],
-  template: `<p>md-paragraph works!</p>`,
+  imports: [CommonModule, MdWrapperComponent, MdContentInjectionDirective],
+  template: `
+    @for (mdContent of contents(); track mdContent.id) {
+      <pj-mdr-md-wrapper [pjMdrMdContentInjection]="mdContent" />
+    }
+  `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
