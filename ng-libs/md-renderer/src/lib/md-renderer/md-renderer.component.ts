@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnDestroy,
   PLATFORM_ID,
   QueryList,
   ViewChildren,
@@ -13,9 +14,8 @@ import {
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MarkdownAst, MarkdownSection } from '@peterjokumsen/ts-md-models';
+import { MdComponentMapService, MdContentService } from '../services';
 
-import { MdComponentMapService } from '../services';
-import { MdContentService } from '../services';
 import { MdSectionDirective } from '../directives/md-section.directive';
 import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';
@@ -36,7 +36,8 @@ import { WithId } from '../models';
   styleUrl: './md-renderer.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdRendererComponent implements AfterViewInit {
+export class MdRendererComponent implements AfterViewInit, OnDestroy {
+  private _observer?: IntersectionObserver;
   private _logger = inject(PjLogger, { optional: true });
   private _uniqueContentService = inject(MdContentService);
   private _platform = inject(PLATFORM_ID);
@@ -53,7 +54,14 @@ export class MdRendererComponent implements AfterViewInit {
   ngAfterViewInit() {
     if (!isPlatformBrowser(this._platform)) return;
 
-    const observer = new IntersectionObserver(
+    if (typeof IntersectionObserver === 'undefined') {
+      this._logger?.to.warn(
+        'IntersectionObserver not supported, no section tracking will be done.',
+      );
+      return;
+    }
+
+    this._observer = new IntersectionObserver(
       (entries) => {
         const intersecting = entries.find((e) => e.isIntersecting);
         const id = intersecting?.target.id ?? '';
@@ -62,14 +70,23 @@ export class MdRendererComponent implements AfterViewInit {
           this.intersectingSectionId.update(() => id);
         }
       },
-      { threshold: 0.75, root: window.document },
+      { threshold: 0.7 },
     );
     for (const section of this.sectionAnchors ?? []) {
-      observer.observe(section.nativeElement);
+      this._observer?.observe(section.nativeElement);
     }
   }
 
+  ngOnDestroy(): void {
+    this._observer?.disconnect();
+  }
+
   onNavigationClick(sectionId: string) {
+    if (!sectionId && isPlatformBrowser(this._platform)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     const section = this.sectionAnchors?.find(
       (e) => e.nativeElement.id === sectionId,
     );

@@ -28,4 +28,19 @@ describe('MdRendererComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  describe('onNavigationClick', () => {
+    describe('when argument is falsy', () => {
+      it('should scroll to top', () => {
+        const spy = jest.spyOn(window, 'scrollTo').mockImplementation(() => {
+          /* do nothing */
+        });
+
+        component.onNavigationClick('');
+
+        expect(spy).toHaveBeenCalledWith({ top: 0, behavior: 'smooth' });
+        spy.mockRestore();
+      });
+    });
+  });
 });
