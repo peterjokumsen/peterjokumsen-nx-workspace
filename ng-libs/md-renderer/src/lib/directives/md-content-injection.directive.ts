@@ -8,7 +8,6 @@ import { WithId } from '../models';
 
 @Directive({
   selector: 'pj-mdr-md-wrapper[pjMdrMdContentInjection]',
-  standalone: true,
   host: {
     class: 'pj-mdr-md-content-injection',
   },
