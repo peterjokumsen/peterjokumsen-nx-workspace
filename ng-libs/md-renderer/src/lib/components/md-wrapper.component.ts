@@ -5,12 +5,8 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
-
 @Component({
   selector: 'pj-mdr-md-wrapper',
-  standalone: true,
-  imports: [CommonModule],
   template: `<ng-container #container></ng-container>`,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,

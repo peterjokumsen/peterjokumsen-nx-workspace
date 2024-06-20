@@ -1,21 +1,29 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  inject,
+} from '@angular/core';
 
-import { CommonModule } from '@angular/common';
 import { HasContent } from '../has-content';
 import { MarkdownContent } from '@peterjokumsen/ts-md-models';
+import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-md-unknown',
-  standalone: true,
-  imports: [CommonModule],
   template: `
     <div class="unknown">
       <p>Unknown content type: {{ contentType }}</p>
-      <pre>{{ content | json }}</pre>
+      <p>See console for details...</p>
     </div>
   `,
   styles: `
+    code {
+      white-space: pre-wrap;
+    }
+
     .unknown {
       background-color: #ff0000;
       color: #ffffff;
@@ -29,8 +37,11 @@ import { WithId } from '../models';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdUnknownComponent implements HasContent {
+export class MdUnknownComponent implements HasContent, OnInit {
+  private _logger = inject(PjLogger, { optional: true });
+
   @Input() content: string | WithId<MarkdownContent> | MarkdownContent = '';
+
   get contentType(): string {
     if (typeof this.content === 'string') {
       return 'string';
@@ -39,5 +50,9 @@ export class MdUnknownComponent implements HasContent {
     } else {
       return 'unknown';
     }
+  }
+
+  ngOnInit() {
+    this._logger?.to.warn('Unknown content type: %o', this.content);
   }
 }

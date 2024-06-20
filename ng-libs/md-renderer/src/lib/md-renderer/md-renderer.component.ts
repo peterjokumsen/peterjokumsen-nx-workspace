@@ -16,8 +16,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MarkdownAst, MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService, MdContentService } from '../services';
 
-import { MdContentInjectionDirective } from '../directives/md-content-injection.directive';
-import { MdWrapperComponent } from '../components';
+import { MdComponentsModule } from '../md-components.module';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { TableOfContentsComponent } from '../toc/table-of-contents.component';
 import { WithId } from '../models';
@@ -25,12 +24,7 @@ import { WithId } from '../models';
 @Component({
   selector: 'pj-mdr-md-renderer',
   standalone: true,
-  imports: [
-    CommonModule,
-    TableOfContentsComponent,
-    MdContentInjectionDirective,
-    MdWrapperComponent,
-  ],
+  imports: [CommonModule, TableOfContentsComponent, MdComponentsModule],
   providers: [MdContentService, MdComponentMapService],
   templateUrl: './md-renderer.component.html',
   styleUrl: './md-renderer.component.scss',
@@ -39,7 +33,7 @@ import { WithId } from '../models';
 export class MdRendererComponent implements AfterViewInit, OnDestroy {
   private _observer?: IntersectionObserver;
   private _logger = inject(PjLogger, { optional: true });
-  private _uniqueContentService = inject(MdContentService);
+  private _mdContentService = inject(MdContentService);
   private _platform = inject(PLATFORM_ID);
 
   @ViewChildren('sectionAnchor') sectionAnchors?: QueryList<ElementRef>;
@@ -47,7 +41,7 @@ export class MdRendererComponent implements AfterViewInit, OnDestroy {
   parsedContent = input<MarkdownAst>();
   sections = computed<WithId<MarkdownSection>[]>(() => {
     const sections = this.parsedContent()?.sections ?? [];
-    return sections.map((s) => this._uniqueContentService.addId(s));
+    return sections.map((s) => this._mdContentService.addId(s));
   });
   intersectingSectionId = signal<string>('');
 

@@ -13,8 +13,10 @@
   <div class="markdown-contents">
     @for (section of sections(); track section.id) {
       <div #sectionAnchor class="section-container" id="{{ section.id }}">
-        @defer (on viewport) {
-          <pj-mdr-md-wrapper [pjMdrMdContentInjection]="section" />
+        @defer {
+          <pj-mdr-md-wrapper
+            [pjMdrMdContentInjection]="section"
+          ></pj-mdr-md-wrapper>
         } @placeholder {
           <div class="placeholder"></div>
         }

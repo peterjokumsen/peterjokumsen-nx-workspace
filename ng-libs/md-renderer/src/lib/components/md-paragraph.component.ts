@@ -16,8 +16,6 @@ import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-md-paragraph',
-  standalone: true,
-  imports: [CommonModule, MdWrapperComponent, MdContentInjectionDirective],
   template: `
     @for (mdContent of contents(); track mdContent.id) {
       <pj-mdr-md-wrapper [pjMdrMdContentInjection]="mdContent" />
