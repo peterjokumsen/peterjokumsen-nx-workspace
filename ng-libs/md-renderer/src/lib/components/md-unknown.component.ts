@@ -20,6 +20,11 @@ import { WithId } from '../models';
       background-color: #ff0000;
       color: #ffffff;
       padding: 1rem;
+      font-size: 1.2rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

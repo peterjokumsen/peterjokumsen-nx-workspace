@@ -12,14 +12,11 @@
   </div>
   <div class="markdown-contents">
     @for (section of sections(); track section.id) {
-      <div #sectionAnchor class="section-anchor" id="{{ section.id }}">
+      <div #sectionAnchor class="section-container" id="{{ section.id }}">
         @defer (on viewport) {
-          <pj-mdr-md-wrapper
-            [pjMdrMdSection]="section"
-            class="section"
-          ></pj-mdr-md-wrapper>
+          <pj-mdr-md-wrapper [pjMdrMdSection]="section"></pj-mdr-md-wrapper>
         } @placeholder {
-          <div class="section placeholder"></div>
+          <div class="placeholder"></div>
         }
       </div>
     }

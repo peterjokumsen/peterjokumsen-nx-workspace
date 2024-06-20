@@ -1,4 +1,4 @@
-import { Directive, Input, OnInit, inject } from '@angular/core';
+import { Directive, Input, inject } from '@angular/core';
 
 import { MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';

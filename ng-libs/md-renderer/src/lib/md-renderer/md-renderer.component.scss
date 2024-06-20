@@ -15,11 +15,8 @@ $mobile: 768px;
     flex: 1;
     margin: 0 auto;
 
-    .section {
+    .section-container {
       min-height: 100vh;
-    }
-
-    .section-anchor {
       border: 1px solid blue;
     }
 
