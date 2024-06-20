@@ -18,11 +18,43 @@ describe('MdContentService', () => {
   });
 
   describe('addId', () => {
-    it('should add incrementing "id" to passed in object', () => {
-      let result = service.addId({});
-      expect(result.id).toEqual('id_0');
-      result = service.addId({});
-      expect(result.id).toEqual('id_1');
+    describe('when object is empty', () => {
+      it('should use "id" for generated id', () => {
+        let result = service.addId({});
+        expect(result.id).toEqual('id_0');
+        result = service.addId({});
+        expect(result.id).toEqual('id_1');
+      });
+    });
+
+    describe('when object has "type"', () => {
+      it('should use "type" for generated id', () => {
+        let result = service.addId({ type: 'text' });
+        expect(result.id).toEqual('text_0');
+        result = service.addId({ type: 'paragraph' });
+        expect(result.id).toEqual('paragraph_0');
+        result = service.addId({ type: 'text' });
+        expect(result.id).toEqual('text_1');
+      });
+    });
+
+    describe('when object has title', () => {
+      it('should use title converted to kebab-case as id', () => {
+        const result = service.addId({ title: 'Test Title' });
+        expect(result.id).toEqual('test-title');
+      });
+
+      it('should replace non-word characters with "-"', () => {
+        const result = service.addId({ title: 'Test!&^%Title?' });
+        expect(result.id).toEqual('test----title-');
+      });
+
+      it('should make id unique', () => {
+        const result = service.addId({ title: 'Test Title' });
+        expect(result.id).toEqual('test-title');
+        const result2 = service.addId({ title: 'Test Title' });
+        expect(result2.id).toEqual('test-title_1');
+      });
     });
 
     describe('when object already has "id"', () => {
