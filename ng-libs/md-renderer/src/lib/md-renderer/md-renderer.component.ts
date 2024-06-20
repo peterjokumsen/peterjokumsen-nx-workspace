@@ -16,7 +16,7 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MarkdownAst, MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService, MdContentService } from '../services';
 
-import { MdSectionDirective } from '../directives/md-section.directive';
+import { MdContentInjectionDirective } from '../directives/md-content-injection.directive';
 import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { TableOfContentsComponent } from '../toc/table-of-contents.component';
@@ -28,7 +28,7 @@ import { WithId } from '../models';
   imports: [
     CommonModule,
     TableOfContentsComponent,
-    MdSectionDirective,
+    MdContentInjectionDirective,
     MdWrapperComponent,
   ],
   providers: [MdContentService, MdComponentMapService],

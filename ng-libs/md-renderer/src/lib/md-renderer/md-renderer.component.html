@@ -14,7 +14,7 @@
     @for (section of sections(); track section.id) {
       <div #sectionAnchor class="section-container" id="{{ section.id }}">
         @defer (on viewport) {
-          <pj-mdr-md-wrapper [pjMdrMdSection]="section"></pj-mdr-md-wrapper>
+          <pj-mdr-md-wrapper [pjMdrMdContentInjection]="section" />
         } @placeholder {
           <div class="placeholder"></div>
         }
