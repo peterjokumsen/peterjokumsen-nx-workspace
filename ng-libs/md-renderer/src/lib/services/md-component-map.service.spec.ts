@@ -2,6 +2,7 @@ import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from '../injection.tokens';
 import {
   MdImageComponent,
   MdParagraphComponent,
+  MdTextComponent,
   MdUnknownComponent,
 } from '../components';
 
@@ -42,6 +43,7 @@ describe('MdComponentMapService', () => {
       const cases: Array<[MarkdownContentType, Type<unknown>]> = [
         ['paragraph', MdParagraphComponent],
         ['image', MdImageComponent],
+        ['text', MdTextComponent],
       ];
       it.each(cases)(
         `should return component expected component for "%s"`,

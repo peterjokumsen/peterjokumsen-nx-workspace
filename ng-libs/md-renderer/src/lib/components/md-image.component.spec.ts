@@ -39,7 +39,7 @@ describe('MdImageComponent', () => {
       it('should log a warning', () => {
         component.content = 'string';
         expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'String content not supported for image component, received "%s"',
+          'String content not supported for MdImageComponent, received "%s"',
           'string',
         );
       });
@@ -49,17 +49,34 @@ describe('MdImageComponent', () => {
       it('should log a warning', () => {
         component.content = { type: 'horizontal-rule' };
         expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'Non-image content passed to image component, received %o',
+          'Invalid content type "%s" for MdImageComponent, received %o',
+          'horizontal-rule',
           { type: 'horizontal-rule' },
         );
       });
     });
 
     describe('when using image content', () => {
+      beforeEach(() => {
+        component.content = {
+          type: 'image',
+          alt: 'alt-value',
+          src: 'src-value',
+        };
+        fixture.detectChanges();
+      });
+
       it('should set alt and src', () => {
-        component.content = { type: 'image', alt: 'alt', src: 'src' };
-        expect(component.alt).toBe('alt');
-        expect(component.src).toBe('src');
+        const img = component.imageValue();
+        expect(img?.alt).toBe('alt-value');
+        expect(img?.src).toBe('src-value');
+      });
+
+      it('should render an img element in template', () => {
+        const img = fixture.nativeElement.querySelector('img');
+        expect(img).toBeTruthy();
+        expect(img.getAttribute('src')).toBe('src-value');
+        expect(img.getAttribute('alt')).toBe('alt-value');
       });
     });
   });

@@ -14,9 +14,11 @@ import { WithId } from '../models';
 @Component({
   selector: 'pj-mdr-md-paragraph',
   template: `
-    @for (mdContent of contents(); track mdContent.id) {
-      <pj-mdr-md-wrapper [pjMdrMdContentInjection]="mdContent" />
-    }
+    <p class="md-paragraph">
+      @for (mdContent of contents(); track mdContent.id) {
+        <pj-mdr-md-wrapper [pjMdrMdContentInjection]="mdContent" />
+      }
+    </p>
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
