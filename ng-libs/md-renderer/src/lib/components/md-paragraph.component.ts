@@ -5,12 +5,9 @@ import {
   signal,
 } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
 import { HasContent } from '../has-content';
 import { MarkdownContent } from '@peterjokumsen/ts-md-models';
-import { MdContentInjectionDirective } from '../directives/md-content-injection.directive';
 import { MdContentService } from '../services';
-import { MdWrapperComponent } from './md-wrapper.component';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 

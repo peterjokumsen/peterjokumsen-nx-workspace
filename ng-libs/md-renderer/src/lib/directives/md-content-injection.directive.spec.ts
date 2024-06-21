@@ -1,18 +1,13 @@
 import {
   Component,
   ComponentRef,
-  ElementRef,
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  MarkdownContent,
-  MarkdownImage,
-  MarkdownSection,
-} from '@peterjokumsen/ts-md-models';
 
 import { HasContent } from '../has-content';
+import { MarkdownContent } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';
 import { MdContentInjectionDirective } from './md-content-injection.directive';
 import { MdWrapperComponent } from '../components';
@@ -20,7 +15,6 @@ import { MockComponent } from 'ng-mocks';
 import { WithId } from '../models';
 
 @Component({
-  standalone: true,
   template: '',
 })
 class HasContentComponent implements HasContent {
@@ -28,8 +22,6 @@ class HasContentComponent implements HasContent {
 }
 
 @Component({
-  standalone: true,
-  imports: [MdContentInjectionDirective, MdWrapperComponent],
   template:
     '<pj-mdr-md-wrapper [pjMdrMdContentInjection]="content"></pj-mdr-md-wrapper>',
 })
@@ -75,13 +67,13 @@ describe('MdContentInjectionDirective', () => {
         // providers
         { provide: MdComponentMapService, useValue: mapSpy },
       ],
-      imports: [SectionHostComponent],
-    })
-      .overrideComponent(SectionHostComponent, {
-        remove: { imports: [MdWrapperComponent] },
-        add: { imports: [MockComponent(MdWrapperComponent)] },
-      })
-      .compileComponents();
+      declarations: [
+        MdContentInjectionDirective,
+        MockComponent(MdWrapperComponent),
+        SectionHostComponent,
+        HasContentComponent,
+      ],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(SectionHostComponent);
     component = fixture.componentInstance;
