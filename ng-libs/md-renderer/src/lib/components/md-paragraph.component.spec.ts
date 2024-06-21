@@ -25,7 +25,7 @@ describe('MdParagraphComponent', () => {
         // providers
         { provide: MdContentService, useValue: mdContentSpy },
       ],
-      imports: [MdParagraphComponent],
+      declarations: [MdParagraphComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MdParagraphComponent);

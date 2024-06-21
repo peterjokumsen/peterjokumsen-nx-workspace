@@ -8,7 +8,7 @@ describe('MdWrapperComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MdWrapperComponent],
+      declarations: [MdWrapperComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MdWrapperComponent);

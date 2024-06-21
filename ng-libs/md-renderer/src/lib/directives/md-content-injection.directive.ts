@@ -1,6 +1,6 @@
 import { Directive, Input, inject } from '@angular/core';
-import { MarkdownContent, MarkdownSection } from '@peterjokumsen/ts-md-models';
 
+import { MarkdownContent } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';
 import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';

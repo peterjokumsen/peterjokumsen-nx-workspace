@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MdUnknownComponent } from './md-unknown.component';
 
-describe('MdStaticComponent', () => {
+describe('MdUnknownComponent', () => {
   let component: MdUnknownComponent;
   let fixture: ComponentFixture<MdUnknownComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MdUnknownComponent],
+      declarations: [MdUnknownComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(MdUnknownComponent);
