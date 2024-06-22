@@ -28,7 +28,7 @@ describe(DebugLoggerService.name, () => {
       beforeEach(() => {
         console.time = jest.fn();
         console.timeEnd = jest.fn();
-        console.group = jest.fn();
+        console.groupCollapsed = jest.fn();
         console.groupEnd = jest.fn();
       });
 
@@ -36,7 +36,7 @@ describe(DebugLoggerService.name, () => {
         it('should use console time and group', () => {
           service.to.group('title');
           expect(console.time).toHaveBeenCalledWith('title');
-          expect(console.group).toHaveBeenCalledWith('title');
+          expect(console.groupCollapsed).toHaveBeenCalledWith('title');
         });
       });
 
