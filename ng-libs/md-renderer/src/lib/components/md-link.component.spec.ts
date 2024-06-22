@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 import { MockComponent, MockDirective } from 'ng-mocks';
 
+import { HasContent } from '../has-content';
 import { MdContentInjectionDirective } from '../directives/md-content-injection.directive';
 import { MdContentService } from '../services';
 import { MdLinkComponent } from './md-link.component';
@@ -67,10 +68,12 @@ describe('MdLinkComponent', () => {
 
     describe('when value type is not "link"', () => {
       it('should log warning', () => {
-        component.content = { type: 'paragraph', content: 'test' };
+        component.content = {
+          type: 'paragraph',
+          content: 'test',
+        } as unknown as HasContent<'link'>['content'];
         expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'Invalid content type "%s" for MdLinkComponent, received %o',
-          'paragraph',
+          'Invalid content for MdLinkComponent, received %o',
           { type: 'paragraph', content: 'test' },
         );
       });

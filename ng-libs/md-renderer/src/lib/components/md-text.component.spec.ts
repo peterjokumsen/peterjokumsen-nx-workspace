@@ -11,6 +11,7 @@ describe('MdTextComponent', () => {
   beforeEach(async () => {
     loggerSpy = {
       warn: jest.fn().mockName('warn'),
+      error: jest.fn().mockName('error'),
     };
     await TestBed.configureTestingModule({
       providers: [
@@ -55,10 +56,9 @@ describe('MdTextComponent', () => {
 
     describe('when value is different type', () => {
       it('should log warning', () => {
-        component.content = { type: 'paragraph', content: 'test' };
-        expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'Invalid content type "%s" for MdTextComponent, received %o',
-          'paragraph',
+        component.content = { type: 'paragraph' as any, content: 'test' };
+        expect(loggerSpy.error).toHaveBeenCalledWith(
+          'Invalid content for MdTextComponent, received %o',
           { type: 'paragraph', content: 'test' },
         );
       });

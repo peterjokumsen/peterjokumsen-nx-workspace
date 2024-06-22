@@ -37,7 +37,7 @@ import { WithId } from '../models';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdUnknownComponent implements HasContent, OnInit {
+export class MdUnknownComponent implements HasContent<any>, OnInit {
   private _logger = inject(PjLogger, { optional: true });
 
   @Input() content: string | WithId<MarkdownContent> | MarkdownContent = '';

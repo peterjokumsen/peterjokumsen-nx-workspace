@@ -11,6 +11,14 @@ import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 
+type ExpectedContentTypes =
+  | 'paragraph'
+  | 'text'
+  | 'image'
+  | 'link'
+  | 'code'
+  | 'horizontal-rule';
+
 @Component({
   selector: 'pj-mdr-md-paragraph',
   template: `
@@ -23,13 +31,13 @@ import { WithId } from '../models';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdParagraphComponent implements HasContent {
+export class MdParagraphComponent implements HasContent<ExpectedContentTypes> {
   private _logger = inject(PjLogger, { optional: true });
   private _mdContent = inject(MdContentService);
 
   contents = signal<WithId<MarkdownContent>[]>([]);
 
-  set content(value: string | MarkdownContent | WithId<MarkdownContent>) {
+  set content(value: HasContent<ExpectedContentTypes>['content']) {
     let contents: MarkdownContent[];
     if (typeof value === 'string') {
       contents = [{ type: 'text', content: value }];
@@ -50,11 +58,7 @@ export class MdParagraphComponent implements HasContent {
           }
           break;
         default:
-          this._logger?.to.warn(
-            'Unknown content type: "%s", object: %o',
-            value.type,
-            value,
-          );
+          this._logger?.to.warn('Unknown content, object: %o', value);
           break;
       }
     }

@@ -24,12 +24,12 @@ import { WithId } from '../models';
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdImageComponent implements HasContent {
+export class MdImageComponent implements HasContent<'image'> {
   private _logger = inject(PjLogger, { optional: true });
 
   imageValue = signal<MarkdownImage | null>(null);
 
-  set content(value: string | MarkdownContent | WithId<MarkdownContent>) {
+  set content(value: HasContent<'image'>['content']) {
     let newImage: MarkdownImage | null = null;
     if (typeof value === 'string') {
       this._logger?.to.warn(
@@ -40,8 +40,7 @@ export class MdImageComponent implements HasContent {
       newImage = value;
     } else {
       this._logger?.to.warn(
-        'Invalid content type "%s" for MdImageComponent, received %o',
-        value.type,
+        'Invalid content for MdImageComponent, received %o',
         value,
       );
     }

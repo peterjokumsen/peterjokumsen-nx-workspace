@@ -17,7 +17,7 @@ import { WithId } from '../models';
 @Component({
   template: '',
 })
-class HasContentComponent implements HasContent {
+class HasContentComponent implements HasContent<any> {
   content: string | MarkdownContent | WithId<MarkdownContent> = '';
 }
 
@@ -42,7 +42,7 @@ describe('MdContentInjectionDirective', () => {
   let component: SectionHostComponent;
   let directive: MdContentInjectionDirective;
   let mapSpy: Partial<jest.Mocked<MdComponentMapService>>;
-  let createdComponentInstance: Partial<HasContent>;
+  let createdComponentInstance: Partial<HasContent<any>>;
   let viewContainerSpy: Partial<jest.Mocked<ViewContainerRef>>;
 
   beforeEach(async () => {
@@ -58,7 +58,7 @@ describe('MdContentInjectionDirective', () => {
         .fn()
         .mockReturnValue({
           instance: createdComponentInstance,
-        } as ComponentRef<HasContent>)
+        } as ComponentRef<HasContent<any>>)
         .mockName('MdWrapper.container.createComponent'),
     };
 
