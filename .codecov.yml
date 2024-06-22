@@ -20,6 +20,9 @@ coverage:
       ng-libs_services:
         flags:
           - ng-libs_services
+      ng-libs_md-renderer:
+        flags:
+          - ng-libs_md-renderer
       ng-libs_styles:
         flags:
           - ng-libs_styles
@@ -32,6 +35,9 @@ coverage:
       ts-libs_md-parser:
         flags:
           - ts-libs_md-parser
+      ts-libs_ts-md-models:
+        flags:
+          - ts-libs_ts-md-models
     project:
       default:
         target: auto
@@ -48,6 +54,9 @@ coverage:
       ng-libs_styles:
         flags:
           - ng-libs_styles
+      ng-libs_md-renderer:
+        flags:
+          - ng-libs_md-renderer
       ng-libs_ui-elements:
         flags:
           - ng-libs_ui-elements
@@ -57,6 +66,9 @@ coverage:
       ts-libs_md-parser:
         flags:
           - ts-libs_md-parser
+      ts-libs_ts-md-models:
+        flags:
+          - ts-libs_ts-md-models
 flags:
   app_blog:
     paths:
@@ -70,6 +82,9 @@ flags:
   ng-libs_styles:
     paths:
       - ng-libs/styles
+  ng-libs_md-renderer:
+    paths:
+      - ng-libs/md-renderer
   ng-libs_ui-elements:
     paths:
       - ng-libs/ui-elements
@@ -79,3 +94,6 @@ flags:
   ts-libs_md-parser:
     paths:
       - ts-libs/md-parser
+  ts-libs_ts-md-models:
+    paths:
+      - ts-libs/ts-md-models
