@@ -24,7 +24,7 @@ import { MdContentInjectionDirective } from './directives/md-content-injection.d
 
     MdContentInjectionDirective,
   ],
-  exports: [MdWrapperComponent, MdContentInjectionDirective],
+  exports: [MdContentInjectionDirective, MdWrapperComponent],
 })
 export class MdComponentsModule {
   static withOverride(
