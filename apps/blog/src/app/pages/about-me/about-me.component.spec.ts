@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AboutMeComponent } from './about-me.component';
-import { ArticleComponent } from '@peterjokumsen/ui-elements';
+import { MdRendererComponent } from '@peterjokumsen/md-renderer';
 import { MockComponent } from 'ng-mocks';
 
 describe('AboutMeComponent', () => {
@@ -14,7 +14,7 @@ describe('AboutMeComponent', () => {
     })
       .overrideComponent(AboutMeComponent, {
         set: {
-          imports: [MockComponent(ArticleComponent)],
+          imports: [MockComponent(MdRendererComponent)],
         },
       })
       .compileComponents();
