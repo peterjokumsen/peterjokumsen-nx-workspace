@@ -7,11 +7,9 @@ import {
   MdUnknownComponent,
   MdWrapperComponent,
 } from './components';
-import { ModuleWithProviders, NgModule, Type } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { HasContent } from './has-content';
-import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
 import { MdContentInjectionDirective } from './directives/md-content-injection.directive';
 
 @NgModule({

@@ -4,15 +4,10 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {
-  MarkdownContent,
-  MarkdownImage,
-  mdModelCheck,
-} from '@peterjokumsen/ts-md-models';
+import { MarkdownImage, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { HasContent } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-md-image',
