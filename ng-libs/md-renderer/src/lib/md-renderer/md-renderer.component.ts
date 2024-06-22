@@ -64,7 +64,7 @@ export class MdRendererComponent implements AfterViewInit, OnDestroy {
           this.intersectingSectionId.update(() => id);
         }
       },
-      { threshold: 0.7 },
+      { threshold: 0.7, rootMargin: '0px 0px -90% 0px' },
     );
     for (const section of this.sectionAnchors ?? []) {
       this._observer?.observe(section.nativeElement);

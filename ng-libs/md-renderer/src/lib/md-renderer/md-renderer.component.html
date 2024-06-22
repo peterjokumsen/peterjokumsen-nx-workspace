@@ -12,7 +12,8 @@
   </div>
   <div class="markdown-contents">
     @for (section of sections(); track section.id) {
-      <div #sectionAnchor class="section-container" id="{{ section.id }}">
+      <div #sectionAnchor id="{{ section.id }}"></div>
+      <div class="section-container">
         @defer {
           <pj-mdr-md-wrapper
             [pjMdrMdContentInjection]="section"
