@@ -6,7 +6,6 @@ import {
 } from '@angular/core';
 import {
   MarkdownCode,
-  MarkdownContent,
   MarkdownImage,
   MarkdownLink,
   MarkdownText,
