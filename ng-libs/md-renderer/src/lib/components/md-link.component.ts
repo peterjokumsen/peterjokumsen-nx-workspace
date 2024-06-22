@@ -40,13 +40,13 @@ type MappedAnchor = Omit<MarkdownLink, 'content'> & {
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdLinkComponent implements HasContent {
+export class MdLinkComponent implements HasContent<'link'> {
   private _mdContent = inject(MdContentService);
   private _logger = inject(PjLogger, { optional: true });
 
   anchor = signal<MappedAnchor | null>(null);
 
-  set content(value: string | MarkdownContent | WithId<MarkdownContent>) {
+  set content(value: HasContent<'link'>['content']) {
     let newContent: MappedAnchor | null = null;
     if (typeof value === 'string') {
       this._logger?.to.warn(
@@ -63,8 +63,7 @@ export class MdLinkComponent implements HasContent {
       };
     } else {
       this._logger?.to.warn(
-        'Invalid content type "%s" for MdLinkComponent, received %o',
-        value.type,
+        'Invalid content for MdLinkComponent, received %o',
         value,
       );
     }

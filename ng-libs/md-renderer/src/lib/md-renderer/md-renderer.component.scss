@@ -11,13 +11,32 @@ $mobile: 768px;
   }
 
   & .markdown-contents {
-    border: 1px solid red;
+    // border: 1px solid red;
     flex: 1;
     margin: 0 auto;
 
     .section-container {
       min-height: 100vh;
-      border: 1px solid blue;
+      // border: 1px solid blue;
+      font-size: 1.3em;
+      line-height: 1.4;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px 0;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      pj-mdr-md-wrapper {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+
+      h2 {
+        font-size: 1.6em;
+        padding-bottom: 20px;
+      }
     }
 
     @media (min-width: $mobile) {
@@ -26,7 +45,7 @@ $mobile: 768px;
   }
 
   & .markdown-navigation {
-    border: 1px solid pink;
+    // border: 1px solid pink;
 
     @media (min-width: $mobile) {
       display: block;

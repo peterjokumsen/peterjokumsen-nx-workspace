@@ -1,3 +1,4 @@
+import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from './injection.tokens';
 import {
   MdImageComponent,
   MdLinkComponent,
@@ -10,7 +11,6 @@ import { ModuleWithProviders, NgModule, Type } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { HasContent } from './has-content';
-import { MD_COMPONENT_TYPE_MAP } from './injection.tokens';
 import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
 import { MdContentInjectionDirective } from './directives/md-content-injection.directive';
 
@@ -30,7 +30,7 @@ import { MdContentInjectionDirective } from './directives/md-content-injection.d
 })
 export class MdComponentsModule {
   static withOverride(
-    typeMap: Record<MarkdownContentType, Type<HasContent>>,
+    typeMap: Partial<MdComponentTypeMap>,
   ): ModuleWithProviders<MdComponentsModule> {
     return {
       ngModule: MdComponentsModule,

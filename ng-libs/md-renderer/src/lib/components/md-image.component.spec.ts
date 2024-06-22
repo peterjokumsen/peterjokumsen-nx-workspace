@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
+import { HasContent } from '../has-content';
 import { MdImageComponent } from './md-image.component';
 
 describe('MdImageComponent', () => {
@@ -47,10 +48,11 @@ describe('MdImageComponent', () => {
 
     describe('when using non-image content', () => {
       it('should log a warning', () => {
-        component.content = { type: 'horizontal-rule' };
+        component.content = {
+          type: 'horizontal-rule',
+        } as unknown as HasContent<'image'>['content'];
         expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'Invalid content type "%s" for MdImageComponent, received %o',
-          'horizontal-rule',
+          'Invalid content for MdImageComponent, received %o',
           { type: 'horizontal-rule' },
         );
       });
