@@ -1,7 +1,7 @@
 import { MarkdownContentType } from './markdown-content-type';
 
-interface HasMarkdownContentType {
-  type: MarkdownContentType;
+export interface HasMarkdownContentType {
+  type: MarkdownContentType | string;
 }
 
 export interface MarkdownCode extends HasMarkdownContentType {
@@ -73,3 +73,8 @@ export type MarkdownContent =
   | MarkdownSection
   | MarkdownText
   | MarkdownParagraph;
+
+export type MarkdownType<T extends MarkdownContentType> = Extract<
+  MarkdownContent,
+  { type: T }
+>;
