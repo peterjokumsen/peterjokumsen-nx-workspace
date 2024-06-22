@@ -1,5 +1,6 @@
 import {
   MdImageComponent,
+  MdLinkComponent,
   MdParagraphComponent,
   MdTextComponent,
   MdUnknownComponent,
@@ -17,10 +18,11 @@ import { MdContentInjectionDirective } from './directives/md-content-injection.d
   imports: [CommonModule],
   declarations: [
     MdImageComponent,
+    MdLinkComponent,
     MdParagraphComponent,
     MdTextComponent,
-    MdWrapperComponent,
     MdUnknownComponent,
+    MdWrapperComponent,
 
     MdContentInjectionDirective,
   ],

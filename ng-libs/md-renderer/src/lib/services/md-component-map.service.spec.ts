@@ -1,6 +1,7 @@
 import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from '../injection.tokens';
 import {
   MdImageComponent,
+  MdLinkComponent,
   MdParagraphComponent,
   MdTextComponent,
   MdUnknownComponent,
@@ -44,6 +45,7 @@ describe('MdComponentMapService', () => {
         ['paragraph', MdParagraphComponent],
         ['image', MdImageComponent],
         ['text', MdTextComponent],
+        ['link', MdLinkComponent],
       ];
       it.each(cases)(
         `should return component expected component for "%s"`,

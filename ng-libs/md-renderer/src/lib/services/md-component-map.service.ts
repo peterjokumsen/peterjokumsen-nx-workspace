@@ -1,6 +1,7 @@
 import { Injectable, Type, inject } from '@angular/core';
 import {
   MdImageComponent,
+  MdLinkComponent,
   MdParagraphComponent,
   MdTextComponent,
   MdUnknownComponent,
@@ -27,6 +28,9 @@ export class MdComponentMapService {
 
       case 'text':
         return MdTextComponent;
+
+      case 'link':
+        return MdLinkComponent;
 
       default:
         return MdUnknownComponent;
