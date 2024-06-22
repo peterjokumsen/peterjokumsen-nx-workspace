@@ -23,7 +23,6 @@ import { first } from 'rxjs';
       ]),
     ]),
   ],
-  providers: [],
   template: `
     @defer {
       <router-outlet></router-outlet>
@@ -39,35 +38,7 @@ import { first } from 'rxjs';
       </div>
     }
   `,
-  styles: `
-    .splash {
-      height: 110vh;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      @keyframes heartbeat {
-        0% {
-          transform: scale(1);
-        }
-        50% {
-          transform: scale(1.2);
-        }
-        100% {
-          transform: scale(1);
-        }
-      }
-
-      img {
-        display: block;
-        animation: heartbeat 500ms infinite;
-      }
-    }
-  `,
+  styleUrl: './splash.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SplashComponent implements OnInit {
