@@ -6,11 +6,19 @@ describe('mdModelCheck', () => {
   const markdownContentTypes: Record<MarkdownContentType, MarkdownContent> = {
     'code-block': { type: 'code-block', content: ['code-block-content'] },
     'horizontal-rule': { type: 'horizontal-rule' },
-    'ordered-list': { type: 'ordered-list', content: ['ordered-list-content'] },
+    'ordered-list': {
+      type: 'ordered-list',
+      indent: 0,
+      content: [{ type: 'paragraph', content: '' }],
+    },
     code: { type: 'code', content: 'code-content' },
     image: { type: 'image', src: 'image-src', alt: 'image-alt' },
     link: { type: 'link', href: 'link-href', content: 'link-content' },
-    list: { type: 'list', content: ['list-content'] },
+    list: {
+      type: 'list',
+      indent: 0,
+      content: [{ type: 'paragraph', content: '' }],
+    },
     paragraph: { type: 'paragraph', content: 'paragraph-content' },
     quote: { type: 'quote', content: 'quote-content' },
     section: { type: 'section', title: 'section-title', content: [] },
