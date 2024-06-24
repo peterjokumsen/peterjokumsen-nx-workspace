@@ -1,4 +1,6 @@
 import { MarkdownContentType } from './markdown-content-type';
+import { ParagraphContentType } from './paragraph-content-type';
+import { SectionContentType } from './section-content-type';
 
 export interface HasMarkdownContentType {
   type: MarkdownContentType | string;
@@ -14,24 +16,31 @@ export interface MarkdownCodeBlock extends HasMarkdownContentType {
   content: string[];
 }
 
-export interface MarkdownList extends HasMarkdownContentType {
-  type: 'list';
-  content: Array<string | MarkdownContent>;
+export interface MarkdownListElement extends HasMarkdownContentType {
+  type: 'list' | 'ordered-list';
+  indent: number;
+  content:
+    | string
+    | MarkdownType<SectionContentType>
+    | MarkdownType<SectionContentType>[];
 }
 
-export interface MarkdownOrderedList extends HasMarkdownContentType {
+export interface MarkdownList extends MarkdownListElement {
+  type: 'list';
+}
+
+export interface MarkdownOrderedList extends MarkdownListElement {
   type: 'ordered-list';
-  content: Array<string | MarkdownContent>;
 }
 
 export interface MarkdownParagraph extends HasMarkdownContentType {
   type: 'paragraph';
-  content: string | MarkdownContent[];
+  content: string | MarkdownType<ParagraphContentType>[];
 }
 
 export interface MarkdownQuote extends HasMarkdownContentType {
   type: 'quote';
-  content: string | MarkdownContent[];
+  content: string | MarkdownType<SectionContentType>[];
 }
 
 export interface MarkdownHorizontalRule extends HasMarkdownContentType {
@@ -58,7 +67,7 @@ export interface MarkdownLink extends HasMarkdownContentType {
 export interface MarkdownSection extends HasMarkdownContentType {
   type: 'section';
   title: string;
-  content: MarkdownContent[];
+  content: MarkdownType<SectionContentType>[];
 }
 
 export type MarkdownContent =
