@@ -20,7 +20,8 @@ export interface MarkdownCodeBlock extends HasMarkdownContentType {
 export interface MarkdownListElement extends HasMarkdownContentType {
   type: 'list' | 'ordered-list';
   indent: number;
-  entries: MarkdownType<SectionContentType>[];
+  rawValue?: string;
+  items: MarkdownType<SectionContentType>[];
 }
 
 export interface MarkdownList extends MarkdownListElement {
