@@ -8,21 +8,19 @@ export interface HasMarkdownContentType {
 
 export interface MarkdownCode extends HasMarkdownContentType {
   type: 'code';
-  content: string;
+  element: string;
 }
 
 export interface MarkdownCodeBlock extends HasMarkdownContentType {
   type: 'code-block';
-  content: string[];
+  language?: unknown; // TODO: Add language type(s)
+  lines: string[];
 }
 
 export interface MarkdownListElement extends HasMarkdownContentType {
   type: 'list' | 'ordered-list';
   indent: number;
-  content:
-    | string
-    | MarkdownType<SectionContentType>
-    | MarkdownType<SectionContentType>[];
+  entries: MarkdownType<SectionContentType>[];
 }
 
 export interface MarkdownList extends MarkdownListElement {
@@ -67,7 +65,7 @@ export interface MarkdownLink extends HasMarkdownContentType {
 export interface MarkdownSection extends HasMarkdownContentType {
   type: 'section';
   title: string;
-  content: MarkdownType<SectionContentType>[];
+  contents: MarkdownType<SectionContentType>[];
 }
 
 export type MarkdownContent =
