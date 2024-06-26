@@ -1,1 +1,1 @@
-export * from './read-markdown';
+export * from './generate-markdown-sections';

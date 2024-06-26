@@ -1,27 +1,48 @@
-import {
-  MarkdownContentType,
-  MarkdownSection,
-} from '@peterjokumsen/ts-md-models';
-import { getContentType, getHeaderLevel } from '../helper-fns';
+import { getHeaderLevel, getSectionContentType } from '../helper-fns';
 
-import { contentReaders } from './content-readers';
+import { MarkdownSection } from '@peterjokumsen/ts-md-models';
+import { readList } from './read-list';
+import { readParagraph } from './read-paragraph';
 import { readSection } from './read-section';
 
 jest.mock('../helper-fns');
+jest.mock('./read-list');
+jest.mock('./read-paragraph');
 
 describe('readSection', () => {
-  let getContentTypeSpy: jest.MockedFunction<typeof getContentType>;
+  let getSectionContentTypeSpy: jest.MockedFunction<
+    typeof getSectionContentType
+  >;
 
   beforeEach(() => {
-    getContentTypeSpy = jest.mocked(getContentType);
+    getSectionContentTypeSpy = jest
+      .mocked(getSectionContentType)
+      .mockName('getSectionContentType');
+  });
+
+  it('should get content type of following line', () => {
+    const lines = ['# Title', 'line 2'];
+    getSectionContentTypeSpy.mockImplementation(() => {
+      throw new Error('catch');
+    });
+
+    try {
+      readSection(lines, 0);
+    } catch {
+      // ignoring error
+    }
+
+    expect(getSectionContentTypeSpy).toHaveBeenCalledWith(lines[1]);
   });
 
   describe('when content type is "section"', () => {
     let getHeaderLevelSpy: jest.MockedFunction<typeof getHeaderLevel>;
 
     beforeEach(() => {
-      getContentTypeSpy.mockReturnValue('section');
-      getHeaderLevelSpy = jest.mocked(getHeaderLevel);
+      getSectionContentTypeSpy.mockReturnValue('section');
+      getHeaderLevelSpy = jest
+        .mocked(getHeaderLevel)
+        .mockName('getHeaderLevel');
     });
 
     describe('and next header level is greater than current', () => {
@@ -38,15 +59,15 @@ describe('readSection', () => {
         const expected: MarkdownSection = {
           type: 'section',
           title: 'Title',
-          content: [
+          contents: [
             {
               type: 'section',
               title: 'SubTitle',
-              content: [],
+              contents: [],
             },
           ],
         };
-        expect(result.content).toEqual(expected);
+        expect(result.result).toEqual(expected);
         expect(result.nextStart).toBe(1);
       });
     });
@@ -60,47 +81,80 @@ describe('readSection', () => {
         const result = readSection(lines, 1);
 
         expect(getHeaderLevelSpy).toHaveBeenCalledWith(lines[1]);
-        expect(result.content).toEqual({
+        expect(result.result).toEqual({
           type: 'section',
           title: 'SubTitle',
-          content: [],
+          contents: [],
         });
         expect(result.nextStart).toBe(1);
       });
     });
   });
 
-  describe.each<MarkdownContentType>(['code', 'list', 'quote'])(
-    `when content type is "%s"`,
-    (type) => {
-      const originalReader = contentReaders[type];
-      beforeEach(() => {
-        contentReaders[type] = jest.fn().mockImplementation((_, i) => ({
-          content: { type: 'paragraph', content: '' },
-          nextStart: i,
-        }));
+  describe('when content type is "list"', () => {
+    let readListSpy: jest.MockedFunction<typeof readList>;
+
+    beforeEach(() => {
+      getSectionContentTypeSpy.mockReturnValue('list');
+      readListSpy = jest.mocked(readList).mockName('readList');
+    });
+
+    it('should push readList result into "contents"', () => {
+      const lines = ['# Title', '- List item'];
+      readListSpy.mockReturnValue({
+        result: { type: 'list', indent: 0, items: [] },
+        nextStart: 1,
       });
+      const result = readSection(lines, 0);
 
-      afterEach(() => {
-        contentReaders[type] = originalReader;
+      expect(readListSpy).toHaveBeenCalledWith(lines, 1);
+      expect(result).toEqual({
+        result: expect.objectContaining({
+          contents: [{ type: 'list', indent: 0, items: [] }],
+        }),
+        nextStart: 1,
       });
+    });
+  });
 
-      it('should use the correct reader function', () => {
-        getContentTypeSpy.mockReturnValue(type);
-        const lines = ['# Title', 'Some code'];
-        const start = 0;
+  describe('when content type is "paragraph"', () => {
+    let readParagraphSpy: jest.MockedFunction<typeof readParagraph>;
 
-        const result = readSection(lines, start);
+    beforeEach(() => {
+      getSectionContentTypeSpy.mockReturnValue('paragraph');
+      readParagraphSpy = jest.mocked(readParagraph).mockName('readParagraph');
+    });
 
-        const expected: MarkdownSection = {
+    it('should push readParagraph result into "contents"', () => {
+      const lines = ['# Title', 'Some content'];
+      readParagraphSpy.mockReturnValue({
+        result: { type: 'paragraph', content: 'Some content' },
+        nextStart: 1,
+      });
+      const result = readSection(lines, 0);
+
+      expect(readParagraphSpy).toHaveBeenCalledWith(lines, 1);
+      expect(result).toEqual({
+        result: {
           type: 'section',
           title: 'Title',
-          content: [{ type: 'paragraph', content: '' }],
-        };
-
-        expect(result.content).toEqual(expected);
-        expect(result.nextStart).toBe(lines.length - 1);
+          contents: [{ type: 'paragraph', content: 'Some content' }],
+        },
+        nextStart: 1,
       });
-    },
-  );
+    });
+  });
+
+  describe('when content type is not supported', () => {
+    it('should throw an error', () => {
+      const lines = ['# Title', 'Some content'];
+      getSectionContentTypeSpy.mockReturnValue(
+        'unsupported' as ReturnType<typeof getSectionContentType>,
+      );
+
+      expect(() => readSection(lines, 0)).toThrow(
+        'Content type: "unsupported" not supported, attempting to read line 1: "Some content"',
+      );
+    });
+  });
 });

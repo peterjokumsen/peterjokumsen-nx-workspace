@@ -14,7 +14,7 @@ describe('parseMarkdown', () => {
           {
             type: 'section',
             title: '',
-            content: [],
+            contents: [],
           },
         ],
       });
@@ -31,7 +31,7 @@ describe('parseMarkdown', () => {
       expect(section).toEqual({
         type: 'section',
         title: 'A Title',
-        content: [
+        contents: [
           {
             type: 'paragraph',
             content: 'Some Content',
@@ -68,10 +68,10 @@ describe('parseMarkdown', () => {
 
     it.each(expectations.map((v, i) => [...v, i]))(
       'should have section "%s" with expected content',
-      (title, content, index) => {
+      (title, contents, index) => {
         const actualSection = sections[index];
         expect(actualSection.title).toEqual(title);
-        expect(actualSection.content).toEqual(content);
+        expect(actualSection.contents).toEqual(contents);
       },
     );
   }
@@ -217,5 +217,82 @@ describe('parseMarkdown', () => {
         },
       ],
     ]);
+  });
+
+  describe('when reading list.md', () => {
+    itShouldBeParsed(
+      'list.md',
+      [
+        'Basic list',
+        [
+          {
+            type: 'list',
+            indent: 0,
+            items: [
+              {
+                type: 'paragraph',
+                content: 'Item 1',
+              },
+              {
+                type: 'paragraph',
+                content: 'Item 2',
+              },
+            ],
+          },
+        ],
+      ],
+      [
+        'Custom list',
+        [
+          {
+            type: 'list',
+            indent: 0,
+            items: [
+              {
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'image',
+                    alt: 'Image 1',
+                    src: '/image1',
+                  },
+                ],
+              },
+              {
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'text',
+                    content: 'Test ',
+                  },
+                  {
+                    type: 'link',
+                    content: 'link',
+                    href: '/link',
+                  },
+                ],
+              },
+              {
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'link',
+                    href: '/image-link',
+                    content: [
+                      { type: 'text', content: 'link ' },
+                      {
+                        type: 'image',
+                        alt: 'Image 2',
+                        src: '/image2',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      ],
+    );
   });
 });

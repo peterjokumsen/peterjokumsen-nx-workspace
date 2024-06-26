@@ -1,12 +1,12 @@
 import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
-import { getContentType } from './';
+import { getSectionContentType } from './';
 
 interface TestCase {
   line: string;
   expectedType: MarkdownContentType;
 }
 
-describe('getContentType', () => {
+describe('getSectionContentType', () => {
   describe.each<[string, TestCase]>([
     [
       'line starts with #',
@@ -24,7 +24,7 @@ describe('getContentType', () => {
     ],
   ])('when %s', (_, { line, expectedType }) => {
     it(`should return "${expectedType}"`, () => {
-      expect(getContentType(line)).toBe(expectedType);
+      expect(getSectionContentType(line)).toBe(expectedType);
     });
   });
 });
