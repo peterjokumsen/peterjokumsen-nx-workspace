@@ -1,6 +1,6 @@
 import { MarkdownAst, MarkdownSection } from '@peterjokumsen/ts-md-models';
 
-import { readMarkdown } from './reader-fns';
+import { generateMarkdownSections } from './reader-fns';
 
 export function parseMarkdown(markdown: string): MarkdownAst {
   if (!markdown) {
@@ -9,7 +9,7 @@ export function parseMarkdown(markdown: string): MarkdownAst {
         {
           type: 'section',
           title: '',
-          content: [],
+          contents: [],
         },
       ],
     };
@@ -17,7 +17,7 @@ export function parseMarkdown(markdown: string): MarkdownAst {
 
   const sections: MarkdownSection[] = [];
   let currentSection: MarkdownSection | undefined;
-  for (const content of readMarkdown(markdown)) {
+  for (const content of generateMarkdownSections(markdown)) {
     if (content.type === 'section') {
       currentSection = content;
       sections.push(currentSection);
@@ -28,12 +28,12 @@ export function parseMarkdown(markdown: string): MarkdownAst {
       currentSection = {
         type: 'section',
         title: '',
-        content: [],
+        contents: [],
       };
       sections.push(currentSection);
     }
 
-    currentSection.content.push(content);
+    currentSection.contents.push(content);
   }
 
   return { sections };

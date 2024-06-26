@@ -1,8 +1,9 @@
-import { RichContentMap } from '../_models';
-import { isRichContentString } from './is-rich-content-string';
+import { MatchedContentMap } from '../_models';
+import { RegexContentType } from './provide-regex-tools';
+import { mapHasContent } from './map-has-content';
 
-describe('isRichContentString', () => {
-  let map: RichContentMap;
+describe('mapHasContent', () => {
+  let map: MatchedContentMap<RegexContentType>;
 
   beforeEach(() => {
     map = {};
@@ -11,7 +12,7 @@ describe('isRichContentString', () => {
   describe('when content is array', () => {
     it('should return false', () => {
       // Act
-      const result = isRichContentString([], map);
+      const result = mapHasContent([], map);
 
       expect(result).toBeFalsy();
     });
@@ -20,7 +21,7 @@ describe('isRichContentString', () => {
   describe('when content is empty string', () => {
     it('should return false', () => {
       // Act
-      const result = isRichContentString('', map);
+      const result = mapHasContent('', map);
 
       expect(result).toBeFalsy();
     });
@@ -34,7 +35,7 @@ describe('isRichContentString', () => {
       };
 
       // Act
-      const result = isRichContentString('plain text', map);
+      const result = mapHasContent('plain text', map);
 
       expect(result).toBeFalsy();
     });
@@ -48,7 +49,7 @@ describe('isRichContentString', () => {
       };
 
       // Act
-      const result = isRichContentString('plain text with rich', map);
+      const result = mapHasContent('plain text with rich', map);
 
       expect(result).toBeTruthy();
     });

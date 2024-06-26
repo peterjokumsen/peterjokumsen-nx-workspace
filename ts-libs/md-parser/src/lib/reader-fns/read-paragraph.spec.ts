@@ -1,16 +1,20 @@
-import { isRichContentString, lineHas, splitRichContent } from '../helper-fns';
+import {
+  lineHasContentType,
+  mapHasContent,
+  splitRegexContent,
+} from '../helper-fns';
 
-import { matchRichContent } from './match-rich-content';
+import { matchParagraphContentType } from './match-paragraph-content-type';
 import { readParagraph } from './read-paragraph';
 
-jest.mock('./match-rich-content');
+jest.mock('./match-paragraph-content-type');
 jest.mock('../helper-fns');
 
 describe('readParagraph', () => {
-  let lineHasSpy: jest.MockedFunction<typeof lineHas>;
+  let lineHasSpy: jest.MockedFunction<typeof lineHasContentType>;
 
   beforeEach(() => {
-    lineHasSpy = jest.mocked(lineHas).mockName('lineHas');
+    lineHasSpy = jest.mocked(lineHasContentType).mockName('lineHas');
   });
 
   afterEach(() => {
@@ -27,7 +31,7 @@ describe('readParagraph', () => {
       const start = 1;
 
       expect(readParagraph(lines, start)).toEqual({
-        content: {
+        result: {
           type: 'paragraph',
           content: 'Some content',
         },
@@ -37,19 +41,21 @@ describe('readParagraph', () => {
   });
 
   describe('when line has rich content', () => {
-    let isRichContentStringSpy: jest.MockedFunction<typeof isRichContentString>;
-    let splitRichContentSpy: jest.MockedFunction<typeof splitRichContent>;
-    let matchRichContentSpy: jest.MockedFunction<typeof matchRichContent>;
+    let isRichContentStringSpy: jest.MockedFunction<typeof mapHasContent>;
+    let splitRichContentSpy: jest.MockedFunction<typeof splitRegexContent>;
+    let matchRichContentSpy: jest.MockedFunction<
+      typeof matchParagraphContentType
+    >;
 
     beforeEach(() => {
       isRichContentStringSpy = jest
-        .mocked(isRichContentString)
+        .mocked(mapHasContent)
         .mockName('isRichContentString');
       splitRichContentSpy = jest
-        .mocked(splitRichContent)
+        .mocked(splitRegexContent)
         .mockName('splitRichContent');
       matchRichContentSpy = jest
-        .mocked(matchRichContent)
+        .mocked(matchParagraphContentType)
         .mockName('matchRichContent');
     });
 

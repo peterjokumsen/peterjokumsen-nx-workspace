@@ -1,9 +1,8 @@
-import { MarkdownContent, RichContentType } from '@peterjokumsen/ts-md-models';
+import { MarkdownContent } from '@peterjokumsen/ts-md-models';
+import { matchParagraphContentType } from './match-paragraph-content-type';
 
-import { matchRichContent } from './match-rich-content';
-
-describe('readRichContent', () => {
-  let type: RichContentType;
+describe('matchParagraphContentType', () => {
+  let type: Parameters<typeof matchParagraphContentType>[0];
 
   describe("when type is 'image'", () => {
     beforeEach(() => {
@@ -12,14 +11,14 @@ describe('readRichContent', () => {
 
     describe('and content does not have image', () => {
       it('should return empty', () => {
-        const result = matchRichContent(type, 'no image here');
+        const result = matchParagraphContentType(type, 'no image here');
         expect(result).toEqual([]);
       });
     });
 
     describe('and content has image', () => {
       it('should return resolved image', () => {
-        const result = matchRichContent(
+        const result = matchParagraphContentType(
           type,
           '![alt text](https://example.com/image.jpg)',
         );
@@ -40,7 +39,7 @@ describe('readRichContent', () => {
 
     describe('and content has multiple images', () => {
       it('should return resolved images', () => {
-        const result = matchRichContent(
+        const result = matchParagraphContentType(
           type,
           '![alt text](/image.jpg) ![alt text](/image.jpg) [![other](/image.png)](/link)',
         );
@@ -72,14 +71,17 @@ describe('readRichContent', () => {
   describe("when type is 'link'", () => {
     describe('and content does not have link', () => {
       it('should return empty', () => {
-        const result = matchRichContent('link', 'no link here');
+        const result = matchParagraphContentType('link', 'no link here');
         expect(result).toEqual([]);
       });
     });
 
     describe('and content has link', () => {
       it('should return resolved link', () => {
-        const result = matchRichContent('link', '[text](https://example.com)');
+        const result = matchParagraphContentType(
+          'link',
+          '[text](https://example.com)',
+        );
 
         const expectedContent: MarkdownContent = {
           type: 'link',
@@ -97,7 +99,7 @@ describe('readRichContent', () => {
 
     describe('and content has multiple links', () => {
       it('should return resolved links', () => {
-        const result = matchRichContent(
+        const result = matchParagraphContentType(
           'link',
           '[text](/link-1) [text](/link-1) [other](/link-2)',
         );

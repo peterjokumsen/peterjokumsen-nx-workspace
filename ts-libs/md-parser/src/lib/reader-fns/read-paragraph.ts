@@ -1,28 +1,38 @@
-import { ReadResult, RichContentMap } from '../_models';
-import { isRichContentString, lineHas, splitRichContent } from '../helper-fns';
+import { MatchedContentMap, ReadResult } from '../_models';
+import {
+  RegexContentType,
+  lineHasContentType,
+  mapHasContent,
+  splitRegexContent,
+} from '../helper-fns';
 
-import { RichContentType } from '@peterjokumsen/ts-md-models';
-import { matchRichContent } from './match-rich-content';
+import { ParagraphContentType } from '@peterjokumsen/ts-md-models';
+import { matchParagraphContentType } from './match-paragraph-content-type';
 
-export function readParagraph(lines: string[], start: number): ReadResult {
-  const contentTypes: RichContentType[] = ['image', 'link'];
+type AllowedRegexTypes = Extract<ParagraphContentType, RegexContentType>;
+
+export function readParagraph(
+  lines: string[],
+  start: number,
+): ReadResult<'paragraph'> {
+  const contentTypes: Array<AllowedRegexTypes> = ['image', 'link'];
   let line = lines[start];
 
-  const richContentMap: RichContentMap = {};
+  const contentMap: MatchedContentMap<AllowedRegexTypes> = {};
   for (const type of contentTypes) {
-    if (!lineHas(type, line)) continue;
-    const richContentMatches = matchRichContent(type, line);
+    if (!lineHasContentType(type, line)) continue;
+    const richContentMatches = matchParagraphContentType(type, line);
     let typeCount = 0;
     for (const { matched, content } of richContentMatches) {
       const key = `__${type}_${typeCount++}__`;
-      richContentMap[key] = { matched, content };
+      contentMap[key] = { matched, content };
       line = line.split(matched).join(key);
     }
   }
 
-  if (!Object.keys(richContentMap).length) {
+  if (!Object.keys(contentMap).length) {
     return {
-      content: {
+      result: {
         type: 'paragraph',
         content: line,
       },
@@ -30,16 +40,16 @@ export function readParagraph(lines: string[], start: number): ReadResult {
     };
   }
 
-  for (const { content } of Object.values(richContentMap)) {
+  for (const { content } of Object.values(contentMap)) {
     if (content.type !== 'link') continue;
-    if (!isRichContentString(content.content, richContentMap)) continue;
-    content.content = splitRichContent(content.content, richContentMap);
+    if (!mapHasContent(content.content, contentMap)) continue;
+    content.content = splitRegexContent(content.content, contentMap);
   }
 
   return {
-    content: {
+    result: {
       type: 'paragraph',
-      content: splitRichContent(line, richContentMap),
+      content: splitRegexContent(line, contentMap),
     },
     nextStart: start,
   };

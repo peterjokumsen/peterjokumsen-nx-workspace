@@ -1,14 +1,14 @@
-import { regexContentFns, regexPatterns } from '../helper-fns';
+import { RegexContentType, provideRegexTools } from '../helper-fns';
 
 import { MatchedContent } from '../_models';
-import { RichContentType } from '@peterjokumsen/ts-md-models';
 
-export function matchRichContent(
-  type: RichContentType,
+export function matchParagraphContentType<T extends RegexContentType>(
+  type: T,
   rawContent: string,
-): MatchedContent[] {
-  const pattern = regexPatterns[type];
-  const result: MatchedContent[] = [];
+): MatchedContent<T>[] {
+  const tools = provideRegexTools(type);
+  const pattern = tools.regex;
+  const result: MatchedContent<T>[] = [];
   if (!pattern) {
     return result;
   }
@@ -19,7 +19,7 @@ export function matchRichContent(
   }
 
   for (const match of matches) {
-    const { matched, content } = regexContentFns[type](match);
+    const { matched, content } = tools.contentFn(match);
     if (!matched || result.some(({ matched: found }) => found === matched)) {
       continue;
     }

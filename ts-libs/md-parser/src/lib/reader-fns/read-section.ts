@@ -1,15 +1,22 @@
-import { getContentType, getHeaderLevel } from '../helper-fns';
+import {
+  MarkdownSection,
+  SectionContentType,
+} from '@peterjokumsen/ts-md-models';
+import { getHeaderLevel, getSectionContentType } from '../helper-fns';
 
-import { MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { ReadResult } from '../_models';
-import { contentReaders } from './content-readers';
+import { readList } from './read-list';
+import { readParagraph } from './read-paragraph';
 
-export function readSection(lines: string[], start: number): ReadResult {
+export function readSection(
+  lines: string[],
+  start: number,
+): ReadResult<SectionContentType> {
   const currentHeaderLevel = getHeaderLevel(lines[start]);
   const section: MarkdownSection = {
     type: 'section',
     title: lines[start].replace(/#+/, '').trim(),
-    content: [],
+    contents: [],
   };
 
   let i = start + 1;
@@ -19,32 +26,37 @@ export function readSection(lines: string[], start: number): ReadResult {
       continue;
     }
 
-    const type = getContentType(line);
+    const type = getSectionContentType(line);
     switch (type) {
       case 'section': {
         if (currentHeaderLevel >= getHeaderLevel(line)) {
-          return { content: section, nextStart: i - 1 };
+          return { result: section, nextStart: i - 1 };
         }
 
-        const { content, nextStart } = readSection(lines, i);
-        section.content.push(content);
+        const { result, nextStart } = readSection(lines, i);
+        section.contents.push(result);
+        i = nextStart;
+        break;
+      }
+      case 'list': {
+        const { result, nextStart } = readList(lines, i);
+        section.contents.push(result);
+        i = nextStart;
+        break;
+      }
+      case 'paragraph': {
+        const { result, nextStart } = readParagraph(lines, i);
+        section.contents.push(result);
         i = nextStart;
         break;
       }
 
-      default: {
-        const reader = contentReaders[type];
-        if (!reader) {
-          throw new Error(
-            `No reader found for content type: "${type}", Line: "${line}":${i}`,
-          );
-        }
-        const { content, nextStart } = reader(lines, i);
-        section.content.push(content);
-        i = nextStart;
-      }
+      default:
+        throw new Error(
+          `Content type: "${type}" not supported, attempting to read line ${i}: "${line}"`,
+        );
     }
   }
 
-  return { content: section, nextStart: i - 1 };
+  return { result: section, nextStart: i - 1 };
 }

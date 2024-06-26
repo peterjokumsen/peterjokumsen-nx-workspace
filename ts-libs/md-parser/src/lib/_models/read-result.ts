@@ -1,6 +1,6 @@
-import { MarkdownContent } from '@peterjokumsen/ts-md-models';
+import { MarkdownContentType, MarkdownType } from '@peterjokumsen/ts-md-models';
 
-export interface ReadResult {
-  content: MarkdownContent;
+export interface ReadResult<T extends MarkdownContentType> {
+  result: MarkdownType<T>;
   nextStart: number;
 }
