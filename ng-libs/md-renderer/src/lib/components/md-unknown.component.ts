@@ -6,10 +6,8 @@ import {
   inject,
 } from '@angular/core';
 
-import { HasContent } from '../has-content';
-import { MarkdownContent } from '@peterjokumsen/ts-md-models';
+import { HasContentBase } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-md-unknown',
@@ -37,10 +35,10 @@ import { WithId } from '../models';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MdUnknownComponent implements HasContent<any>, OnInit {
+export class MdUnknownComponent implements HasContentBase, OnInit {
   private _logger = inject(PjLogger, { optional: true });
 
-  @Input() content: string | WithId<MarkdownContent> | MarkdownContent = '';
+  @Input() content: HasContentBase['content'] = '';
 
   get contentType(): string {
     if (typeof this.content === 'string') {

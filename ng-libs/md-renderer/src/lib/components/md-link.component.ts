@@ -4,21 +4,18 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import {
-  MarkdownCode,
-  MarkdownImage,
-  MarkdownLink,
-  MarkdownText,
-  mdModelCheck,
-} from '@peterjokumsen/ts-md-models';
+import { MarkdownType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
+import { ExpectedContentTypes } from '../expected-content-types';
 import { HasContent } from '../has-content';
 import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 
-type MdAnchorContent = WithId<MarkdownText | MarkdownImage | MarkdownCode>;
-type MappedAnchor = Omit<MarkdownLink, 'content'> & {
+type InnerAnchorTypes = Extract<ExpectedContentTypes, 'image' | 'text'>;
+
+type MdAnchorContent = WithId<MarkdownType<'link' | InnerAnchorTypes>>;
+type MappedAnchor = Omit<MarkdownType<'link'>, 'content'> & {
   ariaLabel: string;
   content: MdAnchorContent[];
 };
@@ -70,21 +67,16 @@ export class MdLinkComponent implements HasContent<'link'> {
     this.anchor.update(() => newContent);
   }
 
-  private getContents(parent: MarkdownLink): MdAnchorContent[] {
+  private getContents(parent: MarkdownType<'link'>): MdAnchorContent[] {
     if (typeof parent.content === 'string') {
-      return [
-        this._mdContent.mapContent(parent.content) as WithId<MarkdownText>,
-      ];
+      return [this._mdContent.mapContent<InnerAnchorTypes>(parent.content)];
     }
 
     return parent.content.reduce((arr, content) => {
       switch (content.type) {
         case 'text':
         case 'image':
-        case 'code':
-          arr.push(
-            this._mdContent.mapContent(content) as WithId<MdAnchorContent>,
-          );
+          arr.push(this._mdContent.mapContent(content));
           break;
 
         default:
@@ -102,7 +94,22 @@ export class MdLinkComponent implements HasContent<'link'> {
 
   private createAriaLabel(contents: MdAnchorContent[]): string {
     return contents
-      .map((c) => (c.type === 'image' ? c.alt : c.content))
+      .map((c) => {
+        switch (c.type) {
+          case 'text':
+            return c.content;
+
+          case 'image':
+            return c.alt;
+
+          default:
+            this._logger?.to.error(
+              'Unknown content for aria-label of MdLinkComponent, received %o',
+              c,
+            );
+            return '';
+        }
+      })
       .join(' ');
   }
 }

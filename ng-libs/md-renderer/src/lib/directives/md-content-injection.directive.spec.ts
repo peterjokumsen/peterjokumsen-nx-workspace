@@ -6,8 +6,9 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { ExpectedContentTypes } from '../expected-content-types';
 import { HasContent } from '../has-content';
-import { MarkdownContent } from '@peterjokumsen/ts-md-models';
+import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';
 import { MdContentInjectionDirective } from './md-content-injection.directive';
 import { MdWrapperComponent } from '../components';
@@ -17,8 +18,8 @@ import { WithId } from '../models';
 @Component({
   template: '',
 })
-class HasContentComponent implements HasContent<any> {
-  content: string | MarkdownContent | WithId<MarkdownContent> = '';
+class HasContentComponent implements HasContent<ExpectedContentTypes> {
+  content: HasContent<ExpectedContentTypes>['content'] = '';
 }
 
 @Component({
@@ -29,8 +30,8 @@ class SectionHostComponent {
   @ViewChild(MdContentInjectionDirective, { static: true })
   directive!: MdContentInjectionDirective;
 
-  content: WithId<MarkdownContent> = {
-    content: [],
+  content: WithId<MarkdownType<ExpectedContentTypes>> = {
+    contents: [],
     id: '',
     title: '',
     type: 'section',
@@ -42,7 +43,7 @@ describe('MdContentInjectionDirective', () => {
   let component: SectionHostComponent;
   let directive: MdContentInjectionDirective;
   let mapSpy: Partial<jest.Mocked<MdComponentMapService>>;
-  let createdComponentInstance: Partial<HasContent<any>>;
+  let createdComponentInstance: Partial<HasContent<ExpectedContentTypes>>;
   let viewContainerSpy: Partial<jest.Mocked<ViewContainerRef>>;
 
   beforeEach(async () => {
@@ -58,7 +59,7 @@ describe('MdContentInjectionDirective', () => {
         .fn()
         .mockReturnValue({
           instance: createdComponentInstance,
-        } as ComponentRef<HasContent<any>>)
+        } as ComponentRef<HasContent<ExpectedContentTypes>>)
         .mockName('MdWrapper.container.createComponent'),
     };
 
@@ -82,7 +83,9 @@ describe('MdContentInjectionDirective', () => {
     directive.wrapper.container = viewContainerSpy as ViewContainerRef;
   });
 
-  function setComponentContent(content: WithId<MarkdownContent>) {
+  function setComponentContent(
+    content: WithId<MarkdownType<ExpectedContentTypes>>,
+  ) {
     component.content = content;
     fixture.detectChanges();
   }
@@ -97,7 +100,7 @@ describe('MdContentInjectionDirective', () => {
         id: '',
         type: 'section',
         title: 'Section Title',
-        content: [{ type: 'paragraph', content: 'Hello, world!' }],
+        contents: [{ type: 'paragraph', content: 'Hello, world!' }],
       });
 
       expect(mapSpy.getComponent).toHaveBeenCalledWith('paragraph');

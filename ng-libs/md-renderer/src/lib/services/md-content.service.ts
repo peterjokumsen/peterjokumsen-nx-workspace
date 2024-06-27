@@ -1,5 +1,6 @@
+import { MarkdownContentType, MarkdownType } from '@peterjokumsen/ts-md-models';
+
 import { Injectable } from '@angular/core';
-import { MarkdownContent } from '@peterjokumsen/ts-md-models';
 import { WithId } from '../models';
 
 @Injectable()
@@ -14,16 +15,17 @@ export class MdContentService {
     return 'title' in obj;
   }
 
-  addId<T extends object>(obj: T): WithId<T> {
-    if ('id' in obj) return obj as T & { id: string };
+  addId<T extends MarkdownContentType>(
+    obj: MarkdownType<T> | WithId<MarkdownType<T>>,
+  ): WithId<MarkdownType<T>> {
+    if ('id' in obj) return obj;
+
     let id = 'id';
     let showZero = true;
     if (this.hasTitle(obj)) {
       id = obj.title?.toLowerCase().replace(/\W/g, '-');
       showZero = false;
-    }
-
-    if (this.hasType(obj)) {
+    } else if (this.hasType(obj)) {
       id = obj.type;
     }
 
@@ -36,9 +38,13 @@ export class MdContentService {
     return Object.assign(obj, { id });
   }
 
-  mapContent(value: string | MarkdownContent): WithId<MarkdownContent> {
-    return this.addId(
-      typeof value === 'string' ? { type: 'text', content: value } : value,
-    );
+  mapContent<T extends MarkdownContentType>(
+    value: string | MarkdownType<T>,
+  ): WithId<MarkdownType<'text'>> | WithId<MarkdownType<T>> {
+    if (typeof value === 'string') {
+      return this.addId({ type: 'text', content: value });
+    }
+
+    return this.addId(value);
   }
 }

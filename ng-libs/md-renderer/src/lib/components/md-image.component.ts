@@ -4,7 +4,7 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { MarkdownImage, mdModelCheck } from '@peterjokumsen/ts-md-models';
+import { MarkdownType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { HasContent } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
@@ -22,10 +22,10 @@ import { PjLogger } from '@peterjokumsen/ng-services';
 export class MdImageComponent implements HasContent<'image'> {
   private _logger = inject(PjLogger, { optional: true });
 
-  imageValue = signal<MarkdownImage | null>(null);
+  imageValue = signal<MarkdownType<'image'> | null>(null);
 
   set content(value: HasContent<'image'>['content']) {
-    let newImage: MarkdownImage | null = null;
+    let newImage: MarkdownType<'image'> | null = null;
     if (typeof value === 'string') {
       this._logger?.to.warn(
         'String content not supported for MdImageComponent, received "%s"',

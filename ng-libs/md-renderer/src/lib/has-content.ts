@@ -1,16 +1,13 @@
-import {
-  MarkdownContent,
-  MarkdownContentType,
-  MarkdownType,
-} from '@peterjokumsen/ts-md-models';
+import { MarkdownContent, MarkdownType } from '@peterjokumsen/ts-md-models';
 
+import { ExpectedContentTypes } from './expected-content-types';
 import { WithId } from './models';
 
 export interface HasContentBase {
   content: string | MarkdownContent | WithId<MarkdownContent>;
 }
 
-export interface HasContent<T extends MarkdownContentType>
+export interface HasContent<T extends ExpectedContentTypes>
   extends HasContentBase {
   content: string | WithId<MarkdownType<T>> | MarkdownType<T>;
 }

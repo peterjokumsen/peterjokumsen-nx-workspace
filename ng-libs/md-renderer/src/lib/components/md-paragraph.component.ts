@@ -5,19 +5,12 @@ import {
   signal,
 } from '@angular/core';
 
+import { ExpectedContentTypes } from '../expected-content-types';
 import { HasContent } from '../has-content';
-import { MarkdownContent } from '@peterjokumsen/ts-md-models';
+import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
-
-type ExpectedContentTypes =
-  | 'paragraph'
-  | 'text'
-  | 'image'
-  | 'link'
-  | 'code'
-  | 'horizontal-rule';
 
 @Component({
   selector: 'pj-mdr-md-paragraph',
@@ -35,10 +28,10 @@ export class MdParagraphComponent implements HasContent<ExpectedContentTypes> {
   private _logger = inject(PjLogger, { optional: true });
   private _mdContent = inject(MdContentService);
 
-  contents = signal<WithId<MarkdownContent>[]>([]);
+  contents = signal<WithId<MarkdownType<ExpectedContentTypes>>[]>([]);
 
   set content(value: HasContent<ExpectedContentTypes>['content']) {
-    let contents: MarkdownContent[];
+    let contents: MarkdownType<ExpectedContentTypes>[];
     if (typeof value === 'string') {
       contents = [{ type: 'text', content: value }];
     } else {
@@ -46,13 +39,11 @@ export class MdParagraphComponent implements HasContent<ExpectedContentTypes> {
         case 'text':
         case 'image':
         case 'link':
-        case 'code':
-        case 'horizontal-rule':
           contents = [value];
           break;
         case 'paragraph':
           if (Array.isArray(value.content)) {
-            contents = value.content;
+            contents = value.content as MarkdownType<ExpectedContentTypes>[];
           } else {
             contents = [{ type: 'text', content: value.content }];
           }

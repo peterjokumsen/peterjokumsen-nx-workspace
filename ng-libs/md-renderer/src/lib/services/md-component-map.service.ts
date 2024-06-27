@@ -9,7 +9,7 @@ import {
   MdUnknownComponent,
 } from '../components';
 
-import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
+import { ExpectedContentTypes } from '../expected-content-types';
 
 @Injectable()
 export class MdComponentMapService {
@@ -21,7 +21,7 @@ export class MdComponentMapService {
     link: MdLinkComponent,
   };
 
-  getComponent<T extends MarkdownContentType>(
+  getComponent<T extends ExpectedContentTypes>(
     type: T,
   ): Type<HasContent<T> | HasContentBase> {
     if (this._typeMap?.[type]) {

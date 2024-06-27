@@ -4,11 +4,10 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { MarkdownText, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { HasContent } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { WithId } from '../models';
+import { mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 @Component({
   selector: 'pj-mdr-md-text',
@@ -28,7 +27,7 @@ export class MdTextComponent implements HasContent<'text'> {
   private _logger = inject(PjLogger, { optional: true });
   textValue = signal<string | null>(null);
 
-  set content(value: string | MarkdownText | WithId<MarkdownText>) {
+  set content(value: HasContent<'text'>['content']) {
     let newContent: string | null = null;
     if (typeof value === 'string') {
       newContent = value;
