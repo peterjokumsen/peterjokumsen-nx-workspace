@@ -1,27 +1,31 @@
-import { MarkdownContent } from './markdown-content';
+import { MarkdownContent, MarkdownType } from './markdown-content';
+
 import { MarkdownContentType } from './markdown-content-type';
 import { mdModelCheck } from './md-model-check';
 
 describe('mdModelCheck', () => {
-  const markdownContentTypes: Record<MarkdownContentType, MarkdownContent> = {
-    'code-block': { type: 'code-block', content: ['code-block-content'] },
+  const markdownContentTypes: Record<
+    MarkdownContentType,
+    MarkdownType<MarkdownContentType>
+  > = {
+    'code-block': { type: 'code-block', lines: ['code-block-content'] },
     'horizontal-rule': { type: 'horizontal-rule' },
     'ordered-list': {
       type: 'ordered-list',
       indent: 0,
-      content: [{ type: 'paragraph', content: '' }],
+      items: [{ type: 'paragraph', content: '' }],
     },
-    code: { type: 'code', content: 'code-content' },
+    code: { type: 'code', element: 'code-content' },
     image: { type: 'image', src: 'image-src', alt: 'image-alt' },
     link: { type: 'link', href: 'link-href', content: 'link-content' },
     list: {
       type: 'list',
       indent: 0,
-      content: [{ type: 'paragraph', content: '' }],
+      items: [{ type: 'paragraph', content: '' }],
     },
     paragraph: { type: 'paragraph', content: 'paragraph-content' },
     quote: { type: 'quote', content: 'quote-content' },
-    section: { type: 'section', title: 'section-title', content: [] },
+    section: { type: 'section', title: 'section-title', contents: [] },
     text: { type: 'text', content: 'text-content' },
   };
 
@@ -29,7 +33,7 @@ describe('mdModelCheck', () => {
     const content: MarkdownContent = markdownContentTypes['code-block'];
     if (mdModelCheck('code-block', content)) {
       // content is now seen as MarkdownCodeBlock inside scope.
-      expect(content.content).toEqual(['code-block-content']);
+      expect(content.lines).toEqual(['code-block-content']);
     }
   });
 
