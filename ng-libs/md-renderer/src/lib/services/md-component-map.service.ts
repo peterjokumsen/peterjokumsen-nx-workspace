@@ -4,6 +4,7 @@ import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from '../injection.tokens';
 import {
   MdImageComponent,
   MdLinkComponent,
+  MdListComponent,
   MdParagraphComponent,
   MdTextComponent,
   MdUnknownComponent,
@@ -19,6 +20,7 @@ export class MdComponentMapService {
     image: MdImageComponent,
     text: MdTextComponent,
     link: MdLinkComponent,
+    list: MdListComponent,
   };
 
   getComponent<T extends ExpectedContentTypes>(

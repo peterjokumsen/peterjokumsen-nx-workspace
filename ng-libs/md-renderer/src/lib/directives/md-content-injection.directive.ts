@@ -1,10 +1,9 @@
 import { Directive, Input, inject } from '@angular/core';
+import { MdTitleComponent, MdWrapperComponent } from '../components';
 
 import { ExpectedContentTypes } from '../expected-content-types';
 import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';
-import { MdTitleComponent } from '../components/md-title.component';
-import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 import { filterContentTypes } from '../filter-content-types';
