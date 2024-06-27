@@ -11,6 +11,7 @@ import { ModuleWithProviders, NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { MdContentInjectionDirective } from './directives/md-content-injection.directive';
+import { MdListComponent } from './components/md-list.component';
 import { MdTitleComponent } from './components/md-title.component';
 
 @NgModule({
@@ -18,13 +19,14 @@ import { MdTitleComponent } from './components/md-title.component';
   declarations: [
     MdImageComponent,
     MdLinkComponent,
+    MdListComponent,
     MdParagraphComponent,
     MdTextComponent,
+    MdTitleComponent,
     MdUnknownComponent,
     MdWrapperComponent,
 
     MdContentInjectionDirective,
-    MdTitleComponent,
   ],
   exports: [MdContentInjectionDirective, MdWrapperComponent],
 })
