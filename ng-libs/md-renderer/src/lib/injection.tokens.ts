@@ -1,10 +1,10 @@
 import { HasContent, HasContentBase } from './has-content';
 import { InjectionToken, Type } from '@angular/core';
 
-import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
+import { ExpectedContentTypes } from './expected-content-types';
 
 export type MdComponentTypeMap =
-  | Record<MarkdownContentType, Type<HasContent<MarkdownContentType>>>
+  | Record<ExpectedContentTypes, Type<HasContent<ExpectedContentTypes>>>
   | { [key: string]: Type<HasContentBase> };
 
 export const MD_COMPONENT_TYPE_MAP = new InjectionToken<MdComponentTypeMap>(

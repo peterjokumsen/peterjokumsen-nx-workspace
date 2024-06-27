@@ -13,7 +13,7 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { MarkdownAst, MarkdownSection } from '@peterjokumsen/ts-md-models';
+import { MarkdownAst, MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService, MdContentService } from '../services';
 
 import { MdComponentsModule } from '../md-components.module';
@@ -39,7 +39,7 @@ export class MdRendererComponent implements AfterViewInit, OnDestroy {
   @ViewChildren('sectionAnchor') sectionAnchors?: QueryList<ElementRef>;
 
   parsedContent = input<MarkdownAst>();
-  sections = computed<WithId<MarkdownSection>[]>(() => {
+  sections = computed<WithId<MarkdownType<'section'>>[]>(() => {
     const sections = this.parsedContent()?.sections ?? [];
     return sections.map((s) => this._mdContentService.addId(s));
   });

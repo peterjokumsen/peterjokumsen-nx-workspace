@@ -56,7 +56,7 @@ describe('MdTextComponent', () => {
 
     describe('when value is different type', () => {
       it('should log warning', () => {
-        component.content = { type: 'paragraph' as any, content: 'test' };
+        component.content = { type: 'paragraph' as never, content: 'test' };
         expect(loggerSpy.error).toHaveBeenCalledWith(
           'Invalid content for MdTextComponent, received %o',
           { type: 'paragraph', content: 'test' },

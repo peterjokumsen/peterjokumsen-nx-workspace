@@ -1,10 +1,12 @@
 import { Directive, Input, inject } from '@angular/core';
 
-import { MarkdownContent } from '@peterjokumsen/ts-md-models';
+import { ExpectedContentTypes } from '../expected-content-types';
+import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';
 import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
+import { filterContentTypes } from '../filter-content-types';
 
 @Directive({
   selector: 'pj-mdr-md-wrapper[pjMdrMdContentInjection]',
@@ -18,7 +20,7 @@ export class MdContentInjectionDirective {
   wrapper = inject(MdWrapperComponent);
 
   @Input('pjMdrMdContentInjection') set contentToRender(
-    value: WithId<MarkdownContent>,
+    value: WithId<MarkdownType<ExpectedContentTypes>>,
   ) {
     this._logger?.to.log(
       'MdContentInjection initialized',
@@ -33,9 +35,15 @@ export class MdContentInjectionDirective {
     }
   }
 
-  private getChildContents(content: MarkdownContent) {
+  private getChildContents(content: MarkdownType<ExpectedContentTypes>) {
     if (content.type === 'section') {
-      return content.content;
+      return filterContentTypes(content.contents, (type) =>
+        this._logger?.to.warn(
+          'Unsupported content type "%s" filtered out of %o',
+          type,
+          content,
+        ),
+      );
     }
 
     return [content];

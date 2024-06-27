@@ -7,7 +7,7 @@ import {
   MdUnknownComponent,
 } from '../components';
 
-import { MarkdownContentType } from '@peterjokumsen/ts-md-models';
+import { ExpectedContentTypes } from '../expected-content-types';
 import { MdComponentMapService } from './md-component-map.service';
 import { TestBed } from '@angular/core/testing';
 import { Type } from '@angular/core';
@@ -35,13 +35,13 @@ describe('MdComponentMapService', () => {
   describe('getComponent', () => {
     describe('when type map has type', () => {
       it('should return component from type map', () => {
-        contentTypeMap.code = MdParagraphComponent;
-        expect(service.getComponent('code')).toBe(MdParagraphComponent);
+        contentTypeMap.image = MdParagraphComponent;
+        expect(service.getComponent('image')).toBe(MdParagraphComponent);
       });
     });
 
     describe('when no type map is provided', () => {
-      const cases: Array<[MarkdownContentType, Type<unknown>]> = [
+      const cases: Array<[ExpectedContentTypes, Type<unknown>]> = [
         ['paragraph', MdParagraphComponent],
         ['image', MdImageComponent],
         ['text', MdTextComponent],
@@ -56,7 +56,7 @@ describe('MdComponentMapService', () => {
 
       describe('when type is not catered for', () => {
         it('should return UnknownComponent', () => {
-          expect(service.getComponent('unknown' as MarkdownContentType)).toBe(
+          expect(service.getComponent('unknown' as ExpectedContentTypes)).toBe(
             MdUnknownComponent,
           );
         });

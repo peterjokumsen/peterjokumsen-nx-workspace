@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MarkdownContentType, MarkdownType } from '@peterjokumsen/ts-md-models';
 
-import { MarkdownContent } from '@peterjokumsen/ts-md-models';
 import { MdContentService } from '../services';
 import { MdParagraphComponent } from './md-paragraph.component';
 import { WithId } from '../models';
@@ -15,7 +15,8 @@ describe('MdParagraphComponent', () => {
       mapContent: jest
         .fn()
         .mockImplementation(
-          (value: string | MarkdownContent) => value as WithId<MarkdownContent>,
+          <T extends MarkdownContentType>(value: string | MarkdownType<T>) =>
+            value as WithId<MarkdownType<T>>,
         )
         .mockName('MdContentService.mapContent'),
     };
@@ -49,7 +50,7 @@ describe('MdParagraphComponent', () => {
 
     describe('when value is MarkdownContent', () => {
       it('should set contents to value', () => {
-        const content: MarkdownContent = {
+        const content: MarkdownType<'image'> = {
           type: 'image',
           alt: 'alt',
           src: 'src',
@@ -60,7 +61,7 @@ describe('MdParagraphComponent', () => {
 
       describe('when value has child contents', () => {
         it('should set contents to child contents', () => {
-          const content: MarkdownContent = {
+          const content: MarkdownType<'paragraph'> = {
             type: 'paragraph',
             content: [
               { type: 'text', content: 'testing' },
