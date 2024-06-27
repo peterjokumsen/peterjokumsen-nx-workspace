@@ -3,6 +3,7 @@ import { Directive, Input, inject } from '@angular/core';
 import { ExpectedContentTypes } from '../expected-content-types';
 import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';
+import { MdTitleComponent } from '../components/md-title.component';
 import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
@@ -26,6 +27,12 @@ export class MdContentInjectionDirective {
       'MdContentInjection initialized',
       this.contentToRender,
     );
+
+    if (value.type === 'section') {
+      const titleInstance =
+        this.wrapper.container.createComponent(MdTitleComponent).instance;
+      titleInstance.section = value;
+    }
 
     for (const child of this.getChildContents(value)) {
       const component = this.componentMap.getComponent(child.type);
