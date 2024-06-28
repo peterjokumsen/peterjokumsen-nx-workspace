@@ -1,99 +1,33 @@
 comment:
-  layout: 'condensed_header, condensed_files, flags, condensed_footer'
+  layout: 'condensed_header, condensed_files, components, condensed_footer'
   behavior: once
   require_changes: true
-coverage:
-  range: 70..100
-  round: down
-  precision: 2
-  status:
-    patch:
-      default:
+
+component_management:
+  default_rules: # default rules that will be inherited by all components
+    statuses:
+      - type: project # in this case every component that doesn't have a status defined will have a project type one
         target: auto
-        threshold: 5%
-      app_blog:
-        flags:
-          - app_blog
-      ng-features_blog-container:
-        flags:
-          - ng-features_blog-container
-      ng-libs_services:
-        flags:
-          - ng-libs_services
-      ng-libs_md-renderer:
-        flags:
-          - ng-libs_md-renderer
-      ng-libs_styles:
-        flags:
-          - ng-libs_styles
-      ng-libs_ui-elements:
-        flags:
-          - ng-libs_ui-elements
-      ts-libs_ts-utils:
-        flags:
-          - ts-libs_ts-utils
-      ts-libs_md-parser:
-        flags:
-          - ts-libs_md-parser
-      ts-libs_ts-md-models:
-        flags:
-          - ts-libs_ts-md-models
-    project:
-      default:
-        target: auto
-        threshold: 5%
-      app_blog:
-        flags:
-          - app_blog
-      ng-features_blog-container:
-        flags:
-          - ng-features_blog-container
-      ng-libs_services:
-        flags:
-          - ng-libs_services
-      ng-libs_styles:
-        flags:
-          - ng-libs_styles
-      ng-libs_md-renderer:
-        flags:
-          - ng-libs_md-renderer
-      ng-libs_ui-elements:
-        flags:
-          - ng-libs_ui-elements
-      ts-libs_ts-utils:
-        flags:
-          - ts-libs_ts-utils
-      ts-libs_md-parser:
-        flags:
-          - ts-libs_md-parser
-      ts-libs_ts-md-models:
-        flags:
-          - ts-libs_ts-md-models
-flags:
-  app_blog:
-    paths:
-      - apps/blog
-  ng-features_blog-container:
-    paths:
-      - ng-features/blog-container
-  ng-libs_services:
-    paths:
-      - ng-libs/services
-  ng-libs_styles:
-    paths:
-      - ng-libs/styles
-  ng-libs_md-renderer:
-    paths:
-      - ng-libs/md-renderer
-  ng-libs_ui-elements:
-    paths:
-      - ng-libs/ui-elements
-  ts-libs_ts-utils:
-    paths:
-      - ts-libs/ts-utils
-  ts-libs_md-parser:
-    paths:
-      - ts-libs/md-parser
-  ts-libs_ts-md-models:
-    paths:
-      - ts-libs/ts-md-models
+        branches:
+          - '!main'
+  individual_components:
+    - component_id: module_md_parser # this is an identifier that should not be changed
+      name: md-parser # this is a display name, and can be changed freely
+      paths:
+        - ts-libs/md-parser/**
+    - component_id: module_ts_libs
+      name: ts-libs
+      paths:
+        - ts-libs/**
+        - '!ts-libs/md-parser/**'
+    - component_id: module_ng_md_renderer
+      name: md-renderer
+      paths:
+        - ng-libs/md-renderer/**
+    - component_id: module_ng_libs
+      paths:
+        - ng-libs/**
+        - '!ng-libs/md-renderer/**'
+    - component_id: app_blog
+      paths:
+        - apps/blog/**
