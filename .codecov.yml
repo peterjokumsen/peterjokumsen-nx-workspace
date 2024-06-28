@@ -2,98 +2,53 @@ comment:
   layout: 'condensed_header, condensed_files, flags, condensed_footer'
   behavior: once
   require_changes: true
-coverage:
-  range: 70..100
-  round: down
-  precision: 2
-  status:
-    patch:
-      default:
+
+flag_management:
+  default_rules: # the rules that will be followed for any flag added, generally
+    carryforward: true
+    statuses:
+      - type: project
         target: auto
-        threshold: 5%
-      app_blog:
-        flags:
-          - app_blog
-      ng-features_blog-container:
-        flags:
-          - ng-features_blog-container
-      ng-libs_services:
-        flags:
-          - ng-libs_services
-      ng-libs_md-renderer:
-        flags:
-          - ng-libs_md-renderer
-      ng-libs_styles:
-        flags:
-          - ng-libs_styles
-      ng-libs_ui-elements:
-        flags:
-          - ng-libs_ui-elements
-      ts-libs_ts-utils:
-        flags:
-          - ts-libs_ts-utils
-      ts-libs_md-parser:
-        flags:
-          - ts-libs_md-parser
-      ts-libs_ts-md-models:
-        flags:
-          - ts-libs_ts-md-models
-    project:
-      default:
-        target: auto
-        threshold: 5%
-      app_blog:
-        flags:
-          - app_blog
-      ng-features_blog-container:
-        flags:
-          - ng-features_blog-container
-      ng-libs_services:
-        flags:
-          - ng-libs_services
-      ng-libs_styles:
-        flags:
-          - ng-libs_styles
-      ng-libs_md-renderer:
-        flags:
-          - ng-libs_md-renderer
-      ng-libs_ui-elements:
-        flags:
-          - ng-libs_ui-elements
-      ts-libs_ts-utils:
-        flags:
-          - ts-libs_ts-utils
-      ts-libs_md-parser:
-        flags:
-          - ts-libs_md-parser
-      ts-libs_ts-md-models:
-        flags:
-          - ts-libs_ts-md-models
-flags:
-  app_blog:
-    paths:
-      - apps/blog
-  ng-features_blog-container:
-    paths:
-      - ng-features/blog-container
-  ng-libs_services:
-    paths:
-      - ng-libs/services
-  ng-libs_styles:
-    paths:
-      - ng-libs/styles
-  ng-libs_md-renderer:
-    paths:
-      - ng-libs/md-renderer
-  ng-libs_ui-elements:
-    paths:
-      - ng-libs/ui-elements
-  ts-libs_ts-utils:
-    paths:
-      - ts-libs/ts-utils
-  ts-libs_md-parser:
-    paths:
-      - ts-libs/md-parser
-  ts-libs_ts-md-models:
-    paths:
-      - ts-libs/ts-md-models
+        threshold: 1%
+      - type: patch
+        target: 90%
+  individual_flags: # exceptions to the default rules above, stated flag by flag
+    - name: ts_libs #fill in your own flag name
+      paths:
+        - ts-libs #fill in your own path. Note, accepts globs, not regexes
+      carryforward: true
+      statuses:
+        - type: project
+          target: 20%
+        - type: patch
+          target: 100%
+
+    - name: ng_libs
+      paths:
+        - ng-libs
+      carryforward: true
+      statuses:
+        - type: project
+          target: 20%
+        - type: patch
+          target: 100%
+
+    - name: ng_features
+      paths:
+        - ng-features
+      carryforward: true
+      statuses:
+        - type: project
+          target: 20%
+        - type: patch
+          target: 100%
+
+    - name: app_blog
+      paths:
+        - apps/blog
+      carryforward: true
+      statuses:
+        - type: project
+          target: 20%
+        - type: patch
+          target: 100%
