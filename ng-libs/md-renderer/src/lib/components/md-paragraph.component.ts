@@ -5,7 +5,7 @@ import {
   signal,
 } from '@angular/core';
 
-import { ExpectedContentTypes } from '../expected-content-types';
+import { ExpectedContentTypes } from '../filter-content-types';
 import { HasContent } from '../has-content';
 import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdContentService } from '../services';

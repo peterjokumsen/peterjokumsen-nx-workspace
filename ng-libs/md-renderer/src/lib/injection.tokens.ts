@@ -1,7 +1,7 @@
 import { HasContent, HasContentBase } from './has-content';
 import { InjectionToken, Type } from '@angular/core';
 
-import { ExpectedContentTypes } from './expected-content-types';
+import { ExpectedContentTypes } from './filter-content-types';
 
 export type MdComponentTypeMap =
   | Record<ExpectedContentTypes, Type<HasContent<ExpectedContentTypes>>>

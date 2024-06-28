@@ -1,6 +1,6 @@
 import { MarkdownContent, MarkdownType } from '@peterjokumsen/ts-md-models';
 
-import { ExpectedContentTypes } from './expected-content-types';
+import { ExpectedContentTypes } from './filter-content-types';
 import { WithId } from './models';
 
 export interface HasContentBase {
