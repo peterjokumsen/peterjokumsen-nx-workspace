@@ -1,12 +1,14 @@
 import { Directive, Input, inject } from '@angular/core';
+import {
+  ExpectedContentTypes,
+  filterContentTypes,
+} from '../filter-content-types';
 import { MdTitleComponent, MdWrapperComponent } from '../components';
 
-import { ExpectedContentTypes } from '../expected-content-types';
 import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
-import { filterContentTypes } from '../filter-content-types';
 
 @Directive({
   selector: 'pj-mdr-md-wrapper[pjMdrMdContentInjection]',

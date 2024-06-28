@@ -7,7 +7,7 @@ import {
   MdUnknownComponent,
 } from '../components';
 
-import { ExpectedContentTypes } from '../expected-content-types';
+import { ExpectedContentTypes } from '../filter-content-types';
 import { MdComponentMapService } from './md-component-map.service';
 import { TestBed } from '@angular/core/testing';
 import { Type } from '@angular/core';

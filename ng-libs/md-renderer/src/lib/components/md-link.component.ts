@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { MarkdownType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
-import { ExpectedContentTypes } from '../expected-content-types';
+import { ExpectedContentTypes } from '../filter-content-types';
 import { HasContent } from '../has-content';
 import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';

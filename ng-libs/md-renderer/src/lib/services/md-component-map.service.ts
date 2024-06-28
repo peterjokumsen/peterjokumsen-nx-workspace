@@ -10,7 +10,7 @@ import {
   MdUnknownComponent,
 } from '../components';
 
-import { ExpectedContentTypes } from '../expected-content-types';
+import { ExpectedContentTypes } from '../filter-content-types';
 
 @Injectable()
 export class MdComponentMapService {
