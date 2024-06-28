@@ -23,7 +23,13 @@ import { filterContentTypes } from '../filter-content-types';
       </li>
     </ul>
   `,
-  styles: ``,
+  styles: `
+    ul {
+      list-style-type: disc;
+      margin: 1em 0;
+      padding: 0 0 0 2em;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdListComponent implements HasContent<'list'> {
