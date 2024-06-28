@@ -140,5 +140,6 @@ jobs:
       deployment_url: ${{ needs.deploy_app.outputs.deployed_url }}
       audit_urls: |
         ${{ needs.deploy_app.outputs.deployed_url }}/
+        ${{ needs.deploy_app.outputs.deployed_url }}/about-me
         ${{ needs.deploy_app.outputs.deployed_url }}/development-notes
         ${{ needs.deploy_app.outputs.deployed_url }}/not/found
