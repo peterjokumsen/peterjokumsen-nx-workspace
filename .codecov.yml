@@ -1,54 +1,33 @@
 comment:
-  layout: 'condensed_header, condensed_files, flags, condensed_footer'
+  layout: 'condensed_header, condensed_files, components, condensed_footer'
   behavior: once
   require_changes: true
 
-flag_management:
-  default_rules: # the rules that will be followed for any flag added, generally
-    carryforward: true
+component_management:
+  default_rules: # default rules that will be inherited by all components
     statuses:
-      - type: project
+      - type: project # in this case every component that doesn't have a status defined will have a project type one
         target: auto
-        threshold: 1%
-      - type: patch
-        target: 90%
-  individual_flags: # exceptions to the default rules above, stated flag by flag
-    - name: ts_libs #fill in your own flag name
+        branches:
+          - '!main'
+  individual_components:
+    - component_id: module_md_parser # this is an identifier that should not be changed
+      name: md-parser # this is a display name, and can be changed freely
       paths:
-        - coverage/ts-libs #fill in your own path. Note, accepts globs, not regexes
-      carryforward: true
-      statuses:
-        - type: project
-          target: 20%
-        - type: patch
-          target: 100%
-
-    - name: ng_libs
+        - ts-libs/md-parser/**
+    - component_id: module_ts_libs
+      name: ts-libs
       paths:
-        - ng-libs
-      carryforward: true
-      statuses:
-        - type: project
-          target: 20%
-        - type: patch
-          target: 100%
-
-    - name: ng_features
+        - ts-libs/**
+        - !ts-libs/md-parser/**
+    - component_id: module_ng_md_renderer
+      name: md-renderer
       paths:
-        - ng-features
-      carryforward: true
-      statuses:
-        - type: project
-          target: 20%
-        - type: patch
-          target: 100%
-
-    - name: app_blog
+        - ng-libs/md-renderer/**
+    - component_id: module_ng_libs
       paths:
-        - apps/blog
-      carryforward: true
-      statuses:
-        - type: project
-          target: 20%
-        - type: patch
-          target: 100%
+        - ng-libs/**
+        - !ng-libs/md-renderer/**
+    - component_id: app_blog
+      paths:
+        - apps/blog/**
