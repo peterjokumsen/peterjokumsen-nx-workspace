@@ -19,7 +19,7 @@ component_management:
       name: ts-libs
       paths:
         - ts-libs/**
-        - !ts-libs/md-parser/**
+        - '!ts-libs/md-parser/**'
     - component_id: module_ng_md_renderer
       name: md-renderer
       paths:
@@ -27,7 +27,7 @@ component_management:
     - component_id: module_ng_libs
       paths:
         - ng-libs/**
-        - !ng-libs/md-renderer/**
+        - '!ng-libs/md-renderer/**'
     - component_id: app_blog
       paths:
         - apps/blog/**
