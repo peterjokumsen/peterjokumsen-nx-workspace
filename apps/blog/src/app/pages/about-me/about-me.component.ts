@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  inject,
+} from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MdRendererComponent } from '@peterjokumsen/md-renderer';
+import { PjLogger } from '@peterjokumsen/ng-services';
 import { parseMarkdown } from '@peterjokumsen/md-parser';
 
 @Component({
@@ -15,7 +21,9 @@ import { parseMarkdown } from '@peterjokumsen/md-parser';
   styleUrl: 'about-me.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AboutMeComponent {
+export class AboutMeComponent implements OnInit {
+  private _logger = inject(PjLogger, { optional: true });
+
   markdown = parseMarkdown(`
 # Who am i?
 
@@ -25,8 +33,11 @@ I am passionate about learning new technologies and solving problems in interest
 
 # What is the purpose of this blog?
 
-The purpose of this blog is to share my knowledge and experiences with others.
-I hope to help others learn new things and grow as software engineers.
+The purpose of this blog is:
+
+- share my knowledge and experiences with others
+- learn new things and grow as a software engineer
+- help others learn new things and grow as software engineers
 
 # What will you find on this blog?
 
@@ -39,4 +50,8 @@ The repository for this blog is available on GitHub.
 ![new image](/assets/images/basic-image.webp)
 You can find it at [peterjokumsen/peterjokumsen-nx-workspace](https://github.com/peterjokumsen/peterjokumsen-nx-workspace?tab=readme-ov-file#peterjokumsen-blog).
 `);
+
+  ngOnInit(): void {
+    this._logger?.to.log('Parsed markdown %o', this.markdown);
+  }
 }
