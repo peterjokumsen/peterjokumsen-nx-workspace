@@ -78,9 +78,9 @@ describe('MdContentInjectionDirective', () => {
 
     fixture = TestBed.createComponent(SectionHostComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
     directive = component.directive;
     directive.wrapper.container = viewContainerSpy as ViewContainerRef;
+    fixture.detectChanges();
   });
 
   function setComponentContent(
