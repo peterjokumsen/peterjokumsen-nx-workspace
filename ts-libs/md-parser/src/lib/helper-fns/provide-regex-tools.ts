@@ -14,7 +14,6 @@ export type RegexContentType = Exclude<
   | 'paragraph'
   | 'horizontal-rule'
   | 'code-block'
-  | 'code'
   | 'quote'
   | 'ordered-list'
 >;
@@ -34,6 +33,20 @@ export function provideRegexTools<T extends RegexContentType>(
 } {
   // keeping the switch statement in one place to make it easier to maintain.
   switch (value) {
+    case 'code':
+      return {
+        regex: /`(.+)`/,
+        contentFn: (regex) => {
+          const [matched, content] = regex;
+          return {
+            matched,
+            content: {
+              type: 'code',
+              element: content,
+            },
+          } as MatchedContent<T>;
+        },
+      };
     case 'image':
       return {
         regex: /!\[(.*?)]\((.*?)\)/,

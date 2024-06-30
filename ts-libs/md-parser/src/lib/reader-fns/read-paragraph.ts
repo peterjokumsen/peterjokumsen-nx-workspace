@@ -24,7 +24,7 @@ export function readParagraph(
   lines: string[],
   start: number,
 ): ReadResult<'paragraph'> {
-  const contentTypes: Array<AllowedRegexTypes> = ['image', 'link'];
+  const contentTypes: Array<AllowedRegexTypes> = ['code', 'image', 'link'];
   let line = lines[start];
 
   const contentMap: MatchedContentMap<AllowedRegexTypes> = {};
