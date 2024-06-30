@@ -8,6 +8,20 @@ import { ReadResult } from '../_models';
 import { readList } from './read-list';
 import { readParagraph } from './read-paragraph';
 
+/**
+ * Reads a section starting from the specified start index in the provided lines from markdown file.
+ * Will read until the next section of the same or lower header level is found.
+ *
+ * If a section is found, and the header level is higher than the current section, it will read the section and add it to the contents of the current section.
+ * If a list is found, it will read the list and add it to the contents of the current section.
+ * If a paragraph is found, it will read the paragraph and add it to the contents of the curren section.
+ *
+ * If the content type is not supported, an error will be thrown.
+ *
+ * @param lines
+ * @param start
+ * @returns ReadResult<SectionContentType>
+ */
 export function readSection(
   lines: string[],
   start: number,

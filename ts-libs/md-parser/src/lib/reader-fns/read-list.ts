@@ -3,6 +3,12 @@ import { lineHasContentType, provideRegexTools } from '../helper-fns';
 import { ReadResult } from '../_models';
 import { readParagraph } from './read-paragraph';
 
+/**
+ * Reads a list from the provided markdown lines.
+ * @param lines The markdown lines to read.
+ * @param start The line index to start reading.
+ * @returns The read list and the last line index read.
+ */
 export function readList(lines: string[], start: number): ReadResult<'list'> {
   if (!lineHasContentType('list', lines[start])) {
     throw new Error(`Line "${lines[start]}" is not a list`);

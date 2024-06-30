@@ -1,5 +1,11 @@
 import { RegexContentType, provideRegexTools } from './provide-regex-tools';
 
+/**
+ * Check if a line has a specific content type.
+ * @param contentType The content type to check.
+ * @param line The line to check.
+ * @returns {boolean} True if the line has the content type.
+ */
 export function lineHasContentType(
   contentType: RegexContentType,
   line: string,

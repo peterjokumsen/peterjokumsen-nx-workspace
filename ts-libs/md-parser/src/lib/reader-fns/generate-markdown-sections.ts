@@ -5,6 +5,13 @@ import { readList } from './read-list';
 import { readParagraph } from './read-paragraph';
 import { readSection } from './read-section';
 
+/**
+ * Generates markdown sections from the provided markdown string.
+ * Splits the markdown string into lines an reads each line to determine the content type.
+ * Will yield the next markdown section until the end of the markdown string is reached.
+ * @param markdown
+ * @returns Generator of markdown sections.
+ */
 export function* generateMarkdownSections(
   markdown: string,
 ): Generator<MarkdownType<SectionContentType>> {
