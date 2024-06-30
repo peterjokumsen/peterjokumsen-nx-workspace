@@ -15,7 +15,13 @@ export function readList(lines: string[], start: number): ReadResult<'list'> {
   }
 
   const { content: list } = tools.contentFn(regexMatch);
-  const listValues: string[] = [list.rawValue!];
+  if (!list.rawValue) {
+    throw new Error(
+      `Could not create list from "${lines[start]}", no raw value found.`,
+    );
+  }
+
+  const listValues: string[] = [list.rawValue];
   let currentLineIdx = start + 1;
   for (; currentLineIdx < lines.length; currentLineIdx++) {
     regexMatch = lines[currentLineIdx].match(tools.regex);
@@ -28,7 +34,10 @@ export function readList(lines: string[], start: number): ReadResult<'list'> {
       currentLineIdx--;
       break; // next list item is not at the same indent level
     }
-    listValues.push(nextList.rawValue!);
+
+    if (nextList.rawValue) {
+      listValues.push(nextList.rawValue);
+    }
   }
 
   list.items = listValues
