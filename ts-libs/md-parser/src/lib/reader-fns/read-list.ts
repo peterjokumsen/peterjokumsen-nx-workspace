@@ -38,6 +38,6 @@ export function readList(lines: string[], start: number): ReadResult<'list'> {
 
   return {
     result: list,
-    nextStart: currentLineIdx,
+    lastLineIndex: currentLineIdx,
   };
 }
