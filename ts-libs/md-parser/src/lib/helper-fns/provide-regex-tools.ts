@@ -5,6 +5,9 @@ import {
 
 import { MatchedContent } from '../_models';
 
+/**
+ * Content types that can be matched.
+ */
 export type RegexContentType = Exclude<
   ParagraphContentType | SectionContentType,
   | 'section'
@@ -16,12 +19,20 @@ export type RegexContentType = Exclude<
   | 'ordered-list'
 >;
 
+/**
+ * Provide regex tools for a specific content type.
+ * Will return a regex pattern to use for matching the content type and a function to parse the matched content from that regex match.
+ * @template T The type of content to provide regex tools for.
+ * @param value
+ * @returns {{ regex: RegExp, contentFn: (regexMatch: RegExpMatchArray) => MatchedContent<T> }} The regex and content function for the content type.
+ */
 export function provideRegexTools<T extends RegexContentType>(
   value: T,
 ): {
   regex: RegExp;
   contentFn: (regex: RegExpMatchArray) => MatchedContent<T>;
 } {
+  // keeping the switch statement in one place to make it easier to maintain.
   switch (value) {
     case 'image':
       return {

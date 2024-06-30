@@ -2,6 +2,11 @@ import { MarkdownAst, MarkdownSection } from '@peterjokumsen/ts-md-models';
 
 import { generateMarkdownSections } from './reader-fns';
 
+/**
+ * Parses the provided markdown string into an AST.
+ * @param markdown
+ * @returns The parsed markdown AST.
+ */
 export function parseMarkdown(markdown: string): MarkdownAst {
   if (!markdown) {
     return {

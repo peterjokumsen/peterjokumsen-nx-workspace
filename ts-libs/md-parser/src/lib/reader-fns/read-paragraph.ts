@@ -9,8 +9,17 @@ import {
 import { ParagraphContentType } from '@peterjokumsen/ts-md-models';
 import { matchParagraphContentType } from './match-paragraph-content-type';
 
+/**
+ * Content types to match in a paragraph.
+ */
 type AllowedRegexTypes = Extract<ParagraphContentType, RegexContentType>;
 
+/**
+ * Reads a paragraph from the provided lines.
+ * @param lines - The lines to read.
+ * @param start - The line index to start reading.
+ * @returns The read paragraph and the last line index read.
+ */
 export function readParagraph(
   lines: string[],
   start: number,
