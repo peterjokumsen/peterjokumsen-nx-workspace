@@ -11,6 +11,17 @@ interface Expectation<T extends RegexContentType> {
 describe('provideRegexTools', () => {
   const testCases: Array<[RegexContentType, Expectation<RegexContentType>]> = [
     [
+      'code',
+      {
+        shouldMatch: ['`code`'],
+        shouldNotMatch: ['random string', 'no ` close'],
+        expectedMatchFromFirstMatch: {
+          matched: '`code`',
+          content: { type: 'code', element: 'code' },
+        },
+      },
+    ],
+    [
       'image',
       {
         shouldMatch: [

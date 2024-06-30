@@ -295,4 +295,61 @@ describe('parseMarkdown', () => {
       ],
     );
   });
+
+  describe(`when reading inline-code.md`, () => {
+    itShouldBeParsed(
+      'inline-code.md',
+      [
+        'Inline code',
+        [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                content: 'This is a paragraph with some ',
+              },
+              {
+                type: 'code',
+                element: 'inline code',
+              },
+              {
+                type: 'text',
+                content: ' in it.',
+              },
+            ],
+          },
+        ],
+      ],
+      [
+        'Inline code in link',
+        [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'link',
+                content: [
+                  {
+                    type: 'text',
+                    content: 'This is a link with ',
+                  },
+                  {
+                    type: 'code',
+                    element: 'inline code',
+                  },
+                  {
+                    type: 'text',
+                    content: ' in it',
+                  },
+                ],
+                href: 'https://example.com',
+              },
+              { type: 'text', content: '.' },
+            ],
+          },
+        ],
+      ],
+    );
+  });
 });
