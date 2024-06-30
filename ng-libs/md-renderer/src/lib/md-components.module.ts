@@ -10,6 +10,7 @@ import {
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { MdCodeComponent } from './components/md-code.component';
 import { MdContentInjectionDirective } from './directives/md-content-injection.directive';
 import { MdListComponent } from './components/md-list.component';
 import { MdTitleComponent } from './components/md-title.component';
@@ -27,6 +28,7 @@ import { MdTitleComponent } from './components/md-title.component';
     MdWrapperComponent,
 
     MdContentInjectionDirective,
+    MdCodeComponent,
   ],
   exports: [MdContentInjectionDirective, MdWrapperComponent],
 })
