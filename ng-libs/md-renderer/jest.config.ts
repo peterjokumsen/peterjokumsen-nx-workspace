@@ -3,7 +3,7 @@ export default {
   displayName: 'md-renderer',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/ng-features/md-renderer',
+  coverageDirectory: '../../coverage/ng-libs/md-renderer',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',
