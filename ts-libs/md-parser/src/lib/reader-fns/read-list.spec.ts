@@ -59,7 +59,7 @@ describe('readList', () => {
       };
       const expected: ReadResult<'list'> = {
         result: expectedContent,
-        nextStart: 3,
+        lastLineIndex: 3,
       };
       expect(result).toEqual(expected);
     });

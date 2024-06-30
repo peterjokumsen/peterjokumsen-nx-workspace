@@ -68,7 +68,7 @@ describe('readSection', () => {
           ],
         };
         expect(result.result).toEqual(expected);
-        expect(result.nextStart).toBe(1);
+        expect(result.lastLineIndex).toBe(1);
       });
     });
 
@@ -86,7 +86,7 @@ describe('readSection', () => {
           title: 'SubTitle',
           contents: [],
         });
-        expect(result.nextStart).toBe(1);
+        expect(result.lastLineIndex).toBe(1);
       });
     });
   });
@@ -103,7 +103,7 @@ describe('readSection', () => {
       const lines = ['# Title', '- List item'];
       readListSpy.mockReturnValue({
         result: { type: 'list', indent: 0, items: [] },
-        nextStart: 1,
+        lastLineIndex: 1,
       });
       const result = readSection(lines, 0);
 
@@ -112,7 +112,7 @@ describe('readSection', () => {
         result: expect.objectContaining({
           contents: [{ type: 'list', indent: 0, items: [] }],
         }),
-        nextStart: 1,
+        lastLineIndex: 1,
       });
     });
   });
@@ -129,7 +129,7 @@ describe('readSection', () => {
       const lines = ['# Title', 'Some content'];
       readParagraphSpy.mockReturnValue({
         result: { type: 'paragraph', content: 'Some content' },
-        nextStart: 1,
+        lastLineIndex: 1,
       });
       const result = readSection(lines, 0);
 
@@ -140,7 +140,7 @@ describe('readSection', () => {
           title: 'Title',
           contents: [{ type: 'paragraph', content: 'Some content' }],
         },
-        nextStart: 1,
+        lastLineIndex: 1,
       });
     });
   });

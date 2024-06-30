@@ -30,24 +30,24 @@ export function readSection(
     switch (type) {
       case 'section': {
         if (currentHeaderLevel >= getHeaderLevel(line)) {
-          return { result: section, nextStart: i - 1 };
+          return { result: section, lastLineIndex: i - 1 };
         }
 
-        const { result, nextStart } = readSection(lines, i);
+        const { result, lastLineIndex } = readSection(lines, i);
         section.contents.push(result);
-        i = nextStart;
+        i = lastLineIndex;
         break;
       }
       case 'list': {
-        const { result, nextStart } = readList(lines, i);
+        const { result, lastLineIndex } = readList(lines, i);
         section.contents.push(result);
-        i = nextStart;
+        i = lastLineIndex;
         break;
       }
       case 'paragraph': {
-        const { result, nextStart } = readParagraph(lines, i);
+        const { result, lastLineIndex } = readParagraph(lines, i);
         section.contents.push(result);
-        i = nextStart;
+        i = lastLineIndex;
         break;
       }
 
@@ -58,5 +58,5 @@ export function readSection(
     }
   }
 
-  return { result: section, nextStart: i - 1 };
+  return { result: section, lastLineIndex: i - 1 };
 }

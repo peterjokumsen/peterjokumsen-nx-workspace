@@ -17,20 +17,20 @@ export function* generateMarkdownSections(
     const type = getSectionContentType(line);
     switch (type) {
       case 'section': {
-        const { result, nextStart } = readSection(lines, idx);
-        idx = nextStart;
+        const { result, lastLineIndex } = readSection(lines, idx);
+        idx = lastLineIndex;
         next = result;
         break;
       }
       case 'list': {
-        const { result, nextStart } = readList(lines, idx);
-        idx = nextStart;
+        const { result, lastLineIndex } = readList(lines, idx);
+        idx = lastLineIndex;
         next = result;
         break;
       }
       case 'paragraph': {
-        const { result, nextStart } = readParagraph(lines, idx);
-        idx = nextStart;
+        const { result, lastLineIndex } = readParagraph(lines, idx);
+        idx = lastLineIndex;
         next = result;
         break;
       }

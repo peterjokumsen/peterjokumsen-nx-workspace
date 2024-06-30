@@ -35,7 +35,7 @@ describe('readParagraph', () => {
           type: 'paragraph',
           content: 'Some content',
         },
-        nextStart: 1,
+        lastLineIndex: 1,
       });
     });
   });

@@ -31,7 +31,7 @@ describe('readMarkdownSection', () => {
         .mockName('readSection')
         .mockImplementation((lines, i) => ({
           result: { type: 'section', title: lines[i], contents: [] },
-          nextStart: i,
+          lastLineIndex: i,
         }));
 
       generator = generateMarkdownSections(expectedLines.join('\n'));
@@ -71,7 +71,7 @@ describe('readMarkdownSection', () => {
         .mockName('readList')
         .mockImplementation(() => ({
           result: { type: 'list', indent: 0, items: [] },
-          nextStart: 3,
+          lastLineIndex: 3,
         }));
 
       generator = generateMarkdownSections(expectedLines.join('\n'));
@@ -95,7 +95,7 @@ describe('readMarkdownSection', () => {
       let indent = 0;
       readListSpy.mockImplementation(() => ({
         result: { type: 'list', indent: indent++, items: [] },
-        nextStart: indent,
+        lastLineIndex: indent,
       }));
       generator = generateMarkdownSections(expectedLines.join('\n'));
       let result = generator.next();

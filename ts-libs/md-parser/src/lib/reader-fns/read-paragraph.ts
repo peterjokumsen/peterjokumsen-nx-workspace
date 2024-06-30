@@ -36,7 +36,7 @@ export function readParagraph(
         type: 'paragraph',
         content: line,
       },
-      nextStart: start,
+      lastLineIndex: start,
     };
   }
 
@@ -51,6 +51,6 @@ export function readParagraph(
       type: 'paragraph',
       content: splitRegexContent(line, contentMap),
     },
-    nextStart: start,
+    lastLineIndex: start,
   };
 }
