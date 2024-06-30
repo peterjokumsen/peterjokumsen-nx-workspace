@@ -2,7 +2,7 @@ import { MarkdownContentType, MarkdownType } from '@peterjokumsen/ts-md-models';
 
 export type ExpectedContentTypes = Extract<
   MarkdownContentType,
-  'section' | 'paragraph' | 'link' | 'text' | 'image' | 'list'
+  'section' | 'paragraph' | 'link' | 'text' | 'image' | 'list' | 'code'
 >;
 
 const allowed: Required<Record<ExpectedContentTypes, object>> = {
@@ -12,6 +12,7 @@ const allowed: Required<Record<ExpectedContentTypes, object>> = {
   text: {},
   image: {},
   list: {},
+  code: {},
 };
 
 const allowedTypes = Object.keys(allowed) as ExpectedContentTypes[];
