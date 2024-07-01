@@ -45,15 +45,15 @@ describe('readList', () => {
         items: [
           {
             type: 'paragraph',
-            content: 'item 1',
+            content: [{ type: 'text', content: 'item 1' }],
           },
           {
             type: 'paragraph',
-            content: 'item 2',
+            content: [{ type: 'text', content: 'item 2' }],
           },
           {
             type: 'paragraph',
-            content: 'item 3',
+            content: [{ type: 'text', content: 'item 3' }],
           },
         ],
       };

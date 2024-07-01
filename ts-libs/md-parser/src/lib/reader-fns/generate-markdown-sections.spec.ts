@@ -121,7 +121,7 @@ describe('readMarkdownSection', () => {
       const result = generator.next();
       expect(result.value).toEqual({
         type: 'paragraph',
-        content: 'Some content',
+        content: [{ type: 'text', content: 'Some content' }],
       });
       if (!generator.next().done) {
         fail('Generator did not finish');
