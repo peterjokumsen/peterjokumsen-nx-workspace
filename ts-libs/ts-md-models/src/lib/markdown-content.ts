@@ -48,6 +48,7 @@ export interface MarkdownHorizontalRule extends HasMarkdownContentType {
 
 export interface MarkdownText extends HasMarkdownContentType {
   type: 'text';
+  format?: 'bold' | 'italic' | 'bold-italic' | 'strike-through' | 'line-break';
   content: string;
 }
 
