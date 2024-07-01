@@ -34,7 +34,7 @@ describe('parseMarkdown', () => {
         contents: [
           {
             type: 'paragraph',
-            content: 'Some Content',
+            content: [{ type: 'text', content: 'Some Content' }],
           },
         ],
       });
@@ -82,7 +82,7 @@ describe('parseMarkdown', () => {
       [
         {
           type: 'paragraph',
-          content: 'Section text.',
+          content: [{ type: 'text', content: 'Section text.' }],
         },
       ],
     ]);
@@ -94,7 +94,7 @@ describe('parseMarkdown', () => {
       [
         {
           type: 'paragraph',
-          content: 'No title here.',
+          content: [{ type: 'text', content: 'No title here.' }],
         },
       ],
     ]);
@@ -108,7 +108,7 @@ describe('parseMarkdown', () => {
         [
           {
             type: 'paragraph',
-            content: 'This is the first section.',
+            content: [{ type: 'text', content: 'This is the first section.' }],
           },
         ],
       ],
@@ -117,7 +117,7 @@ describe('parseMarkdown', () => {
         [
           {
             type: 'paragraph',
-            content: 'This is the second section.',
+            content: [{ type: 'text', content: 'This is the second section.' }],
           },
         ],
       ],
@@ -231,11 +231,11 @@ describe('parseMarkdown', () => {
             items: [
               {
                 type: 'paragraph',
-                content: 'Item 1',
+                content: [{ type: 'text', content: 'Item 1' }],
               },
               {
                 type: 'paragraph',
-                content: 'Item 2',
+                content: [{ type: 'text', content: 'Item 2' }],
               },
             ],
           },
@@ -346,6 +346,155 @@ describe('parseMarkdown', () => {
                 href: 'https://example.com',
               },
               { type: 'text', content: '.' },
+            ],
+          },
+        ],
+      ],
+    );
+  });
+
+  xdescribe('when reading formatted-text.md', () => {
+    itShouldBeParsed(
+      'formatted-text.md',
+      [
+        'Formatted text (asterisk)',
+        [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                content: 'Using ',
+              },
+              { type: 'code', element: '*' },
+              {
+                type: 'text',
+                content: ' for ',
+              },
+              {
+                type: 'text',
+                format: 'bold-italic',
+                content: 'super text',
+              },
+              {
+                type: 'text',
+                content: ', ',
+              },
+              {
+                type: 'text',
+                format: 'bold',
+                content: 'bold text',
+              },
+              {
+                type: 'text',
+                content: ', and ',
+              },
+              {
+                type: 'text',
+                format: 'italic',
+                content: 'italic text',
+              },
+              {
+                type: 'text',
+                content: '.',
+              },
+            ],
+          },
+        ],
+      ],
+      [
+        'Formatted text (underscore)',
+        [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                content: 'Using ',
+              },
+              { type: 'code', element: '_' },
+              {
+                type: 'text',
+                content: ' for ',
+              },
+              {
+                type: 'text',
+                format: 'bold-italic',
+                content: 'super text',
+              },
+              {
+                type: 'text',
+                content: ', ',
+              },
+              {
+                type: 'text',
+                format: 'bold',
+                content: 'bold text',
+              },
+              {
+                type: 'text',
+                content: ', and ',
+              },
+              {
+                type: 'text',
+                format: 'italic',
+                content: 'italic text',
+              },
+              {
+                type: 'text',
+                content: '.',
+              },
+            ],
+          },
+        ],
+      ],
+      [
+        'Formatted text (tilde)',
+        [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                content: 'Using ',
+              },
+              { type: 'code', element: '~' },
+              {
+                type: 'text',
+                content: ' for ',
+              },
+              {
+                type: 'text',
+                format: 'strike-through',
+                content: 'strikethrough text',
+              },
+              {
+                type: 'text',
+                content: '.',
+              },
+            ],
+          },
+        ],
+      ],
+      [
+        'Formatted text (line break)',
+        [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                content: '2 empty spaces for line break',
+              },
+              {
+                type: 'text',
+                format: 'line-break',
+                content: '',
+              },
+              {
+                type: 'text',
+                content: 'and the paragraph goes on...',
+              },
             ],
           },
         ],
