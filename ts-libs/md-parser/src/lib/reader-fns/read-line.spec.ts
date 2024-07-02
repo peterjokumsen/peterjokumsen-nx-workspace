@@ -4,29 +4,48 @@ import {
   splitRegexContent,
 } from '../helper-fns';
 
-import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { matchParagraphContentType } from './match-paragraph-content-type';
+import { matchTextFormatting } from './match-text-formatting';
 import { readLine } from './read-line';
 
 jest.mock('../helper-fns');
 jest.mock('./match-paragraph-content-type');
+jest.mock('./match-text-formatting');
 
 describe('readLine', () => {
   let lineHasContentTypeSpy: jest.MockedFunction<typeof lineHasContentType>;
+  let matchParagraphContentSpy: jest.MockedFunction<
+    typeof matchParagraphContentType
+  >;
+  let matchTextFormattingSpy: jest.MockedFunction<typeof matchTextFormatting>;
+  let splitRegexContentSpy: jest.MockedFunction<typeof splitRegexContent>;
 
   beforeEach(() => {
     lineHasContentTypeSpy = jest
       .mocked(lineHasContentType)
       .mockName('lineHasContentType');
+    matchParagraphContentSpy = jest
+      .mocked(matchParagraphContentType)
+      .mockName('matchParagraphContentType');
+    matchTextFormattingSpy = jest
+      .mocked(matchTextFormatting)
+      .mockName('matchTextFormatting');
+    splitRegexContentSpy = jest
+      .mocked(splitRegexContent)
+      .mockName('splitRegexContent');
   });
 
   afterEach(() => {
     lineHasContentTypeSpy.mockClear();
+    matchParagraphContentSpy.mockClear();
+    matchTextFormattingSpy.mockClear();
+    splitRegexContentSpy.mockClear();
   });
 
   describe('when line has no content type or formatting', () => {
     beforeEach(() => {
       lineHasContentTypeSpy.mockReturnValue(false);
+      matchTextFormattingSpy.mockReturnValue([]);
     });
 
     it('should return line as string', () => {
@@ -37,24 +56,9 @@ describe('readLine', () => {
 
   describe('when line has content type(s)', () => {
     let mapHasContentSpy: jest.MockedFunction<typeof mapHasContent>;
-    let splitRegexContentSpy: jest.MockedFunction<typeof splitRegexContent>;
-    let matchParagraphContentSpy: jest.MockedFunction<
-      typeof matchParagraphContentType
-    >;
 
     beforeEach(() => {
       mapHasContentSpy = jest.mocked(mapHasContent).mockName('mapHasContent');
-      splitRegexContentSpy = jest
-        .mocked(splitRegexContent)
-        .mockName('splitRegexContent');
-      matchParagraphContentSpy = jest
-        .mocked(matchParagraphContentType)
-        .mockName('matchParagraphContentType');
-    });
-
-    afterEach(() => {
-      splitRegexContentSpy.mockClear();
-      matchParagraphContentSpy.mockClear();
     });
 
     describe('link and image', () => {
@@ -78,10 +82,10 @@ describe('readLine', () => {
 
           return [
             {
-              matched: 'b__image_0__',
+              matched: 'b%%image-0%%',
               content: {
                 type: 'link',
-                content: '__image_0__',
+                content: '%%image-0%%',
                 href: '/link',
               },
             },
@@ -98,18 +102,18 @@ describe('readLine', () => {
         );
         expect(lineHasContentTypeSpy).toHaveBeenCalledWith(
           'link',
-          'a b__image_0__ __image_0__ d',
+          'a b%%image-0%% %%image-0%% d',
         );
         expect(matchParagraphContentSpy).toHaveBeenCalledWith(
           'link',
-          'a b__image_0__ __image_0__ d',
+          'a b%%image-0%% %%image-0%% d',
         );
         expect(splitRegexContentSpy).toHaveBeenCalledWith(
-          '__image_0__',
+          '%%image-0%%',
           expect.any(Object),
         );
         expect(splitRegexContentSpy).toHaveBeenCalledWith(
-          'a __link_0__ __image_0__ d',
+          'a %%link-0%% %%image-0%% d',
           expect.any(Object),
         );
       });
@@ -139,7 +143,7 @@ describe('readLine', () => {
         expect(lineHasContentTypeSpy).toHaveBeenCalledWith('link', 'abcd');
         expect(matchParagraphContentSpy).toHaveBeenCalledWith('link', 'abcd');
         expect(splitRegexContentSpy).toHaveBeenCalledWith(
-          'a__link_0__d',
+          'a%%link-0%%d',
           expect.any(Object),
         );
       });
@@ -168,7 +172,7 @@ describe('readLine', () => {
         );
         expect(matchParagraphContentSpy).toHaveBeenCalledWith('image', 'abcd');
         expect(splitRegexContentSpy).toHaveBeenCalledWith(
-          'a__image_0__d',
+          'a%%image-0%%d',
           expect.any(Object),
         );
       });
@@ -193,51 +197,88 @@ describe('readLine', () => {
         expect(lineHasContentTypeSpy).toHaveBeenCalledWith('code', 'abcd');
         expect(matchParagraphContentSpy).toHaveBeenCalledWith('code', 'abcd');
         expect(splitRegexContentSpy).toHaveBeenCalledWith(
-          'a__code_0__d',
+          'a%%code-0%%d',
           expect.any(Object),
         );
       });
     });
   });
 
-  xdescribe('when line has formatting', () => {
-    describe('with 2 spaces at end of line', () => {
-      it('should return line break', () => {
-        lineHasContentTypeSpy.mockReturnValue(false);
+  describe('when line has formatting', () => {
+    beforeEach(() => {
+      lineHasContentTypeSpy.mockReturnValue(false);
+    });
 
-        const result = readLine('Some content  ');
+    it('should match text formatting', () => {
+      matchTextFormattingSpy.mockReturnValue([
+        {
+          matched: 'b',
+          content: {
+            type: 'text',
+            format: 'bold',
+            content: 'bold',
+          },
+        },
+        {
+          matched: 'c',
+          content: {
+            type: 'text',
+            format: 'italic',
+            content: 'italic',
+          },
+        },
+      ]);
 
-        expect(result).toEqual([
-          { type: 'text', content: 'Some content' },
-          { type: 'text', format: 'line-break', content: '' },
+      // Act
+      readLine('a b c d c b');
+
+      expect(matchTextFormattingSpy).toHaveBeenCalledWith('a b c d c b');
+      expect(splitRegexContentSpy).toHaveBeenCalledWith(
+        'a %%f-0%% %%f-1%% d %%f-1%% %%f-0%%',
+        expect.objectContaining({
+          '%%f-0%%': expect.any(Object),
+          '%%f-1%%': expect.any(Object),
+        }),
+      );
+    });
+
+    describe('with line-break', () => {
+      it('should replace last 2 characters in line', () => {
+        matchTextFormattingSpy.mockReturnValue([
+          {
+            matched: '%%line-break%%',
+            content: {
+              type: 'text',
+              format: 'line-break',
+              content: '',
+            },
+          },
         ]);
+
+        // Act
+        readLine('a b c d'); // should not have character, but ' d' used for testing purposes
+
+        expect(splitRegexContentSpy).toHaveBeenCalledWith(
+          'a b c%%f-0%%',
+          expect.objectContaining({
+            '%%f-0%%': expect.any(Object),
+          }),
+        );
       });
     });
 
-    describe.each(['*', '_'])(
-      'when line has formatting using "%s"',
-      (formatKey) => {
-        it('should return text with formatting', () => {
-          lineHasContentTypeSpy.mockReturnValue(false);
-          const bold = ''.padStart(2, formatKey);
-          const italic = ''.padStart(1, formatKey);
-          const both = ''.padStart(3, formatKey);
+    describe('with code', () => {
+      it('should match code before matching formatting', () => {
+        lineHasContentTypeSpy.mockImplementation((c) => c === 'code');
+        matchParagraphContentSpy.mockReturnValue([
+          { matched: '`*`', content: { type: 'code', element: '*' } },
+        ]);
 
-          const result = readLine(
-            `Some ${both}super${both} ${bold}content${bold} ${italic}here${italic}`,
-          );
+        // Act
+        readLine('a `*` c d');
 
-          const expected: Array<MarkdownType<'text'>> = [
-            { type: 'text', content: 'Some ' },
-            { type: 'text', format: 'bold-italic', content: 'super' },
-            { type: 'text', content: ' ' },
-            { type: 'text', format: 'bold', content: 'content' },
-            { type: 'text', content: ' ' },
-            { type: 'text', format: 'italic', content: 'here' },
-          ];
-          expect(result).toEqual(expected);
-        });
-      },
-    );
+        expect(matchTextFormattingSpy).toHaveBeenCalledWith('a %%code-0%% c d');
+      });
+    });
   });
 });
