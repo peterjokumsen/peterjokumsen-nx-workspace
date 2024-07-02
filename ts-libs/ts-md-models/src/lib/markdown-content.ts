@@ -1,4 +1,5 @@
 import { MarkdownContentType } from './markdown-content-type';
+import { MarkdownFormatType } from './markdown-format-type';
 import { ParagraphContentType } from './paragraph-content-type';
 import { SectionContentType } from './section-content-type';
 
@@ -48,7 +49,7 @@ export interface MarkdownHorizontalRule extends HasMarkdownContentType {
 
 export interface MarkdownText extends HasMarkdownContentType {
   type: 'text';
-  format?: 'bold' | 'italic' | 'bold-italic' | 'strike-through' | 'line-break';
+  format?: MarkdownFormatType;
   content: string;
 }
 
