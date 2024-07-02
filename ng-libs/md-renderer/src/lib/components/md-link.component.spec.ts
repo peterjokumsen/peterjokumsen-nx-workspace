@@ -111,5 +111,42 @@ describe('MdLinkComponent', () => {
         expect(anchor.getAttribute('aria-label')).toBe('content-value');
       });
     });
+
+    describe('when value type is "link" with multiple contents', () => {
+      beforeEach(() => {
+        component.content = {
+          type: 'link',
+          href: 'href-value',
+          content: [
+            { type: 'text', content: 'text' },
+            { type: 'text', content: 'end' },
+          ],
+        };
+        fixture.detectChanges();
+      });
+
+      it('should set anchor', () => {
+        expect(component.anchor()).toEqual(
+          expect.objectContaining({ href: 'href-value' }),
+        );
+        expect(component.anchor()?.content).toEqual([
+          expect.objectContaining({ type: 'text', content: 'text' }),
+          expect.objectContaining({ type: 'text', content: 'end' }),
+        ]);
+      });
+
+      it('should include aria label', () => {
+        expect(component.anchor()).toEqual(
+          expect.objectContaining({ ariaLabel: 'text end' }),
+        );
+      });
+
+      it('should render anchor tag', () => {
+        const anchor = fixture.nativeElement.querySelector('a');
+        expect(anchor).toBeTruthy();
+        expect(anchor.getAttribute('href')).toBe('href-value');
+        expect(anchor.getAttribute('aria-label')).toBe('text end');
+      });
+    });
   });
 });
