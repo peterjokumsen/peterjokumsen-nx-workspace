@@ -353,7 +353,7 @@ describe('parseMarkdown', () => {
     );
   });
 
-  xdescribe('when reading formatted-text.md', () => {
+  describe('when reading formatted-text.md', () => {
     itShouldBeParsed(
       'formatted-text.md',
       [
