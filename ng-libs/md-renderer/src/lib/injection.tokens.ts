@@ -3,10 +3,11 @@ import { InjectionToken, Type } from '@angular/core';
 
 import { ExpectedContentTypes } from './filter-content-types';
 
-export type MdComponentTypeMap =
-  | Record<ExpectedContentTypes, Type<HasContent<ExpectedContentTypes>>>
-  | { [key: string]: Type<HasContentBase> };
+export type MdComponentTypeMap = Record<
+  ExpectedContentTypes,
+  Type<HasContent<ExpectedContentTypes>>
+>;
 
-export const MD_COMPONENT_TYPE_MAP = new InjectionToken<MdComponentTypeMap>(
-  'MD_COMPONENT_TYPE_MAP',
-);
+export const MD_COMPONENT_TYPE_MAP = new InjectionToken<
+  Partial<MdComponentTypeMap & { fallback: Type<HasContentBase> }>
+>('MD_COMPONENT_TYPE_MAP');
