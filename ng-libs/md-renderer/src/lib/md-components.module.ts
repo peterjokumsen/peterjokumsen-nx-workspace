@@ -1,6 +1,7 @@
 import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from './injection.tokens';
 import {
   MdCodeComponent,
+  MdHorizontalRuleComponent,
   MdImageComponent,
   MdLinkComponent,
   MdListComponent,
@@ -29,6 +30,7 @@ import { MdContentInjectionDirective } from './directives/md-content-injection.d
 
     MdContentInjectionDirective,
     MdCodeComponent,
+    MdHorizontalRuleComponent,
   ],
   exports: [MdContentInjectionDirective, MdWrapperComponent],
 })
