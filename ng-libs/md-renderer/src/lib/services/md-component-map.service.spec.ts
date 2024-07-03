@@ -8,13 +8,16 @@ import {
 } from '../components';
 
 import { ExpectedContentTypes } from '../filter-content-types';
+import { HasContentBase } from '../has-content';
 import { MdComponentMapService } from './md-component-map.service';
 import { TestBed } from '@angular/core/testing';
 import { Type } from '@angular/core';
 
 describe('MdComponentMapService', () => {
   let service: MdComponentMapService;
-  let contentTypeMap: Partial<MdComponentTypeMap>;
+  let contentTypeMap: Partial<
+    MdComponentTypeMap & { fallback: Type<HasContentBase> }
+  >;
 
   beforeEach(() => {
     contentTypeMap = {};
@@ -37,6 +40,15 @@ describe('MdComponentMapService', () => {
       it('should return component from type map', () => {
         contentTypeMap.image = MdParagraphComponent;
         expect(service.getComponent('image')).toBe(MdParagraphComponent);
+      });
+    });
+
+    describe('when type map has "fallback"', () => {
+      it('should return fallback component', () => {
+        contentTypeMap.fallback = MdParagraphComponent;
+        expect(service.getComponent('unknown' as ExpectedContentTypes)).toBe(
+          MdParagraphComponent,
+        );
       });
     });
 
