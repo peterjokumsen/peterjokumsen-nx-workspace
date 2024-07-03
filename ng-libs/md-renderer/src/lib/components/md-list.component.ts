@@ -5,14 +5,15 @@ import {
   inject,
   signal,
 } from '@angular/core';
+import { MarkdownType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { ExpectedContentTypes } from '../filter-content-types';
 import { HasContent } from '../has-content';
-import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 import { filterContentTypes } from '../filter-content-types';
+import { logUnexpectedContent } from '../fns';
 
 @Component({
   selector: 'pj-mdr-md-list',
@@ -33,15 +34,17 @@ import { filterContentTypes } from '../filter-content-types';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdListComponent implements HasContent<'list'> {
-  private _logger = inject(PjLogger, { optional: true });
-  private _mdContent = inject(MdContentService);
-
-  list = signal<WithId<MarkdownType<'list'>>>({
+  private readonly _defaultList: WithId<MarkdownType<'list'>> = {
     type: 'list',
     id: '',
     items: [],
     indent: 0,
-  });
+  };
+
+  private _logger = inject(PjLogger, { optional: true });
+  private _mdContent = inject(MdContentService);
+
+  list = signal<WithId<MarkdownType<'list'>>>(this._defaultList);
   items = computed<WithId<MarkdownType<ExpectedContentTypes>>[]>(() => {
     const list = this.list();
     return filterContentTypes(list.items).map((c) =>
@@ -50,14 +53,13 @@ export class MdListComponent implements HasContent<'list'> {
   });
 
   set content(value: HasContent<'list'>['content']) {
-    if (typeof value === 'string') {
-      this._logger?.to.warn(
-        'MdListComponent received string content, expected MarkdownContent',
-      );
+    let newList = this._defaultList;
+    if (typeof value !== 'string' && mdModelCheck('list', value)) {
+      newList = this._mdContent.addId(value);
     } else {
-      this.list.update(
-        () => this._mdContent.mapContent(value) as WithId<MarkdownType<'list'>>,
-      );
+      logUnexpectedContent('MdListComponent', value, this._logger?.to);
     }
+
+    this.list.update(() => newList);
   }
 }

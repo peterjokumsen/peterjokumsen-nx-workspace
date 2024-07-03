@@ -1,13 +1,29 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
 import { MdUnknownComponent } from './md-unknown.component';
+import { logUnexpectedContent } from '../fns';
+
+jest.mock('../fns');
 
 describe('MdUnknownComponent', () => {
   let component: MdUnknownComponent;
   let fixture: ComponentFixture<MdUnknownComponent>;
+  let logFnSpy: Partial<jest.Mocked<LogFns>>;
 
   beforeEach(async () => {
+    logFnSpy = {
+      warn: jest.fn().mockName('warn'),
+    };
+    const logger: PjLogger = {
+      to: logFnSpy as LogFns,
+    };
+
     await TestBed.configureTestingModule({
+      providers: [
+        // providers
+        { provide: PjLogger, useValue: logger },
+      ],
       declarations: [MdUnknownComponent],
     }).compileComponents();
 
@@ -18,5 +34,22 @@ describe('MdUnknownComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe('onInit', () => {
+    it('should log warning', () => {
+      const logSpy = jest
+        .mocked(logUnexpectedContent)
+        .mockName('logUnexpectedContent');
+      component.content = { type: 'horizontal-rule' };
+
+      component.ngOnInit();
+
+      expect(logSpy).toHaveBeenCalledWith(
+        'MdUnknownComponent',
+        component.content,
+        logFnSpy,
+      );
+    });
   });
 });

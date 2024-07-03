@@ -1,4 +1,5 @@
 export * from './md-code.component';
+export * from './md-horizontal-rule.component';
 export * from './md-image.component';
 export * from './md-link.component';
 export * from './md-list.component';

@@ -7,6 +7,9 @@ import { MdContentInjectionDirective } from '../directives/md-content-injection.
 import { MdContentService } from '../services';
 import { MdLinkComponent } from './md-link.component';
 import { MdWrapperComponent } from './md-wrapper.component';
+import { logUnexpectedContent } from '../fns';
+
+jest.mock('../fns');
 
 describe('MdLinkComponent', () => {
   let component: MdLinkComponent;
@@ -56,25 +59,22 @@ describe('MdLinkComponent', () => {
   });
 
   describe('content', () => {
-    describe('when value is string', () => {
-      it('should log warning', () => {
-        component.content = 'test';
-        expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'Invalid content for MdLinkComponent, received "%s"',
-          'test',
-        );
-      });
-    });
-
     describe('when value type is not "link"', () => {
       it('should log warning', () => {
-        component.content = {
+        const logSpy = jest
+          .mocked(logUnexpectedContent)
+          .mockName('logUnexpectedContent');
+        const newContent = {
           type: 'paragraph',
           content: 'test',
         } as unknown as HasContent<'link'>['content'];
-        expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'Invalid content for MdLinkComponent, received %o',
-          { type: 'paragraph', content: 'test' },
+
+        component.content = newContent;
+
+        expect(logSpy).toHaveBeenCalledWith(
+          'MdLinkComponent',
+          newContent,
+          loggerSpy,
         );
       });
     });

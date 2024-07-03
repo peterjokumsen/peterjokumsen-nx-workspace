@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
-import { HasContent } from '../has-content';
 import { MdImageComponent } from './md-image.component';
+import { logUnexpectedContent } from '../fns';
+
+jest.mock('../fns');
 
 describe('MdImageComponent', () => {
   let component: MdImageComponent;
@@ -36,24 +38,21 @@ describe('MdImageComponent', () => {
   });
 
   describe('content', () => {
-    describe('when using string value', () => {
-      it('should log a warning', () => {
-        component.content = 'string';
-        expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'String content not supported for MdImageComponent, received "%s"',
-          'string',
-        );
-      });
-    });
-
     describe('when using non-image content', () => {
       it('should log a warning', () => {
-        component.content = {
+        const logSpy = jest
+          .mocked(logUnexpectedContent)
+          .mockName('logUnexpectedContent');
+        const newContent = {
           type: 'horizontal-rule',
-        } as unknown as HasContent<'image'>['content'];
-        expect(loggerSpy.warn).toHaveBeenCalledWith(
-          'Invalid content for MdImageComponent, received %o',
-          { type: 'horizontal-rule' },
+        } as unknown as MdImageComponent['content'];
+
+        component.content = newContent;
+
+        expect(logSpy).toHaveBeenCalledWith(
+          'MdImageComponent',
+          newContent,
+          loggerSpy,
         );
       });
     });

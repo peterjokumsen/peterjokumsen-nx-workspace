@@ -7,6 +7,7 @@ import {
 
 import { HasContent } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
+import { logUnexpectedContent } from '../fns';
 import { mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 @Component({
@@ -29,15 +30,12 @@ export class MdTextComponent implements HasContent<'text'> {
 
   set content(value: HasContent<'text'>['content']) {
     let newContent: string | null = null;
-    if (typeof value === 'string') {
+    if (typeof value == 'string') {
       newContent = value;
     } else if (mdModelCheck('text', value)) {
       newContent = value.content;
     } else {
-      this._logger?.to.error(
-        'Invalid content for MdTextComponent, received %o',
-        value,
-      );
+      logUnexpectedContent('MdTextComponent', value, this._logger?.to);
     }
 
     this.textValue.update(() => newContent);

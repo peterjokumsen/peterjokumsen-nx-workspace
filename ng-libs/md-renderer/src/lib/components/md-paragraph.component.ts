@@ -11,6 +11,7 @@ import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
+import { logUnexpectedContent } from '../fns';
 
 @Component({
   selector: 'pj-mdr-md-paragraph',
@@ -31,7 +32,7 @@ export class MdParagraphComponent implements HasContent<ExpectedContentTypes> {
   contents = signal<WithId<MarkdownType<ExpectedContentTypes>>[]>([]);
 
   set content(value: HasContent<ExpectedContentTypes>['content']) {
-    let contents: MarkdownType<ExpectedContentTypes>[];
+    let contents: MarkdownType<ExpectedContentTypes>[] = [];
     if (typeof value === 'string') {
       contents = [{ type: 'text', content: value }];
     } else {
@@ -49,7 +50,7 @@ export class MdParagraphComponent implements HasContent<ExpectedContentTypes> {
           }
           break;
         default:
-          this._logger?.to.warn('Unknown content, object: %o', value);
+          logUnexpectedContent('MdParagraphComponent', value, this._logger?.to);
           break;
       }
     }

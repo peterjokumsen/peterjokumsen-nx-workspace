@@ -7,6 +7,7 @@ import {
 
 import { HasContent } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
+import { logUnexpectedContent } from '../fns';
 
 @Component({
   selector: 'pj-mdr-md-code',
@@ -32,10 +33,7 @@ export class MdCodeComponent implements HasContent<'code'> {
 
   set content(value: HasContent<'code'>['content']) {
     if (typeof value === 'string' || value.type !== 'code') {
-      this._logger?.to.warn(
-        'Invalid content for MdCodeComponent, received %o',
-        value,
-      );
+      logUnexpectedContent('MdCodeComponent', value, this._logger?.to);
 
       this.elementValue.update(() => '');
       return;

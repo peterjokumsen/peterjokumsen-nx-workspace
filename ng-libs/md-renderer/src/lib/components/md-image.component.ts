@@ -8,6 +8,7 @@ import { MarkdownType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
 import { HasContent } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
+import { logUnexpectedContent } from '../fns';
 
 @Component({
   selector: 'pj-mdr-md-image',
@@ -26,18 +27,10 @@ export class MdImageComponent implements HasContent<'image'> {
 
   set content(value: HasContent<'image'>['content']) {
     let newImage: MarkdownType<'image'> | null = null;
-    if (typeof value === 'string') {
-      this._logger?.to.warn(
-        'String content not supported for MdImageComponent, received "%s"',
-        value,
-      );
-    } else if (mdModelCheck('image', value)) {
+    if (typeof value !== 'string' && mdModelCheck('image', value)) {
       newImage = value;
     } else {
-      this._logger?.to.warn(
-        'Invalid content for MdImageComponent, received %o',
-        value,
-      );
+      logUnexpectedContent('MdImageComponent', value, this._logger?.to);
     }
 
     this.imageValue.update(() => newImage);

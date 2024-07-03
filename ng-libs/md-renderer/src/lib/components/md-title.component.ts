@@ -86,7 +86,9 @@ import { WithId } from '../models';
 })
 export class MdTitleComponent {
   title = signal('');
+
   nestLevel = 2;
+
   set section(value: WithId<MarkdownType<'section'>>) {
     this.title.update(() => value.title);
   }

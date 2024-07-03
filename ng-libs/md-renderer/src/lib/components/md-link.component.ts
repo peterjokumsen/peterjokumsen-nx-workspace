@@ -11,6 +11,7 @@ import { HasContent } from '../has-content';
 import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
+import { logUnexpectedContent } from '../fns';
 
 type InnerAnchorTypes = Extract<ExpectedContentTypes, 'image' | 'text'>;
 
@@ -44,12 +45,7 @@ export class MdLinkComponent implements HasContent<'link'> {
 
   set content(value: HasContent<'link'>['content']) {
     let newContent: MappedAnchor | null = null;
-    if (typeof value === 'string') {
-      this._logger?.to.warn(
-        'Invalid content for MdLinkComponent, received "%s"',
-        value,
-      );
-    } else if (mdModelCheck('link', value)) {
+    if (typeof value !== 'string' && mdModelCheck('link', value)) {
       const content = this.getContents(value);
       newContent = {
         type: 'link',
@@ -58,10 +54,7 @@ export class MdLinkComponent implements HasContent<'link'> {
         content,
       };
     } else {
-      this._logger?.to.warn(
-        'Invalid content for MdLinkComponent, received %o',
-        value,
-      );
+      logUnexpectedContent('MdLinkComponent', value, this._logger?.to);
     }
 
     this.anchor.update(() => newContent);
