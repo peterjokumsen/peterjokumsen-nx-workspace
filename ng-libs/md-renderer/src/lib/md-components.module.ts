@@ -6,6 +6,7 @@ import {
   MdLinkComponent,
   MdListComponent,
   MdParagraphComponent,
+  MdSectionComponent,
   MdTextComponent,
   MdTitleComponent,
   MdUnknownComponent,
@@ -19,20 +20,25 @@ import { MdContentInjectionDirective } from './directives/md-content-injection.d
 @NgModule({
   imports: [CommonModule],
   declarations: [
+    MdContentInjectionDirective,
+
+    MdCodeComponent,
+    MdHorizontalRuleComponent,
     MdImageComponent,
     MdLinkComponent,
     MdListComponent,
     MdParagraphComponent,
+    MdSectionComponent,
     MdTextComponent,
     MdTitleComponent,
     MdUnknownComponent,
     MdWrapperComponent,
-
-    MdContentInjectionDirective,
-    MdCodeComponent,
-    MdHorizontalRuleComponent,
   ],
-  exports: [MdContentInjectionDirective, MdWrapperComponent],
+  exports: [
+    MdContentInjectionDirective,
+    MdSectionComponent,
+    MdWrapperComponent,
+  ],
 })
 export class MdComponentsModule {
   static withOverride(

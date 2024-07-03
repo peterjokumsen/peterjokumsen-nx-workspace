@@ -29,12 +29,6 @@ export class MdContentInjectionDirective {
       this.contentToRender,
     );
 
-    if (value.type === 'section') {
-      const titleInstance =
-        this.wrapper.container.createComponent(MdTitleComponent).instance;
-      titleInstance.section = value;
-    }
-
     for (const child of this.getChildContents(value)) {
       const component = this.componentMap.getComponent(child.type);
       const instance =
