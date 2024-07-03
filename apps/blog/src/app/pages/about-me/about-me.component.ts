@@ -25,10 +25,12 @@ export class AboutMeComponent implements OnInit {
   private _logger = inject(PjLogger, { optional: true });
 
   markdown = parseMarkdown(`
-# Who am i?
+# Who am I?
 
 I am a software engineer who loves to build things.
+
 I have been working in the software industry for over 10 years.
+
 I am passionate about learning new technologies and solving problems in interesting ways.
 
 # What is the purpose of this blog?
@@ -42,12 +44,15 @@ The purpose of this blog is:
 # What will you find on this blog?
 
 On this blog, you will find articles on various topics related to software engineering.
+
 I will cover topics such as programming languages, frameworks, tools, best practices, workarounds that I've found and some completely unrelated topics too.
 
 # Where is the repository for this blog?
 
 The repository for this blog is available on GitHub.
+
 ![new image](/assets/images/basic-image.webp)
+
 You can find it at [peterjokumsen/peterjokumsen-nx-workspace](https://github.com/peterjokumsen/peterjokumsen-nx-workspace?tab=readme-ov-file#peterjokumsen-blog).
 `);
 
