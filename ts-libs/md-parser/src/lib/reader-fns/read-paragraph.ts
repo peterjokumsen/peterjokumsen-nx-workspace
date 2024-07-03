@@ -10,9 +10,18 @@ import { readLine } from './read-line';
 export function readParagraph(
   lines: string[],
   start: number,
-): ReadResult<'paragraph'> {
-  const linesToRead = [lines[start]];
+): ReadResult<'paragraph' | 'horizontal-rule'> {
+  const line = lines[start];
+  if (line === '---') {
+    return {
+      result: {
+        type: 'horizontal-rule',
+      },
+      lastLineIndex: start,
+    };
+  }
 
+  const linesToRead = [line];
   let lineIndex = start + 1;
   for (; lineIndex < lines.length; lineIndex++) {
     if (!lines[lineIndex]) break;
