@@ -1,3 +1,4 @@
+import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { readLine } from './read-line';
 import { readParagraph } from './read-paragraph';
 
@@ -21,6 +22,10 @@ describe('readParagraph', () => {
     // Act
     const { result, lastLineIndex } = readParagraph(lines, 1);
 
+    if (result.type !== 'paragraph') {
+      throw new Error(`Expected paragraph, got ${result.type}`);
+    }
+
     expect(readLineSpy).toHaveBeenCalledWith('a bc c d');
     expect(lastLineIndex).toEqual(1);
     expect(result.content).toEqual([{ type: 'text', content: '1234' }]);
@@ -34,6 +39,10 @@ describe('readParagraph', () => {
     // Act
     const { result, lastLineIndex } = readParagraph(lines, start);
 
+    if (result.type !== 'paragraph') {
+      throw new Error(`Expected paragraph, got ${result.type}`);
+    }
+
     expect(readLineSpy).toHaveBeenCalledWith('a');
     expect(readLineSpy).toHaveBeenCalledWith('b  ');
     expect(readLineSpy).toHaveBeenCalledWith('c');
@@ -43,5 +52,20 @@ describe('readParagraph', () => {
       { type: 'text', content: 'b  ' },
       { type: 'text', content: 'c' },
     ]);
+  });
+
+  describe('when line provided is "---"', () => {
+    it('should return horizontal-rule', () => {
+      const lines = ['', '---', ''];
+
+      // Act
+      const { result, lastLineIndex } = readParagraph(lines, 1);
+
+      const expected: MarkdownType<'horizontal-rule'> = {
+        type: 'horizontal-rule',
+      };
+      expect(lastLineIndex).toEqual(1);
+      expect(result).toEqual(expected);
+    });
   });
 });
