@@ -31,6 +31,8 @@ I am a software engineer who loves to build things.
 
 I have been working in the software industry for over 10 years.
 
+---
+
 I am passionate about learning new technologies and solving problems in interesting ways.
 
 # What is the purpose of this blog?
