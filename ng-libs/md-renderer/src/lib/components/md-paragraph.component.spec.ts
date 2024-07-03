@@ -1,16 +1,28 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 import { MarkdownContentType, MarkdownType } from '@peterjokumsen/ts-md-models';
 
 import { MdContentService } from '../services';
 import { MdParagraphComponent } from './md-paragraph.component';
 import { WithId } from '../models';
+import { logUnexpectedContent } from '../fns';
+
+jest.mock('../fns');
 
 describe('MdParagraphComponent', () => {
   let component: MdParagraphComponent;
   let fixture: ComponentFixture<MdParagraphComponent>;
+  let logFnSpy: Partial<jest.Mocked<LogFns>>;
   let mdContentSpy: jest.Mocked<Partial<MdContentService>>;
 
   beforeEach(async () => {
+    logFnSpy = {
+      warn: jest.fn().mockName('warn'),
+    };
+    const logger: PjLogger = {
+      to: logFnSpy as LogFns,
+    };
+
     mdContentSpy = {
       mapContent: jest
         .fn()
@@ -24,6 +36,7 @@ describe('MdParagraphComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         // providers
+        { provide: PjLogger, useValue: logger },
         { provide: MdContentService, useValue: mdContentSpy },
       ],
       declarations: [MdParagraphComponent],
@@ -38,7 +51,26 @@ describe('MdParagraphComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('set content', () => {
+  describe('content', () => {
+    describe('when value type is not "image"/"link"/"text"/"paragraph"', () => {
+      it('should log a warning', () => {
+        const logSpy = jest
+          .mocked(logUnexpectedContent)
+          .mockName('logUnexpectedContent');
+        const newContent = {
+          type: 'list',
+        } as unknown as WithId<MarkdownType<'paragraph'>>;
+
+        component.content = newContent;
+
+        expect(logSpy).toHaveBeenCalledWith(
+          'MdParagraphComponent',
+          newContent,
+          logFnSpy,
+        );
+      });
+    });
+
     describe('when value is a string', () => {
       it('should set contents to text content', () => {
         component.content = 'test';

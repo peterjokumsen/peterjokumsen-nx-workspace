@@ -2,6 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
 import { MdCodeComponent } from './md-code.component';
+import { logUnexpectedContent } from '../fns';
+
+jest.mock('../fns');
 
 describe('MdCodeComponent', () => {
   let component: MdCodeComponent;
@@ -38,13 +41,19 @@ describe('MdCodeComponent', () => {
 
     describe('when content is not a code element', () => {
       it('should reset element value', () => {
+        const logFnSpy = jest
+          .mocked(logUnexpectedContent)
+          .mockName('logUnexpectedContent');
         component.elementValue.update(() => 'value');
+
         component.content = 'value';
-        expect(component.elementValue()).toEqual('');
-        expect(logSpy.warn).toHaveBeenCalledWith(
-          'Invalid content for MdCodeComponent, received %o',
+
+        expect(logFnSpy).toHaveBeenCalledWith(
+          'MdCodeComponent',
           'value',
+          logSpy,
         );
+        expect(component.elementValue()).toEqual('');
       });
     });
   });

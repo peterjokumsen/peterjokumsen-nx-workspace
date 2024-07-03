@@ -2,6 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
 import { MdTextComponent } from './md-text.component';
+import { logUnexpectedContent } from '../fns';
+
+jest.mock('../fns');
 
 describe('MdTextComponent', () => {
   let component: MdTextComponent;
@@ -54,12 +57,22 @@ describe('MdTextComponent', () => {
       });
     });
 
-    describe('when value is different type', () => {
+    describe('when value is not a string or "text"', () => {
       it('should log warning', () => {
-        component.content = { type: 'paragraph' as never, content: 'test' };
-        expect(loggerSpy.error).toHaveBeenCalledWith(
-          'Invalid content for MdTextComponent, received %o',
-          { type: 'paragraph', content: 'test' },
+        const logSpy = jest
+          .mocked(logUnexpectedContent)
+          .mockName('logUnexpectedContent');
+        const newContent = {
+          type: 'paragraph' as never,
+          content: 'test',
+        } as MdTextComponent['content'];
+
+        component.content = newContent;
+
+        expect(logSpy).toHaveBeenCalledWith(
+          'MdTextComponent',
+          newContent,
+          loggerSpy,
         );
       });
     });

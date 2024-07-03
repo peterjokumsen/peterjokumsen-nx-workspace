@@ -1,19 +1,19 @@
 import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from './injection.tokens';
 import {
+  MdCodeComponent,
   MdImageComponent,
   MdLinkComponent,
+  MdListComponent,
   MdParagraphComponent,
   MdTextComponent,
+  MdTitleComponent,
   MdUnknownComponent,
   MdWrapperComponent,
 } from './components';
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { MdCodeComponent } from './components/md-code.component';
 import { MdContentInjectionDirective } from './directives/md-content-injection.directive';
-import { MdListComponent } from './components/md-list.component';
-import { MdTitleComponent } from './components/md-title.component';
 
 @NgModule({
   imports: [CommonModule],

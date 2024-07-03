@@ -8,11 +8,12 @@ import {
 
 import { HasContentBase } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
+import { logUnexpectedContent } from '../fns';
 
 @Component({
   selector: 'pj-mdr-md-unknown',
   template: `
-    <div class="unknown">
+    <div class="md-unknown">
       <p>Unknown content type: {{ contentType }}</p>
       <p>See console for details...</p>
     </div>
@@ -22,7 +23,7 @@ import { PjLogger } from '@peterjokumsen/ng-services';
       white-space: pre-wrap;
     }
 
-    .unknown {
+    .md-unknown {
       background-color: #ff0000;
       color: #ffffff;
       padding: 1rem;
@@ -51,6 +52,6 @@ export class MdUnknownComponent implements HasContentBase, OnInit {
   }
 
   ngOnInit() {
-    this._logger?.to.warn('Unknown content type: %o', this.content);
+    logUnexpectedContent('MdUnknownComponent', this.content, this._logger?.to);
   }
 }
