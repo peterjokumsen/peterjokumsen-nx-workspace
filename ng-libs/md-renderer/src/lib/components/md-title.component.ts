@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  signal,
+} from '@angular/core';
 
 import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { WithId } from '../models';
@@ -89,6 +94,7 @@ export class MdTitleComponent {
 
   nestLevel = 2;
 
+  @Input()
   set section(value: WithId<MarkdownType<'section'>>) {
     this.title.update(() => value.title);
   }

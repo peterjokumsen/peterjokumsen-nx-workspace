@@ -15,9 +15,7 @@
       <div #sectionAnchor id="{{ section.id }}"></div>
       <div class="section-container">
         @defer {
-          <pj-mdr-md-wrapper
-            [pjMdrMdContentInjection]="section"
-          ></pj-mdr-md-wrapper>
+          <pj-mdr-md-section [content]="section"></pj-mdr-md-section>
         } @placeholder {
           <div class="placeholder"></div>
         }

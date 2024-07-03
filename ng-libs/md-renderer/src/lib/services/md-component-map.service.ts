@@ -8,6 +8,7 @@ import {
   MdLinkComponent,
   MdListComponent,
   MdParagraphComponent,
+  MdSectionComponent,
   MdTextComponent,
   MdUnknownComponent,
 } from '../components';
@@ -24,7 +25,7 @@ export class MdComponentMapService {
     link: MdLinkComponent,
     list: MdListComponent,
     paragraph: MdParagraphComponent,
-    section: MdParagraphComponent, // TODO: need to create MdSectionComponent (cater for sub-sections)
+    section: MdSectionComponent,
     text: MdTextComponent,
   };
 
