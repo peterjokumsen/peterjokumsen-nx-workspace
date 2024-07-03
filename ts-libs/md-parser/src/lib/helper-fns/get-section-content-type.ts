@@ -14,7 +14,7 @@ export function getSectionContentType(
     return 'section';
   }
 
-  if (trimmedLine.startsWith('-')) {
+  if (trimmedLine.startsWith('- ')) {
     return 'list';
   }
 

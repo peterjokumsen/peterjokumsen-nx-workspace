@@ -16,6 +16,20 @@ describe('getSectionContentType', () => {
       },
     ],
     [
+      'line has "- "',
+      {
+        line: '  - List item',
+        expectedType: 'list',
+      },
+    ],
+    [
+      'line has "---"',
+      {
+        line: '---',
+        expectedType: 'paragraph',
+      },
+    ],
+    [
       'line starts without known markdown syntax',
       {
         line: 'This is a paragraph',

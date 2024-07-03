@@ -501,4 +501,23 @@ describe('parseMarkdown', () => {
       ],
     );
   });
+
+  describe('when reading horizontal-line.md', () => {
+    itShouldBeParsed('horizontal-line.md', [
+      'Horizontal line',
+      [
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', content: 'Paragraph 1' }],
+        },
+        {
+          type: 'horizontal-rule',
+        },
+        {
+          type: 'paragraph',
+          content: [{ type: 'text', content: 'Paragraph 2' }],
+        },
+      ],
+    ]);
+  });
 });
