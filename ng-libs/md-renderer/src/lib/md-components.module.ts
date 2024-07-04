@@ -15,10 +15,11 @@ import {
 import { ModuleWithProviders, NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
+import { MatIcon } from '@angular/material/icon';
 import { MdContentInjectionDirective } from './directives/md-content-injection.directive';
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, MatIcon],
   declarations: [
     MdContentInjectionDirective,
 
