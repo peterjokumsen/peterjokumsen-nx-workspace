@@ -19,6 +19,7 @@ type MdAnchorContent = WithId<MarkdownType<'link' | InnerAnchorTypes>>;
 type MappedAnchor = Omit<MarkdownType<'link'>, 'content'> & {
   ariaLabel: string;
   content: MdAnchorContent[];
+  target: '_blank' | '_self';
 };
 
 @Component({
@@ -31,12 +32,33 @@ type MappedAnchor = Omit<MarkdownType<'link'>, 'content'> & {
             [pjMdrMdContentInjection]="content"
           ></pj-mdr-md-wrapper>
         }
+
+        @if (anchor()?.target === '_blank') {
+          <mat-icon aria-hidden="false" aria-label="Open in new tab">
+            open_in_new
+          </mat-icon>
+        }
       </a>
     }
   `,
   styles: `
     a {
       text-decoration: underline;
+
+      &:hover mat-icon {
+        opacity: 1;
+      }
+    }
+
+    mat-icon {
+      transition: opacity 0.2s;
+      font-size: 1em;
+      width: 1em;
+      height: 1em;
+
+      @media (min-width: 600px) {
+        opacity: 0.6;
+      }
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -56,6 +78,7 @@ export class MdLinkComponent implements HasContent<'link'> {
         ariaLabel: this.createAriaLabel(content),
         href: value.href,
         content,
+        target: value.href.startsWith('http') ? '_blank' : '_self',
       };
     } else {
       logUnexpectedContent('MdLinkComponent', value, this._logger?.to);
@@ -108,5 +131,9 @@ export class MdLinkComponent implements HasContent<'link'> {
         }
       })
       .join(' ');
+  }
+
+  onMouseOver($event: MouseEvent) {
+    this._logger?.to.log('Mouse over event %o', $event);
   }
 }

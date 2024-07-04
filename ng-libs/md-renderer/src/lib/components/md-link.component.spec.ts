@@ -3,6 +3,7 @@ import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 import { MockComponent, MockDirective } from 'ng-mocks';
 
 import { HasContent } from '../has-content';
+import { MatIcon } from '@angular/material/icon';
 import { MdContentInjectionDirective } from '../directives/md-content-injection.directive';
 import { MdContentService } from '../services';
 import { MdLinkComponent } from './md-link.component';
@@ -44,6 +45,7 @@ describe('MdLinkComponent', () => {
       ],
       declarations: [
         MockComponent(MdWrapperComponent),
+        MockComponent(MatIcon),
         MockDirective(MdContentInjectionDirective),
         MdLinkComponent,
       ],
@@ -75,6 +77,44 @@ describe('MdLinkComponent', () => {
           'MdLinkComponent',
           newContent,
           loggerSpy,
+        );
+      });
+    });
+
+    describe('when "href" starts with "http"', () => {
+      beforeEach(() => {
+        component.content = {
+          type: 'link',
+          href: 'http://example.com',
+          content: 'content',
+        };
+        fixture.detectChanges();
+      });
+
+      it('should set target as "_blank"', () => {
+        expect(component.anchor()).toEqual(
+          expect.objectContaining({ target: '_blank' }),
+        );
+      });
+
+      it('should render icon for external link', () => {
+        const icon = fixture.nativeElement.querySelector('mat-icon');
+        expect(icon).toBeTruthy();
+        expect(icon.textContent).toContain('open_in_new');
+      });
+    });
+
+    describe('when "href" starts with "/"', () => {
+      it('should set target as "_self"', () => {
+        component.content = {
+          type: 'link',
+          href: '/example',
+          content: 'content',
+        };
+        fixture.detectChanges();
+
+        expect(component.anchor()).toEqual(
+          expect.objectContaining({ target: '_self' }),
         );
       });
     });
