@@ -3,10 +3,10 @@ import {
   ExpectedContentTypes,
   filterContentTypes,
 } from '../filter-content-types';
-import { MdTitleComponent, MdWrapperComponent } from '../components';
 
 import { MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService } from '../services';
+import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 
@@ -24,10 +24,7 @@ export class MdContentInjectionDirective {
   @Input('pjMdrMdContentInjection') set contentToRender(
     value: WithId<MarkdownType<ExpectedContentTypes>>,
   ) {
-    this._logger?.to.log(
-      'MdContentInjection initialized',
-      this.contentToRender,
-    );
+    this._logger?.to.log('MdContentInjection initialized, %o', value);
 
     for (const child of this.getChildContents(value)) {
       const component = this.componentMap.getComponent(child.type);
