@@ -44,16 +44,27 @@ describe('MdTextComponent', () => {
     describe('when value is MarkdownContent with "text"', () => {
       beforeEach(() => {
         component.content = { type: 'text', content: 'test' };
+        fixture.detectChanges();
       });
 
       it('should set textValue to content', () => {
         expect(component.textValue()).toBe('test');
       });
 
-      it('should render textValue in template', () => {
-        fixture.detectChanges();
-        const p = fixture.nativeElement;
-        expect(p.textContent).toContain('test');
+      it('should contain content', () => {
+        expect(fixture.nativeElement.textContent).toContain('test');
+      });
+
+      it('should not have leading/trailing whitespace', () => {
+        expect(fixture.nativeElement.textContent).not.toMatch(/^\s|\s$/);
+      });
+
+      describe('when content has leading/trailing whitespace', () => {
+        it('should include leading/trailing whitespace', () => {
+          component.content = { type: 'text', content: '  test  ' };
+          fixture.detectChanges();
+          expect(fixture.nativeElement.textContent).toContain('  test  ');
+        });
       });
     });
 
