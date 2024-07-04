@@ -14,7 +14,7 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
   selector: 'pj-mdr-md-text',
   template: `
     @if (textValue()) {
-      {{ textValue() }}
+      <ng-container>{{ textValue() }}</ng-container>
     }
   `,
   styles: `
