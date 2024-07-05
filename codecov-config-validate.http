@@ -1,0 +1,6 @@
+### POST request to validate codecov configuration
+POST https://api.codecov.io/validate
+
+< .codecov.yml
+
+###
