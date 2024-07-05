@@ -80,6 +80,7 @@ export class HeaderComponent {
     const headerHeight = this.primaryHeader?.nativeElement.clientHeight ?? 0;
     const pastHeader = windowScrollY > documentHeight + headerHeight;
     if (this.windowPastHeader() !== pastHeader) {
+      this._logger?.to.debug('Header is past header:', pastHeader);
       this.windowPastHeader.update(() => pastHeader);
     }
   }
