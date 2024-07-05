@@ -132,8 +132,4 @@ export class MdLinkComponent implements HasContent<'link'> {
       })
       .join(' ');
   }
-
-  onMouseOver($event: MouseEvent) {
-    this._logger?.to.log('Mouse over event %o', $event);
-  }
 }
