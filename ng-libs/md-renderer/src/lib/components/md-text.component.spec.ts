@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
+import { By } from '@angular/platform-browser';
+import { MarkdownFormatType } from '@peterjokumsen/ts-md-models';
 import { MdTextComponent } from './md-text.component';
 import { logUnexpectedContent } from '../fns';
 
@@ -66,6 +68,44 @@ describe('MdTextComponent', () => {
           expect(fixture.nativeElement.textContent).toContain('  test  ');
         });
       });
+
+      const formats: Array<MarkdownFormatType | undefined> = [
+        'italic',
+        'bold',
+        'bold-italic',
+        'strike-through',
+        'line-break',
+        undefined,
+      ];
+      describe.each(formats)(
+        'when content using %s for emphasis',
+        (emphasis) => {
+          it('should render emphasis', () => {
+            component.content = {
+              type: 'text',
+              format: emphasis,
+              content: 'formatted content',
+            };
+            fixture.detectChanges();
+            let foundElement = fixture.debugElement.query(
+              By.css(`.${emphasis}`),
+            );
+            if (!emphasis) {
+              foundElement = fixture.debugElement.query(By.css('span'));
+            }
+
+            if (!foundElement) {
+              throw {
+                type: 'error',
+                message: `Could not find element using class ${emphasis}`,
+              };
+            }
+            expect(foundElement.nativeElement.textContent).toBe(
+              'formatted content',
+            );
+          });
+        },
+      );
     });
 
     describe('when value is not a string or "text"', () => {
