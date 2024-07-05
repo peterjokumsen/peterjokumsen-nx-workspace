@@ -8,6 +8,7 @@ dist
 tmp
 /out-tsc
 .nx-cache
+*.sarif.json
 
 # dependencies
 node_modules
