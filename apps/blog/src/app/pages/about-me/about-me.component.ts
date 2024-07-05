@@ -27,13 +27,17 @@ export class AboutMeComponent implements OnInit {
   markdown = parseMarkdown(`
 # Who am I?
 
-I am a software engineer who loves to build things.
+I am a software engineer who **loves** to build things.
 
-I have been working in the software industry for over 10 years.
+I have been working in the software industry for over *10* years.
+
+I have been dabbling with software development for _even longer_.
+
+Starting with ~~deleting~~ \`Windows 3.1\` files from my father's computer when I was 4/6 years old.
 
 ---
 
-I am passionate about learning new technologies and solving problems in interesting ways.
+I am passionate about learning new technologies and solving problems in ***interesting ways***.
 
 # What is the purpose of this blog?
 
