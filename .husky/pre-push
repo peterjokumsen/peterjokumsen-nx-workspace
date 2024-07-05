@@ -8,18 +8,10 @@ GREEN_BACKGROUND='\033[42m'
 NC='\033[0m' # No Color
 
 echo -e "${BLUE}Running tests of affected projects..."
-if npm run test:affected; then
-  echo -e "${NC}${GREEN_BACKGROUND}All tests passed.${NC}"
+if npm run pre-push:check; then
+  echo -e "${NC}${GREEN_BACKGROUND}pre-push:check successful!${NC}"
 else
-  echo -e "${NC}${RED_BACKGROUND}Tests failed.${NC}"
-  exit 1
-fi
-
-echo -e "${BLUE}Building affected projects..."
-if npm run build:affected; then
-  echo -e "${NC}${GREEN_BACKGROUND}Successfully built projects.${NC}"
-else
-  echo -e "${NC}${RED_BACKGROUND}Build failed.${NC}"
+  echo -e "${NC}${RED_BACKGROUND}pre-push:check failed!${NC}"
   exit 1
 fi
 
