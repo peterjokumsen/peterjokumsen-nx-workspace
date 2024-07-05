@@ -12,6 +12,7 @@ coverage:
     patch:
       default:
         target: 60%
+        if_ci_failed: ignore
 
 component_management:
   default_rules: # default rules that will be inherited by all components
@@ -22,6 +23,7 @@ component_management:
           - '!main'
       - type: patch
         target: 60%
+        if_ci_failed: ignore
   individual_components:
     - component_id: module_md_parser # this is an identifier that should not be changed
       name: md-parser # this is a display name, and can be changed freely
