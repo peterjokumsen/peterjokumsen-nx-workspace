@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { FullPageLoaderComponent } from './full-page-loader.component';
+import { FullPageLoaderComponent } from './';
 import { MockComponent } from 'ng-mocks';
 
 describe('FullPageLoaderComponent', () => {
