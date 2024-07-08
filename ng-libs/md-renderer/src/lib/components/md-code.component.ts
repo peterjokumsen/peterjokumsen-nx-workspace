@@ -18,10 +18,18 @@ import { logUnexpectedContent } from '../fns';
   `,
   styles: `
     :host {
-      padding: 5px;
+      padding: 2px 5px;
       border-radius: 5px;
       font-family: monospace, monospace;
       border: 1px solid;
+      display: inline-flex;
+      align-items: center;
+      position: relative;
+      top: -2px;
+    }
+
+    .md-code {
+      font-size: 0.9rem;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
