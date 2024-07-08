@@ -106,6 +106,10 @@
     }
   },
   "release": {
+    "git": {
+      "commitArgs": "--no-verify",
+      "commitMessage": "chore(release): release {version}"
+    },
     "projects": [
       "md-parser",
       "md-renderer",
