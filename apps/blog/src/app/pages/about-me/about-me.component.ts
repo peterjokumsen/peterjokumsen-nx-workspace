@@ -33,7 +33,7 @@ I have been working in the software industry for over *10* years.
 
 I have been dabbling with software development for _even longer_.
 
-Starting with ~~deleting~~ \`Windows 3.1\` files from my father's computer when I was 4/6 years old.
+Starting with deleting \`Windows 3.1\` files from my father's computer when I was 4/6 years old.
 
 ---
 
