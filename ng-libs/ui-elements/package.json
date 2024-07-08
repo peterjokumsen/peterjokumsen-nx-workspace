@@ -1,6 +1,6 @@
 {
   "name": "@peterjokumsen/ui-elements",
-  "version": "0.0.1",
+  "version": "2.0.0",
   "peerDependencies": {
     "@angular/animations": "^18.0.3",
     "@angular/common": "^18.0.3",
