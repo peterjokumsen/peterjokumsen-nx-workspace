@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  OnInit,
   ViewChild,
   inject,
   input,
@@ -61,7 +62,7 @@ import { faCode } from '@fortawesome/free-solid-svg-icons';
     ]),
   ],
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   private _logger = inject(PjLogger, { optional: true });
   private _browserTools = inject(PjBrowserTools, { optional: true });
 
@@ -73,11 +74,14 @@ export class HeaderComponent {
 
   @ViewChild('primaryHeader', { static: true }) primaryHeader?: ElementRef;
 
+  ngOnInit() {
+    this._logger?.to.log('Header view container');
+  }
+
   onScroll() {
     const windowScrollY = this._browserTools?.window?.scrollY ?? 0;
-    const documentHeight =
-      this._browserTools?.window?.document?.documentElement.clientHeight ?? 0;
     const headerHeight = this.primaryHeader?.nativeElement.clientHeight ?? 0;
+    const documentHeight = 0;
     const pastHeader = windowScrollY > documentHeight + headerHeight;
     if (this.windowPastHeader() !== pastHeader) {
       this._logger?.to.debug('Header is past header:', pastHeader);
