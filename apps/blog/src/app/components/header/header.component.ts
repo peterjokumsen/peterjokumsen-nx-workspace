@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  OnInit,
   ViewChild,
   inject,
   input,
@@ -62,7 +61,7 @@ import { faCode } from '@fortawesome/free-solid-svg-icons';
     ]),
   ],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
   private _logger = inject(PjLogger, { optional: true });
   private _browserTools = inject(PjBrowserTools, { optional: true });
 
@@ -73,10 +72,6 @@ export class HeaderComponent implements OnInit {
   navElements = input<PjUiRouterNavigationElement[]>([]);
 
   @ViewChild('primaryHeader', { static: true }) primaryHeader?: ElementRef;
-
-  ngOnInit() {
-    this._logger?.to.log('Header view container');
-  }
 
   onScroll() {
     const windowScrollY = this._browserTools?.window?.scrollY ?? 0;
