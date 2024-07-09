@@ -1,9 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  HostListener,
+  computed,
+  inject,
   input,
   output,
+  signal,
 } from '@angular/core';
+import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 import {
   animate,
   animateChild,
@@ -63,7 +68,21 @@ import { WithId } from '../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableOfContentsComponent {
+  private _logger = inject(PjLogger, { optional: true });
+  private _browserTools = inject(PjBrowserTools, { optional: true });
+  private _scrollPos = signal(this._browserTools?.window?.scrollY ?? 0);
+
+  showBackToTop = computed(() => {
+    const inView = this.inViewSectionId();
+    return this._scrollPos() > 200 && inView !== '';
+  });
   sections = input<WithId<MarkdownSection>[]>([]);
   inViewSectionId = input<string>();
   sectionClick = output<string>();
+
+  @HostListener('document:scroll') onScroll() {
+    const scrollPos = this._browserTools?.window?.scrollY;
+    if (!scrollPos) return;
+    this._scrollPos.update(() => scrollPos);
+  }
 }
