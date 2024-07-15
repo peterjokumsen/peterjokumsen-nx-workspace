@@ -15,16 +15,21 @@ import {
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MarkdownAst, MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService, MdContentService } from '../services';
+import { MobileTocComponent, TableOfContentsComponent } from '../toc';
 
 import { MdComponentsModule } from '../md-components.module';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { TableOfContentsComponent } from '../toc/table-of-contents.component';
 import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-md-renderer',
   standalone: true,
-  imports: [CommonModule, TableOfContentsComponent, MdComponentsModule],
+  imports: [
+    CommonModule,
+    TableOfContentsComponent,
+    MobileTocComponent,
+    MdComponentsModule,
+  ],
   providers: [MdContentService, MdComponentMapService],
   templateUrl: './md-renderer.component.html',
   styleUrl: './md-renderer.component.scss',
