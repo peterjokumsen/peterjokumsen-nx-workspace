@@ -1,5 +1,15 @@
 $mobile: 768px;
 
+.mobile-navigation {
+  display: block;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+
+  @media (min-width: $mobile) {
+    display: none;
+  }
+}
 .markdown-document {
   display: flex;
   flex-direction: column;
@@ -45,7 +55,7 @@ $mobile: 768px;
   }
 
   & .markdown-navigation {
-    // border: 1px solid pink;
+    display: none;
 
     @media (min-width: $mobile) {
       display: block;
