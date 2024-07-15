@@ -24,8 +24,6 @@ import { logUnexpectedContent } from '../fns';
       border: 1px solid;
       display: inline-flex;
       align-items: center;
-      position: relative;
-      top: -2px;
     }
 
     .md-code {
