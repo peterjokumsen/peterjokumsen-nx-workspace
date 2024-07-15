@@ -15,6 +15,7 @@ export interface MarkdownCode extends HasMarkdownContentType {
 export interface MarkdownCodeBlock extends HasMarkdownContentType {
   type: 'code-block';
   language?: unknown; // TODO: Add language type(s)
+  indent?: number;
   lines: string[];
 }
 
