@@ -23,6 +23,13 @@ describe('getSectionContentType', () => {
       },
     ],
     [
+      'line has "  ```"',
+      {
+        line: '  ```',
+        expectedType: 'code-block',
+      },
+    ],
+    [
       'line has "---"',
       {
         line: '---',

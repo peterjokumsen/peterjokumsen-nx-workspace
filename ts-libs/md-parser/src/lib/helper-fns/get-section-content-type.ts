@@ -8,7 +8,10 @@ import { SectionContentType } from '@peterjokumsen/ts-md-models';
  */
 export function getSectionContentType(
   line: string,
-): Extract<SectionContentType, 'section' | 'list' | 'paragraph'> {
+): Extract<
+  SectionContentType,
+  'section' | 'code-block' | 'list' | 'paragraph'
+> {
   const trimmedLine = line.trimStart();
   if (trimmedLine.startsWith('#')) {
     return 'section';
@@ -16,6 +19,10 @@ export function getSectionContentType(
 
   if (trimmedLine.startsWith('- ')) {
     return 'list';
+  }
+
+  if (trimmedLine.startsWith('```')) {
+    return 'code-block';
   }
 
   return 'paragraph';
