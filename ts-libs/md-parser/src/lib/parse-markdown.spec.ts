@@ -520,4 +520,68 @@ describe('parseMarkdown', () => {
       ],
     ]);
   });
+
+  describe('when reading code-block.md', () => {
+    itShouldBeParsed(
+      'code-block.md',
+      [
+        'CSharp',
+        [
+          {
+            type: 'code-block',
+            language: 'csharp',
+            indent: 0,
+            lines: [
+              'public class Program',
+              '{',
+              '    public static void Main()',
+              '    {',
+              '        Console.WriteLine("Hello, World!");',
+              '    }',
+              '}',
+            ],
+          },
+        ],
+      ],
+      [
+        'TypeScript',
+        [
+          {
+            type: 'code-block',
+            language: 'typescript',
+            indent: 0,
+            lines: [
+              'class Program {',
+              '  static Main() {',
+              "    console.log('Hello, World!');",
+              '  }',
+              '}',
+            ],
+          },
+        ],
+      ],
+      [
+        'Shell',
+        [
+          {
+            type: 'code-block',
+            language: 'shell',
+            indent: 0,
+            lines: ['git log --oneline --first-parent'],
+          },
+        ],
+      ],
+      [
+        'No lang',
+        [
+          {
+            type: 'code-block',
+            language: '',
+            indent: 0,
+            lines: ['echo "Hello, World!"'],
+          },
+        ],
+      ],
+    );
+  });
 });

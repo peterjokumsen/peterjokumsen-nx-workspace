@@ -5,6 +5,7 @@ import {
 import { getHeaderLevel, getSectionContentType } from '../helper-fns';
 
 import { ReadResult } from '../_models';
+import { readCodeBlock } from './read-code-block';
 import { readList } from './read-list';
 import { readParagraph } from './read-paragraph';
 
@@ -60,6 +61,12 @@ export function readSection(
       }
       case 'paragraph': {
         const { result, lastLineIndex } = readParagraph(lines, i);
+        section.contents.push(result);
+        i = lastLineIndex;
+        break;
+      }
+      case 'code-block': {
+        const { result, lastLineIndex } = readCodeBlock(lines, i);
         section.contents.push(result);
         i = lastLineIndex;
         break;
