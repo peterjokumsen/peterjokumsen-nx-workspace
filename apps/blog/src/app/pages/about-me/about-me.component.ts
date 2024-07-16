@@ -60,6 +60,11 @@ The repository for this blog is available on GitHub.
 ![new image](/assets/images/basic-image.webp)
 
 You can find it at [peterjokumsen/peterjokumsen-nx-workspace](https://github.com/peterjokumsen/peterjokumsen-nx-workspace?tab=readme-ov-file#peterjokumsen-blog).
+
+\`\`\`shell
+# Clone the repository
+git clone https://github.com/peterjokumsen/peterjokumsen-nx-workspace.git
+\`\`\`
 `);
 
   ngOnInit(): void {
