@@ -13,21 +13,14 @@ import { logUnexpectedContent } from '../fns';
   selector: 'pj-mdr-md-code',
   template: `
     @if (elementValue()) {
-      <span class="md-code">{{ elementValue() }}</span>
+      <code class="primary-colors">{{ elementValue() }}</code>
     }
   `,
   styles: `
-    :host {
-      padding: 2px 5px;
-      border-radius: 5px;
-      font-family: monospace, monospace;
-      border: 1px solid;
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .md-code {
-      font-size: 0.9rem;
+    code {
+      display: inline-block;
+      padding: 1px 4px;
+      border-radius: 4px;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
