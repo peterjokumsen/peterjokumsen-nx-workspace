@@ -2,17 +2,19 @@ import { MarkdownContentType, MarkdownType } from '@peterjokumsen/ts-md-models';
 
 export type ExpectedContentTypes = Extract<
   MarkdownContentType,
-  | 'section'
-  | 'paragraph'
-  | 'link'
-  | 'text'
-  | 'image'
-  | 'list'
   | 'code'
+  | 'code-block'
   | 'horizontal-rule'
+  | 'image'
+  | 'link'
+  | 'list'
+  | 'paragraph'
+  | 'section'
+  | 'text'
 >;
 
 const allowed: Required<Record<ExpectedContentTypes, object>> = {
+  'code-block': {},
   'horizontal-rule': {},
   code: {},
   image: {},
