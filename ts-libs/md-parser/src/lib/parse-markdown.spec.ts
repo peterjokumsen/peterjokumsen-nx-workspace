@@ -54,13 +54,13 @@ describe('parseMarkdown', () => {
       );
 
       if (!markdown) {
-        fail(`Could not read file ${fileName} for test`);
+        throw new Error(`Could not read file '${fileName}' for test`);
       }
 
       const result = parseMarkdown(markdown);
       sections = result.sections;
       if (sections.length !== expectations.length) {
-        fail(
+        throw new Error(
           `Expected ${expectations.length} sections, but got ${sections.length}`,
         );
       }

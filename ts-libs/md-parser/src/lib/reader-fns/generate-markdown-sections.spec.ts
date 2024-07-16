@@ -46,7 +46,7 @@ describe('readMarkdownSection', () => {
       }
 
       if (!generator.next().done) {
-        fail('Generator did not finish');
+        throw new Error('Generator did not finish');
       }
     });
 
@@ -124,7 +124,7 @@ describe('readMarkdownSection', () => {
         content: [{ type: 'text', content: 'Some content' }],
       });
       if (!generator.next().done) {
-        fail('Generator did not finish');
+        throw new Error('Generator did not finish');
       }
     });
   });
