@@ -2,7 +2,7 @@
 
 @import './declare-color-classes';
 @import './declare-block-classes';
-@import './set-variables';
+@import './set-root-variables';
 
 @function get-palette($theme, $color) {
   @return map-get(map-get($theme, color), $color);
@@ -89,7 +89,7 @@
   @include mat.all-component-colors($theme);
 
   :root {
-    @include set-variables($colors);
+    @include set-root-variables($colors);
   }
 
   @include declare-color-classes($colors);
