@@ -7,10 +7,36 @@
     ".vscode",
     "megalinter",
     "package-lock.json",
-    "report"
+    "report",
+    ".gitattributes",
+    ".gitignore",
+    ".jscpd.json",
+    ".prettierrc"
   ],
   "language": "en",
   "noConfigSearch": true,
-  "words": ["megalinter", "oxsecurity"],
+  "words": [
+    "appsettings",
+    "azurestaticapps",
+    "apikey",
+    "APPINSIGHTS",
+    "Bluefield",
+    "Buildable",
+    "crawlable",
+    "devcontainers",
+    "endgroup",
+    "INSTRUMENTATIONKEY",
+    "lighthouseci",
+    "megalinter",
+    "marocchino",
+    "nrwl",
+    "oxsecurity",
+    "peterjokumsen",
+    "sarif",
+    "stefanzweifel",
+    "treosh",
+    "Jokumsen",
+    "westeurope"
+  ],
   "version": "0.2"
 }
