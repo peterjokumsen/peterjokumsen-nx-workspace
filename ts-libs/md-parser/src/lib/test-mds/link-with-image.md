@@ -1,3 +1,3 @@
 # Image as link content
 
-[![image](/image)](/link)
+[![image](/image)](https://example.net)

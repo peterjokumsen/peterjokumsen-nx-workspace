@@ -138,7 +138,7 @@ describe('parseMarkdown', () => {
             {
               type: 'link',
               content: 'link',
-              href: '/link',
+              href: 'https://example.net',
             },
             {
               type: 'text',
@@ -147,7 +147,7 @@ describe('parseMarkdown', () => {
             {
               type: 'image',
               alt: 'image',
-              src: '/image',
+              src: 'https://example.net',
             },
             {
               type: 'text',
@@ -169,7 +169,7 @@ describe('parseMarkdown', () => {
             {
               type: 'link',
               content: 'link',
-              href: '/link',
+              href: 'https://example.net',
             },
           ],
         },
@@ -211,7 +211,7 @@ describe('parseMarkdown', () => {
                   src: '/image',
                 },
               ],
-              href: '/link',
+              href: 'https://example.net',
             },
           ],
         },
@@ -268,7 +268,7 @@ describe('parseMarkdown', () => {
                   {
                     type: 'link',
                     content: 'link',
-                    href: '/link',
+                    href: 'https://example.net',
                   },
                 ],
               },
@@ -277,7 +277,7 @@ describe('parseMarkdown', () => {
                 content: [
                   {
                     type: 'link',
-                    href: '/image-link',
+                    href: 'https://example.net',
                     content: [
                       { type: 'text', content: 'link ' },
                       {

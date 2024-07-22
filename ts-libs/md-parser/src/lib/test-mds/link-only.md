@@ -1,3 +1,3 @@
 # Line with only link
 
-[link](/link)
+[link](https://example.net)
