@@ -1,7 +1,7 @@
 # MegaLinter GitHub Action configuration file
 # More info at https://megalinter.io
 ---
-name: MegaLinter
+name: 🤖 MegaLinter
 
 # Trigger mega-linter at every push. Action will also be visible from
 # Pull Requests to main
@@ -9,11 +9,11 @@ on:
   # Comment this line to trigger action only on pull-requests
   # (not recommended if you don't pay for GH Actions)
   push:
-
+    branches:
+      - main
   pull_request:
     branches:
       - main
-      - master
 
 # Comment env block if you do not want to apply fixes
 env:
@@ -58,12 +58,15 @@ jobs:
           # improve performance
           fetch-depth: 0
 
+      - name: 'Install dependencies 📦'
+        uses: ./.github/actions/install-deps
+
       # MegaLinter
       - name: MegaLinter
 
         # You can override MegaLinter flavor used to have faster performances
         # More info at https://megalinter.io/latest/flavors/
-        uses: oxsecurity/megalinter@v7
+        uses: oxsecurity/megalinter/flavors/javascript@v7.13.0
 
         id: ml
 
