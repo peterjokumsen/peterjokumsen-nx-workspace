@@ -20,6 +20,9 @@ on:
         description: 'Azure Subscription ID'
         required: true
 
+permissions:
+  contents: read
+
 jobs:
   # Close the deployed static web app
   close_deployed:

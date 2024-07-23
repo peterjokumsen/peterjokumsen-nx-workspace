@@ -32,6 +32,10 @@ on:
         description: 'Azure Subscription ID'
         required: true
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   # lint bicep files when a pull request is opened or synchronized
   lint_biceps:
