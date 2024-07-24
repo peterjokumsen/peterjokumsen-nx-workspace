@@ -49,7 +49,7 @@ describe('parseMarkdown', () => {
 
     beforeEach(() => {
       const markdown = fs.readFileSync(
-        path.join(__dirname, `./test-mds/${fileName}`),
+        path.join(__dirname, `../../test-mds/${fileName}`),
         'utf-8',
       );
 
@@ -187,7 +187,7 @@ describe('parseMarkdown', () => {
             {
               type: 'image',
               alt: 'image',
-              src: '/image',
+              src: 'https://example.net',
             },
           ],
         },
@@ -208,7 +208,7 @@ describe('parseMarkdown', () => {
                 {
                   type: 'image',
                   alt: 'image',
-                  src: '/image',
+                  src: 'https://example.net',
                 },
               ],
               href: 'https://example.net',
@@ -254,7 +254,7 @@ describe('parseMarkdown', () => {
                   {
                     type: 'image',
                     alt: 'Image 1',
-                    src: '/image1',
+                    src: 'https://example.net',
                   },
                 ],
               },
@@ -283,7 +283,7 @@ describe('parseMarkdown', () => {
                       {
                         type: 'image',
                         alt: 'Image 2',
-                        src: '/image2',
+                        src: 'https://example.net',
                       },
                     ],
                   },
