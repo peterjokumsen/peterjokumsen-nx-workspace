@@ -466,7 +466,7 @@ describe('parseMarkdown', () => {
               {
                 type: 'text',
                 format: 'strike-through',
-                content: 'strikethrough text',
+                content: 'Strike-through text',
               },
               {
                 type: 'text',
