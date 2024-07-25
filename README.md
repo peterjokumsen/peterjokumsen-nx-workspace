@@ -8,6 +8,8 @@ This repository is meant as a playground of sorts, that I've created as a collec
 
 # Applications
 
+
+
 ## Blog
 
 <a alt="Peter Jokumsen Blog" href="https://blog.peterjokumsen.com" target="_blank" rel="noreferrer"><img src="https://blog.peterjokumsen.com/assets/logo-150.webp" width="150"></a>
