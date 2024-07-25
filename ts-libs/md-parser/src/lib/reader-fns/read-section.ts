@@ -15,7 +15,7 @@ import { readParagraph } from './read-paragraph';
  *
  * If a section is found, and the header level is higher than the current section, it will read the section and add it to the contents of the current section.
  * If a list is found, it will read the list and add it to the contents of the current section.
- * If a paragraph is found, it will read the paragraph and add it to the contents of the curren section.
+ * If a paragraph is found, it will read the paragraph and add it to the contents of the current section.
  *
  * If the content type is not supported, an error will be thrown.
  *

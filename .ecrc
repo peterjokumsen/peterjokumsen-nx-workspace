@@ -1,5 +1,14 @@
 {
-  "Exclude": [
-    "LICENCE"
-  ],
+  "Verbose": false,
+  "IgnoreDefaults": false,
+  "Exclude": ["licence"],
+  "SpacesAfterTabs": false,
+  "Disable": {
+    "EndOfLine": false,
+    "Indentation": false,
+    "IndentSize": false,
+    "InsertFinalNewline": false,
+    "TrimTrailingWhitespace": false,
+    "MaxLineLength": false
+  }
 }

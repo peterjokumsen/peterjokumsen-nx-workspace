@@ -12,6 +12,7 @@
     "**/report/**",
     "**/*.svg",
     "**/megalinter-reports/**",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "dist/**"
   ]
 }

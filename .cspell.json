@@ -11,7 +11,8 @@
     ".gitattributes",
     ".gitignore",
     ".jscpd.json",
-    ".prettierrc"
+    ".prettierrc",
+    ".mega-linter.yml"
   ],
   "language": "en",
   "noConfigSearch": true,
@@ -22,12 +23,14 @@
     "Capa",
     "DEVSKIM",
     "INSTRUMENTATIONKEY",
+    "Strikethrough",
     "Jokumsen",
     "Qodana",
     "apikey",
     "appsettings",
     "azurestaticapps",
     "crawlable",
+    "ecrc",
     "devcontainer",
     "devcontainers",
     "devkit",
@@ -36,6 +39,7 @@
     "fontawesome",
     "fortawesome",
     "lighthouseci",
+    "markdownlintignore",
     "marocchino",
     "megalinter",
     "ngsw",
@@ -50,10 +54,12 @@
     "securestring",
     "staticwebapp",
     "stefanzweifel",
+    "strikethrough",
     "treosh",
     "webp",
     "westeurope",
-    "xlink"
+    "xlink",
+    "LICENCE"
   ],
   "version": "0.2"
 }

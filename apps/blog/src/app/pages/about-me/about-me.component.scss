@@ -1,8 +1,8 @@
 .show-hide {
-  transition: opacity 0.5s;
   display: none;
-  opacity: 0;
   height: 0;
+  opacity: 0;
+  transition: opacity 0.5s;
 
   &.show {
     display: block;
@@ -20,7 +20,7 @@
   &:hover,
   &.active {
     background-color: var(--primary-color);
-    color: var(--primary-bg-color);
     border-color: var(--primary-bg-color);
+    color: var(--primary-bg-color);
   }
 }
