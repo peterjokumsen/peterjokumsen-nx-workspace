@@ -13,6 +13,12 @@
     "**/*.svg",
     "**/megalinter-reports/**",
     "**/*.spec.ts",
-    "dist/**"
-  ]
+    "dist/**",
+    "ng-libs/ui-elements/src/lib/article/**",
+    "**/tsconfig.json",
+    ".biceps/*",
+    "**/tailwind.config.js",
+    "**/.eslintrc.json"
+  ],
+  "ignorePattern": ["import.*from\\s*'.*'"]
 }
