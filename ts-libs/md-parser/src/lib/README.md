@@ -51,7 +51,7 @@ The above code will output:
 }
 ```
 
-# Internal functions
+## Internal functions
 
 While there is only 1 exported function in this library, there are a few internal functions that are used to parse the markdown text.
 
