@@ -23,6 +23,7 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
       padding: 1rem;
       border-radius: 5px;
       border: 1px solid var(--primary-color);
+      overflow-x: scroll;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
