@@ -1,9 +1,13 @@
 <div class="mobile-navigation">
-  <pj-mdr-mobile-toc
-    [sections]="sections()"
-    [inViewSectionId]="intersectingSectionId()"
-    (sectionClick)="onNavigationClick($event)"
-  ></pj-mdr-mobile-toc>
+  @defer {
+    <pj-mdr-mobile-toc
+      [sections]="sections()"
+      [inViewSectionId]="intersectingSectionId()"
+      (sectionClick)="onNavigationClick($event)"
+    ></pj-mdr-mobile-toc>
+  } @placeholder {
+    <div class="navigation-placeholder"></div>
+  }
 </div>
 
 <div class="markdown-document">
