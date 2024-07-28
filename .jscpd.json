@@ -1,0 +1,24 @@
+{
+  "threshold": 0,
+  "reporters": ["html", "markdown"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/.rbenv/**",
+    "**/.venv/**",
+    "**/*cache*/**",
+    "**/.github/**",
+    "**/.idea/**",
+    "**/report/**",
+    "**/*.svg",
+    "**/megalinter-reports/**",
+    "**/*.spec.ts",
+    "dist/**",
+    "ng-libs/ui-elements/src/lib/article/**",
+    "**/tsconfig.json",
+    ".biceps/*",
+    "**/tailwind.config.js",
+    "**/.eslintrc.json"
+  ],
+  "ignorePattern": ["import.*from\\s*'.*'"]
+}

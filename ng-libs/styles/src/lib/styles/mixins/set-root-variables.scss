@@ -1,4 +1,4 @@
-@mixin set-variables($colors) {
+@mixin set-root-variables($colors) {
   $main: map-get($colors, 'main');
   $accent: map-get($colors, 'accent');
   $error: map-get($colors, 'error');
@@ -14,7 +14,9 @@
     error-color: map-get($error, 'foreground'),
   );
 
-  @each $key, $value in $map {
-    --#{$key}: #{$value};
+  :root {
+    @each $key, $value in $map {
+      --#{$key}: #{$value};
+    }
   }
 }

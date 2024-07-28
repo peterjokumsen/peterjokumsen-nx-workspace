@@ -1,27 +1,29 @@
 .splash {
-  height: 110vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  display: flex;
+  height: 110vh;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
 
   @keyframes heartbeat {
     0% {
       transform: scale(1);
     }
+
     50% {
       transform: scale(1.2);
     }
+
     100% {
       transform: scale(1);
     }
   }
 
   img {
-    display: block;
     animation: heartbeat 500ms infinite;
+    display: block;
   }
 }

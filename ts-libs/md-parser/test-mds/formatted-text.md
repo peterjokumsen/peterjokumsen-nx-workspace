@@ -8,7 +8,7 @@ Using `_` for **_super text_**, **bold text**, and _italic text_.
 
 # Formatted text (tilde)
 
-Using `~` for ~~strikethrough text~~.
+Using `~` for ~~Strike-through text~~.
 
 # Formatted text (line break)
 

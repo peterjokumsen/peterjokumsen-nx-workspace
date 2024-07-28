@@ -155,11 +155,11 @@ Strong is parsed from `**` and are converted to a strong tag.
 
 > Strong is not _yet_ supported.
 
-### Strikethrough
+### Strike-through
 
 Strikethrough is parsed from `~~` and are converted to a strikethrough tag.
 
-> Strikethrough is not _yet_ supported.
+> Strike-through is not _yet_ supported.
 
 ### Inline code
 

@@ -64,11 +64,12 @@
 *.ps1      text eol=crlf
 
 # Serialisation
-*.json     text eol=lf
-*.toml     text
-*.xml      text
-*.yaml     text eol=lf
-*.yml      text eol=lf
+*.json            text eol=lf
+*.toml            text
+*.xml             text
+*.yaml            text eol=lf
+*.yml             text eol=lf
+.husky/*.*      text eol=lf
 
 # Archives
 *.7z       binary

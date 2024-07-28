@@ -1,0 +1,109 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "metadata": {
+    "_generator": {
+      "name": "bicep",
+      "version": "0.28.1.47646",
+      "templateHash": "519232325221288565"
+    }
+  },
+  "parameters": {
+    "location": {
+      "type": "string",
+      "defaultValue": "[resourceGroup().location]",
+      "metadata": {
+        "description": "Location to use"
+      }
+    },
+    "branch": {
+      "type": "string",
+      "metadata": {
+        "description": "Branch used for deployment"
+      }
+    },
+    "staticWebAppName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of Static Web App"
+      }
+    },
+    "tags": {
+      "type": "object",
+      "metadata": {
+        "description": "Tags to use for deployed resources"
+      }
+    },
+    "appInsightsId": {
+      "type": "string",
+      "metadata": {
+        "description": "Application Insights ID"
+      }
+    },
+    "appInsightsInstrumentationKey": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Application Insights instrumentation key"
+      }
+    },
+    "appInsightsConnectionString": {
+      "type": "securestring",
+      "metadata": {
+        "description": "Application Insights connection string"
+      }
+    }
+  },
+  "variables": {
+    "tagsWithHiddenLinks": "[union(createObject('hidden-link: /app-insights-resource-id', parameters('appInsightsId'), 'hidden-link: /app-insights-instrumentation-key', parameters('appInsightsInstrumentationKey'), 'hidden-link: /app-insights-conn-string', parameters('appInsightsConnectionString')), parameters('tags'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Web/staticSites",
+      "apiVersion": "2022-09-01",
+      "name": "[parameters('staticWebAppName')]",
+      "location": "[parameters('location')]",
+      "tags": "[variables('tagsWithHiddenLinks')]",
+      "sku": {
+        "name": "Free",
+        "tier": "Free"
+      },
+      "properties": {
+        "repositoryUrl": "https://github.com/peterjokumsen/peterjokumsen-nx-workspace",
+        "branch": "[parameters('branch')]",
+        "provider": "GitHub",
+        "stagingEnvironmentPolicy": "Enabled",
+        "allowConfigFileUpdates": true,
+        "buildProperties": {
+          "skipGithubActionWorkflowGeneration": true
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Web/staticSites/config",
+      "apiVersion": "2022-09-01",
+      "name": "[format('{0}/{1}', parameters('staticWebAppName'), 'appsettings')]",
+      "kind": "config",
+      "properties": {
+        "APPINSIGHTS_INSTRUMENTATIONKEY": "[parameters('appInsightsInstrumentationKey')]",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "[parameters('appInsightsConnectionString')]"
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Web/staticSites', parameters('staticWebAppName'))]"
+      ]
+    }
+  ],
+  "outputs": {
+    "id": {
+      "type": "string",
+      "value": "[resourceId('Microsoft.Web/staticSites', parameters('staticWebAppName'))]"
+    },
+    "name": {
+      "type": "string",
+      "value": "[parameters('staticWebAppName')]"
+    },
+    "defaultHostName": {
+      "type": "string",
+      "value": "[reference(resourceId('Microsoft.Web/staticSites', parameters('staticWebAppName')), '2022-09-01').defaultHostname]"
+    }
+  }
+}

@@ -79,16 +79,16 @@ jobs:
         id: test_affected
         if: github.event_name != 'push'
         run: |
-          echo "::group::nx affected -t lint test --configuration=ci --base=${{ inputs.nx_base }}"
-          npx nx affected -t lint test --configuration=ci --base=${{ inputs.nx_base }}
-          echo "::endgroup::"
+          echo ::group::nx affected -t lint test --configuration=ci --base="${{ inputs.nx_base }}"
+          npx nx affected -t lint test --configuration=ci --base="${{ inputs.nx_base }}"
+          echo ::endgroup::
           coverage_reports="No"
           if [ -d "coverage" ]; then
             coverage_reports="Yes"
           fi
 
-          echo "output [coverage_reports=$coverage_reports]"
-          echo "coverage_reports=$coverage_reports" >> $GITHUB_OUTPUT
+          echo output [coverage_reports="$coverage_reports"]
+          echo coverage_reports="$coverage_reports" >> "$GITHUB_OUTPUT"
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
@@ -137,7 +137,7 @@ jobs:
           echo "$build_configuration is the configuration for branch $branch_name"
 
           echo "::group::nx run ${{ inputs.project_name }}:build:$build_configuration"
-          npx nx run ${{ inputs.project_name }}:build:$build_configuration
+          npx nx run "${{ inputs.project_name }}:build:$build_configuration"
           echo "::endgroup::"
           compiled_files="No"
           if [ -d "${{ inputs.build_location }}" ]; then
@@ -145,7 +145,7 @@ jobs:
           fi
 
           echo "output [compiled_files=$compiled_files]"
-          echo "compiled_files=$compiled_files" >> $GITHUB_OUTPUT
+          echo "compiled_files=$compiled_files" >> "$GITHUB_OUTPUT"
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 

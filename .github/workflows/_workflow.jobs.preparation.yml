@@ -68,11 +68,11 @@ jobs:
           deploymentName="${branchName////-}.$shortSha"
 
           echo "Deployment name: $deploymentName"
-          echo "generated_name=$deploymentName" >> $GITHUB_OUTPUT
+          echo "generated_name=$deploymentName" >> "$GITHUB_OUTPUT"
           echo "Sub-domain: $subDomain"
-          echo "sub_domain=$subDomain" >> $GITHUB_OUTPUT
+          echo "sub_domain=$subDomain" >> "$GITHUB_OUTPUT"
           echo "App name: $appName"
-          echo "app_name=$appName" >> $GITHUB_OUTPUT
+          echo "app_name=$appName" >> "$GITHUB_OUTPUT"
 
       - name: 'Set group deployment parameters 📝'
         id: group_deployment_parameters
@@ -91,7 +91,7 @@ jobs:
                   appName='${{ steps.prepare_names.outputs.app_name }}' \
                   subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
 
-          echo "parameters=$parameters" >> $GITHUB_OUTPUT
+          echo "parameters=$parameters" >> "$GITHUB_OUTPUT"
 
     outputs:
       app_name: ${{ steps.prepare_names.outputs.app_name }}
@@ -125,7 +125,7 @@ jobs:
         run: |
           echo "::group::nx show projects --type app --affected"
           affected_projects=$(npx nx show projects --type app --affected)
-          echo $affected_projects
+          echo "$affected_projects"
           project_name="${{ inputs.app_name }}"
           echo "::endgroup::"
           project_affected="No"
@@ -136,21 +136,21 @@ jobs:
           fi
 
           echo "output [project_affected=$project_affected]"
-          echo "project_affected=$project_affected" >> $GITHUB_OUTPUT
+          echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
 
       - name: 'Check if infra affected 🏗️'
         id: check_biceps
         run: |
           base="${{ steps.set_base.outputs.base }}"
-          echo "::group::git diff --name-only $base HEAD"
-          CHANGED_FILES=$(git diff --name-only $base HEAD)
-          echo "Changed files: $CHANGED_FILES"
+          echo ::group::git diff --name-only "$base" HEAD
+          CHANGED_FILES=$(git diff --name-only "$base" HEAD)
+          echo Changed files: "$CHANGED_FILES"
           echo "::endgroup::"
           if [[ $CHANGED_FILES == *".bicep"* ]]; then
-            echo "infra_affected=Yes" >> $GITHUB_OUTPUT
+            echo "infra_affected=Yes" >> "$GITHUB_OUTPUT"
             echo "infra_affected=Yes"
           else
-            echo "infra_affected=No" >> $GITHUB_OUTPUT
+            echo "infra_affected=No" >> "$GITHUB_OUTPUT"
             echo "infra_affected=No"
           fi
 

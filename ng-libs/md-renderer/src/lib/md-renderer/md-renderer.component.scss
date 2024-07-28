@@ -1,15 +1,16 @@
 $mobile: 768px;
 
 .mobile-navigation {
+  bottom: 0;
   display: block;
   position: fixed;
-  bottom: 0;
   right: 0;
 
   @media (min-width: $mobile) {
     display: none;
   }
 }
+
 .markdown-document {
   display: flex;
   flex-direction: column;
@@ -19,50 +20,48 @@ $mobile: 768px;
   @media (min-width: $mobile) {
     flex-direction: row-reverse;
   }
+}
 
-  & .markdown-contents {
-    // border: 1px solid red;
-    flex: 1;
+.markdown-navigation {
+  display: none;
+
+  @media (min-width: $mobile) {
+    display: block;
+    max-height: calc(100vh - 40px);
+    position: sticky;
+    top: 20px;
+    width: 360px;
+  }
+}
+
+.markdown-contents {
+  flex: 1;
+  margin: 0 auto;
+
+  .section-container {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.3em;
+    justify-content: center;
+    line-height: 1.4;
     margin: 0 auto;
+    max-width: 800px;
+    min-height: 100vh;
+    padding: 20px 0;
 
-    .section-container {
-      min-height: 100vh;
-      // border: 1px solid blue;
-      font-size: 1.3em;
-      line-height: 1.4;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px 0;
+    pj-mdr-md-wrapper {
       display: flex;
-      justify-content: center;
       flex-direction: column;
-
-      pj-mdr-md-wrapper {
-        display: flex;
-        justify-content: center;
-        flex-direction: column;
-      }
-
-      h2 {
-        font-size: 1.6em;
-        padding-bottom: 20px;
-      }
+      justify-content: center;
     }
 
-    @media (min-width: $mobile) {
-      margin: 0 20px 0 0;
+    h2 {
+      font-size: 1.6em;
+      padding-bottom: 20px;
     }
   }
 
-  & .markdown-navigation {
-    display: none;
-
-    @media (min-width: $mobile) {
-      display: block;
-      width: 360px;
-      max-height: calc(100vh - 40px);
-      position: sticky;
-      top: 20px;
-    }
+  @media (min-width: $mobile) {
+    margin: 0 20px 0 0;
   }
 }

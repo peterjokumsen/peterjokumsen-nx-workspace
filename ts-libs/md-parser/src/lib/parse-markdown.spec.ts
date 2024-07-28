@@ -49,7 +49,7 @@ describe('parseMarkdown', () => {
 
     beforeEach(() => {
       const markdown = fs.readFileSync(
-        path.join(__dirname, `./test-mds/${fileName}`),
+        path.join(__dirname, `../../test-mds/${fileName}`),
         'utf-8',
       );
 
@@ -138,7 +138,7 @@ describe('parseMarkdown', () => {
             {
               type: 'link',
               content: 'link',
-              href: '/link',
+              href: 'https://example.net',
             },
             {
               type: 'text',
@@ -147,7 +147,7 @@ describe('parseMarkdown', () => {
             {
               type: 'image',
               alt: 'image',
-              src: '/image',
+              src: 'https://example.net',
             },
             {
               type: 'text',
@@ -169,7 +169,7 @@ describe('parseMarkdown', () => {
             {
               type: 'link',
               content: 'link',
-              href: '/link',
+              href: 'https://example.net',
             },
           ],
         },
@@ -187,7 +187,7 @@ describe('parseMarkdown', () => {
             {
               type: 'image',
               alt: 'image',
-              src: '/image',
+              src: 'https://example.net',
             },
           ],
         },
@@ -208,10 +208,10 @@ describe('parseMarkdown', () => {
                 {
                   type: 'image',
                   alt: 'image',
-                  src: '/image',
+                  src: 'https://example.net',
                 },
               ],
-              href: '/link',
+              href: 'https://example.net',
             },
           ],
         },
@@ -254,7 +254,7 @@ describe('parseMarkdown', () => {
                   {
                     type: 'image',
                     alt: 'Image 1',
-                    src: '/image1',
+                    src: 'https://example.net',
                   },
                 ],
               },
@@ -268,7 +268,7 @@ describe('parseMarkdown', () => {
                   {
                     type: 'link',
                     content: 'link',
-                    href: '/link',
+                    href: 'https://example.net',
                   },
                 ],
               },
@@ -277,13 +277,13 @@ describe('parseMarkdown', () => {
                 content: [
                   {
                     type: 'link',
-                    href: '/image-link',
+                    href: 'https://example.net',
                     content: [
                       { type: 'text', content: 'link ' },
                       {
                         type: 'image',
                         alt: 'Image 2',
-                        src: '/image2',
+                        src: 'https://example.net',
                       },
                     ],
                   },
@@ -466,7 +466,7 @@ describe('parseMarkdown', () => {
               {
                 type: 'text',
                 format: 'strike-through',
-                content: 'strikethrough text',
+                content: 'Strike-through text',
               },
               {
                 type: 'text',
