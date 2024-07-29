@@ -8,7 +8,11 @@ import {
   signal,
 } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { MatAnchor, MatFabButton } from '@angular/material/button';
+import {
+  MatAnchor,
+  MatFabButton,
+  MatIconButton,
+} from '@angular/material/button';
 import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
 import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 import {
@@ -19,6 +23,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar } from '@angular/material/toolbar';
 import { faCode } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -36,28 +42,29 @@ import { faCode } from '@fortawesome/free-solid-svg-icons';
     RouterLinkActive,
     MatMenuTrigger,
     FaIconComponent,
+    MatToolbar,
+    MatIcon,
+    MatIconButton,
   ],
   templateUrl: './header.component.html',
   styles: `
-    .static-header {
+    .floating-header {
       position: fixed;
       top: 0;
     }
 
-    .secondary-header {
-      height: 70px;
+    .spacer {
+      flex: 1 1 auto;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   animations: [
     trigger('showHide', [
       transition(':enter', [
-        style({ transform: 'translateX(-100%)' }),
-        animate('0.4s', style({ transform: 'translateX(0)' })),
+        style({ opacity: 0 }),
+        animate('300ms', style({ opacity: 1 })),
       ]),
-      transition(':leave', [
-        animate('300ms', style({ transform: 'translateX(-100%)' })),
-      ]),
+      transition(':leave', [animate('100ms', style({ opacity: 0 }))]),
     ]),
   ],
 })
