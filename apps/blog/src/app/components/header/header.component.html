@@ -43,21 +43,17 @@
 </header>
 @defer {
   @if (windowPastHeader()) {
-    <div @showHide class="static-header">
+    <mat-toolbar @showHide class="floating-header" color="primary">
+      <img [ngSrc]="imageSrc" alt="logo" height="50" width="50" />
+      <span>Peter Jokumsen</span>
+      <span class="spacer"></span>
       <button
-        type="button"
-        class="secondary-header m-3"
-        mat-fab
-        extended="extended"
-        color="primary"
+        mat-icon-button
+        aria-label="Navigation menu"
         [matMenuTriggerFor]="navMenu"
       >
-        <div class="flex items-center justify-around">
-          <img [ngSrc]="imageSrc" alt="logo" height="60" width="60" />
-          <div class="pl-2 font-bold">Peter Jokumsen</div>
-        </div>
+        <mat-icon>menu</mat-icon>
       </button>
-
       <mat-menu #navMenu="matMenu" [xPosition]="'before'">
         @for (nav of navElements(); track nav.route) {
           <a
@@ -73,6 +69,11 @@
           </a>
         }
       </mat-menu>
-    </div>
+      <!--
+      <button mat-icon-button class="example-icon" aria-label="Share">
+        <mat-icon>share</mat-icon>
+      </button>
+      -->
+    </mat-toolbar>
   }
 }
