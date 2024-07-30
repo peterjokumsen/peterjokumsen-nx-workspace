@@ -1,9 +1,12 @@
 import { LogFns, PjLogger } from '../pj-logger';
 
-import { PjArticle } from './models';
+import { MarkdownAst } from '@peterjokumsen/ts-md-models';
 import { PjArticleParser } from './';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
+import { parseMarkdown } from '@peterjokumsen/md-parser';
+
+jest.mock('@peterjokumsen/md-parser');
 
 describe('PjArticleParserService', () => {
   let service: PjArticleParser;
@@ -36,48 +39,21 @@ describe('PjArticleParserService', () => {
   });
 
   describe('fromSource', () => {
+    let parseMarkdownSpy: jest.Mocked<typeof parseMarkdown>;
+
+    beforeEach(() => {
+      parseMarkdownSpy = jest.mocked(parseMarkdown).mockName('parseMarkdown');
+    });
+
     const useFromSource = (
       ...params: Parameters<PjArticleParser['fromSource']>
-    ): Promise<PjArticle> => {
+    ): Promise<MarkdownAst> => {
       return firstValueFrom(service.fromSource(...params));
     };
 
-    describe('when source is string', () => {
-      describe('and is markdown with titles and basic content', () => {
-        let result: PjArticle;
-
-        beforeEach(async () => {
-          result = await useFromSource(`
-          # Page title
-
-          ## Section 1
-
-          A new section.
-          To show.
-
-          ## Section 2
-
-          Another section.
-          `);
-        });
-
-        it('should set primary title', () => {
-          expect(result.title).toBe('Page title');
-        });
-
-        it('should return sections', () => {
-          expect(result.sections).toEqual([
-            {
-              title: 'Section 1',
-              content: ['A new section.', 'To show.'],
-            },
-            {
-              title: 'Section 2',
-              content: ['Another section.'],
-            },
-          ]);
-        });
-      });
+    it('should use parseMarkdown', async () => {
+      await useFromSource('markdown string');
+      expect(parseMarkdownSpy).toHaveBeenCalledWith('markdown string');
     });
   });
 });
