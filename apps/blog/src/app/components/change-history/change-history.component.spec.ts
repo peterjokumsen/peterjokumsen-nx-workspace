@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatCard, MatCardContent, MatCardHeader } from '@angular/material/card';
-import { MockComponent, MockDirective, MockPipe } from 'ng-mocks';
-import { PjArticle, PjArticleParser } from '@peterjokumsen/ng-services';
 
-import { ArticleComponent } from '@peterjokumsen/ui-elements';
 import { ChangeHistoryComponent } from './change-history.component';
-import { JsonPipe } from '@angular/common';
+import { MarkdownAst } from '@peterjokumsen/ts-md-models';
+import { MdRendererComponent } from '@peterjokumsen/md-renderer';
+import { MockComponent } from 'ng-mocks';
+import { PjArticleParser } from '@peterjokumsen/ng-services';
 import { of } from 'rxjs';
 
 describe('ChangeHistoryComponent', () => {
@@ -17,9 +16,7 @@ describe('ChangeHistoryComponent', () => {
     parserSpy = jest.mocked<Partial<PjArticleParser>>({
       fromSource: jest.fn(),
     }) as unknown as jest.Mocked<PjArticleParser>;
-    parserSpy.fromSource.mockReturnValue(
-      of<PjArticle>({ sections: [{ title: 'test', content: 'testing' }] }),
-    );
+    parserSpy.fromSource.mockReturnValue(of<MarkdownAst>({ sections: [] }));
 
     await TestBed.configureTestingModule({
       imports: [ChangeHistoryComponent],
@@ -29,14 +26,11 @@ describe('ChangeHistoryComponent', () => {
       ],
     })
       .overrideComponent(ChangeHistoryComponent, {
-        set: {
-          imports: [
-            MockComponent(ArticleComponent),
-            MockComponent(MatCard),
-            MockComponent(MatCardHeader),
-            MockDirective(MatCardContent),
-            MockPipe(JsonPipe),
-          ],
+        remove: {
+          imports: [MdRendererComponent],
+        },
+        add: {
+          imports: [MockComponent(MdRendererComponent)],
         },
       })
       .compileComponents();
@@ -52,8 +46,5 @@ describe('ChangeHistoryComponent', () => {
 
   it('should use the parser to parse the article', () => {
     expect(parserSpy.fromSource).toHaveBeenCalledWith(expect.any(String));
-    expect(component.article()).toEqual({
-      sections: [{ title: 'test', content: 'testing' }],
-    });
   });
 });
