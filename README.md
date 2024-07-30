@@ -18,14 +18,6 @@ Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/stati
 
 ## Libraries
 
-### ng-features
-
-[`ng-features/**`](./ng-features/README.md) is a collection of Angular features, meant to be lazy-loaded components.
-
-#### ng-features/blog-container
-
-[`ng-features/blog-container`](./ng-features/blog-container/README.md) is a container component, to drive functionality for blog posts.
-
 ### ng-libs
 
 [`ng-libs/**`](./ng-libs/README.md) is a collection of Angular libraries, meant to be shared re-usable components, services, and utilities.
