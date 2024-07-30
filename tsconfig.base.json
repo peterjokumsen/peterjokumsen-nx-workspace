@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@peterjokumsen/blog-container": [
-        "ng-features/blog-container/src/index.ts"
-      ],
       "@peterjokumsen/md-parser": ["ts-libs/md-parser/src/index.ts"],
       "@peterjokumsen/md-renderer": ["ng-libs/md-renderer/src/index.ts"],
       "@peterjokumsen/ng-services": ["ng-libs/services/src/index.ts"],
