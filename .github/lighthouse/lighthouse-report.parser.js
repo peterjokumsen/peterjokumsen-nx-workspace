@@ -50,7 +50,7 @@ const summaryKeys = {
   accessibility: 'Accessibility',
   'best-practices': 'Best Practices',
   seo: 'SEO',
-//  pwa: 'PWA',
+  //  pwa: 'PWA',
 };
 
 /** @param {number} rawScore */
