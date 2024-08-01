@@ -2,11 +2,11 @@
   "name": "@peterjokumsen/ui-elements",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^18.0.3",
-    "@angular/core": "^18.0.3",
-    "@angular/material": "^18.0.3",
-    "@angular/router": "^18.0.3",
-    "@nx/angular": "^19.3.0",
+    "@angular/common": "^18.1.3",
+    "@angular/core": "^18.1.3",
+    "@angular/material": "^18.1.3",
+    "@angular/router": "^18.1.3",
+    "@nx/angular": "^19.5.5",
     "@fortawesome/angular-fontawesome": "^0.15.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@peterjokumsen/ng-services": "*"
