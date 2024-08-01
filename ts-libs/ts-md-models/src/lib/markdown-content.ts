@@ -19,6 +19,11 @@ export interface MarkdownCodeBlock extends HasMarkdownContentType {
   lines: string[];
 }
 
+export interface MarkdownCommentBlock extends HasMarkdownContentType {
+  type: 'commented';
+  lines: string[];
+}
+
 export interface MarkdownListElement extends HasMarkdownContentType {
   type: 'list' | 'ordered-list';
   indent: number;
@@ -75,6 +80,7 @@ export interface MarkdownSection extends HasMarkdownContentType {
 export type MarkdownContent =
   | MarkdownCode
   | MarkdownCodeBlock
+  | MarkdownCommentBlock
   | MarkdownList
   | MarkdownOrderedList
   | MarkdownQuote

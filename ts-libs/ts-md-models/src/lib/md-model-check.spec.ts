@@ -27,6 +27,7 @@ describe('mdModelCheck', () => {
     quote: { type: 'quote', content: 'quote-content' },
     section: { type: 'section', title: 'section-title', contents: [] },
     text: { type: 'text', content: 'text-content' },
+    commented: { type: 'commented', lines: [] },
   };
 
   it('should help narrow down the type of MarkdownContent', () => {

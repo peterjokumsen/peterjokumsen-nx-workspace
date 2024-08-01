@@ -9,4 +9,5 @@ export type MarkdownContentType =
   | 'image'
   | 'link'
   | 'paragraph'
-  | 'text';
+  | 'text'
+  | 'commented';
