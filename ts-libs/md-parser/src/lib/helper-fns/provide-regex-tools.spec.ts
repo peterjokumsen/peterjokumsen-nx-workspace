@@ -73,6 +73,20 @@ describe('provideRegexTools', () => {
         },
       },
     ],
+    [
+      'commented',
+      {
+        shouldMatch: ['<!-- something', '<!-- something -->'],
+        shouldNotMatch: ['regular line'],
+        expectedMatchFromFirstMatch: {
+          matched: '<!-- something',
+          content: {
+            type: 'commented',
+            lines: ['something'],
+          },
+        },
+      },
+    ],
   ];
 
   describe.each(testCases)(

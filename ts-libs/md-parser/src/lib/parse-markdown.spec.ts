@@ -584,4 +584,25 @@ describe('parseMarkdown', () => {
       ],
     );
   });
+
+  describe('when reading commented.md', () => {
+    itShouldBeParsed('commented.md', [
+      'Comment',
+      [
+        {
+          type: 'commented',
+          lines: ['Hello world!', 'More comment.'],
+        },
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              content: 'Comment.',
+            },
+          ],
+        },
+      ],
+    ]);
+  });
 });

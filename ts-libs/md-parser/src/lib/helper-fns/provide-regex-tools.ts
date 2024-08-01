@@ -107,6 +107,20 @@ export function provideRegexTools<T extends RegexContentType>(
           } as MatchedContent<T>;
         },
       };
+    case 'commented':
+      return {
+        regex: /<!--(.*)(-->)?/,
+        contentFn: (regex) => {
+          const [matched, comment] = regex;
+          return {
+            matched,
+            content: {
+              type: 'commented',
+              lines: comment.trim().split('\n'),
+            },
+          } as MatchedContent<T>;
+        },
+      };
     default: {
       // force compilation to fail if a case is missing
       const _: never = value;
