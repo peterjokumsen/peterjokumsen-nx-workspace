@@ -109,7 +109,7 @@ export function provideRegexTools<T extends RegexContentType>(
       };
     case 'commented':
       return {
-        regex: /<!--(.*)(-->)?/,
+        regex: /<!--(.*)-->/,
         contentFn: (regex) => {
           const [matched, comment] = regex;
           return {

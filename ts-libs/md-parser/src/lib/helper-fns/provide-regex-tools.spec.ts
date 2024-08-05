@@ -76,10 +76,10 @@ describe('provideRegexTools', () => {
     [
       'commented',
       {
-        shouldMatch: ['<!-- something', '<!-- something -->'],
+        shouldMatch: ['<!-- something -->'],
         shouldNotMatch: ['regular line'],
         expectedMatchFromFirstMatch: {
-          matched: '<!-- something',
+          matched: '<!-- something -->',
           content: {
             type: 'commented',
             lines: ['something'],
