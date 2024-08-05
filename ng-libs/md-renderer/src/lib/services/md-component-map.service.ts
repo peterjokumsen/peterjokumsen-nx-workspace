@@ -4,6 +4,7 @@ import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from '../injection.tokens';
 import {
   MdCodeBlockComponent,
   MdCodeComponent,
+  MdCommentedComponent,
   MdHorizontalRuleComponent,
   MdImageComponent,
   MdLinkComponent,
@@ -23,6 +24,7 @@ export class MdComponentMapService {
     'code-block': MdCodeBlockComponent,
     'horizontal-rule': MdHorizontalRuleComponent,
     code: MdCodeComponent,
+    commented: MdCommentedComponent,
     image: MdImageComponent,
     link: MdLinkComponent,
     list: MdListComponent,

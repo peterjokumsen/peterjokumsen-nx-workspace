@@ -24,8 +24,6 @@ export class MdContentInjectionDirective {
   @Input('pjMdrMdContentInjection') set contentToRender(
     value: WithId<MarkdownType<ExpectedContentTypes>>,
   ) {
-    this._logger?.to.log('MdContentInjection initialized, %o', value);
-
     for (const child of this.getChildContents(value)) {
       const component = this.componentMap.getComponent(child.type);
       const instance =
