@@ -4,6 +4,7 @@ export type ExpectedContentTypes = Extract<
   MarkdownContentType,
   | 'code'
   | 'code-block'
+  | 'commented'
   | 'horizontal-rule'
   | 'image'
   | 'link'
@@ -17,6 +18,7 @@ const allowed: Required<Record<ExpectedContentTypes, object>> = {
   'code-block': {},
   'horizontal-rule': {},
   code: {},
+  commented: {},
   image: {},
   link: {},
   list: {},

@@ -2,6 +2,7 @@ import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from './injection.tokens';
 import {
   MdCodeBlockComponent,
   MdCodeComponent,
+  MdCommentedComponent,
   MdHorizontalRuleComponent,
   MdImageComponent,
   MdLinkComponent,
@@ -26,6 +27,7 @@ import { MdContentInjectionDirective } from './directives/md-content-injection.d
 
     MdCodeComponent,
     MdCodeBlockComponent,
+    MdCommentedComponent,
     MdHorizontalRuleComponent,
     MdImageComponent,
     MdLinkComponent,

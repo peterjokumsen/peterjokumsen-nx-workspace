@@ -1,5 +1,6 @@
 export * from './md-code.component';
 export * from './md-code-block.component';
+export * from './md-commented.component';
 export * from './md-horizontal-rule.component';
 export * from './md-image.component';
 export * from './md-link.component';
