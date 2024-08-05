@@ -6,6 +6,7 @@ import { getHeaderLevel, getSectionContentType } from '../helper-fns';
 
 import { ReadResult } from '../_models';
 import { readCodeBlock } from './read-code-block';
+import { readCommentedBlock } from './read-commented-block';
 import { readList } from './read-list';
 import { readParagraph } from './read-paragraph';
 
@@ -35,6 +36,7 @@ export function readSection(
   };
 
   let i = start + 1;
+
   for (; i < lines.length; i++) {
     const line = lines[i];
     if (line.trim() === '') {
@@ -67,6 +69,12 @@ export function readSection(
       }
       case 'code-block': {
         const { result, lastLineIndex } = readCodeBlock(lines, i);
+        section.contents.push(result);
+        i = lastLineIndex;
+        break;
+      }
+      case 'commented': {
+        const { result, lastLineIndex } = readCommentedBlock(lines, i);
         section.contents.push(result);
         i = lastLineIndex;
         break;

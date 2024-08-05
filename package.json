@@ -17,7 +17,7 @@
     "test:uncommitted": "nx affected --target=test --uncommitted",
     "format": "nx format:write",
     "format:check": "nx format:check",
-    "pre-commit:write": "nx format:write & npm run lint:uncommitted",
+    "pre-commit:write": "nx format:write && npm run lint:uncommitted",
     "pre-push:check": "nx affected --base=origin/main -t lint test build --parallel=5",
     "prepare": "husky",
     "mega-lint": "npx mega-linter-runner --flavor javascript"
