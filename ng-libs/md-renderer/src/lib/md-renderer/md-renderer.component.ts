@@ -65,7 +65,6 @@ export class MdRendererComponent implements AfterViewInit, OnDestroy {
         const intersecting = entries.find((e) => e.isIntersecting);
         const id = intersecting?.target.id ?? '';
         if (id) {
-          this._logger?.to.log('Intersecting section:', id, entries);
           this.intersectingSectionId.update(() => id);
         }
       },
