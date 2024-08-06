@@ -22,8 +22,8 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
       display: block;
       padding: 1rem;
       border-radius: 5px;
-      border: 1px solid var(--primary-color);
-      overflow-x: scroll;
+      border: 1px solid;
+      overflow-x: auto;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
