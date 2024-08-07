@@ -143,3 +143,32 @@ jobs:
         ${{ needs.deploy_app.outputs.deployed_url }}/about-me
         ${{ needs.deploy_app.outputs.deployed_url }}/development-notes
         ${{ needs.deploy_app.outputs.deployed_url }}/not/found
+
+  ci_status:
+    name: 'CI Status ✅'
+    runs-on: ubuntu-latest
+    needs:
+      - lint_test_build
+      - infra
+      - deploy_app
+      - post_deploy
+    if: always()
+    steps:
+      - name: 'lint_test_build failed'
+        if: needs.lint_test_build.result == 'failed'
+        run: exit 1
+
+      - name: 'infra failed'
+        if: needs.infra.result == 'failed'
+        run: exit 1
+
+      - name: 'deploy_app failed'
+        if: needs.deploy_app.result == 'failed'
+        run: exit 1
+
+      - name: 'post_deploy failed'
+        if: needs.post_deploy.result == 'failed'
+        run: exit 1
+
+      - name: 'checks completed'
+        run: echo "All checks done"
