@@ -155,19 +155,19 @@ jobs:
     if: always()
     steps:
       - name: 'lint_test_build failed'
-        if: needs.lint_test_build.result == 'failed'
+        if: needs.lint_test_build.result == 'failure'
         run: exit 1
 
       - name: 'infra failed'
-        if: needs.infra.result == 'failed'
+        if: needs.infra.result == 'failure'
         run: exit 1
 
       - name: 'deploy_app failed'
-        if: needs.deploy_app.result == 'failed'
+        if: needs.deploy_app.result == 'failure'
         run: exit 1
 
       - name: 'post_deploy failed'
-        if: needs.post_deploy.result == 'failed'
+        if: needs.post_deploy.result == 'failure'
         run: exit 1
 
       - name: 'checks completed'
