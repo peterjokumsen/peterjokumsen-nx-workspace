@@ -146,6 +146,7 @@ jobs:
 
           echo "output [compiled_files=$compiled_files]"
           echo "compiled_files=$compiled_files" >> "$GITHUB_OUTPUT"
+          exit 1
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
