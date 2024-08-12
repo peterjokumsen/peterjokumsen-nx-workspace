@@ -36,7 +36,7 @@ describe('TableOfContentsComponent', () => {
 
   describe('onScroll', () => {
     it('should update scroll height', () => {
-      component.inViewSectionId.apply(() => 'section');
+      component.inViewSectionId = 'section';
       component.onScroll();
       expect(component.showBackToTop()).toBe(true);
     });

@@ -1,10 +1,16 @@
 $mobile: 768px;
 
 .mobile-navigation {
-  bottom: 0;
-  display: block;
-  position: fixed;
-  right: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: center;
+  padding: 1rem;
+
+  h2 {
+    text-align: center;
+  }
 
   @media (min-width: $mobile) {
     display: none;

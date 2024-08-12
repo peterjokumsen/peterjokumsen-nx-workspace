@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { MobileTocComponent, TableOfContentsComponent } from '../toc';
 
 import { CommonModule } from '@angular/common';
 import { MdRendererComponent } from './md-renderer.component';
 import { MockComponents } from 'ng-mocks';
+import { TableOfContentsComponent } from '../toc';
 
 describe('MdRendererComponent', () => {
   let component: MdRendererComponent;
@@ -15,9 +15,7 @@ describe('MdRendererComponent', () => {
     })
       .overrideComponent(MdRendererComponent, {
         set: {
-          imports: [
-            MockComponents(TableOfContentsComponent, MobileTocComponent),
-          ],
+          imports: [MockComponents(TableOfContentsComponent)],
         },
       })
       .compileComponents();

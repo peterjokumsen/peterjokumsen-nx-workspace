@@ -14,7 +14,7 @@
       mat-raised-button
       color="primary"
       @inOutAnimation
-      [disabled]="section.id === inViewSectionId()"
+      [disabled]="section.id === currentSectionId()"
       (click)="sectionClick.emit(section.id)"
     >
       {{ section.title }}
