@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
+  Input,
   computed,
   inject,
   input,
@@ -72,12 +73,18 @@ export class TableOfContentsComponent {
   private _browserTools = inject(PjBrowserTools, { optional: true });
   private _scrollPos = signal(this._browserTools?.window?.scrollY ?? 0);
 
+  currentSectionId = signal<string>('');
   showBackToTop = computed(() => {
-    const inView = this.inViewSectionId();
-    return this._scrollPos() > 200 && inView !== '';
+    const inView = this.currentSectionId();
+    return this._scrollPos() > 200 && !!inView;
   });
   sections = input<WithId<MarkdownSection>[]>([]);
-  inViewSectionId = input<string>();
+
+  @Input()
+  set inViewSectionId(value: string) {
+    this.currentSectionId.update(() => value);
+  }
+
   sectionClick = output<string>();
 
   @HostListener('document:scroll') onScroll() {
