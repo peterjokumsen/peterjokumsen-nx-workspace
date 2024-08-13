@@ -43,6 +43,13 @@ describe('getSectionContentType', () => {
         expectedType: 'paragraph',
       },
     ],
+    [
+      'line starts with >',
+      {
+        line: '  > Hello world',
+        expectedType: 'quote',
+      },
+    ],
   ])('when %s', (_, { line, expectedType }) => {
     it(`should return "${expectedType}"`, () => {
       expect(getSectionContentType(line)).toBe(expectedType);

@@ -9,6 +9,7 @@ import { readCodeBlock } from './read-code-block';
 import { readCommentedBlock } from './read-commented-block';
 import { readList } from './read-list';
 import { readParagraph } from './read-paragraph';
+import { readQuote } from './read-quote';
 
 /**
  * Reads a section starting from the specified start index in the provided lines from markdown file.
@@ -75,6 +76,12 @@ export function readSection(
       }
       case 'commented': {
         const { result, lastLineIndex } = readCommentedBlock(lines, i);
+        section.contents.push(result);
+        i = lastLineIndex;
+        break;
+      }
+      case 'quote': {
+        const { result, lastLineIndex } = readQuote(lines, i);
         section.contents.push(result);
         i = lastLineIndex;
         break;

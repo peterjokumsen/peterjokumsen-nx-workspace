@@ -605,4 +605,63 @@ describe('parseMarkdown', () => {
       ],
     ]);
   });
+
+  xdescribe('when reading quote.md', () => {
+    itShouldBeParsed(
+      'quote.md',
+      [
+        'Quote example',
+        [
+          {
+            type: 'quote',
+            indent: 0,
+            paragraphs: [
+              {
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'text',
+                    content: 'This is a quote',
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      ],
+      [
+        'Multi-line quote',
+        [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                content: 'First line',
+              },
+              {
+                type: 'text',
+                content: '',
+                format: 'line-break',
+              },
+              {
+                type: 'text',
+                content: 'Second line',
+                format: 'bold',
+              },
+            ],
+          },
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'text',
+                content: 'Third line',
+              },
+            ],
+          },
+        ],
+      ],
+    );
+  });
 });
