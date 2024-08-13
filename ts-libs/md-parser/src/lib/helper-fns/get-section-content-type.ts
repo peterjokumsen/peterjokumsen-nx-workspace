@@ -10,7 +10,7 @@ export function getSectionContentType(
   line: string,
 ): Extract<
   SectionContentType,
-  'section' | 'code-block' | 'list' | 'paragraph' | 'commented'
+  'section' | 'code-block' | 'list' | 'paragraph' | 'commented' | 'quote'
 > {
   const trimmedLine = line.trimStart();
   if (trimmedLine.startsWith('#')) {
@@ -27,6 +27,10 @@ export function getSectionContentType(
 
   if (trimmedLine.startsWith('<!--')) {
     return 'commented';
+  }
+
+  if (trimmedLine.startsWith('> ')) {
+    return 'quote';
   }
 
   return 'paragraph';

@@ -3,6 +3,7 @@ import { MarkdownType, SectionContentType } from '@peterjokumsen/ts-md-models';
 import { getSectionContentType } from '../helper-fns';
 import { readList } from './read-list';
 import { readParagraph } from './read-paragraph';
+import { readQuote } from './read-quote';
 import { readSection } from './read-section';
 
 /**
@@ -37,6 +38,12 @@ export function* generateMarkdownSections(
       }
       case 'paragraph': {
         const { result, lastLineIndex } = readParagraph(lines, idx);
+        idx = lastLineIndex;
+        next = result;
+        break;
+      }
+      case 'quote': {
+        const { result, lastLineIndex } = readQuote(lines, idx);
         idx = lastLineIndex;
         next = result;
         break;
