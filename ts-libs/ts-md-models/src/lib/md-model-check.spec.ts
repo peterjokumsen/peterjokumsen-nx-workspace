@@ -24,7 +24,7 @@ describe('mdModelCheck', () => {
       items: [{ type: 'paragraph', content: '' }],
     },
     paragraph: { type: 'paragraph', content: 'paragraph-content' },
-    quote: { type: 'quote', content: 'quote-content' },
+    quote: { type: 'quote', paragraphs: [] },
     section: { type: 'section', title: 'section-title', contents: [] },
     text: { type: 'text', content: 'text-content' },
     commented: { type: 'commented', lines: [] },
