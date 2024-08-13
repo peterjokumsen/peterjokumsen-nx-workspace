@@ -46,7 +46,8 @@ export interface MarkdownParagraph extends HasMarkdownContentType {
 
 export interface MarkdownQuote extends HasMarkdownContentType {
   type: 'quote';
-  content: string | MarkdownType<SectionContentType>[];
+  indent?: number;
+  paragraphs: MarkdownParagraph[];
 }
 
 export interface MarkdownHorizontalRule extends HasMarkdownContentType {
