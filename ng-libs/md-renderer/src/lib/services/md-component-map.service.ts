@@ -10,6 +10,7 @@ import {
   MdLinkComponent,
   MdListComponent,
   MdParagraphComponent,
+  MdQuoteBlockComponent,
   MdSectionComponent,
   MdTextComponent,
   MdUnknownComponent,
@@ -29,6 +30,7 @@ export class MdComponentMapService {
     link: MdLinkComponent,
     list: MdListComponent,
     paragraph: MdParagraphComponent,
+    quote: MdQuoteBlockComponent,
     section: MdSectionComponent,
     text: MdTextComponent,
   };

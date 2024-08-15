@@ -10,6 +10,7 @@ export type ExpectedContentTypes = Extract<
   | 'link'
   | 'list'
   | 'paragraph'
+  | 'quote'
   | 'section'
   | 'text'
 >;
@@ -23,6 +24,7 @@ const allowed: Required<Record<ExpectedContentTypes, object>> = {
   link: {},
   list: {},
   paragraph: {},
+  quote: {},
   section: {},
   text: {},
 };
