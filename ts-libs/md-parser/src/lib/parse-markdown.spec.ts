@@ -606,7 +606,7 @@ describe('parseMarkdown', () => {
     ]);
   });
 
-  xdescribe('when reading quote.md', () => {
+  describe('when reading quote.md', () => {
     itShouldBeParsed(
       'quote.md',
       [
@@ -633,30 +633,36 @@ describe('parseMarkdown', () => {
         'Multi-line quote',
         [
           {
-            type: 'paragraph',
-            content: [
+            indent: 0,
+            type: 'quote',
+            paragraphs: [
               {
-                type: 'text',
-                content: 'First line',
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'text',
+                    content: 'First line',
+                  },
+                  {
+                    type: 'text',
+                    content: '',
+                    format: 'line-break',
+                  },
+                  {
+                    type: 'text',
+                    content: 'Second line',
+                    format: 'bold',
+                  },
+                ],
               },
               {
-                type: 'text',
-                content: '',
-                format: 'line-break',
-              },
-              {
-                type: 'text',
-                content: 'Second line',
-                format: 'bold',
-              },
-            ],
-          },
-          {
-            type: 'paragraph',
-            content: [
-              {
-                type: 'text',
-                content: 'Third line',
+                type: 'paragraph',
+                content: [
+                  {
+                    type: 'text',
+                    content: 'Third line',
+                  },
+                ],
               },
             ],
           },
