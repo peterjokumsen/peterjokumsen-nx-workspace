@@ -22,6 +22,10 @@ Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/stati
 
 [`ng-libs/**`](./ng-libs/README.md) is a collection of Angular libraries, meant to be shared re-usable components, services, and utilities.
 
+#### ng-libs/md-renderer
+
+[`ng-libs/md-renderer`](./ng-libs/md-renderer/README.md) is a Angular project to render markdown.
+
 #### ng-libs/services
 
 [`ng-libs/services`](./ng-libs/services/README.md) is a collection of shared Angular services for the workspace. Named as `ng-services`, just in case any other `services` libraries created in the future.
