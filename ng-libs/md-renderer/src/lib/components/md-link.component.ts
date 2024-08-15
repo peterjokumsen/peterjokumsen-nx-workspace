@@ -41,26 +41,7 @@ type MappedAnchor = Omit<MarkdownType<'link'>, 'content'> & {
       </a>
     }
   `,
-  styles: `
-    a {
-      text-decoration: underline;
-
-      &:hover mat-icon {
-        opacity: 1;
-      }
-    }
-
-    mat-icon {
-      transition: opacity 0.2s;
-      font-size: 1em;
-      width: 1em;
-      height: 1em;
-
-      @media (min-width: 600px) {
-        opacity: 0.6;
-      }
-    }
-  `,
+  styleUrl: './md-link.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdLinkComponent implements HasContent<'link'> {
