@@ -4,8 +4,7 @@
 
 # Multi-line quote
 
-- List
-  > First line  
-  > **Second line**
-  >
-  > Third line
+> First line  
+> **Second line**
+>
+> Third line
