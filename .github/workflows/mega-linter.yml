@@ -78,11 +78,7 @@ jobs:
           #     github.event_name == 'push' &&
           #     github.ref == 'refs/heads/main'
           #   }}
-          VALIDATE_ALL_CODEBASE: >-
-            ${{
-              github.event_name == 'push' &&
-              github.ref == 'refs/heads/main'
-            }}
+          VALIDATE_ALL_CODEBASE: true
 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
