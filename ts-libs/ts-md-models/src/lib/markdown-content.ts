@@ -64,6 +64,7 @@ export interface MarkdownImage extends HasMarkdownContentType {
   type: 'image';
   src: string;
   alt: string;
+  placement?: 'begin' | 'center' | 'end' | 'full';
 }
 
 export interface MarkdownLink extends HasMarkdownContentType {
