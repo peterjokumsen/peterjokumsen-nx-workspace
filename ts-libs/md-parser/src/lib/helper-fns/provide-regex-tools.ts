@@ -1,4 +1,5 @@
 import {
+  ImagePlacementType,
   ParagraphContentType,
   SectionContentType,
 } from '@peterjokumsen/ts-md-models';
@@ -49,16 +50,22 @@ export function provideRegexTools<T extends RegexContentType>(
       };
     case 'image':
       return {
-        regex: /!\[(.*?)]\((.*?)\)/,
+        regex: /!\[(.*?)]\((.*?)(\??)(?:placement=(.+?))?\)/,
         contentFn: (regex) => {
-          const [matched, alt, src] = regex;
+          const [matched, alt, src, , placement] = regex;
+          const content: MatchedContent<'image'>['content'] = {
+            type: 'image',
+            alt,
+            src,
+          };
+
+          if (placement) {
+            content.placement = placement as ImagePlacementType;
+          }
+
           return {
             matched,
-            content: {
-              type: 'image',
-              alt,
-              src,
-            },
+            content,
           } as MatchedContent<T>;
         },
       };
