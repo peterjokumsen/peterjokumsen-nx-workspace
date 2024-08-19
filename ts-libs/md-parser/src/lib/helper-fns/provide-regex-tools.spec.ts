@@ -25,13 +25,18 @@ describe('provideRegexTools', () => {
       'image',
       {
         shouldMatch: [
-          '[![alt-value](/src-value) link text](/href)',
+          '[![alt-value](/src-value?placement=end) link text](/href)',
           '![alt](/src)',
         ],
         shouldNotMatch: ['[link](/href)', 'random string'],
         expectedMatchFromFirstMatch: {
-          matched: '![alt-value](/src-value)',
-          content: { type: 'image', alt: 'alt-value', src: '/src-value' },
+          matched: '![alt-value](/src-value?placement=end)',
+          content: {
+            type: 'image',
+            alt: 'alt-value',
+            src: '/src-value',
+            placement: 'end',
+          },
         },
       },
     ],

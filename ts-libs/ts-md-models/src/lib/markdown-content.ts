@@ -1,3 +1,4 @@
+import { ImagePlacementType } from './image-placement-type';
 import { MarkdownContentType } from './markdown-content-type';
 import { MarkdownFormatType } from './markdown-format-type';
 import { ParagraphContentType } from './paragraph-content-type';
@@ -64,7 +65,7 @@ export interface MarkdownImage extends HasMarkdownContentType {
   type: 'image';
   src: string;
   alt: string;
-  placement?: 'begin' | 'center' | 'end' | 'full';
+  placement?: ImagePlacementType;
 }
 
 export interface MarkdownLink extends HasMarkdownContentType {

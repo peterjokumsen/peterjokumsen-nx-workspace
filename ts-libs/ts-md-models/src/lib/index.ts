@@ -1,3 +1,4 @@
+export * from './image-placement-type';
 export * from './markdown-ast';
 export * from './markdown-content';
 export * from './markdown-content-type';
