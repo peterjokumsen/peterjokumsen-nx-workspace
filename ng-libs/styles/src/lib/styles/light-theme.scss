@@ -8,3 +8,5 @@
 @include mat.core();
 
 @include generate-from-theme-colors($light-theme);
+
+@import 'highlight.js/scss/default';

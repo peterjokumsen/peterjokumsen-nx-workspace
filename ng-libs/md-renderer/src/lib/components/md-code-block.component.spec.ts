@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
+import { CodeHighlightService } from '../services';
+import { HighlightedCode } from '../models';
 import { MdCodeBlockComponent } from './md-code-block.component';
 import { logUnexpectedContent } from '../fns';
 
@@ -9,9 +11,18 @@ jest.mock('../fns');
 describe('MdCodeBlockComponent', () => {
   let component: MdCodeBlockComponent;
   let fixture: ComponentFixture<MdCodeBlockComponent>;
+  let codeHighlightSpy: Partial<jest.Mocked<CodeHighlightService>>;
   let logSpy: Partial<jest.Mocked<LogFns>>;
 
   beforeEach(async () => {
+    const mockResult: HighlightedCode = {
+      htmlCode: 'html-code',
+      language: 'lang',
+      code: 'code',
+    };
+    codeHighlightSpy = {
+      highlight: jest.fn().mockName('highlight').mockReturnValue(mockResult),
+    };
     logSpy = {
       warn: jest.fn().mockName('warn'),
     };
@@ -19,6 +30,7 @@ describe('MdCodeBlockComponent', () => {
     await TestBed.configureTestingModule({
       providers: [
         // providers
+        { provide: CodeHighlightService, useValue: codeHighlightSpy },
         { provide: PjLogger, useValue: { to: logSpy } },
       ],
       declarations: [MdCodeBlockComponent],
@@ -42,6 +54,16 @@ describe('MdCodeBlockComponent', () => {
     it('should extract language', () => {
       component.content = { type: 'code-block', language: 'value', lines: [] };
       expect(component.language()).toEqual('value');
+    });
+
+    it('should use code highlight service', () => {
+      component.content = {
+        type: 'code-block',
+        language: 'value',
+        lines: ['code'],
+      };
+      expect(component.highlightedCode()).toBeTruthy();
+      expect(codeHighlightSpy.highlight).toHaveBeenCalledWith('code', 'value');
     });
 
     describe('when content is not a code-block element', () => {
