@@ -8,3 +8,5 @@
 @include mat.core();
 
 @include generate-from-theme-colors($dark-theme);
+
+@import 'highlight.js/scss/dark';

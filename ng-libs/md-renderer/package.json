@@ -7,7 +7,8 @@
     "@angular/core": "^18.2.0",
     "@angular/material": "^18.2.0",
     "@peterjokumsen/ts-md-models": "*",
-    "@peterjokumsen/ng-services": "*"
+    "@peterjokumsen/ng-services": "*",
+    "highlight.js": "^11.10.0"
   },
   "sideEffects": false
 }
