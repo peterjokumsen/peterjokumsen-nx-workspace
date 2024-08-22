@@ -1,18 +1,2 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-# Define some colors
-BLUE='\033[0;34m'
-RED_BACKGROUND='\033[41m'
-GREEN_BACKGROUND='\033[42m'
-NC='\033[0m' # No Color
-
-echo -e "${BLUE}Running tests of affected projects..."
-if npm run pre-push:check; then
-  echo -e "${NC}${GREEN_BACKGROUND}pre-push:check successful!${NC}"
-else
-  echo -e "${NC}${RED_BACKGROUND}pre-push:check failed!${NC}"
-  exit 1
-fi
-
-echo -e "${NC}${GREEN_BACKGROUND}Pre-push checks completed.${NC}"
+npm run format:check
+npm run pre-push:check
