@@ -19,7 +19,7 @@
     "format:check": "nx format:check",
     "pre-commit:write": "nx format:write && npm run lint:uncommitted",
     "pre-push:check": "nx affected --base=origin/main -t lint test build --parallel=5",
-    "prepare": "husky",
+    "prepare": "husky || true",
     "mega-lint": "npx mega-linter-runner --flavor javascript"
   },
   "private": true,
