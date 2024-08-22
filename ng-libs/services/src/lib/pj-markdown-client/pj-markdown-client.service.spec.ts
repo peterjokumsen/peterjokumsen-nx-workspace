@@ -1,9 +1,9 @@
-import { TestBed } from '@angular/core/testing';
+import { firstValueFrom, of } from 'rxjs';
 
-import { PjMarkdownClient } from './';
 import { HttpClient } from '@angular/common/http';
 import { MarkdownParserService } from './services';
-import { firstValueFrom, of } from 'rxjs';
+import { PjMarkdownClient } from './';
+import { TestBed } from '@angular/core/testing';
 
 describe('PjMarkdownClientService', () => {
   let service: PjMarkdownClient;
@@ -43,17 +43,24 @@ describe('PjMarkdownClientService', () => {
 
       await firstValueFrom(service.readMarkdown(url));
 
-      expect(httpClient.get).toHaveBeenCalledWith(url, { responseType: 'text' });
+      expect(httpClient.get).toHaveBeenCalledWith(url, {
+        responseType: 'text',
+      });
     });
 
     it('should call markdownParserService.parse with the response', async () => {
       await firstValueFrom(service.readMarkdown('/assets/docs/readme.md'));
 
-      expect(markdownParserService.parse).toHaveBeenCalledWith({ markdownContent: 'markdown', basePath: '/assets/docs' });
+      expect(markdownParserService.parse).toHaveBeenCalledWith({
+        markdownContent: 'markdown',
+        basePath: '/assets/docs',
+      });
     });
 
     it('should return the parsed markdown', async () => {
-      const result = await firstValueFrom(service.readMarkdown('/assets/docs/readme.md'));
+      const result = await firstValueFrom(
+        service.readMarkdown('/assets/docs/readme.md'),
+      );
 
       expect(result).toEqual({ sections: [], tags: [] });
     });

@@ -12,7 +12,6 @@ To use the `PjMarkdownClient` service, you need to provide it in the root module
 
 ```typescript
 import { ApplicationConfig } from '@angular/core';
-
 import { providePjMarkdownClient } from '@peterjokumsen/ng-services';
 
 export const appConfig: ApplicationConfig = {
@@ -28,7 +27,6 @@ Or you can provide it in the root module of your application:
 
 ```typescript
 import { NgModule } from '@angular/core';
-
 import { providePjMarkdownClient } from '@peterjokumsen/ng-services';
 
 @NgModule({
@@ -55,10 +53,9 @@ import { PjMarkdownClient } from '@peterjokumsen/ng-services';
 })
 export class AppComponent {
   constructor(private markdownClient: PjMarkdownClient) {
-    this.markdownClient.getMarkdown('/assets/markdown-file.md')
-      .subscribe((markdown) => {
-        console.log(markdown);
-      });
+    this.markdownClient.getMarkdown('/assets/markdown-file.md').subscribe((markdown) => {
+      console.log(markdown);
+    });
   }
 }
 ```

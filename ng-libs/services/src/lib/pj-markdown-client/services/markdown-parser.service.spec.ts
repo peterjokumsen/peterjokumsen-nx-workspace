@@ -1,6 +1,5 @@
-import { TestBed } from '@angular/core/testing';
-
 import { MarkdownParserService } from './markdown-parser.service';
+import { TestBed } from '@angular/core/testing';
 import { parseMarkdown } from '@peterjokumsen/md-parser';
 
 jest.mock('@peterjokumsen/md-parser');
@@ -26,7 +25,8 @@ describe('MarkdownParserService', () => {
     let parseMock: jest.MockedFn<typeof parseMarkdown>;
 
     beforeEach(() => {
-      parseMock = jest.mocked(parseMarkdown)
+      parseMock = jest
+        .mocked(parseMarkdown)
         .mockName('parseMarkdown')
         .mockReturnValue({ sections: [], tags: [] });
     });
@@ -49,13 +49,16 @@ describe('MarkdownParserService', () => {
         ['./image.png', '/assets/doc/image.png'],
         ['../images/image.png', '/assets/images/image.png'],
         ['../../images/image.png', '/images/image.png'],
-      ])('should replace "%s" with "%s" when base path is "assets/doc"', (original, expected) => {
-        const markdownContent = `![alt](${original})`;
+      ])(
+        'should replace "%s" with "%s" when base path is "assets/doc"',
+        (original, expected) => {
+          const markdownContent = `![alt](${original})`;
 
-        service.parse({ markdownContent, basePath: 'assets/doc' });
+          service.parse({ markdownContent, basePath: 'assets/doc' });
 
-        expect(parseMock).toHaveBeenCalledWith(`![alt](${expected})`);
-      });
+          expect(parseMock).toHaveBeenCalledWith(`![alt](${expected})`);
+        },
+      );
     });
 
     describe('when content has absolute image paths', () => {

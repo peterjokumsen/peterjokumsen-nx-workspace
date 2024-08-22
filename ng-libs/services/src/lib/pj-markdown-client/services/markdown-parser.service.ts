@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { parseMarkdown } from '@peterjokumsen/md-parser';
-import { ToBeParsed } from '../models';
 import { MarkdownAst } from '@peterjokumsen/ts-md-models';
+import { ToBeParsed } from '../models';
+import { parseMarkdown } from '@peterjokumsen/md-parser';
 
 /**
  * Service to parse markdown content, using parseMarkdown after adjusting the content as follows:
@@ -18,20 +18,29 @@ export class MarkdownParserService {
    * @param basePath
    * @private
    */
-  private transformRelativeImagePaths(markdownContent: string, basePath: string): string {
+  private transformRelativeImagePaths(
+    markdownContent: string,
+    basePath: string,
+  ): string {
     const regex = /!\[(.*)]\(((?:\.{1,2}\/)*)?(\w+\/)*(\w+.\w+)\)/g;
-    return markdownContent.replace(regex, (_, altText, relativePath, folderPath, fileName) => {
-      let base = basePath[0] === '/' ? basePath.slice(1) : basePath;
-      if (typeof relativePath === 'string' && relativePath.includes('..')) {
-        const baseParts = basePath.split('/').filter((p) => !!p);
-        const relativeParts = relativePath.split('/').filter((p) => !!p);
-        const parts = baseParts.slice(0, baseParts.length - relativeParts.length);
-        base = `${parts.join('/')}`;
-      }
+    return markdownContent.replace(
+      regex,
+      (_, altText, relativePath, folderPath, fileName) => {
+        let base = basePath[0] === '/' ? basePath.slice(1) : basePath;
+        if (typeof relativePath === 'string' && relativePath.includes('..')) {
+          const baseParts = basePath.split('/').filter((p) => !!p);
+          const relativeParts = relativePath.split('/').filter((p) => !!p);
+          const parts = baseParts.slice(
+            0,
+            baseParts.length - relativeParts.length,
+          );
+          base = `${parts.join('/')}`;
+        }
 
-      const path = `/${base}/${folderPath ?? ''}`.replace(/\/+/g, '/');
-      return `![${altText}](${path}${fileName})`;
-    });
+        const path = `/${base}/${folderPath ?? ''}`.replace(/\/+/g, '/');
+        return `![${altText}](${path}${fileName})`;
+      },
+    );
   }
 
   /**
@@ -40,7 +49,10 @@ export class MarkdownParserService {
    * @param basePath
    */
   parse({ markdownContent, basePath }: ToBeParsed): MarkdownAst {
-    markdownContent = this.transformRelativeImagePaths(markdownContent, basePath);
+    markdownContent = this.transformRelativeImagePaths(
+      markdownContent,
+      basePath,
+    );
     return parseMarkdown(markdownContent);
   }
 }
