@@ -22,10 +22,12 @@ export class MarkdownParserService {
     markdownContent: string,
     basePath: string,
   ): string {
-    const regex = /!\[(.*)]\(((?:\.{1,2}\/)*)?(\w+\/)*(\w+.\w+)\)/g;
+    const regex = /!\[(.*)]\(((?:\.{1,2}\/)*)?(\w+\/)*(.*\.\w{3,4})\)/g;
     return markdownContent.replace(
       regex,
-      (_, altText, relativePath, folderPath, fileName) => {
+      (original, altText, relativePath, folderPath, fileName) => {
+        if (fileName?.startsWith('http')) return original;
+
         let base = basePath[0] === '/' ? basePath.slice(1) : basePath;
         if (typeof relativePath === 'string' && relativePath.includes('..')) {
           const baseParts = basePath.split('/').filter((p) => !!p);

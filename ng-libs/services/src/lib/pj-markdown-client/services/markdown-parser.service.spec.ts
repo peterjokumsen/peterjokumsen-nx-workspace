@@ -49,14 +49,17 @@ describe('MarkdownParserService', () => {
         ['./image.png', '/assets/doc/image.png'],
         ['../images/image.png', '/assets/images/image.png'],
         ['../../images/image.png', '/images/image.png'],
+        ['../other-images/a-image.png', '/assets/other-images/a-image.png'],
       ])(
         'should replace "%s" with "%s" when base path is "assets/doc"',
         (original, expected) => {
-          const markdownContent = `![alt](${original})`;
+          const markdownContent = `# Hello world\n\n![alt](${original})`;
 
           service.parse({ markdownContent, basePath: 'assets/doc' });
 
-          expect(parseMock).toHaveBeenCalledWith(`![alt](${expected})`);
+          expect(parseMock).toHaveBeenCalledWith(
+            expect.stringContaining(`![alt](${expected})`),
+          );
         },
       );
     });
