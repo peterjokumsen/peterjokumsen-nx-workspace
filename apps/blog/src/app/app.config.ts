@@ -3,6 +3,7 @@ import {
   providePjBrowserTools,
   providePjHttpTools,
   providePjLogger,
+  providePjMarkdownClient,
   providePjTheme,
 } from '@peterjokumsen/ng-services';
 
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     providePjBrowserTools(),
     providePjLogger({ production: !isDevMode() }),
     providePjTheme(),
+    providePjMarkdownClient(),
     providePjHttpTools({ production: !isDevMode() }, withFetch()),
   ],
 };
