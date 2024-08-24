@@ -43,6 +43,8 @@ describe('AboutMeComponent', () => {
   });
 
   it('should read markdown', () => {
-    expect(mdClient.readMarkdown).toHaveBeenCalledWith('assets/docs/about-me.md');
+    expect(mdClient.readMarkdown).toHaveBeenCalledWith(
+      'assets/docs/about-me.md',
+    );
   });
 });
