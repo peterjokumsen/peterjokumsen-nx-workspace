@@ -106,7 +106,9 @@
               "output": "/"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "serviceWorker": "apps/blog/ngsw-config.json",
+          "appShell": true
         },
         "development": {
           "optimization": false,
