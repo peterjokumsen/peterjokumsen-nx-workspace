@@ -1,9 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  FullPageLoaderComponent,
-  RouterNavComponent,
-  ThemeToggleComponent,
-} from '@peterjokumsen/ui-elements';
 
 import { FooterComponent } from './components/footer';
 import { HeaderComponent } from './components/header';
@@ -11,6 +6,7 @@ import { MockComponent } from 'ng-mocks';
 import { PjBrowserTools } from '@peterjokumsen/ng-services';
 import { PrimaryComponent } from './primary.component';
 import { Router } from '@angular/router';
+import { RouterNavComponent } from '@peterjokumsen/ui-elements';
 import { of } from 'rxjs';
 
 describe(`[blog] - ${PrimaryComponent.name}`, () => {
@@ -26,18 +22,9 @@ describe(`[blog] - ${PrimaryComponent.name}`, () => {
       ],
     })
       .overrideComponent(PrimaryComponent, {
-        remove: {
-          imports: [
-            RouterNavComponent,
-            FooterComponent,
-            FullPageLoaderComponent,
-            HeaderComponent,
-          ],
-        },
-        add: {
+        set: {
           imports: [
             MockComponent(RouterNavComponent),
-            MockComponent(ThemeToggleComponent),
             MockComponent(FooterComponent),
             MockComponent(HeaderComponent),
           ],
