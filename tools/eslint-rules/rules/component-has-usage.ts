@@ -22,16 +22,27 @@ export const RULE_NAME = 'component-has-usage';
 export const rule = ESLintUtils.RuleCreator(() => __filename)({
   name: RULE_NAME,
   meta: {
-    type: 'problem',
+    type: 'suggestion',
     docs: {
-      description: ``,
+      description: `Detect unused components`,
       recommended: 'recommended',
     },
     schema: [],
-    messages: {},
+    messages: {
+      123: `Component is not used`,
+    },
   },
   defaultOptions: [],
   create(context) {
-    return {};
+    return {
+      JSXOpeningElement(node) {
+        const sourceCode = context.sourceCode;
+        const text = sourceCode.getText();
+        context.report({
+          messageId: '123',
+          node
+        });
+      }
+    };
   },
 });

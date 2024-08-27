@@ -1,16 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
-import {
-  FullPageLoaderComponent,
-  PjUiRouterNavigationElement,
-  RouterNavComponent,
-} from '@peterjokumsen/ui-elements';
 import { NavigationStart, Route, Router, RouterOutlet } from '@angular/router';
-import { NgOptimizedImage, NgTemplateOutlet } from '@angular/common';
 import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { FooterComponent } from './components/footer';
 import { HeaderComponent } from './components/header';
+import { PjUiRouterNavigationElement } from '@peterjokumsen/ui-elements';
 import { childRoutes } from './app.routes';
 import { filter } from 'rxjs';
 import { pjFilterMap } from '@peterjokumsen/ts-utils';
@@ -18,16 +12,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
-  imports: [
-    RouterOutlet,
-    FaIconComponent,
-    NgOptimizedImage,
-    RouterNavComponent,
-    FullPageLoaderComponent,
-    NgTemplateOutlet,
-    FooterComponent,
-    HeaderComponent,
-  ],
+  imports: [RouterOutlet, FooterComponent, HeaderComponent],
   templateUrl: './primary.component.html',
   styles: ``,
 })
