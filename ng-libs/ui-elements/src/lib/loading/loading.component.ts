@@ -14,16 +14,16 @@ import {
   inject,
 } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'pj-ui-loading',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgOptimizedImage],
   template: `
     <img
       #image
-      srcSet="assets/logo-150.webp"
+      [ngSrc]="imageSrc"
       width="150"
       height="150"
       alt="Logo"
@@ -41,7 +41,10 @@ export class LoadingComponent {
   @ViewChild('image', { static: true }) image!: ElementRef<HTMLImageElement>;
 
   @Input()
-  set loadFactor(value: number | null) {
+  imageSrc = 'assets/logo-150.webp';
+
+  @Input()
+  set loadFactor(value: number | undefined) {
     if (!value) {
       this._stopSpin = true;
       return;
