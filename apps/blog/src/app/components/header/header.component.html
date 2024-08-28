@@ -1,13 +1,7 @@
 <header class="primary-block pj-header content">
   <div class="pj-header-title content">
     <div class="pj-header-title-logo">
-      <img
-        [ngSrc]="imageSrc"
-        alt="logo"
-        height="150"
-        width="150"
-        [priority]="true"
-      />
+      <pj-ui-loading [loadFactor]="loadingCount()" [imageSrc]="imageSrc" />
     </div>
     <div class="pj-header-title-heading">
       <h1>Peter Jokumsen</h1>
