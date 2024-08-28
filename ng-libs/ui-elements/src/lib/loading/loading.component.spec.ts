@@ -49,8 +49,8 @@ describe('LoadingComponent', () => {
       spinSpy = jest.spyOn(component, 'spinImage');
     });
 
-    it('should stop spinning when loadFactor is null', () => {
-      component.loadFactor = null;
+    it('should stop spinning when loadFactor is undefined', () => {
+      component.loadFactor = undefined;
       expect(spinSpy).not.toHaveBeenCalled();
       expect(component['_stopSpin']).toBe(true);
     });

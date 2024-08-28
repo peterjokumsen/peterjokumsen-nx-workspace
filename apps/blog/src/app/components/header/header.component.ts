@@ -1,9 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed, inject,
+  inject,
   input,
-  signal,
 } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
@@ -13,10 +12,10 @@ import {
 } from '@peterjokumsen/ui-elements';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { HttpCallCountService } from '@peterjokumsen/ng-services';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { debounceTime } from 'rxjs';
+import { faCode } from '@fortawesome/free-solid-svg-icons';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header',
