@@ -1,10 +1,13 @@
 import { Component, OnInit, inject } from '@angular/core';
+import {
+  LoadingComponent,
+  PjUiRouterNavigationElement,
+} from '@peterjokumsen/ui-elements';
 import { NavigationStart, Route, Router, RouterOutlet } from '@angular/router';
 import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 
 import { FooterComponent } from './components/footer';
 import { HeaderComponent } from './components/header';
-import { PjUiRouterNavigationElement } from '@peterjokumsen/ui-elements';
 import { childRoutes } from './app.routes';
 import { filter } from 'rxjs';
 import { pjFilterMap } from '@peterjokumsen/ts-utils';
@@ -12,7 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
-  imports: [RouterOutlet, FooterComponent, HeaderComponent],
+  imports: [RouterOutlet, FooterComponent, HeaderComponent, LoadingComponent],
   templateUrl: './primary.component.html',
   styles: ``,
 })
@@ -27,7 +30,7 @@ export class PrimaryComponent implements OnInit {
     ),
     takeUntilDestroyed(),
   );
-
+  loading = true;
   readonly navElements: PjUiRouterNavigationElement[] = [];
 
   private createNavElement(route: Route): PjUiRouterNavigationElement {
