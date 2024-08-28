@@ -13,7 +13,6 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 
 @Component({
@@ -21,13 +20,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
   standalone: true,
   imports: [CommonModule, NgOptimizedImage],
   template: `
-    <img
-      #image
-      [ngSrc]="imageSrc"
-      width="150"
-      height="150"
-      alt="Logo"
-    />
+    <img #image [ngSrc]="imageSrc" width="150" height="150" alt="Logo" />
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
