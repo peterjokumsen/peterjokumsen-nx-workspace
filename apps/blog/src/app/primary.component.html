@@ -1,6 +1,6 @@
 <app-header [navElements]="navElements" />
 <div class="main-block">
-  <div class="content min-h-screen">
+  <div class="content min-h-screen" [@routeAnimations]="getAnimationContext()">
     <router-outlet></router-outlet>
   </div>
 </div>
