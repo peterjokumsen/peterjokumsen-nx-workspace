@@ -32,6 +32,7 @@ export class PrimaryComponent implements OnInit {
   private _browserTools = inject(PjBrowserTools);
   private _router = inject(Router);
   private _contexts = inject(ChildrenOutletContexts);
+  private _animations: string[] = [];
 
   private _navigationStart$ = this._router.events.pipe(
     filter(
@@ -65,11 +66,14 @@ export class PrimaryComponent implements OnInit {
   }
 
   getAnimationContext() {
+    const lastAnimation = this._animations.pop();
     const context = this._contexts.getContext('primary');
     this._logger?.to.log('Primary context: ', context);
-    return (
+    const nextAnimation =
       context?.route?.snapshot?.data?.['animation'] ??
-      context?.route?.snapshot?.url
-    );
+      context?.route?.snapshot?.url;
+    this._animations.push(nextAnimation);
+    if (!lastAnimation) return null;
+    return nextAnimation;
   }
 }
