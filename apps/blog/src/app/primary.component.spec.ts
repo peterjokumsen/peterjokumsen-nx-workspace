@@ -71,21 +71,31 @@ describe(`[blog] - ${PrimaryComponent.name}`, () => {
       } as unknown as OutletContext);
     });
 
-    it('should return animation when available', () => {
-      expect(component.getAnimationContext()).toBe('something');
+    it('should return null initially', () => {
+      expect(component.getAnimationContext()).toBeNull();
     });
 
-    it('should return url when animation is not available', () => {
-      contextSpy.getContext?.mockReturnValue({
-        route: {
-          snapshot: {
-            data: {},
-            url: ['url'],
-          } as unknown as ActivatedRouteSnapshot,
-        },
-      } as unknown as OutletContext);
+    describe('when called multiple times', () => {
+      beforeEach(() => {
+        component.getAnimationContext();
+      });
 
-      expect(component.getAnimationContext()).toEqual(['url']);
+      it('should return animation when available', () => {
+        expect(component.getAnimationContext()).toBe('something');
+      });
+
+      it('should return url when animation is not available', () => {
+        contextSpy.getContext?.mockReturnValue({
+          route: {
+            snapshot: {
+              data: {},
+              url: ['url'],
+            } as unknown as ActivatedRouteSnapshot,
+          },
+        } as unknown as OutletContext);
+
+        expect(component.getAnimationContext()).toEqual(['url']);
+      });
     });
   });
 });
