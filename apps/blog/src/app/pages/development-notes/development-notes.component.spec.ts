@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ChangeHistoryComponent } from '../../components/change-history';
 import { DevelopmentNotesComponent } from './development-notes.component';
+import { DisplayMarkdownComponent } from '../../components';
 import { MockComponent } from 'ng-mocks';
 import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
 
@@ -17,7 +17,7 @@ describe('DevelopmentNotesComponent', () => {
         set: {
           imports: [
             MockComponent(PageIntroductionComponent),
-            MockComponent(ChangeHistoryComponent),
+            MockComponent(DisplayMarkdownComponent),
           ],
         },
       })

@@ -3,17 +3,21 @@
   [paragraphs]="[
     'This page is a collection of notes and thoughts on the development of this application.',
     'And an alternate approach to documentation on libraries in use.',
-    'Which I hope to then leverage into the proper blog posts, in future.'
+    'Which I hope to then leverage into the proper blog posts, in future.',
   ]"
   [style]="{
     url: '/assets/development_notes_background.webp',
-    position: 'right'
+    position: 'right',
   }"
   actions="Check out notes"
-  (callToAction)="content?.scrollIntoView({ behavior: 'smooth' })"
+  (callToAction)="
+    content?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  "
 ></pj-ui-page-introduction>
 <div #content>
   @defer {
-    <app-change-history></app-change-history>
+    <app-display-markdown
+      [filePath]="'/assets/docs/development-notes/README.md'"
+    />
   }
 </div>

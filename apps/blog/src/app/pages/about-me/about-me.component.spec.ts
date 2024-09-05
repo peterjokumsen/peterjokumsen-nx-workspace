@@ -1,34 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AboutMeComponent } from './about-me.component';
-import { MarkdownAst } from '@peterjokumsen/ts-md-models';
-import { MdRendererComponent } from '@peterjokumsen/md-renderer';
+import { By } from '@angular/platform-browser';
+import { DisplayMarkdownComponent } from '../../components/display-markdown/display-markdown.component';
 import { MockComponent } from 'ng-mocks';
-import { Observable } from 'rxjs';
-import { PjMarkdownClient } from '@peterjokumsen/ng-services';
 
 describe('AboutMeComponent', () => {
   let component: AboutMeComponent;
   let fixture: ComponentFixture<AboutMeComponent>;
-  let mdClient: Partial<jest.Mocked<PjMarkdownClient>>;
 
   beforeEach(async () => {
-    mdClient = {
-      readMarkdown: jest
-        .fn()
-        .mockName('readMarkdown')
-        .mockReturnValue(new Observable<MarkdownAst>()),
-    };
     await TestBed.configureTestingModule({
-      providers: [
-        // keep split
-        { provide: PjMarkdownClient, useValue: mdClient },
-      ],
       imports: [AboutMeComponent],
     })
       .overrideComponent(AboutMeComponent, {
         set: {
-          imports: [MockComponent(MdRendererComponent)],
+          imports: [MockComponent(DisplayMarkdownComponent)],
         },
       })
       .compileComponents();
@@ -42,8 +29,12 @@ describe('AboutMeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should read markdown', () => {
-    expect(mdClient.readMarkdown).toHaveBeenCalledWith(
+  it('should use display component with "assets/docs/about-me.md" file path', () => {
+    const displayMarkdownComponent = fixture.debugElement.query(
+      By.directive(DisplayMarkdownComponent),
+    );
+    expect(displayMarkdownComponent).toBeTruthy();
+    expect(displayMarkdownComponent.componentInstance.filePath).toBe(
       'assets/docs/about-me.md',
     );
   });
