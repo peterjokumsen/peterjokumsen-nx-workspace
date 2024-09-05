@@ -1,6 +1,6 @@
-# Learning stuff
+## Work in progress
 
-This is a collection of my journeys into learning new things. I will be documenting my learning process and sharing it with you. I hope you find it useful.
+Hoping to create a collection of my journeys into learning new things.
 
 > Starting with [`journeys` is not spelt `journies`](https://www.grammar-monster.com/plurals/plural_of_journey.htm) as I originally thought 😁.
 
@@ -14,12 +14,9 @@ So for now, I will just keep everything to this page.
 >
 > Image by [mostafa meraji](https://pixabay.com/users/mostafa_meraji-13551092/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5243951) from [Pixabay](https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=5243951)
 
-## Angular Material Theming
+## Attempting to break a bad habit
 
-I absolutely love [Angular Material](https://material.angular.io), but I consistently run into issues with theming.
-
-This isn't because [Angular Material theming](https://material.angular.io/guide/theming) is particularly difficult,
-but because **every time** I need to do it, I find myself repeating a `developer strat`, which goes something like this:
+I find myself repeating a kind of `developer strat`, that goes something like this:
 
 - Find documentation 🔍
 - _Scan_ documentation 🫣😎
@@ -36,9 +33,19 @@ but because **every time** I need to do it, I find myself repeating a `developer
 
 This is the happy case of when I don't chase any squirrels to procrastinate, which is something I've kind of done already with all of the emojis I've used in the list above.
 
-Although I have improved on this process with a few steps that I'll hopefully list out in a proper article. I have found that the areas where I have a good fundamental knowledge short circuits this process. And this could really be helped by actually reading the documentation the first time.
+To try and reduce this bad habit of mine, I plan to update this document with a basic target of what I hope to achieve and follow that up with documentation on the steps taken and lessons learned. Which should hopefully keep me on track **and** document things for review 🤞
 
-So let me get back to the reading, and I will hopefully update this little article with the basic notes of what I learnt 🤞
+## Angular Material theming
 
-> Writing this, has made me realize that there are many limitations to this site that need to be handled.  
-> Onwards and upwards!
+I absolutely love [Angular Material](https://material.angular.io), but I consistently run into issues with theming.
+
+While I don't think that [Angular Material theming](https://material.angular.io/guide/theming) is particularly difficult,
+I find that **every time** I need to do it, I get it 70% done and call it there. And when it ends up being something that I need to revisit, I've forgotten most of what I previously learnt.
+
+So this practice, should absolutely help me out with this. Let me set some basic goals:
+
+- Read through the documentation
+- Use Angular Material theming in a fresh project with 4 or more Material components used
+- Add 2 extra themes with basic approach to switching themes
+
+**To be completed by: 12/09/2024, with updates here at least every 2 days**

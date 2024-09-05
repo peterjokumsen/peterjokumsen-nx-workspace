@@ -23,12 +23,6 @@ export const childRoutes: Route[] = [
     data: { title: 'Development Notes' },
   },
   {
-    path: 'learning-stuff',
-    loadComponent: () =>
-      import('./pages/learning-stuff').then((m) => m.LearningStuffComponent),
-    data: { title: 'Learning' },
-  },
-  {
     path: '**',
     loadComponent: () =>
       import('./pages/not-found').then((m) => m.NotFoundComponent),
