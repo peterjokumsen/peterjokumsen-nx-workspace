@@ -35,7 +35,7 @@ This is the happy case of when I don't chase any squirrels to procrastinate, whi
 
 To try and reduce this bad habit of mine, I plan to update this document with a basic target of what I hope to achieve and follow that up with documentation on the steps taken and lessons learned. Which should hopefully keep me on track **and** document things for review 🤞
 
-## Angular Material theming
+## Week 1 - Angular Material theming
 
 I absolutely love [Angular Material](https://material.angular.io), but I consistently run into issues with theming.
 
@@ -49,3 +49,11 @@ So this practice, should absolutely help me out with this. Let me set some basic
 - Add 2 extra themes with basic approach to switching themes
 
 **To be completed by: 12/09/2024, with updates here at least every 2 days**
+
+## Week 1 - 1/3 - Start
+
+I have not made any progress, unfortunately... but going to put something together so that there is something going on (And if I don't get things done, I'll just have to re-adjust 🤷)
+
+To really play around with theming, would like to great a simple standalone project for this purpose... And also play around with `Angular CLI`, since most of my time has been spent using `Nx`.
+
+Created [ng-playground repository](https://github.com/peterjokumsen/ng-playground). Thinking that I will try and do most of my changes in separate branches. Hopefully next update will be more details on using Angular Material.
