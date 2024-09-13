@@ -12,7 +12,7 @@
     ".gitignore",
     ".jscpd.json",
     ".prettierrc",
-    ".mega-linter.yml"
+    "*.yml"
   ],
   "language": "en",
   "noConfigSearch": true,
