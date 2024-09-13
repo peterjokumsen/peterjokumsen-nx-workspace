@@ -57,3 +57,33 @@ I have not made any progress, unfortunately... but going to put something togeth
 To really play around with theming, would like to great a simple standalone project for this purpose... And also play around with `Angular CLI`, since most of my time has been spent using `Nx`.
 
 Created [ng-playground repository](https://github.com/peterjokumsen/ng-playground). Thinking that I will try and do most of my changes in separate branches. Hopefully next update will be more details on using Angular Material.
+
+## Week 1 - 2/3 - Squirrel!
+
+I haven't been able to do anything related to learning about Angular Material theming 🤦🏻😅
+
+I've spent the past 2 evenings upgrading an older Angular project from v8.2 to v16, which has been an experience of it's own...
+
+Using [Angular upgrade guide](https://angular.dev/update-guide?v=8.2-17.0&l=3) makes the process relatively painless, but I did hit a few snags:
+
+The guide did not allow me to take `@ngrx/store` into account, which `ng update` command included in the list of packages it could update but only show next update as `18.0.2`:
+
+![Using ng update from v8](../../screenshots/ng-update-example.png)
+
+With this I ended up going with using the guide approach of first updating `@angular/core` and `@angular/cli`
+
+```bash
+npx @angular/cli@9 update @angular/core@9 @angular/cli@9
+```
+
+Followed by updating `@angular/cdk` and `@angular/material`, with the addition of `@ngrx/store` for the current major version being updated to:
+
+```bash
+npx @angular/cli@9 update @angular/cdk@9 @angular/material@9 @ngrx/store@9
+```
+
+This approach had a few hiccups from 9 to 12, although I was unable to run tests for the project which I believe was primarily due to me using `Node v20`. After updating to 16, I was finally able to run tests in the project and tweak things to get them passing.
+
+My next steps is to check if it actually functions properly 🤞 I'm hoping the passing tests are a good sign, but with the last commit for the project being 24 August 2022 I am pretty sure I'm going to have a few headaches reading my old code.
+
+Hopefully will get back to Angular Material theming in the very near future. Overall, it's been a decent week at least.

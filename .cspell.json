@@ -12,7 +12,7 @@
     ".gitignore",
     ".jscpd.json",
     ".prettierrc",
-    ".mega-linter.yml"
+    "*.yml"
   ],
   "language": "en",
   "noConfigSearch": true,
@@ -64,7 +64,8 @@
     "mostafa",
     "strat",
     "Pixabay",
-    "meraji"
+    "meraji",
+    "ngrx"
   ],
   "version": "0.2"
 }
