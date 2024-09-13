@@ -41,6 +41,7 @@ jobs:
         id: static_web_app_apikey
         uses: azure/CLI@v2
         with:
+          azcliversion: '2.63.0' # remove after jq is available in the default version
           inlineScript: |
             apiKey=$(az staticwebapp secrets list \
               --name '${{ inputs.app_name }}-static-web-app' \
