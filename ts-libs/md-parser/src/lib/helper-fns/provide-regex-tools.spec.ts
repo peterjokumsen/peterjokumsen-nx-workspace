@@ -13,7 +13,7 @@ describe('provideRegexTools', () => {
     [
       'code',
       {
-        shouldMatch: ['`code`'],
+        shouldMatch: ['`code` line `other`', '`code`'],
         shouldNotMatch: ['random string', 'no ` close'],
         expectedMatchFromFirstMatch: {
           matched: '`code`',

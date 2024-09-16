@@ -36,7 +36,7 @@ export function provideRegexTools<T extends RegexContentType>(
   switch (value) {
     case 'code':
       return {
-        regex: /`(.+)`/,
+        regex: /`(.+?)`/,
         contentFn: (regex) => {
           const [matched, content] = regex;
           return {

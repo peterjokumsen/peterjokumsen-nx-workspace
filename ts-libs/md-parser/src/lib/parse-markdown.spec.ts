@@ -350,6 +350,40 @@ describe('parseMarkdown', () => {
           },
         ],
       ],
+      [
+        'Multiple inline code elements',
+        [
+          {
+            type: 'paragraph',
+            content: [
+              {
+                type: 'code',
+                element: 'This',
+              },
+              {
+                type: 'text',
+                content: ' line ',
+              },
+              {
+                type: 'code',
+                element: 'has',
+              },
+              {
+                type: 'text',
+                content: ' multiple ',
+              },
+              {
+                type: 'code',
+                element: 'inline code',
+              },
+              {
+                type: 'text',
+                content: ' elements.',
+              },
+            ],
+          },
+        ],
+      ],
     );
   });
 
