@@ -40,7 +40,7 @@ permissions:
 jobs:
   # lint bicep files when a pull request is opened or synchronized
   lint_biceps:
-    if: github.event_name == 'pull_request' && inputs.infra_affected == 'Yes'
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     name: 'Lint Bicep 💪'
     steps:
@@ -76,7 +76,6 @@ jobs:
 
   # deploy bicep files when a pull request is opened or synchronized, or when a push is made to the main branch
   deploy_bicep:
-    if: inputs.infra_affected == 'Yes'
     runs-on: ubuntu-latest
     name: 'Deploy Bicep 💪'
     steps:
