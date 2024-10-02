@@ -20,7 +20,8 @@
     "pre-commit:write": "nx format:write && npm run lint:uncommitted",
     "pre-push:check": "nx affected --base=origin/main -t lint test build --parallel=5",
     "prepare": "husky || true",
-    "mega-lint": "npx mega-linter-runner --flavor javascript"
+    "mega-lint": "npx mega-linter-runner --flavor javascript",
+    "update-peer-dependencies": "node update-peer-dependencies.js"
   },
   "private": true,
   "dependencies": {
