@@ -99,12 +99,14 @@ jobs:
             az config set bicep.use_binary_from_path=false
 
             echo "::group::Static Web App what-if"
+            echo "::command::az deployment group what-if ${{ inputs.parameters }}"
             az deployment group what-if \
               ${{ inputs.parameters }}
 
             echo "::endgroup::"
 
             echo "::group::Static Web App validate"
+            echo "::command::az deployment group validate ${{ inputs.parameters }}"
             az deployment group validate \
               ${{ inputs.parameters }}
 
