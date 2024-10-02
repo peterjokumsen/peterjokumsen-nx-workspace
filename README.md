@@ -52,6 +52,44 @@ Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/stati
 
 [`ts-libs/ts-utils`](./ts-libs/ts-utils/README.md) is a collection of utility functions for the workspace.
 
+## Upgrading dependencies
+
+### Nx
+
+Use Nx migrate to update the workspace to the latest version of Nx.
+
+```bash
+npx nx migrate latest
+```
+
+#### Installing updated dependencies
+
+If `migrate` updated `package.json`, I've found that need to remove `package-lock.json` and `node_modules` before running `npm install` to avoid issues with `npm` and `yarn` dependencies.
+
+After installing dependencies, buildable libraries with `peerDependencies` may need to be updated. Node script `update-peer-dependencies.js` can be run to update the `peerDependencies` in the `package.json` files.
+
+```bash
+npm run update-peer-dependencies
+```
+
+If lint fails due to `@nx/dependency-checks` rule, try to run `npx nx reset` to reset `Nx` daemon and cache.
+
+#### Running migrations
+
+If `migrations.json` file has been created, run the migrations to update the workspace.
+
+```bash
+npx nx migrate --run-migrations
+```
+
+### Angular
+
+Angular should be updated when updating [Nx](#nx) to the latest version. So have not had to do this manually yet.
+
+### Other dependencies
+
+Have not yet found a simple approach for updating other dependencies at this time. Will update this section when I find a good approach.
+
 ## Code coverage
 
 Sunburst graph of code coverage for the workspace:
