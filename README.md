@@ -90,6 +90,49 @@ Angular should be updated when updating [Nx](#nx) to the latest version. So have
 
 Have not yet found a simple approach for updating other dependencies at this time. Will update this section when I find a good approach.
 
+## Local infrastructure tests
+
+### Pre-requisites
+
+- [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+
+Install bicep:
+
+```bash
+az bicep install
+```
+
+Possibly update `az` CLI:
+
+```bash
+az upgrade
+```
+
+### Linting bicep
+
+```bash
+az bicep build ./infrastructure/main.bicep
+```
+
+```bash
+az bicep lint --file ./.biceps/main.bicep --diagnostics-format sarif
+```
+
+### Deploying bicep
+
+```bash
+az deployment group what-if --resource-group blog-rg
+  --name 'add-tdd.b7e69de'
+  --template-file ./.biceps/main.bicep
+  --parameters
+    location='westeurope'
+    branch='add-tdd'
+    appName='blog'
+    subDomain='blog'
+
+az deployment sub create --location westeurope --template-file ./infrastructure/main.bicep
+```
+
 ## Running GitHub Workflows locally
 
 To run GitHub workflows locally, use [act](https://nektosact.com/) ([GitHub repository](https://github.com/nektos/act)).
