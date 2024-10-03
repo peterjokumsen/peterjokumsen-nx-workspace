@@ -21,6 +21,11 @@ on:
         description: 'Is the infra affected by the latest changes? (Yes/No)'
         required: true
         type: string
+      az_cli_version:
+        description: 'Azure CLI Version'
+        required: false
+        type: string
+        default: '2.63.0' # pinned due to breaking change in 2.64.0
     secrets:
       AZURE_CLIENT_ID:
         description: 'Azure Client ID'
@@ -57,6 +62,7 @@ jobs:
       - name: 'Lint Bicep 🔍'
         uses: azure/CLI@v2
         with:
+          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
             az version
             az bicep install
@@ -94,21 +100,20 @@ jobs:
         id: static_web_app_what_if
         uses: azure/CLI@v2
         with:
+          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
             # https://github.com/Azure/azure-cli/issues/25710
             az config set bicep.use_binary_from_path=false
 
             echo "::group::Static Web App what-if"
-            echo "::command::az deployment group what-if ${{ inputs.parameters }}"
-            az deployment group what-if \
-              ${{ inputs.parameters }}
+
+            az deployment group what-if ${{ inputs.parameters }}
 
             echo "::endgroup::"
 
             echo "::group::Static Web App validate"
-            echo "::command::az deployment group validate ${{ inputs.parameters }}"
-            az deployment group validate \
-              ${{ inputs.parameters }}
+
+            az deployment group validate ${{ inputs.parameters }}
 
             echo "::endgroup::"
 
@@ -117,10 +122,12 @@ jobs:
           github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: azure/CLI@v2
         with:
+          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
             # https://github.com/Azure/azure-cli/issues/25710
             az config set bicep.use_binary_from_path=false
             echo "::group::Static Web App deployment"
+
             az deployment group create ${{ inputs.parameters }}
 
             echo "::endgroup::"
