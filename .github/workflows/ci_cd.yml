@@ -19,6 +19,36 @@ permissions:
   security-events: write
 
 jobs:
+  find_project_files:
+    runs-on: ubuntu-latest
+    outputs:
+      project_files: ${{ steps.search.outputs.found_projects }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Find project.json files
+        id: search
+        run: |
+          files=$(find ./apps -name 'project.json')
+          echo "Found files: $files"
+          echo "found_projects=$files" >> "$GITHUB_OUTPUT"
+
+  process_project_files:
+    needs: find_project_files
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJson(needs.find_project_files.outputs.project_files) }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Process project.json
+        run: |
+          echo "Processing file: ${{ matrix.file }}"
+          # Add your processing commands here
+
   # prepare the deployment parameters
   prep:
     name: '🛠️'
