@@ -45,6 +45,21 @@ jobs:
         /not/found
     secrets: inherit
 
+  # build and deploy tasks-to-do
+  build_deploy_ttd:
+    name: '🏗️ TTD 🚀'
+    uses: './.github/workflows/_workflow.jobs.cd.yml'
+    needs:
+      - lint_test_build
+    with:
+      project_name: 'tasks-to-do'
+      resource_group: 'ttd-rg'
+      sub_domain: 'ttd'
+      build_location: 'dist/apps/tasks-to-do'
+      audit_urls: |
+        /
+    secrets: inherit
+
   ci_status:
     name: 'CI Status ✅'
     runs-on: ubuntu-latest
