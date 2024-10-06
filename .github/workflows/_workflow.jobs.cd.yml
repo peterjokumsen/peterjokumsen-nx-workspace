@@ -336,7 +336,7 @@ jobs:
           done
 
           echo "urls<<EOF" >> "$GITHUB_OUTPUT"
-          cat full_urls.txt
+          echo cat full_urls.txt
           echo "EOF" >> "$GITHUB_OUTPUT"
         env:
           audit_urls: ${{ inputs.audit_urls }}
