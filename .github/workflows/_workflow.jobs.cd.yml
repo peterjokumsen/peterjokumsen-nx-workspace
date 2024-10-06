@@ -1,0 +1,405 @@
+name: '[♻️] build, deploy, and audit'
+# This workflow should be used for deploying a single application
+# It will check if the application has been affected by the latest changes,
+# and deploy the application if it has been affected.
+# Will also attempt to close staging environment if action is `closed`
+on:
+  workflow_call:
+    inputs:
+      audit_urls:
+        description: 'Urls to test'
+        required: true
+        type: string
+      build_location:
+        description: 'Where the app is compiled to, to be published as artifact'
+        required: true
+        type: string
+      project_name:
+        description: 'Project name'
+        required: true
+        type: string
+      resource_group:
+        description: 'Resource group'
+        required: true
+        type: string
+      # defaulted inputs:
+      az_cli_version:
+        description: 'AZ CLI version'
+        type: 'string'
+        default: '2.63.0'
+      bicep_main_file:
+        description: 'Bicep main file'
+        required: false
+        type: string
+        default: './.biceps/main.bicep'
+      location:
+        description: 'Location'
+        required: false
+        type: string
+        default: 'westeurope'
+      sub_domain:
+        description: 'Sub-domain for deployment'
+        type: string
+        default: ''
+
+    outputs:
+      app_affected:
+        description: 'Is the app affected by the latest changes? (Yes/No)'
+        value: ${{ jobs.is_affected.outputs.project_affected }}
+
+permissions:
+  contents: read
+  pull-requests: read
+  security-events: write
+  id-token: write
+
+jobs:
+  prep:
+    runs-on: ubuntu-latest
+    name: 'Prepare 🛠️'
+    steps:
+      - name: 'Prepare names 📝'
+        id: prepare_names
+        run: |
+          gitSha='${{ github.sha }}'
+          shortSha=${gitSha:0:7}
+          branchName='${{ github.ref_name }}'
+          appName='${{ inputs.project_name }}'
+          subDomain='${{ inputs.sub_domain }}'
+          if [ -z "$subDomain" ]; then
+            subDomain="$appName"
+          fi
+
+          deploymentName="${branchName////-}.$shortSha"
+
+          echo "Deployment name: $deploymentName"
+          echo "generated_name=$deploymentName" >> "$GITHUB_OUTPUT"
+          echo "Sub-domain: $subDomain"
+          echo "sub_domain=$subDomain" >> "$GITHUB_OUTPUT"
+          echo "App name: $appName"
+          echo "app_name=$appName" >> "$GITHUB_OUTPUT"
+
+      - name: 'Set group deployment parameters 📝'
+        id: group_deployment_parameters
+        run: |
+          if [ -z "${{ inputs.bicep_main_file }}" ]; then
+            echo "::error::Bicep main file not found"
+            exit 1
+          fi
+
+          parameters="--resource-group ${{ inputs.resource_group }} \
+              --name '${{ steps.prepare_names.outputs.generated_name }}' \
+              --template-file ${{ inputs.bicep_main_file }} \
+              --parameters \
+                  location='${{ inputs.location }}' \
+                  branch='${{ github.ref_name }}' \
+                  appName='${{ steps.prepare_names.outputs.app_name }}' \
+                  subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
+
+          echo "parameters=$parameters" >> "$GITHUB_OUTPUT"
+
+    outputs:
+      app_name: ${{ steps.prepare_names.outputs.app_name }}
+      parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
+
+  # check if the provided application is affected by the latest changes made
+  # outputs the result to be used by subsequent jobs, and the base SHA to be used for affected commands
+  is_affected:
+    if: github.event.action != 'closed'
+    needs:
+      - prep
+    runs-on: ubuntu-latest
+    name: 'Check if affected 🧪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+        with:
+          # Number of commits to fetch. 0 indicates all history for all branches and tags.
+          fetch-depth: 0
+          submodules: true
+
+      - name: 'Install dependencies 📦'
+        uses: ./.github/actions/install-deps
+
+      - name: 'Set SHAs 📝'
+        id: set_base
+        uses: nrwl/nx-set-shas@v4
+
+      - name: 'Check if affected 🧪'
+        id: is_affected
+        run: |
+          echo "::group::nx show projects --type app --affected"
+          affected_projects=$(npx nx show projects --type app --affected)
+          echo "$affected_projects"
+          project_name="${{ inputs.project_name }}"
+          echo "::endgroup::"
+          project_affected="No"
+          echo ""
+          echo "Checking if $project_name is affected"
+          if [[ $affected_projects == *$project_name* ]]; then
+            project_affected="Yes"
+          fi
+
+          echo "output [project_affected=$project_affected]"
+          echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
+
+    outputs:
+      project_affected: ${{ steps.is_affected.outputs.project_affected }}
+
+  # build the project when it is affected by the latest changes
+  # will publish the compiled files as 'compiled-app' artifact
+  build_affected:
+    needs:
+      - is_affected
+    if: |
+      needs.is_affected.outputs.project_affected == 'Yes'
+      && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: 'Build affected 🏗️'
+    outputs:
+      uploaded: ${{ steps.build_affected.outputs.compiled_files }}
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+
+      - name: 'Install dependencies 📦'
+        uses: ./.github/actions/install-deps
+
+      - name: 'Build affected 🏗️'
+        id: build_affected
+        run: |
+          echo "Setting up configuration for build step"
+          build_configuration="production"
+          branch_name="${{ github.ref }}"
+          if [ "$branch_name" != "refs/heads/main" ]; then
+            build_configuration="staging"
+          fi
+          echo "$build_configuration is the configuration for branch $branch_name"
+
+          echo "::group::nx run ${{ inputs.project_name }}:build:$build_configuration"
+          npx nx run "${{ inputs.project_name }}:build:$build_configuration"
+          echo "::endgroup::"
+          compiled_files="No"
+          if [ -d "${{ inputs.build_location }}" ]; then
+            compiled_files="Yes"
+          fi
+
+          echo "output [compiled_files=$compiled_files]"
+          echo "compiled_files=$compiled_files" >> "$GITHUB_OUTPUT"
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Upload artifacts 🚀'
+        uses: actions/upload-artifact@v4
+        if: steps.build_affected.outputs.compiled_files != 'No'
+        with:
+          name: compiled-${{ inputs.project_name }}
+          path: ${{ inputs.build_location }}
+
+  # lint bicep files when a pull request is opened or synchronized
+  infra:
+    needs:
+      - build_affected
+      - is_affected
+      - prep
+    if: github.event.action != 'closed' && needs.is_affected.outputs.project_affected == 'Yes'
+    runs-on: ubuntu-latest
+    name: 'Infra 💪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Lint Bicep 🔍'
+        uses: azure/CLI@v2
+        if: github.event_name == 'pull_request'
+        with:
+          inlineScript: |
+            az version
+            az bicep install
+            az bicep version
+            az bicep lint --file ${{ inputs.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
+            echo '::group::Bicep linting results'
+            cat bicep.sarif
+            echo '::endgroup::'
+
+      - name: 'Upload SARIF ↗️'
+        if: |
+          github.event_name == 'pull_request' && (success() || failure())
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          category: bicep
+          sarif_file: bicep.sarif
+
+      - name: 'Detect changes & validate 📝'
+        if: github.event_name != 'push'
+        id: static_web_app_what_if
+        uses: azure/CLI@v2
+        with:
+          azcliversion: ${{ inputs.az_cli_version }}
+          inlineScript: |
+            # https://github.com/Azure/azure-cli/issues/25710
+            az config set bicep.use_binary_from_path=false
+
+            echo "::group::Static Web App what-if"
+
+            az deployment group what-if ${{ needs.prep.outputs.parameters }}
+
+            echo "::endgroup::"
+            echo "::group::Static Web App validate"
+
+            az deployment group validate ${{ needs.prep.outputs.parameters }}
+
+            echo "::endgroup::"
+
+      - name: 'Deploy bicep 🚀'
+        if: |
+          github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: azure/CLI@v2
+        with:
+          azcliversion: ${{ inputs.az_cli_version }}
+          inlineScript: |
+            # https://github.com/Azure/azure-cli/issues/25710
+            az config set bicep.use_binary_from_path=false
+            echo "::group::Static Web App deployment"
+
+            az deployment group create ${{ needs.prep.outputs.parameters }}
+
+            echo "::endgroup::"
+
+      - name: 'Get SWA API key 🔑'
+        id: static_web_app_apikey
+        uses: azure/CLI@v2
+        with:
+          azcliversion: ${{ inputs.az_cli_version }}
+          inlineScript: |
+            apiKey=$(az staticwebapp secrets list \
+              --name '${{ needs.prep.outputs.app_name }}-static-web-app' \
+              | jq -r '.properties.apiKey')
+            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
+
+      - name: 'Download artifacts 📥'
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-${{ inputs.project_name }}
+          path: dist
+
+      - name: 'Publish SWA 🚀'
+        id: publish_swa
+        uses: azure/static-web-apps-deploy@v1
+        if: steps.static_web_app_apikey.outputs.api_key != ''
+        with:
+          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: 'upload'
+          app_location: 'dist/browser'
+          api_location: '' # Empty for now, no API to deploy
+          skip_app_build: true
+    outputs:
+      deployed_url: ${{ steps.publish_swa.outputs.static_web_app_url }}
+
+  # wait for the deployment to return a successful response
+  # run lighthouse audit on the provided URLs
+  # and output the results as a comment on the PR
+  # uses config from .github/lighthouse/lighthouse.config.json
+  audit_deployment:
+    name: 'Audit deployment 🕵️'
+    needs:
+      - infra
+      - is_affected
+    if: github.event.action != 'closed' && needs.is_affected.outputs.project_affected == 'Yes'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Wait for preview ${{ needs.infra.outputs.deployed_url }} ⌚'
+        uses: nev7n/wait_for_response@v1
+        with:
+          url: '${{ needs.infra.outputs.deployed_url }}'
+          responseCode: 200
+          timeout: 300000
+          interval: 1000
+
+      - name: Prepare audit URLs 📝
+        id: prepare_audit_urls
+        run: |
+          urls=$(echo "$audit_urls" | tr '\n' ' ')
+          for url in $urls; do
+            echo "${DEPLOYMENT_URL}${url}" >> full_urls.txt
+          done
+
+          echo "urls=$(cat full_urls.txt)" >> "$GITHUB_OUTPUT"
+        env:
+          audit_urls: ${{ inputs.audit_urls }}
+          DEPLOYMENT_URL: ${{ needs.infra.outputs.deployed_url }}
+
+      - name: Audit URLs 🧐
+        id: lighthouse_audit
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: ${{ steps.prepare_audit_urls.outputs.urls }}
+          configPath: ./.github/lighthouse/lighthouse.config.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 1
+
+      - name: 'Format lighthouse score ✏️'
+        id: format_lighthouse_score
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const lighthouseCommentMaker = require('./.github/lighthouse/lighthouse-report.parser.js');
+
+            const lighthouseOutputs = {
+              manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
+              links: ${{ steps.lighthouse_audit.outputs.links }},
+            };
+
+            const comment = lighthouseCommentMaker({ lighthouseOutputs }, core.summary);
+            core.setOutput("comment", comment);
+
+      - name: Add Lighthouse stats as comment ✍️
+        id: comment_to_pr
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          number: ${{ github.event.pull_request.number }}
+          header: lighthouse
+          message: ${{ steps.format_lighthouse_score.outputs.comment }}
+
+  # Close the deployed static web app
+  close_deployed:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed'
+    name: 'Close staging 🧹'
+    steps:
+      - name: 'AZ CLI login 👤'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Get API key 🔑'
+        id: static_web_app_apikey
+        uses: azure/CLI@v2
+        with:
+          azcliversion: ${{ inputs.az_cli_version }}
+          inlineScript: |
+            apiKey=$(az staticwebapp secrets list \
+              --name '${{ inputs.project_name }}-static-web-app' \
+              | jq -r '.properties.apiKey')
+            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
+
+      - name: 'Close static web app 🚪'
+        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+        with:
+          action: 'close'
+          app_location: ''
+          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
