@@ -289,7 +289,7 @@ jobs:
           echo ::endgroup::
 
           echo "urls<<EOF" >> "$GITHUB_OUTPUT"
-          echo "$(cat full_urls.txt)" >> "$GITHUB_OUTPUT"
+          cat full_urls.txt >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
         env:
           audit_urls: ${{ inputs.audit_urls }}
