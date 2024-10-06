@@ -262,7 +262,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: 'upload'
-          app_location: ${{ inputs.build_location }} '/browser'
+          app_location: ${{ inputs.build_location }}/browser
           api_location: '' # Empty for now, no API to deploy
           skip_app_build: true
 
