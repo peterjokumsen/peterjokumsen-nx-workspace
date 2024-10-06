@@ -42,11 +42,6 @@ on:
         type: string
         default: ''
 
-    outputs:
-      app_affected:
-        description: 'Is the app affected by the latest changes? (Yes/No)'
-        value: ${{ jobs.is_affected.outputs.project_affected }}
-
 permissions:
   contents: read
   pull-requests: read
@@ -57,6 +52,7 @@ jobs:
   prep:
     runs-on: ubuntu-latest
     name: 'Prepare 🛠️'
+    if: github.event.action != 'closed'
     steps:
       - name: 'Prepare names 📝'
         id: prepare_names
@@ -102,14 +98,13 @@ jobs:
       app_name: ${{ steps.prepare_names.outputs.app_name }}
       parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
 
-  # check if the provided application is affected by the latest changes made
-  # outputs the result to be used by subsequent jobs, and the base SHA to be used for affected commands
-  is_affected:
+  # build the project when it is affected by the latest changes
+  build_and_deploy:
     if: github.event.action != 'closed'
     needs:
       - prep
     runs-on: ubuntu-latest
-    name: 'Check if affected 🧪'
+    name: 'Build and Deploy 🚀'
     steps:
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
@@ -125,6 +120,7 @@ jobs:
         id: set_base
         uses: nrwl/nx-set-shas@v4
 
+      # Check if the project is affected by the latest changes
       - name: 'Check if affected 🧪'
         id: is_affected
         run: |
@@ -143,29 +139,9 @@ jobs:
           echo "output [project_affected=$project_affected]"
           echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
 
-    outputs:
-      project_affected: ${{ steps.is_affected.outputs.project_affected }}
-
-  # build the project when it is affected by the latest changes
-  # will publish the compiled files as 'compiled-app' artifact
-  build_affected:
-    needs:
-      - is_affected
-    if: |
-      needs.is_affected.outputs.project_affected == 'Yes'
-      && github.event.action != 'closed'
-    runs-on: ubuntu-latest
-    name: 'Build affected 🏗️'
-    outputs:
-      uploaded: ${{ steps.build_affected.outputs.compiled_files }}
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-
-      - name: 'Install dependencies 📦'
-        uses: ./.github/actions/install-deps
-
+      # Build the project if it is affected
       - name: 'Build affected 🏗️'
+        if: steps.is_affected.outputs.project_affected == 'Yes'
         id: build_affected
         run: |
           echo "Setting up configuration for build step"
@@ -189,28 +165,10 @@ jobs:
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
-      - name: 'Upload artifacts 🚀'
-        uses: actions/upload-artifact@v4
-        if: steps.build_affected.outputs.compiled_files != 'No'
-        with:
-          name: compiled-${{ inputs.project_name }}
-          path: ${{ inputs.build_location }}
-
-  # lint bicep files when a pull request is opened or synchronized
-  infra:
-    needs:
-      - build_affected
-      - is_affected
-      - prep
-    if: github.event.action != 'closed' && needs.is_affected.outputs.project_affected == 'Yes'
-    runs-on: ubuntu-latest
-    name: 'Infra 💪'
-    steps:
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-
+      # lint bicep files when a pull request is opened or synchronized
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
+        if: steps.is_affected.outputs.project_affected == 'Yes'
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -218,7 +176,7 @@ jobs:
 
       - name: 'Lint Bicep 🔍'
         uses: azure/CLI@v2
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.is_affected.outputs.project_affected == 'Yes'
         with:
           azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
@@ -232,14 +190,16 @@ jobs:
 
       - name: 'Upload SARIF ↗️'
         if: |
-          github.event_name == 'pull_request' && (success() || failure())
+          github.event_name == 'pull_request'
+          && steps.is_affected.outputs.project_affected == 'Yes'
+          && (success() || failure())
         uses: github/codeql-action/upload-sarif@v3
         with:
           category: bicep
           sarif_file: bicep.sarif
 
       - name: 'Detect changes & validate 📝'
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && steps.is_affected.outputs.project_affected == 'Yes'
         id: static_web_app_what_if
         uses: azure/CLI@v2
         with:
@@ -261,7 +221,8 @@ jobs:
 
       - name: 'Deploy bicep 🚀'
         if: |
-          github.event_name == 'push' && github.ref == 'refs/heads/main'
+          (github.event_name == 'push' && github.ref == 'refs/heads/main')
+          && steps.is_affected.outputs.project_affected == 'Yes'
         uses: azure/CLI@v2
         with:
           azcliversion: ${{ inputs.az_cli_version }}
@@ -276,6 +237,7 @@ jobs:
 
       - name: 'Get SWA API key 🔑'
         id: static_web_app_apikey
+        if: steps.is_affected.outputs.project_affected == 'Yes'
         uses: azure/CLI@v2
         with:
           azcliversion: ${{ inputs.az_cli_version }}
@@ -285,12 +247,6 @@ jobs:
               | jq -r '.properties.apiKey')
             echo "api_key=$apiKey" >> $GITHUB_OUTPUT
 
-      - name: 'Download artifacts 📥'
-        uses: actions/download-artifact@v4
-        with:
-          name: compiled-${{ inputs.project_name }}
-          path: dist
-
       - name: 'Publish SWA 🚀'
         id: publish_swa
         uses: azure/static-web-apps-deploy@v1
@@ -299,34 +255,20 @@ jobs:
           azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: 'upload'
-          app_location: 'dist/browser'
+          app_location: ${{ inputs.build_location }} '/browser'
           api_location: '' # Empty for now, no API to deploy
           skip_app_build: true
-    outputs:
-      deployed_url: ${{ steps.publish_swa.outputs.static_web_app_url }}
 
-  # wait for the deployment to return a successful response
-  # run lighthouse audit on the provided URLs
-  # and output the results as a comment on the PR
-  # uses config from .github/lighthouse/lighthouse.config.json
-  audit_deployment:
-    name: 'Audit deployment 🕵️'
-    needs:
-      - infra
-      - is_affected
-    if: github.event.action != 'closed' && needs.is_affected.outputs.project_affected == 'Yes'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: 'Wait for preview ${{ needs.infra.outputs.deployed_url }} ⌚'
+      # wait for the deployment to return a successful response
+      - name: 'Wait for deployment ⌚'
         uses: nev7n/wait_for_response@v1
         with:
-          url: '${{ needs.infra.outputs.deployed_url }}'
+          url: '${{ steps.publish_swa.outputs.static_web_app_url }}'
           responseCode: 200
           timeout: 300000
           interval: 1000
 
+      # Prepare the audit URLs using the deployment URL
       - name: Prepare audit URLs 📝
         id: prepare_audit_urls
         run: |
@@ -335,13 +277,19 @@ jobs:
             echo "${DEPLOYMENT_URL}${url}" >> full_urls.txt
           done
 
+          echo ::group::Full URLs
+          cat full_urls.txt
+          echo ::endgroup::
+
           echo "urls<<EOF" >> "$GITHUB_OUTPUT"
-          echo cat full_urls.txt
+          echo "$(cat full_urls.txt)" >> "$GITHUB_OUTPUT"
           echo "EOF" >> "$GITHUB_OUTPUT"
         env:
           audit_urls: ${{ inputs.audit_urls }}
-          DEPLOYMENT_URL: ${{ needs.infra.outputs.deployed_url }}
+          DEPLOYMENT_URL: ${{ steps.publish_swa.outputs.static_web_app_url }}
 
+      # run lighthouse audit on the provided URLs
+      # uses config from .github/lighthouse/lighthouse.config.json
       - name: Audit URLs 🧐
         id: lighthouse_audit
         uses: treosh/lighthouse-ci-action@v12
@@ -401,6 +349,7 @@ jobs:
             echo "api_key=$apiKey" >> $GITHUB_OUTPUT
 
       - name: 'Close static web app 🚪'
+        if: steps.static_web_app_apikey.outputs.api_key != ''
         uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
         with:
           action: 'close'
