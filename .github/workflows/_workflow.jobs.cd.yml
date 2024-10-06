@@ -335,7 +335,9 @@ jobs:
             echo "${DEPLOYMENT_URL}${url}" >> full_urls.txt
           done
 
-          echo "urls=$(cat full_urls.txt)" >> "$GITHUB_OUTPUT"
+          echo "urls<<EOF" >> "$GITHUB_OUTPUT"
+          cat full_urls.txt
+          echo "EOF" >> "$GITHUB_OUTPUT"
         env:
           audit_urls: ${{ inputs.audit_urls }}
           DEPLOYMENT_URL: ${{ needs.infra.outputs.deployed_url }}
