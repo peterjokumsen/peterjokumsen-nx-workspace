@@ -25,6 +25,7 @@ on:
       # defaulted inputs:
       az_cli_version:
         description: 'AZ CLI version'
+        required: false
         type: 'string'
         default: '2.63.0'
       bicep_main_file:
@@ -32,6 +33,11 @@ on:
         required: false
         type: string
         default: './.biceps/main.bicep'
+      force_deploy:
+        description: 'Force deployment'
+        required: false
+        type: boolean
+        default: false
       location:
         description: 'Location'
         required: false
@@ -99,7 +105,7 @@ jobs:
       parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
 
   # build the project when it is affected by the latest changes
-  build_and_deploy:
+  build_deploy:
     if: github.event.action != 'closed'
     needs:
       - prep
@@ -221,8 +227,9 @@ jobs:
 
       - name: 'Deploy bicep 🚀'
         if: |
-          (github.event_name == 'push' && github.ref == 'refs/heads/main')
-          && steps.is_affected.outputs.project_affected == 'Yes'
+          ((github.event_name == 'push' && github.ref == 'refs/heads/main')
+          && steps.is_affected.outputs.project_affected == 'Yes')
+          || inputs.force_deploy
         uses: azure/CLI@v2
         with:
           azcliversion: ${{ inputs.az_cli_version }}
