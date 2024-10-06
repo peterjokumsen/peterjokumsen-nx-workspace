@@ -288,9 +288,11 @@ jobs:
           cat full_urls.txt
           echo ::endgroup::
 
-          echo "urls<<EOF" >> "$GITHUB_OUTPUT"
-          cat full_urls.txt >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
+          {
+            echo urls<<EOF
+            cat full_urls.txt
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
         env:
           audit_urls: ${{ inputs.audit_urls }}
           DEPLOYMENT_URL: ${{ steps.publish_swa.outputs.static_web_app_url }}
