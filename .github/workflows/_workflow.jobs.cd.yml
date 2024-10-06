@@ -220,6 +220,7 @@ jobs:
         uses: azure/CLI@v2
         if: github.event_name == 'pull_request'
         with:
+          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
             az version
             az bicep install
