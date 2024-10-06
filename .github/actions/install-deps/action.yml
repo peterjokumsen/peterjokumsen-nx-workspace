@@ -8,14 +8,5 @@ runs:
       with:
         package-json-path: '${{ github.workspace }}/package.json'
 
-    - name: Use the package manager cache if available
-      uses: actions/cache@v4
-      with:
-        path: ~/.npm
-        key: "npm-packages-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}"
-        restore-keys: |
-          npm-packages-${{ runner.os }}-
-
-    - name: Install dependencies
-      shell: bash
-      run: npm ci
+    - uses: chill-viking/npm-ci@v1
+      name: 'npm CI'

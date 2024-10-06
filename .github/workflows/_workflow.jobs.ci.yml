@@ -1,0 +1,87 @@
+name: '[♻️] test and lint'
+# This workflow executes the linting, testing, and building of the affected applications
+on:
+  workflow_call:
+    secrets:
+      AZURE_CLIENT_ID:
+        description: 'Azure Client ID'
+        required: true
+      AZURE_TENANT_ID:
+        description: 'Azure Tenant ID'
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        description: 'Azure Subscription ID'
+        required: true
+      NX_CLOUD_ACCESS_TOKEN:
+        description: 'Nx Cloud Access Token'
+        required: true
+      CODECOV_TOKEN:
+        description: 'Codecov Token'
+        required: true
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  # test and lint the affected libraries/applications, when the project is affected
+  # will only test/lint affected when workflow is triggered by a pull_request
+  # will test all when workflow is triggered by a push
+  test_and_lint:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    name: 'Test & lint 🧪'
+    steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 'Fetch main branch 🌿'
+        run: |
+          git rev-parse --verify main || (git remote set-branches origin main && git fetch --depth 1 origin main && git branch main origin/main)
+
+      - name: 'Install dependencies 📦'
+        uses: ./.github/actions/install-deps
+
+      - name: 'Set SHAs 📝'
+        id: set_base
+        uses: nrwl/nx-set-shas@v4
+
+      - name: 'Check formatting 📐'
+        run: npx nx format:check
+
+      - name: 'Lint, Test affected 🧪'
+        id: test_affected
+        if: github.event_name != 'push'
+        run: |
+          echo ::group::nx affected -t lint test --configuration=ci"
+          npx nx affected -t lint test --configuration=ci"
+          echo ::endgroup::
+          coverage_reports="No"
+          if [ -d "coverage" ]; then
+            coverage_reports="Yes"
+          fi
+
+          echo output [coverage_reports="$coverage_reports"]
+          echo "coverage_reports=$coverage_reports" >> "$GITHUB_OUTPUT"
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Lint, Test all 🧪'
+        run: npx nx run-many -t lint test --configuration=ci
+        if: github.event_name == 'push'
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
+
+      - name: 'Publish coverage 📊'
+        if: |
+          github.event_name == 'push' ||
+          steps.test_affected.outputs.coverage_reports == 'Yes'
+        uses: codecov/codecov-action@v4
+        with:
+          directory: coverage
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}

@@ -90,6 +90,32 @@ Angular should be updated when updating [Nx](#nx) to the latest version. So have
 
 Have not yet found a simple approach for updating other dependencies at this time. Will update this section when I find a good approach.
 
+## Running GitHub Workflows locally
+
+To run GitHub workflows locally, use [act](https://nektosact.com/) ([GitHub repository](https://github.com/nektos/act)).
+
+### Installing `act`
+
+Can be installed using `chocolatey` in Windows:
+
+```bash
+choco install act-cli
+```
+
+Can be installed in any bash environment using the following command:
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/nektos/act/master/install.sh | sudo bash
+```
+
+### Using `act`
+
+To run a workflow, use the following command:
+
+```bash
+act -w <path-to-workflow>
+```
+
 ## Code coverage
 
 Sunburst graph of code coverage for the workspace:
