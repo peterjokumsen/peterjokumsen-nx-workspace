@@ -55,11 +55,15 @@ jobs:
     steps:
       - name: 'lint_test_build failed'
         if: needs.lint_test_build.result == 'failure'
-        run: exit 1
+        run: |
+          echo "::error::lint_test_build failed"
+          exit 1
 
       - name: 'build_deploy_blog failed'
         if: needs.build_deploy_blog.result == 'failure'
-        run: exit 1
+        run: |
+          echo "::error::build_deploy_blog failed"
+          exit 1
 
       - name: 'checks completed'
         run: echo "All checks done"
