@@ -59,20 +59,20 @@ jobs:
       - name: Prepare audit URLs 📝
         id: prepare_audit_urls
         run: |
-          if [ -z "$blog_deployed" ]; then
+          if [ -z "$deployed_url_blog" ]; then
             echo "blog was not deployed"
           else
             urls=$(echo "$blog_audit_urls" | tr '\n' ' ')
             for url in $urls; do
-              echo "${blog_deployed}${url}" >> full_urls.txt
+              echo "${deployed_url_blog}${url}" >> full_urls.txt
             done
           fi
-                if [ -z "$ttd_deployed_url" ]; then
+          if [ -z "$deployed_url_tasks-to-do" ]; then
             echo "task-to-do was not deployed"
           else
             urls=$(echo "$ttd_audit_urls" | tr '\n' ' ')
             for url in $urls; do
-              echo "${ttd_deployed}${url}" >> full_urls.txt
+              echo "${deployed_url_tasks-to-do}${url}" >> full_urls.txt
             done
           fi
                 echo ::group::Full URLs
@@ -84,13 +84,11 @@ jobs:
             echo "EOF"
           } >> "$GITHUB_OUTPUT"
         env:
-          blog_deployed_url: ${{ github.env.deployed_url_blog }}
           blog_audit_urls: |
             /
             /about-me
             /development-notes
             /not/found
-          ttd_deployed_url: ${{ github.env.deployed_url_tasks-to-do }}
           ttd_audit_urls: |
             /
       - name: 'Output outputs'
