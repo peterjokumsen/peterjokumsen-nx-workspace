@@ -53,9 +53,10 @@ jobs:
       - lint_test_build
     with:
       project_name: 'tasks-to-do'
-      resource_group: 'ttd-rg'
+      resource_group: 'blog-rg'
       sub_domain: 'ttd'
       build_location: 'dist/apps/tasks-to-do'
+      force_deploy: true
       audit_urls: |
         /
     secrets: inherit
