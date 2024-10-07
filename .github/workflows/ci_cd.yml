@@ -18,9 +18,6 @@ permissions:
   pull-requests: write
   security-events: write
 
-env:
-  az_cli_version: '2.63.0'
-
 jobs:
   # lint and test all affected
   lint_test_build:
@@ -45,7 +42,6 @@ jobs:
     needs:
       - lint_test_build
     with:
-      az_cli_version: ${{ env.az_cli_version }}
       project_name: ${{ matrix.projectl.name }}
       resource_group: 'blog-rg'
       sub_domain: ${{ matrix.project.sub_domain }}
@@ -192,7 +188,7 @@ jobs:
         id: static_web_app_apikey
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ env.az_cli_version }}
+          azcliversion: '2.63.0'
           inlineScript: |
             apiKey=$(az staticwebapp secrets list \
               --name '${{ matrix.project_name }}-static-web-app' \
