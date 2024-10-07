@@ -263,6 +263,10 @@ jobs:
           api_location: '' # Empty for now, no API to deploy
           skip_app_build: true
 
+      - name: 'set deployed url'
+        run: |
+          echo "deployed_url_${{ inputs.project_name }}=${{ steps.publish_swa.outputs.static_web_app_url }}" >> $GITHUB_ENV
+
       # wait for the deployment to return a successful response
       - name: 'Wait for deployment ⌚'
         uses: nev7n/wait_for_response@v1

@@ -55,47 +55,44 @@ jobs:
     needs:
       - build_deploy
     steps:
-      # Prepare the audit URLs using the deployment URL
-      #     - name: Prepare audit URLs 📝
-      #       id: prepare_audit_urls
-      #       run: |
-      #         if [ -z "$blog_deployed" ]; then
-      #           echo "blog was not deployed"
-      #         else
-      #           urls=$(echo "$blog_audit_urls" | tr '\n' ' ')
-      #           for url in $urls; do
-      #             echo "${blog_deployed}${url}" >> full_urls.txt
-      #           done
-      #         fi
-      #
-      #         if [ -z "$ttd_deployed_url" ]; then
-      #           echo "task-to-do was not deployed"
-      #         else
-      #           urls=$(echo "$ttd_audit_urls" | tr '\n' ' ')
-      #           for url in $urls; do
-      #             echo "${ttd_deployed}${url}" >> full_urls.txt
-      #           done
-      #         fi
-      #
-      #         echo ::group::Full URLs
-      #         cat full_urls.txt
-      #         echo ::endgroup::
-      #
-      #         {
-      #           echo "urls<<EOF"
-      #           cat full_urls.txt
-      #           echo "EOF"
-      #         } >> "$GITHUB_OUTPUT"
-      #       env:
-      #         blog_deployed_url: ${{ needs.build_deploy.outputs.deployed_url }}
-      #         blog_audit_urls: |
-      #           /
-      #           /about-me
-      #           /development-notes
-      #           /not/found
-      #         ttd_deployed_url: ${{ needs.build_deploy.outputs.deployed_url }}
-      #         ttd_audit_urls: |
-      #
+      #  Prepare the audit URLs using the deployment URL
+      - name: Prepare audit URLs 📝
+        id: prepare_audit_urls
+        run: |
+          if [ -z "$blog_deployed" ]; then
+            echo "blog was not deployed"
+          else
+            urls=$(echo "$blog_audit_urls" | tr '\n' ' ')
+            for url in $urls; do
+              echo "${blog_deployed}${url}" >> full_urls.txt
+            done
+          fi
+                if [ -z "$ttd_deployed_url" ]; then
+            echo "task-to-do was not deployed"
+          else
+            urls=$(echo "$ttd_audit_urls" | tr '\n' ' ')
+            for url in $urls; do
+              echo "${ttd_deployed}${url}" >> full_urls.txt
+            done
+          fi
+                echo ::group::Full URLs
+          cat full_urls.txt
+          echo ::endgroup::
+          {
+            echo "urls<<EOF"
+            cat full_urls.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+        env:
+          blog_deployed_url: ${{ github.env.deployed_url_blog }}
+          blog_audit_urls: |
+            /
+            /about-me
+            /development-notes
+            /not/found
+          ttd_deployed_url: ${{ github.env.deployed_url_tasks-to-do }}
+          ttd_audit_urls: |
+            /
       - name: 'Output outputs'
         run: |
           echo "deployed_url=${{ toJson(needs.build_deploy) }}"
