@@ -54,7 +54,6 @@ jobs:
   prep:
     runs-on: ubuntu-latest
     name: 'Prepare 🛠️'
-    if: github.event.action != 'closed'
     outputs:
       app_name: ${{ steps.prepare_names.outputs.app_name }}
       parameters: ${{ steps.group_deployment_parameters.outputs.parameters }}
@@ -101,7 +100,6 @@ jobs:
 
   # build the project when it is affected by the latest changes
   build_deploy:
-    if: github.event.action != 'closed'
     needs:
       - prep
     runs-on: ubuntu-latest
@@ -265,7 +263,8 @@ jobs:
 
       - name: 'set deployed url'
         run: |
-          echo "deployed_url_${{ inputs.project_name }}=${{ steps.publish_swa.outputs.static_web_app_url }}" >> $GITHUB_ENV
+          echo "env:[deployed_url_${{ inputs.sub_domain }}=${{ steps.publish_swa.outputs.static_web_app_url }}]"
+          echo "deployed_url_${{ inputs.sub_domain }}=${{ steps.publish_swa.outputs.static_web_app_url }}" >> $GITHUB_ENV
 
       # wait for the deployment to return a successful response
       - name: 'Wait for deployment ⌚'

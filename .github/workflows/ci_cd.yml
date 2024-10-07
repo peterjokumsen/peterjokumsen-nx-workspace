@@ -39,6 +39,7 @@ jobs:
             sub_domain: 'ttd'
     name: '🏗️ ${{ matrix.project.name }} 🚀'
     uses: './.github/workflows/_workflow.jobs.cd.yml'
+    if: github.action != 'closed'
     needs:
       - lint_test_build
     with:
@@ -52,6 +53,7 @@ jobs:
   audit_published_urls:
     name: '🔍 Audit URLs'
     runs-on: ubuntu-latest
+    if: github.action != 'closed'
     needs:
       - build_deploy
     steps:
@@ -67,12 +69,12 @@ jobs:
               echo "${deployed_url_blog}${url}" >> full_urls.txt
             done
           fi
-          if [ -z "$deployed_url_tasks-to-do" ]; then
+          if [ -z "$deployed_url_ttd" ]; then
             echo "task-to-do was not deployed"
           else
             urls=$(echo "$ttd_audit_urls" | tr '\n' ' ')
             for url in $urls; do
-              echo "${deployed_url_tasks-to-do}${url}" >> full_urls.txt
+              echo "${deployed_url_ttd}${url}" >> full_urls.txt
             done
           fi
                 echo ::group::Full URLs
