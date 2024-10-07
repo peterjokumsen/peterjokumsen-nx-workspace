@@ -18,6 +18,9 @@ permissions:
   pull-requests: write
   security-events: write
 
+env:
+  az_cli_version: '2.63.0'
+
 jobs:
   # lint and test all affected
   lint_test_build:
@@ -29,44 +32,127 @@ jobs:
     secrets: inherit
 
   # build and deploy blog
-  build_deploy_blog:
-    name: '🏗️ Blog 🚀'
+  build_deploy:
+    strategy:
+      matrix:
+        project:
+          - name: blog
+            sub_domain: blog
+          - name: tasks-to-do
+            sub_domain: 'ttd'
+    name: '🏗️ ${{ matrix.project.name }} 🚀'
     uses: './.github/workflows/_workflow.jobs.cd.yml'
     needs:
       - lint_test_build
     with:
-      project_name: 'blog'
+      az_cli_version: ${{ env.az_cli_version }}
+      project_name: ${{ matrix.projectl.name }}
       resource_group: 'blog-rg'
-      build_location: 'dist/apps/blog'
-      audit_urls: |
-        /
-        /about-me
-        /development-notes
-        /not/found
+      sub_domain: ${{ matrix.project.sub_domain }}
+      build_location: 'dist/apps/${{ matrix.project.name }}'
     secrets: inherit
 
-  # build and deploy tasks-to-do
-  build_deploy_ttd:
-    name: '🏗️ TTD 🚀'
-    uses: './.github/workflows/_workflow.jobs.cd.yml'
+  # Audit published URLs
+  audit_published_urls:
+    name: '🔍 Audit URLs'
+    runs-on: ubuntu-latest
     needs:
-      - lint_test_build
-    with:
-      project_name: 'tasks-to-do'
-      resource_group: 'blog-rg'
-      sub_domain: 'ttd'
-      build_location: 'dist/apps/tasks-to-do'
-      force_deploy: true
-      audit_urls: |
-        /
-    secrets: inherit
+      - build_deploy
+    steps:
+      # Prepare the audit URLs using the deployment URL
+      - name: Prepare audit URLs 📝
+        id: prepare_audit_urls
+        run: |
+          if [ -z "$blog_deployed" ]; then
+            echo "blog was not deployed"
+          else
+            urls=$(echo "$blog_audit_urls" | tr '\n' ' ')
+            for url in $urls; do
+              echo "${blog_deployed}${url}" >> full_urls.txt
+            done
+          fi
+
+          if [ -z "$ttd_deployed_url" ]; then
+            echo "task-to-do was not deployed"
+          else
+            urls=$(echo "$ttd_audit_urls" | tr '\n' ' ')
+            for url in $urls; do
+              echo "${ttd_deployed}${url}" >> full_urls.txt
+            done
+          fi
+
+          echo ::group::Full URLs
+          cat full_urls.txt
+          echo ::endgroup::
+
+          {
+            echo "urls<<EOF"
+            cat full_urls.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+        env:
+          blog_deployed_url: ${{ needs.build_deploy.outputs.deployed_url }}
+          blog_audit_urls: |
+            /
+            /about-me
+            /development-notes
+            /not/found
+          ttd_deployed_url: ${{ needs.build_deploy.outputs.deployed_url }}
+          ttd_audit_urls: |
+            /
+
+      # run lighthouse audit on the provided URLs
+      # uses config from .github/lighthouse/lighthouse.config.json
+      - name: Audit URLs 🧐
+        id: lighthouse_audit
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: ${{ steps.prepare_audit_urls.outputs.urls }}
+          configPath: ./.github/lighthouse/lighthouse.config.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          runs: 1
+
+      - name: 'Format lighthouse score ✏️'
+        id: format_lighthouse_score
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const lighthouseCommentMaker = require('./.github/lighthouse/lighthouse-report.parser.js');
+
+            const lighthouseOutputs = {
+              manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
+              links: ${{ steps.lighthouse_audit.outputs.links }},
+            };
+
+            const comment = lighthouseCommentMaker(
+              {
+                lighthouseOutputs,
+                project_urls: {
+                  blog: ${{ needs.build_deploy_blog.outputs.deployed_url }},
+                  ttd: ${{ needs.build_deploy_ttd.outputs.deployed_url }},
+                },
+              },
+              core.summary,
+            );
+
+            core.setOutput("comment", comment);
+
+      - name: Add Lighthouse stats as comment ✍️
+        id: comment_to_pr
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          number: ${{ github.event.pull_request.number }}
+          header: lighthouse
+          message: ${{ steps.format_lighthouse_score.outputs.comment }}
 
   ci_status:
     name: 'CI Status ✅'
     runs-on: ubuntu-latest
     needs:
       - lint_test_build
-      - build_deploy_blog
+      - build_deploy
     if: always()
     steps:
       - name: 'lint_test_build failed'
@@ -75,11 +161,48 @@ jobs:
           echo "::error::lint_test_build failed"
           exit 1
 
-      - name: 'build_deploy_blog failed'
-        if: needs.build_deploy_blog.result == 'failure'
+      - name: 'build_deploy failed'
+        if: needs.build_deploy.result == 'failure'
         run: |
-          echo "::error::build_deploy_blog failed"
+          echo "::error::build_deploy failed"
           exit 1
 
       - name: 'checks completed'
         run: echo "All checks done"
+
+  # Close the deployed static web app
+  close_deployed:
+    runs-on: ubuntu-latest
+    if: github.event.action == 'closed'
+    name: 'Close staging 🧹'
+    strategy:
+      matrix:
+        project_name:
+          - blog
+          - tasks-to-do
+    steps:
+      - name: 'AZ CLI login 👤'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Get API key 🔑'
+        id: static_web_app_apikey
+        uses: azure/CLI@v2
+        with:
+          azcliversion: ${{ env.az_cli_version }}
+          inlineScript: |
+            apiKey=$(az staticwebapp secrets list \
+              --name '${{ matrix.project_name }}-static-web-app' \
+              | jq -r '.properties.apiKey')
+            echo "api_key=$apiKey" >> $GITHUB_OUTPUT
+
+      - name: 'Close static web app 🚪'
+        if: steps.static_web_app_apikey.outputs.api_key != ''
+        uses: Azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+        with:
+          action: 'close'
+          app_location: ''
+          azure_static_web_apps_api_token: ${{ steps.static_web_app_apikey.outputs.api_key }}
