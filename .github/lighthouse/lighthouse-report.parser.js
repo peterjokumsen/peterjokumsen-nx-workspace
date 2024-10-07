@@ -75,13 +75,14 @@ function createURL(url) {
 
 /**
  * @param {Object} param0
+ * @param {string} param0.projectName
  * @param {string} param0.url
  * @param {LighthouseSummary} param0.summary
  * @param {string} param0.reportUrl
  */
-const createMarkdownTableRow = ({ url, summary, reportUrl }) =>
+const createMarkdownTableRow = ({ projectName, url, summary, reportUrl }) =>
   [
-    `| [${createURL(url).pathname}](${url})`,
+    `| [${projectName} ${createURL(url).pathname}](${url})`,
     .../** @type {(keyof LighthouseSummary)[]} */ (
       Object.keys(summaryKeys)
     ).map((k) => scoreEntry(summary[k])),
@@ -97,18 +98,29 @@ const createMarkdownTableHeader = () => [
 
 /**
  * @param {LighthouseOutputs} lighthouseOutputs
+ * @param {Record<string, string>} projectUrls
  * @param {CoreSummary} coreSummary
  * @returns {string}
  */
-const createLighthouseReport = ({ links, manifest }, coreSummary) => {
+const createLighthouseReport = (
+  { links, manifest },
+  projectUrls,
+  coreSummary,
+) => {
   const tableHeader = createMarkdownTableHeader();
   const tableBody = manifest.map((result) => {
+    const projectName = /** @type {string} */ (
+      Object.keys(projectUrls).find((key) =>
+        result.url.startsWith(projectUrls[key]),
+      ) ?? 'not-found'
+    );
     const testUrl = /** @type {string} */ (
       Object.keys(links).find((key) => key === result.url)
     );
     const reportPublicUrl = /** @type {string} */ (links[testUrl]);
 
     return createMarkdownTableRow({
+      projectName,
       url: testUrl,
       summary: result.summary,
       reportUrl: reportPublicUrl,
@@ -131,9 +143,9 @@ const createLighthouseReport = ({ links, manifest }, coreSummary) => {
   return commentLines.join('\n');
 };
 
-module.exports = ({ lighthouseOutputs }, coreSummary) => {
+module.exports = ({ lighthouseOutputs, project_urls }, coreSummary) => {
   console.log('exampleOutput: %o', _exampleOutputs);
-  return createLighthouseReport(lighthouseOutputs, coreSummary);
+  return createLighthouseReport(lighthouseOutputs, project_urls, coreSummary);
 };
 
 /** @type {LighthouseOutputs} */
