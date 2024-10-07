@@ -43,8 +43,6 @@ on:
         description: 'Sub-domain for deployment'
         type: string
         default: ''
-    outputs:
-      deployed_url: ${{ jobs.build_deploy.outputs.deployment_url }}
 
 permissions:
   contents: read
@@ -75,11 +73,11 @@ jobs:
 
           deploymentName="${branchName////-}.$shortSha"
 
-          echo "Deployment name: $deploymentName"
+          echo "[generated_name=$deploymentName]"
           echo "generated_name=$deploymentName" >> "$GITHUB_OUTPUT"
-          echo "Sub-domain: $subDomain"
+          echo "[sub_domain=$subDomain]"
           echo "sub_domain=$subDomain" >> "$GITHUB_OUTPUT"
-          echo "App name: $appName"
+          echo "[app_name=$appName]"
           echo "app_name=$appName" >> "$GITHUB_OUTPUT"
 
       - name: 'Set group deployment parameters 📝'
