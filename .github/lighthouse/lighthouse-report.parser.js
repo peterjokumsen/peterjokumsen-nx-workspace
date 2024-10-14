@@ -75,14 +75,13 @@ function createURL(url) {
 
 /**
  * @param {Object} param0
- * @param {string} param0.projectName
  * @param {string} param0.url
  * @param {LighthouseSummary} param0.summary
  * @param {string} param0.reportUrl
  */
-const createMarkdownTableRow = ({ projectName, url, summary, reportUrl }) =>
+const createMarkdownTableRow = ({ url, summary, reportUrl }) =>
   [
-    `| [${projectName} ${createURL(url).pathname}](${url})`,
+    `| [${createURL(url).pathname}](${url})`,
     .../** @type {(keyof LighthouseSummary)[]} */ (
       Object.keys(summaryKeys)
     ).map((k) => scoreEntry(summary[k])),
@@ -108,31 +107,43 @@ const createLighthouseReport = (
   coreSummary,
 ) => {
   const tableHeader = createMarkdownTableHeader();
-  const tableBody = manifest.map((result) => {
-    const projectName = /** @type {string} */ (
-      Object.keys(projectUrls).find((key) =>
-        result.url.startsWith(projectUrls[key]),
-      ) ?? 'not-found'
-    );
-    const testUrl = /** @type {string} */ (
-      Object.keys(links).find((key) => key === result.url)
-    );
-    const reportPublicUrl = /** @type {string} */ (links[testUrl]);
+  const commentLines = [`### ⚡️ Lighthouse reports`];
+  const reportedUrls = [];
 
-    return createMarkdownTableRow({
-      projectName,
-      url: testUrl,
-      summary: result.summary,
-      reportUrl: reportPublicUrl,
-    });
-  });
-  const commentLines = [
-    `### ⚡️ Lighthouse report for the deploy preview of this PR`,
-    '',
-    ...tableHeader,
-    ...tableBody,
-    '',
-  ];
+  for (const projectName of Object.keys(projectUrls)) {
+    commentLines.push(...['', `#### ${projectName}`, '']);
+    const tableLines = manifest
+      .filter(({ url }) => url.startsWith(projectUrls[projectName]))
+      .map((result) => {
+        const testUrl = /** @type {string} */ (
+          Object.keys(links).find((key) => key === result.url)
+        );
+        reportedUrls.push(result.url);
+        const reportPublicUrl = /** @type {string} */ (links[testUrl]);
+
+        return createMarkdownTableRow({
+          url: testUrl,
+          summary: result.summary,
+          reportUrl: reportPublicUrl,
+        });
+      });
+
+    if (tableLines.length === 0) {
+      commentLines.push('> No reports available for this project');
+    } else {
+      commentLines.push(...tableHeader);
+      commentLines.push(...tableLines);
+    }
+  }
+
+  const unreportedUrls = manifest.filter(
+    ({ url }) => !reportedUrls.includes(url),
+  );
+  if (unreportedUrls.length > 0) {
+    commentLines.push(...['', '#### Unknown URLs', '']);
+    commentLines.push('> The following URLs were not included in the report:');
+    commentLines.push(...unreportedUrls.map(({ url }) => `- ${url}`));
+  }
 
   for (const line of commentLines) {
     coreSummary.addRaw(line, true);
