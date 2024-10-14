@@ -137,8 +137,8 @@ const createLighthouseReport = (
       averageSummary.performance >= 0.85
         ? '🤠'
         : averageSummary.performance >= 0.5
-          ? '😅'
-          : '🤦🏻';
+          ? '🐌'
+          : '🦥';
     commentLines.push(...['', `### ${icon} ${projectName}`, '']);
     const tableLines = toBeReportedUrls.map((result) => {
       const testUrl = /** @type {string} */ (
@@ -160,7 +160,7 @@ const createLighthouseReport = (
       commentLines.push(...tableHeader);
       commentLines.push(...tableLines);
       commentLines.push(
-        ...createMarkdownTableRow({
+        createMarkdownTableRow({
           label: 'Average',
           url: '',
           summary: averageSummary,
