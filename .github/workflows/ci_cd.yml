@@ -111,7 +111,7 @@ jobs:
             }
 
             core.setOutput('hasUrls', urls.length > 0);
-            core.setOutput('projects', JSON.stringify(projects));
+            core.setOutput('projects', projects);
             core.setOutput('urls', urls.join('\n'));
 
       # run lighthouse audit on the provided URLs
@@ -140,7 +140,7 @@ jobs:
               links: ${{ steps.lighthouse_audit.outputs.links }},
             };
 
-            const project_urls = JSON.parse(${{ steps.prepare_audit_urls.outputs.projects }});
+            const project_urls = ${{ steps.prepare_audit_urls.outputs.projects }};
 
             const comment = lighthouseCommentMaker({ lighthouseOutputs, project_urls }, core.summary);
             core.setOutput("comment", comment);
