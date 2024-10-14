@@ -86,7 +86,7 @@ const createMarkdownTableRow = ({ label, url, summary, reportUrl }) =>
     .../** @type {(keyof LighthouseSummary)[]} */ (
       Object.keys(summaryKeys)
     ).map((k) => scoreEntry(summary[k])),
-    `[Report](${reportUrl}) |`,
+    label ? ' |' : `[Report](${reportUrl}) |`,
   ].join(' | ');
 
 const createMarkdownTableHeader = () => [
@@ -161,7 +161,7 @@ const createLighthouseReport = (
       commentLines.push(...tableLines);
       commentLines.push(
         createMarkdownTableRow({
-          label: 'Average',
+          label: '> Average',
           url: '',
           summary: averageSummary,
           reportUrl: '',
