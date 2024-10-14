@@ -111,7 +111,7 @@ jobs:
             }
 
             core.setOutput('hasUrls', urls.length > 0);
-            core.setOutput('projects', projects);
+            core.setOutput('projects', JSON.stringify(projects));
             core.setOutput('urls', urls.join('\n'));
 
       # run lighthouse audit on the provided URLs
