@@ -59,7 +59,7 @@ jobs:
   build_deploy:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
-    name: '🏭 ${{ inputs.project_name }} 🚀'
+    name: '🏭 & 🚀'
     steps:
       - name: 'Prepare names 📝'
         id: prepare_names
@@ -290,7 +290,7 @@ jobs:
   close_deployed:
     runs-on: ubuntu-latest
     if: github.event.action == 'closed'
-    name: 'Close staging 🧹'
+    name: '🧹'
     steps:
       - name: 'AZ CLI login 👤'
         uses: azure/login@v2
