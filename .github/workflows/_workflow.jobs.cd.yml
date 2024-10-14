@@ -59,7 +59,7 @@ jobs:
   build_deploy:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
-    name: 'Build and Deploy 🚀'
+    name: '🏭 ${{ inputs.project_name }} 🚀'
     steps:
       - name: 'Prepare names 📝'
         id: prepare_names
@@ -135,7 +135,7 @@ jobs:
           echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
 
       # Build the project if it is affected
-      - name: 'Build affected 🏗️'
+      - name: 'Build ${{ inputs.project_name }}'
         if: steps.is_affected.outputs.project_affected == 'Yes'
         id: build_affected
         run: |
@@ -243,7 +243,7 @@ jobs:
               | jq -r '.properties.apiKey')
             echo "api_key=$apiKey" >> $GITHUB_OUTPUT
 
-      - name: 'Publish SWA 🚀'
+      - name: 'Publish ${{ inputs.project_name }} 🚀'
         id: publish_swa
         uses: azure/static-web-apps-deploy@v1
         if: steps.static_web_app_apikey.outputs.api_key != ''

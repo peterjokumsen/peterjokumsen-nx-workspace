@@ -59,6 +59,11 @@ jobs:
     needs:
       - build_deploy
     steps:
+      - name: Checkout .github 🛎️
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: .github
+
       - name: Get audit URLS 📩
         uses: actions/download-artifact@v4
         with:
@@ -84,7 +89,7 @@ jobs:
                 core.startGroup(`Reading URLs from ${file}`);
 
                 const project = file.replace('_full_urls.txt', '');
-                core.info('Project: ', project);
+                core.info(`Project: ${project}`);
 
                 const allUrls = fs.readFileSync(path.resolve('urls', file), 'utf8');
                 if (allUrls.trim() !== '') {
@@ -92,8 +97,9 @@ jobs:
                   projects[project] = projectBaseUrl.slice(0, -1);
                   urls.push(allUrls);
 
-                  core.info('URLs: ', allUrls);
-                  core.info('Project base URL: ', projects[project]);
+                  core.info(`Project base URL: ${projects[project]}`);
+                  core.info('URLs:');
+                  core.info(allUrls);
                 } else {
                   core.warning(`No URLs found for ${project}`);
                 }
