@@ -75,29 +75,33 @@ jobs:
             const projects = {};
             const urls = [];
 
-            for (const file of fs.readdirSync(path.resolve(__dirname, 'urls'))) {
-              if (!file.endsWith('_full_urls.txt')) {
-                continue;
+            try {
+              for (const file of fs.readdirSync(path.resolve('urls'))) {
+                if (!file.endsWith('_full_urls.txt')) {
+                  continue;
+                }
+
+                core.startGroup(`Reading URLs from ${file}`);
+
+                const project = file.replace('_full_urls.txt', '');
+                core.info('Project: ', project);
+
+                const allUrls = fs.readFileSync(path.resolve('urls', file), 'utf8');
+                if (allUrls.trim() !== '') {
+                  const projectBaseUrl = allUrls.split('\n')[0];
+                  projects[project] = projectBaseUrl.slice(0, -1);
+                  urls.push(allUrls);
+
+                  core.info('URLs: ', allUrls);
+                  core.info('Project base URL: ', projects[project]);
+                } else {
+                  core.warning(`No URLs found for ${project}`);
+                }
+
+                core.endGroup();
               }
-
-              core.startGroup(`Reading URLs from ${file}`);
-
-              const project = file.replace('_full_urls.txt', '');
-              core.info('Project: ', project);
-
-              const allUrls = fs.readFileSync(path.resolve(__dirname, 'urls', file), 'utf8');
-              if (allUrls.trim() !== '') {
-                const projectBaseUrl = allUrls.split('\n')[0];
-                projects[project] = projectBaseUrl.slice(0, -1);
-                urls.push(allUrls);
-
-                core.info('URLs: ', allUrls);
-                core.info('Project base URL: ', projects[project]);
-              } else {
-                core.warning(`No URLs found for ${project}`);
-              }
-
-              core.endGroup();
+            } catch (error) {
+              core.warning(`An error occurred while reading audit URLs ${error}`);
             }
 
             core.setOutput('hasUrls', urls.length > 0);
