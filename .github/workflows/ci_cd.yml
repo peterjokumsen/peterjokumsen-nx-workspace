@@ -39,6 +39,12 @@ jobs:
               /about-me
               /development-notes
               /not/found
+          - name: 'tasks-to-do'
+            resource_group: 'blog-rg'
+            build_location: 'dist/apps/tasks-to-do'
+            sub_domain: 'ttd'
+            audit_urls: |
+              /
 
     name: 🏗️ ${{ matrix.project.name }} 🚀
     if: always() && needs.lint_test_build.result != 'failure'

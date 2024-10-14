@@ -1,0 +1,31 @@
+@use '@angular/material' as mat;
+/* You can add global styles to this file, and also import other style files */
+
+$dark: mat.define-theme(
+  (
+    color: (
+      primary: mat.$blue-palette,
+      tertiary: mat.$azure-palette,
+      theme-type: dark,
+    ),
+    density: (
+      scale: -2,
+    ),
+  )
+);
+
+body {
+  @media (prefers-color-scheme: dark) {
+    @include mat.all-component-colors($dark);
+    @include mat.all-component-densities($dark);
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
