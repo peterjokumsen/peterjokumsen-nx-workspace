@@ -161,7 +161,7 @@ const createLighthouseReport = (
       commentLines.push(...tableLines);
       commentLines.push(
         createMarkdownTableRow({
-          label: '> Average',
+          label: '**Average**',
           url: '',
           summary: averageSummary,
           reportUrl: '',
