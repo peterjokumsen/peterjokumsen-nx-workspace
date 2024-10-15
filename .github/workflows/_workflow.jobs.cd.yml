@@ -174,7 +174,7 @@ jobs:
           inlineScript: |
             echo "::group::Static Web App what-if"
 
-            az deployment group what-if --no-pretty-print ${{ steps.group_deployment_parameters.outputs.parameters }}
+            az deployment group what-if ${{ steps.group_deployment_parameters.outputs.parameters }}
 
             echo "::endgroup::"
             echo "::group::Static Web App validate"
