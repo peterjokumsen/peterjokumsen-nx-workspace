@@ -73,7 +73,7 @@ jobs:
             subDomain="$appName"
           fi
 
-          deploymentName="${branchName////-}.$shortSha"
+          deploymentName="${appName}.${branchName////-}.$shortSha"
 
           echo "Deployment name: $deploymentName"
           echo "generated_name=$deploymentName" >> "$GITHUB_OUTPUT"
