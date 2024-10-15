@@ -101,10 +101,7 @@ const createMarkdownTableHeader = () => [
  * @param {CoreSummary} coreSummary
  * @returns {string}
  */
-const createLighthouseReport = (
-  outputs,
-  coreSummary,
-) => {
+const createLighthouseReport = (outputs, coreSummary) => {
   const tableHeader = createMarkdownTableHeader();
   const commentLines = [`## ⚡️ Lighthouse reports`];
   const reportedUrls = [];
