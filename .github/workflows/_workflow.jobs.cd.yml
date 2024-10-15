@@ -23,11 +23,6 @@ on:
         required: true
         type: string
       # defaulted inputs:
-      az_cli_version:
-        description: 'AZ CLI version'
-        required: false
-        type: 'string'
-        default: '2.63.0'
       bicep_main_file:
         description: 'Bicep main file'
         required: false
@@ -173,7 +168,6 @@ jobs:
         uses: azure/CLI@v2
         if: github.event_name == 'pull_request' && steps.is_affected.outputs.project_affected == 'Yes'
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
             az version
             az bicep install
@@ -198,14 +192,10 @@ jobs:
         id: static_web_app_what_if
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
-            # https://github.com/Azure/azure-cli/issues/25710
-            az config set bicep.use_binary_from_path=false
-
             echo "::group::Static Web App what-if"
 
-            az deployment group what-if ${{ steps.group_deployment_parameters.outputs.parameters }}
+            az deployment group what-if --no-pretty-print ${{ steps.group_deployment_parameters.outputs.parameters }}
 
             echo "::endgroup::"
             echo "::group::Static Web App validate"
@@ -221,10 +211,7 @@ jobs:
           || inputs.force_deploy
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
-            # https://github.com/Azure/azure-cli/issues/25710
-            az config set bicep.use_binary_from_path=false
             echo "::group::Static Web App deployment"
 
             az deployment group create ${{ steps.group_deployment_parameters.outputs.parameters }}
@@ -236,8 +223,8 @@ jobs:
         if: steps.is_affected.outputs.project_affected == 'Yes'
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
+            tdnf install –y jq
             apiKey=$(az staticwebapp secrets list \
               --name '${{ inputs.project_name }}-static-web-app' \
               | jq -r '.properties.apiKey')
@@ -303,8 +290,8 @@ jobs:
         id: static_web_app_apikey
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
+            tdnf install –y jq
             apiKey=$(az staticwebapp secrets list \
               --name '${{ inputs.project_name }}-static-web-app' \
               | jq -r '.properties.apiKey')
