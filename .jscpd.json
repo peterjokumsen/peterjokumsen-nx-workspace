@@ -17,7 +17,9 @@
     "**/tsconfig.json",
     ".biceps/*",
     "**/tailwind.config.js",
-    "**/.eslintrc.json"
+    "**/.eslintrc.json",
+    "apps/**/server.ts",
+    "**/playwright.config.ts"
   ],
   "ignorePattern": ["import.*from\\s*'.*'"]
 }
