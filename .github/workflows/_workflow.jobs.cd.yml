@@ -169,6 +169,8 @@ jobs:
         if: github.event_name == 'pull_request' && steps.is_affected.outputs.project_affected == 'Yes'
         with:
           inlineScript: |
+            tdnf install -y icu
+
             az version
             az bicep install
             az bicep version
