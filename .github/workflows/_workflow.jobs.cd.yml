@@ -55,6 +55,8 @@ jobs:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: '🏭 & 🚀'
+    env:
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
     steps:
       - name: 'Prepare names 📝'
         id: prepare_names
@@ -255,6 +257,8 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.action == 'closed'
     name: '🧹'
+    env:
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
     steps:
       - name: 'AZ CLI login 👤'
         uses: azure/login@v2
