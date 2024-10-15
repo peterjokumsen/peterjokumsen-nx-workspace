@@ -170,9 +170,9 @@ jobs:
         with:
           inlineScript: |
             az version
-            az bicep install
             az bicep version
             az bicep lint --file ${{ inputs.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
+
             echo '::group::Bicep linting results'
             cat bicep.sarif
             echo '::endgroup::'
