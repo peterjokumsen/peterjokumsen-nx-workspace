@@ -203,7 +203,7 @@ jobs:
         uses: azure/CLI@v2
         with:
           inlineScript: |
-            tdnf install –y jq
+            tdnf install -y jq
             apiKey=$(az staticwebapp secrets list \
               --name '${{ inputs.project_name }}-static-web-app' \
               | jq -r '.properties.apiKey')
@@ -272,7 +272,7 @@ jobs:
         uses: azure/CLI@v2
         with:
           inlineScript: |
-            tdnf install –y jq
+            tdnf install -y jq
             apiKey=$(az staticwebapp secrets list \
               --name '${{ inputs.project_name }}-static-web-app' \
               | jq -r '.properties.apiKey')
