@@ -230,17 +230,33 @@ jobs:
           timeout: 300000
           interval: 1000
 
+      # run lighthouse audit on the provided URLs
+      # uses config from .github/lighthouse/lighthouse.config.json
+      - name: Audit URLs 🧐
+        id: lighthouse_audit
+        if: steps.is_affected.outputs.project_affected == 'Yes'
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: ${{ inputs.audit_urls }}
+          configPath: ./.github/lighthouse/lighthouse.config.json
+          uploadArtifacts: false
+          temporaryPublicStorage: false
+          runs: 3
+
       # Prepare the audit URLs using the deployment URL
-      - name: Prepare audit URLs 📝
-        id: prepare_audit_urls
+      - name: Prepare audit output 📝
+        id: prepare_audit_output
         run: |
-          urls=$(echo "$audit_urls" | tr '\n' ' ')
-          for url in $urls; do
-            echo "${DEPLOYMENT_URL}${url}" >> ${{ inputs.project_name }}_full_urls.txt
-          done
+          {
+            echo "{"
+            echo "  \"project_name\": \"${{ inputs.project_name }}\","
+            echo "  \"manifest\": ${{ steps.lighthouse_audit.outputs.manifest }},"
+            echo "  \"links\": ${{ steps.lighthouse_audit.outputs.links }}"
+            echo "}"
+          } >> ${{ inputs.project_name }}_audit_output.json
 
           echo ::group::Full URLs
-          cat ${{ inputs.project_name }}_full_urls.txt
+          cat ${{ inputs.project_name }}_audit_output.json
           echo ::endgroup::
         env:
           audit_urls: ${{ inputs.audit_urls }}
@@ -249,8 +265,8 @@ jobs:
       - name: 'Upload audit URLS 📤'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.project_name }}-audit-urls
-          path: ${{ inputs.project_name }}_full_urls.txt
+          name: ${{ inputs.project_name }}-audit-output
+          path: ${{ inputs.project_name }}_audit_output.json
 
   # Close the deployed static web app
   close_deployed:
