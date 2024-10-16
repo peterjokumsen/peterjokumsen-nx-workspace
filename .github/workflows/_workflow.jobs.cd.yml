@@ -268,8 +268,8 @@ jobs:
           {
             echo "{"
             echo "  \"project_name\": \"${{ inputs.project_name }}\","
-            echo "  \"manifest\": ${{ steps.lighthouse_audit.outputs.manifest }},"
-            echo "  \"links\": ${{ steps.lighthouse_audit.outputs.links }}"
+            echo "  \"manifest\": ${{ toJson(steps.lighthouse_audit.outputs.manifest) }},"
+            echo "  \"links\": []"
             echo "}"
           } >> ${{ inputs.project_name }}_audit_output.json
 
