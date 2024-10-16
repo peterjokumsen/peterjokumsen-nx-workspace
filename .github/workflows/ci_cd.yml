@@ -70,13 +70,13 @@ jobs:
         with:
           sparse-checkout: .github
 
-      - name: Get audit URLS 📩
+      - name: Get audit reports 📩
         uses: actions/download-artifact@v4
         with:
           path: lhci-output
           merge-multiple: true
 
-      - name: Prepare audit URLs 📝
+      - name: Prepare audit reports 📝
         id: prepare_audit_urls
         uses: actions/github-script@v7
         with:
@@ -118,7 +118,7 @@ jobs:
 
       - name: 'Format lighthouse score ✏️'
         id: format_lighthouse_score
-        if: steps.prepare_audit_urls.outputs.hasUrls
+        if: steps.prepare_audit_urls.outputs.hasOutput
         uses: actions/github-script@v7
         with:
           script: |
