@@ -102,7 +102,7 @@ const createLighthouseReport = (outputs, coreSummary) => {
   const tableHeader = createMarkdownTableHeader();
   const commentLines = [`## ⚡️ Lighthouse reports`];
 
-  for (const { links, manifest, project_name } of outputs) {
+  for (const { manifest, project_name } of outputs) {
     const averageSummary = manifest.reduce(
       (acc, { summary }) => {
         Object.keys(summary).forEach((key) => {
@@ -129,9 +129,7 @@ const createLighthouseReport = (outputs, coreSummary) => {
           : '🦥';
     commentLines.push(...['', `### ${icon} ${project_name}`, '']);
     const tableLines = manifest.map((result) => {
-      const testUrl = /** @type {string} */ (
-        Object.keys(links).find((key) => key === result.url)
-      );
+      const testUrl = /** @type {string} */ result.url;
 
       return createMarkdownTableRow({
         url: testUrl,
@@ -152,15 +150,6 @@ const createLighthouseReport = (outputs, coreSummary) => {
         }),
       );
     }
-  }
-
-  const unreportedUrls = manifest.filter(
-    ({ url }) => !reportedUrls.includes(url),
-  );
-  if (unreportedUrls.length > 0) {
-    commentLines.push(...['', '#### Unknown URLs', '']);
-    commentLines.push('> The following URLs were not included in the report:');
-    commentLines.push(...unreportedUrls.map(({ url }) => `- ${url}`));
   }
 
   for (const line of commentLines) {
