@@ -243,7 +243,7 @@ jobs:
             echo "audit_urls<<EOF"
             cat output.txt
             echo "EOF"
-          } >> $GITHUB_OUTPUT
+          } >> "$GITHUB_OUTPUT"
         env:
           audit_urls: ${{ inputs.audit_urls }}
           deployed_url: ${{ steps.publish_swa.outputs.static_web_app_url }}
