@@ -271,15 +271,15 @@ jobs:
             const path = require('path');
 
             const report = {
-              project_name: context.payload.inputs.project_name,
-              manifest: context.payload.steps.lighthouse_audit.outputs.manifest,
+              project_name: "${{ inputs.project_name }}",
+              manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
               links: []
             };
 
             const stringReport = JSON.stringify(report, null, 2);
             core.startGroup('Report JSON');
             core.info(stringReport);
-            fs.writeFileSync(`${context.payload.inputs.project_name}_audit_output.json`, stringReport);
+            fs.writeFileSync("${{ inputs.project_name }}_audit_output.json", stringReport);
             core.endGroup();
 
       - name: 'Upload audit URLS 📤'
