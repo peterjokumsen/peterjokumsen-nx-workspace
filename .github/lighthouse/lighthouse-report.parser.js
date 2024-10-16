@@ -78,22 +78,20 @@ function createURL(url) {
  * @param {string} param0.label
  * @param {string} param0.url
  * @param {LighthouseSummary} param0.summary
- * @param {string} param0.reportUrl
  */
-const createMarkdownTableRow = ({ label, url, summary, reportUrl }) =>
+const createMarkdownTableRow = ({ label, url, summary }) =>
   [
     label ? `| ${label}` : `| [${createURL(url).pathname}](${url})`,
     .../** @type {(keyof LighthouseSummary)[]} */ (
       Object.keys(summaryKeys)
     ).map((k) => scoreEntry(summary[k])),
-    label ? ' |' : `[Report](${reportUrl}) |`,
-  ].join(' | ');
+  ].join(' | ') + '|';
 
 const createMarkdownTableHeader = () => [
-  ['| URL', ...Object.values(summaryKeys), 'Report |'].join(' | '),
-  ['|---', ...Array(Object.keys(summaryKeys).length).fill('---'), '---|'].join(
+  ['| URL', ...Object.values(summaryKeys)].join(' | ') + '|',
+  ['|---', ...Array(Object.keys(summaryKeys).length).fill('---')].join(
     '|',
-  ),
+  ) + '|',
 ];
 
 /**
@@ -104,7 +102,6 @@ const createMarkdownTableHeader = () => [
 const createLighthouseReport = (outputs, coreSummary) => {
   const tableHeader = createMarkdownTableHeader();
   const commentLines = [`## ⚡️ Lighthouse reports`];
-  const reportedUrls = [];
 
   for (const { links, manifest, project_name } of outputs) {
     const averageSummary = manifest.reduce(
@@ -136,13 +133,10 @@ const createLighthouseReport = (outputs, coreSummary) => {
       const testUrl = /** @type {string} */ (
         Object.keys(links).find((key) => key === result.url)
       );
-      reportedUrls.push(result.url);
-      const reportPublicUrl = /** @type {string} */ (links[testUrl]);
 
       return createMarkdownTableRow({
         url: testUrl,
         summary: result.summary,
-        reportUrl: reportPublicUrl,
       });
     });
 
@@ -156,7 +150,6 @@ const createLighthouseReport = (outputs, coreSummary) => {
           label: '**Average**',
           url: '',
           summary: averageSummary,
-          reportUrl: '',
         }),
       );
     }
