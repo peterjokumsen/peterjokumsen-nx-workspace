@@ -233,7 +233,7 @@ jobs:
       - name: 'Combine URLs 📝'
         id: combine_urls
         run: |
-          urls=(echo "$audit_urls" | tr '\n' ' ')
+          urls=$(echo "$audit_urls" | tr '\n' ' ')
 
           for url in $urls; do
             echo "${deployed_url}${url}" >> output.txt
