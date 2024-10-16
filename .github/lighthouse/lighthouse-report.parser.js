@@ -136,16 +136,15 @@ const createLighthouseReport = (outputs, coreSummary) => {
         return 1;
       }
       return 0;
-    })
-    const tableLines = sortedManifest
-      .map((result) => {
-        const testUrl = /** @type {string} */ result.url;
+    });
+    const tableLines = sortedManifest.map((result) => {
+      const testUrl = /** @type {string} */ result.url;
 
-        return createMarkdownTableRow({
-          url: testUrl,
-          summary: result.summary,
-        });
+      return createMarkdownTableRow({
+        url: testUrl,
+        summary: result.summary,
       });
+    });
 
     if (tableLines.length === 0) {
       commentLines.push('> No reports available for this project');
