@@ -78,44 +78,32 @@ function createURL(url) {
  * @param {string} param0.label
  * @param {string} param0.url
  * @param {LighthouseSummary} param0.summary
- * @param {string} param0.reportUrl
  */
-const createMarkdownTableRow = ({ label, url, summary, reportUrl }) =>
+const createMarkdownTableRow = ({ label, url, summary }) =>
   [
     label ? `| ${label}` : `| [${createURL(url).pathname}](${url})`,
     .../** @type {(keyof LighthouseSummary)[]} */ (
       Object.keys(summaryKeys)
     ).map((k) => scoreEntry(summary[k])),
-    label ? ' |' : `[Report](${reportUrl}) |`,
-  ].join(' | ');
+  ].join(' | ') + '|';
 
 const createMarkdownTableHeader = () => [
-  ['| URL', ...Object.values(summaryKeys), 'Report |'].join(' | '),
-  ['|---', ...Array(Object.keys(summaryKeys).length).fill('---'), '---|'].join(
+  ['| URL', ...Object.values(summaryKeys)].join(' | ') + '|',
+  ['|---', ...Array(Object.keys(summaryKeys).length).fill('---')].join('|') +
     '|',
-  ),
 ];
 
 /**
- * @param {LighthouseOutputs} lighthouseOutputs
- * @param {Record<string, string>} projectUrls
+ * @param {(LighthouseOutputs & project_name: string)[]} outputs
  * @param {CoreSummary} coreSummary
  * @returns {string}
  */
-const createLighthouseReport = (
-  { links, manifest },
-  projectUrls,
-  coreSummary,
-) => {
+const createLighthouseReport = (outputs, coreSummary) => {
   const tableHeader = createMarkdownTableHeader();
   const commentLines = [`## ⚡️ Lighthouse reports`];
-  const reportedUrls = [];
 
-  for (const projectName of Object.keys(projectUrls)) {
-    const toBeReportedUrls = manifest.filter(({ url }) =>
-      url.startsWith(projectUrls[projectName]),
-    );
-    const averageSummary = toBeReportedUrls.reduce(
+  for (const { manifest, project_name } of outputs) {
+    const averageSummary = manifest.reduce(
       (acc, { summary }) => {
         Object.keys(summary).forEach((key) => {
           acc[key] += summary[key];
@@ -131,7 +119,7 @@ const createLighthouseReport = (
       },
     );
     Object.keys(averageSummary).forEach((key) => {
-      averageSummary[key] /= toBeReportedUrls.length;
+      averageSummary[key] /= manifest.length;
     });
     const icon =
       averageSummary.performance >= 0.85
@@ -139,18 +127,22 @@ const createLighthouseReport = (
         : averageSummary.performance >= 0.5
           ? '🐌'
           : '🦥';
-    commentLines.push(...['', `### ${icon} ${projectName}`, '']);
-    const tableLines = toBeReportedUrls.map((result) => {
-      const testUrl = /** @type {string} */ (
-        Object.keys(links).find((key) => key === result.url)
-      );
-      reportedUrls.push(result.url);
-      const reportPublicUrl = /** @type {string} */ (links[testUrl]);
+    commentLines.push(...['', `### ${icon} ${project_name}`, '']);
+    const sortedManifest = manifest.sort((a, b) => {
+      if (a.url < b.url) {
+        return -1;
+      }
+      if (a.url > b.url) {
+        return 1;
+      }
+      return 0;
+    });
+    const tableLines = sortedManifest.map((result) => {
+      const testUrl = /** @type {string} */ result.url;
 
       return createMarkdownTableRow({
         url: testUrl,
         summary: result.summary,
-        reportUrl: reportPublicUrl,
       });
     });
 
@@ -164,19 +156,9 @@ const createLighthouseReport = (
           label: '**Average**',
           url: '',
           summary: averageSummary,
-          reportUrl: '',
         }),
       );
     }
-  }
-
-  const unreportedUrls = manifest.filter(
-    ({ url }) => !reportedUrls.includes(url),
-  );
-  if (unreportedUrls.length > 0) {
-    commentLines.push(...['', '#### Unknown URLs', '']);
-    commentLines.push('> The following URLs were not included in the report:');
-    commentLines.push(...unreportedUrls.map(({ url }) => `- ${url}`));
   }
 
   for (const line of commentLines) {
@@ -188,9 +170,9 @@ const createLighthouseReport = (
   return commentLines.join('\n');
 };
 
-module.exports = ({ lighthouseOutputs, project_urls }, coreSummary) => {
+module.exports = ({ lighthouseOutputs }, coreSummary) => {
   console.log('exampleOutput: %o', _exampleOutputs);
-  return createLighthouseReport(lighthouseOutputs, project_urls, coreSummary);
+  return createLighthouseReport(lighthouseOutputs, coreSummary);
 };
 
 /** @type {LighthouseOutputs} */

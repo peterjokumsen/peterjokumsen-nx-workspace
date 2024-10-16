@@ -23,11 +23,6 @@ on:
         required: true
         type: string
       # defaulted inputs:
-      az_cli_version:
-        description: 'AZ CLI version'
-        required: false
-        type: 'string'
-        default: '2.63.0'
       bicep_main_file:
         description: 'Bicep main file'
         required: false
@@ -60,6 +55,8 @@ jobs:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
     name: '🏭 & 🚀'
+    env:
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
     steps:
       - name: 'Prepare names 📝'
         id: prepare_names
@@ -73,7 +70,7 @@ jobs:
             subDomain="$appName"
           fi
 
-          deploymentName="${branchName////-}.$shortSha"
+          deploymentName="${appName}.${branchName////-}.$shortSha"
 
           echo "Deployment name: $deploymentName"
           echo "generated_name=$deploymentName" >> "$GITHUB_OUTPUT"
@@ -169,40 +166,12 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      - name: 'Lint Bicep 🔍'
-        uses: azure/CLI@v2
-        if: github.event_name == 'pull_request' && steps.is_affected.outputs.project_affected == 'Yes'
-        with:
-          azcliversion: ${{ inputs.az_cli_version }}
-          inlineScript: |
-            az version
-            az bicep install
-            az bicep version
-            az bicep lint --file ${{ inputs.bicep_main_file }} --diagnostics-format sarif > bicep.sarif
-            echo '::group::Bicep linting results'
-            cat bicep.sarif
-            echo '::endgroup::'
-
-      - name: 'Upload SARIF ↗️'
-        if: |
-          github.event_name == 'pull_request'
-          && steps.is_affected.outputs.project_affected == 'Yes'
-          && (success() || failure())
-        uses: github/codeql-action/upload-sarif@v3
-        with:
-          category: bicep
-          sarif_file: bicep.sarif
-
       - name: 'Detect changes & validate 📝'
         if: github.event_name != 'push' && steps.is_affected.outputs.project_affected == 'Yes'
         id: static_web_app_what_if
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
-            # https://github.com/Azure/azure-cli/issues/25710
-            az config set bicep.use_binary_from_path=false
-
             echo "::group::Static Web App what-if"
 
             az deployment group what-if ${{ steps.group_deployment_parameters.outputs.parameters }}
@@ -221,10 +190,7 @@ jobs:
           || inputs.force_deploy
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
-            # https://github.com/Azure/azure-cli/issues/25710
-            az config set bicep.use_binary_from_path=false
             echo "::group::Static Web App deployment"
 
             az deployment group create ${{ steps.group_deployment_parameters.outputs.parameters }}
@@ -236,8 +202,8 @@ jobs:
         if: steps.is_affected.outputs.project_affected == 'Yes'
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
+            tdnf install -y jq
             apiKey=$(az staticwebapp secrets list \
               --name '${{ inputs.project_name }}-static-web-app' \
               | jq -r '.properties.apiKey')
@@ -264,33 +230,71 @@ jobs:
           timeout: 300000
           interval: 1000
 
-      # Prepare the audit URLs using the deployment URL
-      - name: Prepare audit URLs 📝
-        id: prepare_audit_urls
+      - name: 'Combine URLs 📝'
+        id: combine_urls
         run: |
           urls=$(echo "$audit_urls" | tr '\n' ' ')
+
           for url in $urls; do
-            echo "${DEPLOYMENT_URL}${url}" >> ${{ inputs.project_name }}_full_urls.txt
+            echo "${deployed_url}${url}" >> output.txt
           done
 
-          echo ::group::Full URLs
-          cat ${{ inputs.project_name }}_full_urls.txt
-          echo ::endgroup::
+          {
+            echo "audit_urls<<EOF"
+            cat output.txt
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
         env:
           audit_urls: ${{ inputs.audit_urls }}
-          DEPLOYMENT_URL: ${{ steps.publish_swa.outputs.static_web_app_url }}
+          deployed_url: ${{ steps.publish_swa.outputs.static_web_app_url }}
+
+      # run lighthouse audit on the provided URLs
+      # uses config from .github/lighthouse/lighthouse.config.json
+      - name: Audit URLs 🧐
+        id: lighthouse_audit
+        if: steps.is_affected.outputs.project_affected == 'Yes'
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: ${{ steps.combine_urls.outputs.audit_urls }}
+          configPath: ./.github/lighthouse/lighthouse.config.json
+          uploadArtifacts: false
+          temporaryPublicStorage: false
+          runs: 3
+
+      # Prepare the audit URLs using the deployment URL
+      - name: Prepare audit output 📝
+        id: prepare_audit_output
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            const report = {
+              project_name: "${{ inputs.project_name }}",
+              manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
+              links: []
+            };
+
+            const stringReport = JSON.stringify(report, null, 2);
+            core.startGroup('Report JSON');
+            core.info(stringReport);
+            fs.writeFileSync("${{ inputs.project_name }}_audit_output.json", stringReport);
+            core.endGroup();
 
       - name: 'Upload audit URLS 📤'
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.project_name }}-audit-urls
-          path: ${{ inputs.project_name }}_full_urls.txt
+          name: ${{ inputs.project_name }}-audit-output
+          path: ${{ inputs.project_name }}_audit_output.json
 
   # Close the deployed static web app
   close_deployed:
     runs-on: ubuntu-latest
     if: github.event.action == 'closed'
     name: '🧹'
+    env:
+      DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
     steps:
       - name: 'AZ CLI login 👤'
         uses: azure/login@v2
@@ -303,8 +307,8 @@ jobs:
         id: static_web_app_apikey
         uses: azure/CLI@v2
         with:
-          azcliversion: ${{ inputs.az_cli_version }}
           inlineScript: |
+            tdnf install -y jq
             apiKey=$(az staticwebapp secrets list \
               --name '${{ inputs.project_name }}-static-web-app' \
               | jq -r '.properties.apiKey')

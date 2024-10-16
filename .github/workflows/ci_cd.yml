@@ -60,7 +60,7 @@ jobs:
     secrets: inherit
 
   audit_deployed:
-    name: '🔍 Audit 🚀'
+    name: 'Format lighthouse score ✏️'
     runs-on: ubuntu-latest
     needs:
       - build_deploy
@@ -70,44 +70,41 @@ jobs:
         with:
           sparse-checkout: .github
 
-      - name: Get audit URLS 📩
+      - name: Get audit reports 📩
         uses: actions/download-artifact@v4
         with:
-          path: urls
+          path: lhci-output
           merge-multiple: true
 
-      - name: Prepare audit URLs 📝
+      - name: Prepare audit reports 📝
         id: prepare_audit_urls
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const path = require('path');
-            const projects = {};
-            const urls = [];
+            const outputs = [];
 
             try {
-              for (const file of fs.readdirSync(path.resolve('urls'))) {
-                if (!file.endsWith('_full_urls.txt')) {
+              for (const file of fs.readdirSync(path.resolve('lhci-output'))) {
+                if (!file.endsWith('_audit_output.json')) {
                   continue;
                 }
 
-                core.startGroup(`Reading URLs from ${file}`);
+                core.startGroup(`Reading output from ${file}`);
 
-                const project = file.replace('_full_urls.txt', '');
-                core.info(`Project: ${project}`);
+                const output = fs.readFileSync(path.resolve('lhci-output', file), 'utf8');
+                if (output.trim() !== '') {
+                  core.info(`Output from ${file}:`);
+                  core.info(output);
 
-                const allUrls = fs.readFileSync(path.resolve('urls', file), 'utf8');
-                if (allUrls.trim() !== '') {
-                  const projectBaseUrl = allUrls.split('\n')[0];
-                  projects[project] = projectBaseUrl.slice(0, -1);
-                  urls.push(allUrls);
+                  const parsedOutput = JSON.parse(output);
+                  core.info(`Parsed output from ${file}:`);
+                  core.info(parsedOutput);
 
-                  core.info(`Project base URL: ${projects[project]}`);
-                  core.info('URLs:');
-                  core.info(allUrls);
+                  outputs.push(parsedOutput);
                 } else {
-                  core.warning(`No URLs found for ${project}`);
+                  core.warning(`No output from ${file}`);
                 }
 
                 core.endGroup();
@@ -116,39 +113,20 @@ jobs:
               core.warning(`An error occurred while reading audit URLs ${error}`);
             }
 
-            core.setOutput('hasUrls', urls.length > 0);
-            core.setOutput('projects', projects);
-            core.setOutput('urls', urls.join('\n'));
-
-      # run lighthouse audit on the provided URLs
-      # uses config from .github/lighthouse/lighthouse.config.json
-      - name: Audit URLs 🧐
-        id: lighthouse_audit
-        if: steps.prepare_audit_urls.outputs.hasUrls
-        uses: treosh/lighthouse-ci-action@v12
-        with:
-          urls: ${{ steps.prepare_audit_urls.outputs.urls }}
-          configPath: ./.github/lighthouse/lighthouse.config.json
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-          runs: 1
+            core.setOutput('hasOutput', outputs.length > 0);
+            core.setOutput('outputCollection', outputs);
 
       - name: 'Format lighthouse score ✏️'
         id: format_lighthouse_score
-        if: steps.prepare_audit_urls.outputs.hasUrls
+        if: steps.prepare_audit_urls.outputs.hasOutput
         uses: actions/github-script@v7
         with:
           script: |
             const lighthouseCommentMaker = require('./.github/lighthouse/lighthouse-report.parser.js');
 
-            const lighthouseOutputs = {
-              manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
-              links: ${{ steps.lighthouse_audit.outputs.links }},
-            };
+            const lighthouseOutputs = ${{ steps.prepare_audit_urls.outputs.outputCollection }};
 
-            const project_urls = ${{ steps.prepare_audit_urls.outputs.projects }};
-
-            const comment = lighthouseCommentMaker({ lighthouseOutputs, project_urls }, core.summary);
+            const comment = lighthouseCommentMaker({ lighthouseOutputs }, core.summary);
             core.setOutput("comment", comment);
 
       - name: Add Lighthouse stats as comment ✍️
