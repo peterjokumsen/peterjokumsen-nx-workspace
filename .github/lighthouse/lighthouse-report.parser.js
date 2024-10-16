@@ -128,14 +128,16 @@ const createLighthouseReport = (outputs, coreSummary) => {
           ? '🐌'
           : '🦥';
     commentLines.push(...['', `### ${icon} ${project_name}`, '']);
-    const tableLines = manifest.map((result) => {
-      const testUrl = /** @type {string} */ result.url;
+    const tableLines = manifest
+      .sort((a, b) => a.url - b.url)
+      .map((result) => {
+        const testUrl = /** @type {string} */ result.url;
 
-      return createMarkdownTableRow({
-        url: testUrl,
-        summary: result.summary,
+        return createMarkdownTableRow({
+          url: testUrl,
+          summary: result.summary,
+        });
       });
-    });
 
     if (tableLines.length === 0) {
       commentLines.push('> No reports available for this project');
