@@ -128,8 +128,16 @@ const createLighthouseReport = (outputs, coreSummary) => {
           ? '🐌'
           : '🦥';
     commentLines.push(...['', `### ${icon} ${project_name}`, '']);
-    const tableLines = manifest
-      .sort((a, b) => a.url.length - b.url.length)
+    const sortedManifest = manifest.sort((a, b) => {
+      if (a.url < b.url) {
+        return -1;
+      }
+      if (a.url > b.url) {
+        return 1;
+      }
+      return 0;
+    })
+    const tableLines = sortedManifest
       .map((result) => {
         const testUrl = /** @type {string} */ result.url;
 
