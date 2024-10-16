@@ -89,9 +89,8 @@ const createMarkdownTableRow = ({ label, url, summary }) =>
 
 const createMarkdownTableHeader = () => [
   ['| URL', ...Object.values(summaryKeys)].join(' | ') + '|',
-  ['|---', ...Array(Object.keys(summaryKeys).length).fill('---')].join(
+  ['|---', ...Array(Object.keys(summaryKeys).length).fill('---')].join('|') +
     '|',
-  ) + '|',
 ];
 
 /**
