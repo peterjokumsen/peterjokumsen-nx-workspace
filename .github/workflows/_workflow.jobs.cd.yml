@@ -130,32 +130,6 @@ jobs:
           echo "output [project_affected=$project_affected]"
           echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
 
-      # Build the project if it is affected
-      - name: 'Build ${{ inputs.project_name }}'
-        if: steps.is_affected.outputs.project_affected == 'Yes'
-        id: build_affected
-        run: |
-          echo "Setting up configuration for build step"
-          build_configuration="production"
-          branch_name="${{ github.ref }}"
-          if [ "$branch_name" != "refs/heads/main" ]; then
-            build_configuration="staging"
-          fi
-          echo "$build_configuration is the configuration for branch $branch_name"
-
-          echo "::group::nx run ${{ inputs.project_name }}:build:$build_configuration"
-          npx nx run "${{ inputs.project_name }}:build:$build_configuration"
-          echo "::endgroup::"
-          compiled_files="No"
-          if [ -d "${{ inputs.build_location }}" ]; then
-            compiled_files="Yes"
-          fi
-
-          echo "output [compiled_files=$compiled_files]"
-          echo "compiled_files=$compiled_files" >> "$GITHUB_OUTPUT"
-        env:
-          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-
       # lint bicep files when a pull request is opened or synchronized
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
@@ -195,6 +169,32 @@ jobs:
             az deployment sub create ${{ steps.group_deployment_parameters.outputs.parameters }}
 
             echo "::endgroup::"
+
+      # Build the project if it is affected
+      - name: 'Build ${{ inputs.project_name }}'
+        if: steps.is_affected.outputs.project_affected == 'Yes'
+        id: build_affected
+        run: |
+          echo "Setting up configuration for build step"
+          build_configuration="production"
+          branch_name="${{ github.ref }}"
+          if [ "$branch_name" != "refs/heads/main" ]; then
+            build_configuration="staging"
+          fi
+          echo "$build_configuration is the configuration for branch $branch_name"
+
+          echo "::group::nx run ${{ inputs.project_name }}:build:$build_configuration"
+          npx nx run "${{ inputs.project_name }}:build:$build_configuration"
+          echo "::endgroup::"
+          compiled_files="No"
+          if [ -d "${{ inputs.build_location }}" ]; then
+            compiled_files="Yes"
+          fi
+
+          echo "output [compiled_files=$compiled_files]"
+          echo "compiled_files=$compiled_files" >> "$GITHUB_OUTPUT"
+        env:
+          NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
 
       - name: 'Get SWA API key 🔑'
         id: static_web_app_apikey
