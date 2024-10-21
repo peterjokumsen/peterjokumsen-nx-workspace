@@ -7,9 +7,6 @@ param parentDomain string = 'peterjokumsen.com'
 @description('The resource ID of the target resource for the DNS record.  This can be a resource of any type that has a public IP address.')
 param targetResourceId string
 
-@description('Tags to be assigned to the DNS zone.')
-param tags object
-
 resource zone 'Microsoft.Network/dnsZones@2023-07-01-preview' existing = {
   name: parentDomain
 }

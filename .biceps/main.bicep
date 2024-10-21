@@ -1,4 +1,4 @@
-targetScope 'subscription'
+targetScope = 'subscription'
 
 @description('Location of the resources')
 param location string
