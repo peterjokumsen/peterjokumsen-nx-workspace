@@ -18,10 +18,6 @@ on:
         description: 'Project name'
         required: true
         type: string
-      resource_group:
-        description: 'Resource group'
-        required: true
-        type: string
       # defaulted inputs:
       bicep_main_file:
         description: 'Bicep main file'
@@ -87,12 +83,11 @@ jobs:
             exit 1
           fi
 
-          parameters="--resource-group ${{ inputs.resource_group }} \
-              --name '${{ steps.prepare_names.outputs.generated_name }}' \
+          parameters="--name '${{ steps.prepare_names.outputs.generated_name }}' \
+              --location '${{ inputs.location }}' \
               --template-file ${{ inputs.bicep_main_file }} \
               --parameters \
                   location='${{ inputs.location }}' \
-                  branch='${{ github.ref_name }}' \
                   appName='${{ steps.prepare_names.outputs.app_name }}' \
                   subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
 
@@ -131,6 +126,46 @@ jobs:
           echo "output [project_affected=$project_affected]"
           echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
 
+      # lint bicep files when a pull request is opened or synchronized
+      - name: 'AZ CLI login 🔑'
+        uses: azure/login@v2
+        if: steps.is_affected.outputs.project_affected == 'Yes'
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 'Detect changes & validate 📝'
+        if: github.event_name != 'push' && steps.is_affected.outputs.project_affected == 'Yes'
+        id: static_web_app_what_if
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            echo "::group::Static Web App what-if"
+
+            az deployment sub what-if ${{ steps.group_deployment_parameters.outputs.parameters }}
+
+            echo "::endgroup::"
+            echo "::group::Static Web App validate"
+
+            az deployment sub validate ${{ steps.group_deployment_parameters.outputs.parameters }}
+
+            echo "::endgroup::"
+
+      - name: 'Deploy bicep 🚀'
+        if: |
+          ((github.event_name == 'push' && github.ref == 'refs/heads/main')
+          && steps.is_affected.outputs.project_affected == 'Yes')
+          || inputs.force_deploy
+        uses: azure/CLI@v2
+        with:
+          inlineScript: |
+            echo "::group::Static Web App deployment"
+
+            az deployment sub create ${{ steps.group_deployment_parameters.outputs.parameters }}
+
+            echo "::endgroup::"
+
       # Build the project if it is affected
       - name: 'Build ${{ inputs.project_name }}'
         if: steps.is_affected.outputs.project_affected == 'Yes'
@@ -156,46 +191,6 @@ jobs:
           echo "compiled_files=$compiled_files" >> "$GITHUB_OUTPUT"
         env:
           NX_CLOUD_ACCESS_TOKEN: ${{ secrets.NX_CLOUD_ACCESS_TOKEN }}
-
-      # lint bicep files when a pull request is opened or synchronized
-      - name: 'AZ CLI login 🔑'
-        uses: azure/login@v2
-        if: steps.is_affected.outputs.project_affected == 'Yes'
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-
-      - name: 'Detect changes & validate 📝'
-        if: github.event_name != 'push' && steps.is_affected.outputs.project_affected == 'Yes'
-        id: static_web_app_what_if
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            echo "::group::Static Web App what-if"
-
-            az deployment group what-if ${{ steps.group_deployment_parameters.outputs.parameters }}
-
-            echo "::endgroup::"
-            echo "::group::Static Web App validate"
-
-            az deployment group validate ${{ steps.group_deployment_parameters.outputs.parameters }}
-
-            echo "::endgroup::"
-
-      - name: 'Deploy bicep 🚀'
-        if: |
-          ((github.event_name == 'push' && github.ref == 'refs/heads/main')
-          && steps.is_affected.outputs.project_affected == 'Yes')
-          || inputs.force_deploy
-        uses: azure/CLI@v2
-        with:
-          inlineScript: |
-            echo "::group::Static Web App deployment"
-
-            az deployment group create ${{ steps.group_deployment_parameters.outputs.parameters }}
-
-            echo "::endgroup::"
 
       - name: 'Get SWA API key 🔑'
         id: static_web_app_apikey
