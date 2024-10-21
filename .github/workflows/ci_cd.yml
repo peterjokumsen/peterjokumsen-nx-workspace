@@ -55,7 +55,6 @@ jobs:
       build_location: ${{ matrix.project.build_location }}
       sub_domain: ${{ matrix.project.sub_domain }}
       audit_urls: ${{ matrix.project.audit_urls }}
-      force_deploy: true
     secrets: inherit
 
   audit_deployed:
