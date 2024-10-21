@@ -51,7 +51,6 @@ jobs:
       - lint_test_build
     with:
       project_name: ${{ matrix.project.name }}
-      resource_group: ${{ matrix.project.resource_group }}
       build_location: ${{ matrix.project.build_location }}
       sub_domain: ${{ matrix.project.sub_domain }}
       audit_urls: ${{ matrix.project.audit_urls }}

@@ -18,10 +18,6 @@ on:
         description: 'Project name'
         required: true
         type: string
-      resource_group:
-        description: 'Resource group'
-        required: true
-        type: string
       # defaulted inputs:
       bicep_main_file:
         description: 'Bicep main file'
