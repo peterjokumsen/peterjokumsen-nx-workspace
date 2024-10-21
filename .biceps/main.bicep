@@ -14,10 +14,6 @@ var resourceGroupName = '${appName}-swa-rg'
 resource newRg 'Microsoft.Resources/resourceGroups@2024-03-01' = {
   name: resourceGroupName
   location: location
-  tags: {
-    app: appName
-    domain: '${subDomainToUse}.${customDomain}'
-  }
 }
 
 module allSwaResources './_swa-rg.bicep' = {
