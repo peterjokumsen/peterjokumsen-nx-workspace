@@ -87,12 +87,11 @@ jobs:
             exit 1
           fi
 
-          parameters="--resource-group ${{ inputs.resource_group }} \
-              --name '${{ steps.prepare_names.outputs.generated_name }}' \
+          parameters="--name '${{ steps.prepare_names.outputs.generated_name }}' \
+              --location '${{ inputs.location }}' \
               --template-file ${{ inputs.bicep_main_file }} \
               --parameters \
                   location='${{ inputs.location }}' \
-                  branch='${{ github.ref_name }}' \
                   appName='${{ steps.prepare_names.outputs.app_name }}' \
                   subDomain='${{ steps.prepare_names.outputs.sub_domain }}'"
 
@@ -174,12 +173,12 @@ jobs:
           inlineScript: |
             echo "::group::Static Web App what-if"
 
-            az deployment group what-if ${{ steps.group_deployment_parameters.outputs.parameters }}
+            az deployment sub what-if ${{ steps.group_deployment_parameters.outputs.parameters }}
 
             echo "::endgroup::"
             echo "::group::Static Web App validate"
 
-            az deployment group validate ${{ steps.group_deployment_parameters.outputs.parameters }}
+            az deployment sub validate ${{ steps.group_deployment_parameters.outputs.parameters }}
 
             echo "::endgroup::"
 
@@ -193,7 +192,7 @@ jobs:
           inlineScript: |
             echo "::group::Static Web App deployment"
 
-            az deployment group create ${{ steps.group_deployment_parameters.outputs.parameters }}
+            az deployment sub create ${{ steps.group_deployment_parameters.outputs.parameters }}
 
             echo "::endgroup::"
 
