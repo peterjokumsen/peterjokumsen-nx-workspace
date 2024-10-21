@@ -31,7 +31,6 @@ jobs:
       matrix:
         project:
           - name: 'blog'
-            resource_group: 'blog-rg'
             build_location: 'dist/apps/blog'
             sub_domain: 'blog'
             audit_urls: |
@@ -40,7 +39,6 @@ jobs:
               /development-notes
               /not/found
           - name: 'tasks-to-do'
-            resource_group: 'blog-rg'
             build_location: 'dist/apps/tasks-to-do'
             sub_domain: 'ttd'
             audit_urls: |
@@ -57,6 +55,7 @@ jobs:
       build_location: ${{ matrix.project.build_location }}
       sub_domain: ${{ matrix.project.sub_domain }}
       audit_urls: ${{ matrix.project.audit_urls }}
+      force_deploy: true
     secrets: inherit
 
   audit_deployed:
