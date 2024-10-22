@@ -52,8 +52,7 @@ resource staticWebAppAppSettings 'Microsoft.Web/staticSites/config@2022-09-01' =
 }
 
 resource customDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
-  name: '${staticWebApp.outputs.name}/${subDomainToUse}.${customDomain}'
-  parent: staticWebApp
+  name: '${deployment().name}-customDomain'
 }
 
 output id string = staticWebApp.id
