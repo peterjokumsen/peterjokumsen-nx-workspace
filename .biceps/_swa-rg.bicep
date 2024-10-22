@@ -50,7 +50,7 @@ module dnsZone './_dns-zone.bicep' = {
 
 resource customDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
   name: '${staticWebApp.outputs.name}/${subDomainToUse}.${customDomain}'
-  parent: staticWebApp
+  parent: staticWebApp.outputs.name
 }
 
 output appInsightsConnectionString string = appInsights.outputs.connectionString
