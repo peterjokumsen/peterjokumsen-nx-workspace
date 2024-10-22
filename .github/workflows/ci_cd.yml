@@ -42,7 +42,7 @@ jobs:
           - name: 'tasks-to-do'
             build_location: 'dist/apps/tasks-to-do'
             sub_domain: 'ttd'
-            force_deployment: false
+            force_deployment: true
             audit_urls: |
               /
 
