@@ -33,6 +33,7 @@ jobs:
           - name: 'blog'
             build_location: 'dist/apps/blog'
             sub_domain: 'blog'
+            force_deployment: false
             audit_urls: |
               /
               /about-me
@@ -41,6 +42,7 @@ jobs:
           - name: 'tasks-to-do'
             build_location: 'dist/apps/tasks-to-do'
             sub_domain: 'ttd'
+            force_deployment: false
             audit_urls: |
               /
 
@@ -54,6 +56,7 @@ jobs:
       build_location: ${{ matrix.project.build_location }}
       sub_domain: ${{ matrix.project.sub_domain }}
       audit_urls: ${{ matrix.project.audit_urls }}
+      force_deploy: ${{ matrix.project.force_deployment }}
     secrets: inherit
 
   audit_deployed:

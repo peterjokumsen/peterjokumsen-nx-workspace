@@ -44,7 +44,7 @@ module dnsZone './_dns-zone.bicep' = {
   params: {
     subDomain: subDomainToUse
     parentDomain: customDomain
-    targetResourceId: staticWebApp.outputs.id
+    targetHostName: staticWebApp.outputs.defaultHostName
   }
 }
 
