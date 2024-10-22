@@ -51,6 +51,11 @@ resource staticWebAppAppSettings 'Microsoft.Web/staticSites/config@2022-09-01' =
   }
 }
 
+resource customDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
+  name: '${staticWebApp.outputs.name}/${subDomainToUse}.${customDomain}'
+  parent: staticWebApp
+}
+
 output id string = staticWebApp.id
 output name string = staticWebApp.name
 output defaultHostName string = staticWebApp.properties.defaultHostname // eg gentle-bush-0db02ce03.azurestaticapps.net
