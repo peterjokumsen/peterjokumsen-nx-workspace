@@ -6,6 +6,8 @@ param branch string
 param staticWebAppName string
 @description('Tags to use for deployed resources')
 param tags object
+@description('Application Custom Domain')
+param customDomain string
 @description('Application Insights ID')
 param appInsightsId string
 @description('Application Insights instrumentation key')
@@ -52,7 +54,7 @@ resource staticWebAppAppSettings 'Microsoft.Web/staticSites/config@2022-09-01' =
 }
 
 resource customDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
-  name: '${deployment().name}-customDomain'
+  name: '${staticWebApp.name}/${customDomain}'
 }
 
 output id string = staticWebApp.id

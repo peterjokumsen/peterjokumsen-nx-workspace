@@ -32,6 +32,7 @@ module staticWebApp './_static-web-app.bicep' = {
     branch: branch
     staticWebAppName: '${appName}-static-web-app'
     tags: tags
+    customDomain: '${subDomainToUse}.${customDomain}'
     appInsightsId: appInsights.outputs.id
     appInsightsConnectionString: appInsights.outputs.connectionString
     appInsightsInstrumentationKey: appInsights.outputs.instrumentationKey
