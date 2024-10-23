@@ -5,3 +5,5 @@ CVE-2024-4067
 CVE-2024-43788
 
 CVE-2024-47764
+
+CVE-2024-21536 # http-proxy-middleware - used by angular build and webpack
