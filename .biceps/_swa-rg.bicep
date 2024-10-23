@@ -10,6 +10,7 @@ param customDomain string = 'peterjokumsen.com'
 param subDomain string = ''
 
 var subDomainToUse = subDomain == '' ? appName : subDomain
+var swaName = '${appName}-static-web-app'
 var tags = {
   app: appName
   domain: '${subDomainToUse}.${customDomain}'
@@ -30,7 +31,7 @@ module staticWebApp './_static-web-app.bicep' = {
   params: {
     location: location
     branch: branch
-    staticWebAppName: '${appName}-static-web-app'
+    staticWebAppName: swaName
     tags: tags
     customDomain: '${subDomainToUse}.${customDomain}'
     appInsightsId: appInsights.outputs.id
@@ -50,7 +51,7 @@ module dnsZone './_dns-zone.bicep' = {
 }
 
 resource swaDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
-  name: '${staticWebApp.outputs.name}/${subDomainToUse}.${customDomain}'
+  name: '${swaName}/${subDomainToUse}.${customDomain}'
 }
 
 output appInsightsConnectionString string = appInsights.outputs.connectionString
