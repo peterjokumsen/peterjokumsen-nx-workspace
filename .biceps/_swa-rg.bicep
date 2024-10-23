@@ -49,6 +49,10 @@ module dnsZone './_dns-zone.bicep' = {
   }
 }
 
+resource swaDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
+  name: '${staticWebApp.outputs.name}/${subDomainToUse}.${customDomain}'
+}
+
 output appInsightsConnectionString string = appInsights.outputs.connectionString
 
 output staticWebAppDefaultHostName string = staticWebApp.outputs.defaultHostName // eg gentle-bush-0db02ce03.azurestaticapps.net

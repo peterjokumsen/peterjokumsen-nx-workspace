@@ -53,10 +53,6 @@ resource staticWebAppAppSettings 'Microsoft.Web/staticSites/config@2022-09-01' =
   }
 }
 
-resource swaDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
-  name: '${staticWebApp.name}/${customDomain}'
-}
-
 output id string = staticWebApp.id
 output name string = staticWebApp.name
 output defaultHostName string = staticWebApp.properties.defaultHostname // eg gentle-bush-0db02ce03.azurestaticapps.net
