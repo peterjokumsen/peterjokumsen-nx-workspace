@@ -167,6 +167,26 @@ To run a workflow, use the following command:
 act -w <path-to-workflow>
 ```
 
+## Local development
+
+See [set up local development for Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/local-development) for detailed instructions to serve a Static Web App locally.
+
+Created `swa-local-app-only` script to run Azure Static Web App CLI listening to `http://localhost:4200` for frontend. And created `swa:{project}` scripts to run `swa-local-app-only` and `serve:{project}` [concurrently](https://www.npmjs.com/package/concurrently).
+
+When running `swa:{project}`, application will be hosted at `http://localhost:4280`.
+
+### Running `blog` locally
+
+```bash
+npm run swa:blog
+```
+
+### Running `tasks-to-do` locally
+
+```bash
+npm run swa:tasks-to-do
+```
+
 ## Code coverage
 
 Sunburst graph of code coverage for the workspace:
