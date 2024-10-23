@@ -50,8 +50,14 @@ module dnsZone './_dns-zone.bicep' = {
   }
 }
 
-// Manual step required to register custom domain for static web app.
-// Every attempt to automate so far has caused headaches, so leaving it as is for now. Problem for future me trying to add another application.
+/*
+Manual step required to register custom domain for static web app.
+Go to Azure Portal -> Static Web Apps -> {static-web-app} -> Custom Domains -> Add custom domain using subdomain used
+
+> CNAME record is already created in ./_dns-zone.bicep
+> Every attempt to automate so far has caused headaches, so leaving it as is for now.
+> Problem for future me trying to add another application.
+*/
 
 output appInsightsConnectionString string = appInsights.outputs.connectionString
 
