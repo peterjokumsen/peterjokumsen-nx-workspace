@@ -20,6 +20,11 @@
           {
             "glob": "**/*",
             "input": "apps/tasks-to-do/public"
+          },
+          {
+            "glob": "staticwebapp\\.config\\.json",
+            "input": "apps/tasks-to-do",
+            "output": "/"
           }
         ],
         "styles": [

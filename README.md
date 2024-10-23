@@ -16,6 +16,14 @@ Application, located in [`apps/blog`](./apps/blog), is the initial project, to b
 
 Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://blog.peterjokumsen.com](https://blog.peterjokumsen.com).
 
+### Tasks to do (TDD)
+
+<a href="https://ttd.peterjokumsen.com" target="_blank" rel="noreferrer"><img alt="Tasks to do (TTD)" src="https://ttd.peterjokumsen.com/logo.png" width="150"></a>
+
+Application, located in [`apps/tasks-to-do`](./apps/tasks-to-do), is a project to be used as a task list, both as a learning project and as a tool to keep track of tasks.
+
+Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://ttd.peterjokumsen.com](https://ttd.peterjokumsen.com).
+
 ## Libraries
 
 ### ng-libs
@@ -157,6 +165,28 @@ To run a workflow, use the following command:
 
 ```bash
 act -w <path-to-workflow>
+```
+
+## Local development
+
+See [set up local development for Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/local-development) for detailed instructions to serve a Static Web App locally.
+
+Created `swa-local-app-only` script to run Azure Static Web App CLI listening to `http://localhost:4200` for frontend.
+
+Use `swa:{application}` scripts to run `swa-local-app-only` with `serve:{application}`, using [concurrently](https://www.npmjs.com/package/concurrently).
+
+When running `swa:{application}`, open `http://localhost:4280` in browser to view application via SWA.
+
+### Running `blog` locally
+
+```bash
+npm run swa:blog
+```
+
+### Running `tasks-to-do` locally
+
+```bash
+npm run swa:tasks-to-do
 ```
 
 ## Code coverage
