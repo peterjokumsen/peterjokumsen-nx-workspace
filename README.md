@@ -16,6 +16,14 @@ Application, located in [`apps/blog`](./apps/blog), is the initial project, to b
 
 Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://blog.peterjokumsen.com](https://blog.peterjokumsen.com).
 
+### Tasks to do (TDD)
+
+<a href="https://ttd.peterjokumsen.com" target="_blank" rel="noreferrer"><img alt="Tasks to do (TTD)" src="https://ttd.peterjokumsen.com/logo.png" width="150"></a>
+
+Application, located in [`apps/tasks-to-do`](./apps/tasks-to-do), is a project to be used as a task list, both as a learning project and as a tool to keep track of tasks.
+
+Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://ttd.peterjokumsen.com](https://ttd.peterjokumsen.com).
+
 ## Libraries
 
 ### ng-libs
