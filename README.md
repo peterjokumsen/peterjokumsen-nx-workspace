@@ -171,9 +171,11 @@ act -w <path-to-workflow>
 
 See [set up local development for Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/local-development) for detailed instructions to serve a Static Web App locally.
 
-Created `swa-local-app-only` script to run Azure Static Web App CLI listening to `http://localhost:4200` for frontend. And created `swa:{project}` scripts to run `swa-local-app-only` and `serve:{project}` [concurrently](https://www.npmjs.com/package/concurrently).
+Created `swa-local-app-only` script to run Azure Static Web App CLI listening to `http://localhost:4200` for frontend.
 
-When running `swa:{project}`, application will be hosted at `http://localhost:4280`.
+Use `swa:{application}` scripts to run `swa-local-app-only` with `serve:{application}`, using [concurrently](https://www.npmjs.com/package/concurrently).
+
+When running `swa:{application}`, open `http://localhost:4280` in browser to view application via SWA.
 
 ### Running `blog` locally
 
