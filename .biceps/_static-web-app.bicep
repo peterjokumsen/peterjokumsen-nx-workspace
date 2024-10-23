@@ -6,8 +6,6 @@ param branch string
 param staticWebAppName string
 @description('Tags to use for deployed resources')
 param tags object
-@description('Application Custom Domain')
-param customDomain string
 @description('Application Insights ID')
 param appInsightsId string
 @description('Application Insights instrumentation key')
