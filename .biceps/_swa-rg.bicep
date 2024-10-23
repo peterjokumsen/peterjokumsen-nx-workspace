@@ -50,9 +50,8 @@ module dnsZone './_dns-zone.bicep' = {
   }
 }
 
-resource swaDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
-  name: '${swaName}/${subDomainToUse}.${customDomain}'
-}
+// Manual step required to register custom domain for static web app.
+// Every attempt to automate so far has caused headaches, so leaving it as is for now. Problem for future me trying to add another application.
 
 output appInsightsConnectionString string = appInsights.outputs.connectionString
 
