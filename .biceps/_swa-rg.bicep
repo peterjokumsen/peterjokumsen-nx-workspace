@@ -10,6 +10,7 @@ param customDomain string = 'peterjokumsen.com'
 param subDomain string = ''
 
 var subDomainToUse = subDomain == '' ? appName : subDomain
+var swaName = '${appName}-static-web-app'
 var tags = {
   app: appName
   domain: '${subDomainToUse}.${customDomain}'
@@ -30,7 +31,7 @@ module staticWebApp './_static-web-app.bicep' = {
   params: {
     location: location
     branch: branch
-    staticWebAppName: '${appName}-static-web-app'
+    staticWebAppName: swaName
     tags: tags
     appInsightsId: appInsights.outputs.id
     appInsightsConnectionString: appInsights.outputs.connectionString
@@ -48,10 +49,14 @@ module dnsZone './_dns-zone.bicep' = {
   }
 }
 
-resource customDomain 'Microsoft.Web/staticSites/customDomains@2022-09-01' = {
-  name: '${staticWebApp.outputs.name}/${subDomainToUse}.${customDomain}'
-  parent: staticWebApp.outputs.name
-}
+/*
+Manual step required to register custom domain for static web app.
+Go to Azure Portal -> Static Web Apps -> {static-web-app} -> Custom Domains -> Add custom domain using subdomain used
+
+> CNAME record is already created in ./_dns-zone.bicep
+> Every attempt to automate so far has caused headaches, so leaving it as is for now.
+> Problem for future me trying to add another application.
+*/
 
 output appInsightsConnectionString string = appInsights.outputs.connectionString
 

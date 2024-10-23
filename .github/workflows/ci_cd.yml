@@ -45,7 +45,7 @@ jobs:
             force_deployment: false
             audit_urls: |
               /
-
+    # deploy infra and app
     name: 🏗️ ${{ matrix.project.name }} 🚀
     if: always() && needs.lint_test_build.result != 'failure'
     uses: './.github/workflows/_workflow.jobs.cd.yml'
