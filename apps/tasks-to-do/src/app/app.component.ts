@@ -1,23 +1,30 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, PLATFORM_ID, inject, signal } from '@angular/core';
-import { interval, map, of, skip, tap } from 'rxjs';
+import {
+  animate,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   imports: [RouterModule, CommonModule],
   selector: 'ttd-root',
+  animations: [
+    trigger('fadeOut', [
+      state('in', style({ opacity: 1 })),
+      transition(':leave', [animate('300ms', style({ opacity: 0 }))]),
+    ]),
+  ],
   template: ` @defer {
       <router-outlet></router-outlet>
-    } @placeholder (minimum 5000) {
-      <div class="loading-container">
-        <p>Loading</p>
-        <div class="loading-symbols">
-          @for (char of loading$ | async; track char) {
-            <span>{{ char }}</span>
-          }
-        </div>
+    } @placeholder (minimum 500) {
+      <div @fadeOut class="loading-container">
+        <p>Loading ⌛</p>
       </div>
     }`,
   styles: `
@@ -32,25 +39,4 @@ import { RouterModule } from '@angular/router';
     }
   `,
 })
-export class AppComponent {
-  private _platformId = inject(PLATFORM_ID);
-  private _stringValue = signal<string[]>([]);
-
-  loading$ = !isPlatformBrowser(this._platformId)
-    ? of(['⌛'])
-    : interval(300).pipe(
-        skip(1),
-        tap((v) => {
-          const next = this.fizzBuzz(v);
-          console.log(this._stringValue(), next);
-          this._stringValue.update((a) => [...a, next]);
-        }),
-        map(() => this._stringValue()),
-      );
-
-  private fizzBuzz(value: number): string {
-    const mod3 = value % 3 === 0;
-    const mod5 = value % 5 === 0;
-    return mod3 ? (mod5 ? '🤠' : '🐮') : mod5 ? '😃' : '⌛';
-  }
-}
+export class AppComponent {}
