@@ -12,7 +12,9 @@ export const appRoutes: Route[] = [
   {
     path: 'app',
     loadComponent: () =>
-      import('./pages/test-app.component').then((m) => m.TestAppComponent),
+      import('./pages/tasks/simple-tasks.component').then(
+        (m) => m.SimpleTasksComponent,
+      ),
     canActivate: [hasAuthenticatedGuard],
   },
 ];
