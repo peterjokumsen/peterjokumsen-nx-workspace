@@ -19,6 +19,9 @@
       "@peterjokumsen/md-renderer": ["ng-libs/md-renderer/src/index.ts"],
       "@peterjokumsen/ng-services": ["ng-libs/services/src/index.ts"],
       "@peterjokumsen/styles": ["ng-libs/styles/src/index.ts"],
+      "@peterjokumsen/task-management": [
+        "ng-libs/task-management/src/index.ts"
+      ],
       "@peterjokumsen/ts-md-models": ["ts-libs/ts-md-models/src/index.ts"],
       "@peterjokumsen/ts-utils": ["ts-libs/ts-utils/src/index.ts"],
       "@peterjokumsen/ui-elements": ["ng-libs/ui-elements/src/index.ts"]
