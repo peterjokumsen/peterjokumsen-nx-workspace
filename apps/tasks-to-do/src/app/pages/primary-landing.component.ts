@@ -11,7 +11,7 @@ import { RouterLink } from '@angular/router';
     <div class="container">
       <h1>Tasks To Do</h1>
       <p>Welcome to the Tasks To Do application.</p>
-      <a routerLink="/app">Go to app</a>
+      <a routerLink="/tasks">Go to app</a>
       <img src="/images/tasks-representation_800.webp" alt="Tasks To Do" />
       <p>
         This application is a personal project of mine to try and keep my tasks

@@ -10,10 +10,10 @@ export const appRoutes: Route[] = [
       ),
   },
   {
-    path: 'app',
-    loadComponent: () =>
-      import('./pages/tasks/simple-tasks.component').then(
-        (m) => m.SimpleTasksComponent,
+    path: 'tasks',
+    loadChildren: () =>
+      import('@peterjokumsen/task-management').then(
+        (m) => m.taskManagementRoutes,
       ),
     canActivate: [hasAuthenticatedGuard],
   },
