@@ -57,6 +57,7 @@ jobs:
       sub_domain: ${{ matrix.project.sub_domain }}
       audit_urls: ${{ matrix.project.audit_urls }}
       force_deploy: ${{ matrix.project.force_deployment }}
+      affected_projects: ${{ needs.lint_test_build.outputs.projects_affected }}
     secrets: inherit
 
   audit_deployed:
