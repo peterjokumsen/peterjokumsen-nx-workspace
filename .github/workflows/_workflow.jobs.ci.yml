@@ -18,6 +18,10 @@ on:
       CODECOV_TOKEN:
         description: 'Codecov Token'
         required: true
+    outputs:
+      projects_affected:
+        description: 'Comma separated list of affected projects'
+        value: ${{ jobs.test_and_lint.outputs.projects_affected }}
 
 permissions:
   id-token: write
@@ -32,6 +36,8 @@ jobs:
   test_and_lint:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
+    outputs:
+      projects_affected: ${{ steps.get_affected.outputs.projects_affected }}
     name: 'Test & lint 🧪'
     steps:
       - name: 'Checkout 📥'
@@ -49,6 +55,22 @@ jobs:
       - name: 'Set SHAs 📝'
         id: set_base
         uses: nrwl/nx-set-shas@v4
+
+      # Check if the project is affected by the latest changes
+      - name: 'Get affected applications 📦'
+        id: get_affected
+        run: |
+          echo "::group::nx show projects --type app --affected"
+          affected_projects=$(npx nx show projects --type app --affected)
+
+          # Replace newlines and spaces with commas
+          comma_separated_projects=$(echo "$affected_projects" | tr '\n' ',' | tr ' ' ',')
+
+          echo "[ $affected_projects ] to $comma_separated_projects"
+          echo "::endgroup::"
+
+          echo "output [projects_affected=$comma_separated_projects]"
+          echo "projects_affected=$comma_separated_projects" >> "$GITHUB_OUTPUT"
 
       - name: 'Check formatting 📐'
         run: npx nx format:check

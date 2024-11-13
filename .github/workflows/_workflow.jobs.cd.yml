@@ -18,6 +18,10 @@ on:
         description: 'Project name'
         required: true
         type: string
+      affected_projects:
+        description: 'Affected projects'
+        required: true
+        type: string
       # defaulted inputs:
       bicep_main_file:
         description: 'Bicep main file'
@@ -46,9 +50,32 @@ permissions:
   id-token: write
 
 jobs:
+  check_affected:
+    runs-on: ubuntu-latest
+    name: '🔍'
+    outputs:
+      project_affected: ${{ steps.compare_affected.outputs.project_affected }}
+    steps:
+      - name: 'Check ${{ inputs.project_name }} affected 📦'
+        id: compare_affected
+        run: |
+          affected_projects="${{ inputs.affected_projects }}"
+          project_name="${{ inputs.project_name }}"
+          project_affected="No"
+
+          if [[ $affected_projects == *"$project_name"* ]]; then
+              project_affected="Yes"
+          fi
+
+          echo "output [project_affected=$project_affected]"
+          echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
+
   # build the project when it is affected by the latest changes
   build_deploy:
+    needs: check_affected
     if: github.event.action != 'closed'
+      && needs.check_affected.outputs.project_affected == 'Yes'
+      || inputs.force_deploy
     runs-on: ubuntu-latest
     name: '🏭 & 🚀'
     env:
@@ -95,48 +122,20 @@ jobs:
 
       - name: 'Checkout 📥'
         uses: actions/checkout@v4
-        with:
-          # Number of commits to fetch. 0 indicates all history for all branches and tags.
-          fetch-depth: 0
-          submodules: true
 
       - name: 'Install dependencies 📦'
         uses: ./.github/actions/install-deps
 
-      - name: 'Set SHAs 📝'
-        id: set_base
-        uses: nrwl/nx-set-shas@v4
-
-      # Check if the project is affected by the latest changes
-      - name: 'Check if affected 🧪'
-        id: is_affected
-        run: |
-          echo "::group::nx show projects --type app --affected"
-          affected_projects=$(npx nx show projects --type app --affected)
-          echo "$affected_projects"
-          project_name="${{ inputs.project_name }}"
-          echo "::endgroup::"
-          project_affected="No"
-          echo ""
-          echo "Checking if $project_name is affected"
-          if [[ $affected_projects == *$project_name* ]]; then
-            project_affected="Yes"
-          fi
-
-          echo "output [project_affected=$project_affected]"
-          echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
-
       # lint bicep files when a pull request is opened or synchronized
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
-        if: steps.is_affected.outputs.project_affected == 'Yes'
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: 'Detect changes & validate 📝'
-        if: github.event_name != 'push' && steps.is_affected.outputs.project_affected == 'Yes'
+        if: github.event_name != 'push'
         id: static_web_app_what_if
         uses: azure/CLI@v2
         with:
@@ -154,8 +153,7 @@ jobs:
 
       - name: 'Deploy bicep 🚀'
         if: |
-          ((github.event_name == 'push' && github.ref == 'refs/heads/main')
-          && steps.is_affected.outputs.project_affected == 'Yes')
+          (github.event_name == 'push' && github.ref == 'refs/heads/main')
           || inputs.force_deploy
         uses: azure/CLI@v2
         with:
@@ -168,7 +166,6 @@ jobs:
 
       # Build the project if it is affected
       - name: 'Build ${{ inputs.project_name }}'
-        if: steps.is_affected.outputs.project_affected == 'Yes'
         id: build_affected
         run: |
           echo "Setting up configuration for build step"
@@ -194,7 +191,6 @@ jobs:
 
       - name: 'Get SWA API key 🔑'
         id: static_web_app_apikey
-        if: steps.is_affected.outputs.project_affected == 'Yes'
         uses: azure/CLI@v2
         with:
           inlineScript: |
