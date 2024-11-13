@@ -67,10 +67,10 @@ jobs:
           comma_separated_projects=$(echo "$affected_projects" | tr '\n' ',' | tr ' ' ',')
 
           # Remove any double commas that may have been introduced
-          comma_separated_projects=$(echo "${comma_separated_projects//s/,,*/,/g}")
+          comma_separated_projects=$("${comma_separated_projects//s/,,*/,/g}")
 
           # Remove a trailing comma if necessary
-          comma_separated_projects=$(echo "${comma_separated_projects//s/,$//}")
+          comma_separated_projects=$("${comma_separated_projects//s/,$//}")
 
           echo "[ $affected_projects ] to $comma_separated_projects"
           echo "::endgroup::"
