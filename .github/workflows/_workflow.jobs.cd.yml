@@ -153,7 +153,7 @@ jobs:
 
       - name: 'Deploy bicep 🚀'
         if: |
-          ((github.event_name == 'push' && github.ref == 'refs/heads/main')
+          (github.event_name == 'push' && github.ref == 'refs/heads/main')
           || inputs.force_deploy
         uses: azure/CLI@v2
         with:
