@@ -4,19 +4,20 @@ import { map, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TaskState } from '../models';
+import { TaskViewComponent } from '../components';
 import { TasksDataService } from '../services';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'task-mgr-task-summary',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TaskViewComponent],
   template: `
     <h2>{{ currentFilter() }} tasks</h2>
 
     <ng-container *ngIf="tasks() as tasks">
       @for (task of tasks; track task.id) {
-        <pre><code>{{ task | json }}</code></pre>
+        <task-mgr-task-view [task]="task"></task-mgr-task-view>
       }
     </ng-container>
   `,
