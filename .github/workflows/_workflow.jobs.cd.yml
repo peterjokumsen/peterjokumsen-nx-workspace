@@ -56,7 +56,7 @@ jobs:
     outputs:
       project_affected: ${{ steps.compare_affected.outputs.project_affected }}
     steps:
-      - name: 'Get affected applications 📦'
+      - name: 'Check ${{ inputs.project_name }} affected 📦'
         id: compare_affected
         run: |
           affected_projects="${{ inputs.affected_projects }}"
