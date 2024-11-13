@@ -62,12 +62,21 @@ jobs:
         run: |
           echo "::group::nx show projects --type app --affected"
           affected_projects=$(npx nx show projects --type app --affected)
-          comma_separated=$(echo $affected_projects | tr '\n' ',')
-          echo "[ $affected_projects ] to $comma_separated"
+
+          # Replace newlines and spaces with commas
+          comma_separated_projects=$(echo "$affected_projects" | tr '\n' ',' | tr ' ' ',')
+
+          # Remove any double commas that may have been introduced
+          comma_separated_projects=$(echo "$comma_separated_projects" | sed 's/,,*/,/g')
+
+          # Remove a trailing comma if necessary
+          comma_separated_projects=$(echo "$comma_separated_projects" | sed 's/,$//')
+
+          echo "[ $affected_projects ] to $comma_separated_projects"
           echo "::endgroup::"
 
-          echo "output [projects_affected=$comma_separated]"
-          echo "projects_affected=$comma_separated" >> "$GITHUB_OUTPUT"
+          echo "output [projects_affected=$comma_separated_projects]"
+          echo "projects_affected=$comma_separated_projects" >> "$GITHUB_OUTPUT"
 
       - name: 'Check formatting 📐'
         run: npx nx format:check
