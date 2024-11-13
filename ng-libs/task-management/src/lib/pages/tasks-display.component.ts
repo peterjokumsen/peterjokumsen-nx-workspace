@@ -38,9 +38,9 @@ export class TasksDisplayComponent {
   tasks = toSignal(
     this._filter$.pipe(
       switchMap((filter) => {
-        const queryFilter = this._statuses.find(
-          (status) => status === filter.toLowerCase(),
-        );
+        const queryFilter = !filter
+          ? 'all'
+          : this._statuses.find((status) => status === filter.toLowerCase());
         return this._tasksData.getTasks({ filter: queryFilter ?? 'all' });
       }),
     ),
