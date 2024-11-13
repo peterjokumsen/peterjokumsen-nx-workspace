@@ -19,7 +19,9 @@ on:
         description: 'Codecov Token'
         required: true
     outputs:
-      projects_affected: ${{ jobs.test_and_lint.outputs.projects_affected }}
+      projects_affected:
+        description: 'Comma separated list of affected projects'
+        value: ${{ jobs.test_and_lint.outputs.projects_affected }}
 
 permissions:
   id-token: write
