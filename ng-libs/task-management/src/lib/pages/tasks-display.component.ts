@@ -4,19 +4,20 @@ import { map, switchMap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { TaskState } from '../models';
+import { TaskViewComponent } from '../components';
 import { TasksDataService } from '../services';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'task-mgr-task-summary',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TaskViewComponent],
   template: `
     <h2>{{ currentFilter() }} tasks</h2>
 
     <ng-container *ngIf="tasks() as tasks">
       @for (task of tasks; track task.id) {
-        <pre><code>{{ task | json }}</code></pre>
+        <task-mgr-task-view [task]="task"></task-mgr-task-view>
       }
     </ng-container>
   `,
@@ -41,7 +42,16 @@ export class TasksDisplayComponent {
         const queryFilter = !filter
           ? 'all'
           : this._statuses.find((status) => status === filter.toLowerCase());
-        return this._tasksData.getTasks({ filter: queryFilter ?? 'all' });
+
+        return this._tasksData
+          .getTasks()
+          .pipe(
+            map((tasks) =>
+              tasks.filter(
+                (task) => queryFilter === 'all' || task.status === queryFilter,
+              ),
+            ),
+          );
       }),
     ),
   );

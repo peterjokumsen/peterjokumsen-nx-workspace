@@ -1,7 +1,7 @@
-import { GetTasksQuery, Task } from '../models';
 import { Injectable, InjectionToken, inject } from '@angular/core';
 
 import { Observable } from 'rxjs';
+import { Task } from '../models';
 import { staticTasks } from './static-tasks';
 
 export const TOGGLE_RESPONSE_DELAY = new InjectionToken<boolean>(
@@ -24,12 +24,7 @@ export class TasksDataService {
     });
   }
 
-  getTasks(query?: GetTasksQuery): Observable<Task[]> {
-    const filter = query?.filter ?? 'all';
-    const tasks = this._instanceTasks.filter((task) => {
-      return filter === 'all' || task.status === filter;
-    });
-
-    return this.randomizeResponseTime(tasks);
+  getTasks(): Observable<Task[]> {
+    return this.randomizeResponseTime(this._instanceTasks);
   }
 }
