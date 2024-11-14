@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@peterjokumsen/loading-indicator": [
+        "ng-libs/loading-indicator/src/index.ts"
+      ],
       "@peterjokumsen/md-parser": ["ts-libs/md-parser/src/index.ts"],
       "@peterjokumsen/md-renderer": ["ng-libs/md-renderer/src/index.ts"],
       "@peterjokumsen/ng-services": ["ng-libs/services/src/index.ts"],
