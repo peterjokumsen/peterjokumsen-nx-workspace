@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WritableSignal, signal } from '@angular/core';
 
+import { By } from '@angular/platform-browser';
 import { LoadingIndicatorComponent } from './loading-indicator.component';
 import { LoadingService } from './loading.service';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('LoadingIndicatorComponent without LoadingService', () => {
   let component: LoadingIndicatorComponent;
@@ -44,7 +46,7 @@ describe('LoadingIndicatorComponent', () => {
         // keep split
         { provide: LoadingService, useValue: loadingService },
       ],
-      imports: [LoadingIndicatorComponent],
+      imports: [NoopAnimationsModule, LoadingIndicatorComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LoadingIndicatorComponent);
@@ -56,14 +58,18 @@ describe('LoadingIndicatorComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  function getLoadingContainer() {
+    return fixture.debugElement.query(By.css('.loading-indicator'));
+  }
+
   describe('when isLoading is false', () => {
     beforeEach(() => {
       isLoadingSignal.update(() => false);
       fixture.detectChanges();
     });
 
-    it('should set display to none', () => {
-      expect(fixture.nativeElement.style.display).toBe('none');
+    it('should hide ".loading-indicator"', () => {
+      expect(getLoadingContainer()).toBeFalsy();
     });
   });
 
@@ -73,8 +79,8 @@ describe('LoadingIndicatorComponent', () => {
       fixture.detectChanges();
     });
 
-    it('should set display to block', () => {
-      expect(fixture.nativeElement.style.display).toBe('block');
+    it('should display ".loading-indicator"', () => {
+      expect(getLoadingContainer()).toBeTruthy();
     });
   });
 });

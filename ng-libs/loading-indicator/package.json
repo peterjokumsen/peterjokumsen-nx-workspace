@@ -2,6 +2,7 @@
   "name": "@peterjokumsen/loading-indicator",
   "version": "0.0.1",
   "peerDependencies": {
+    "@angular/animations": "^18.2.0",
     "@angular/common": "^18.2.0",
     "@angular/core": "^18.2.0",
     "@angular/material": "^18.2.0"

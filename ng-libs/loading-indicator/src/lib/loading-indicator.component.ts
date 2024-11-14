@@ -4,6 +4,7 @@ import {
   OnInit,
   inject,
 } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 import { CommonModule } from '@angular/common';
 import { LoadingService } from './loading.service';
@@ -14,15 +15,31 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
   standalone: true,
   imports: [CommonModule, MatProgressSpinner],
   template: `
-    <div class="loading-indicator">
-      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-    </div>
+    @if (service?.isLoading()) {
+      <div class="loading-indicator" [@fadeInOut]>
+        @defer {
+          <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+        }
+      </div>
+    }
   `,
-  styles: ``,
+  styles: `
+    .loading-indicator {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '[style.display]': 'service?.isLoading() ? "block" : "none"',
-  },
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ transform: 'translateY(100%)' }),
+        animate('200ms', style({ transform: 'translateY(0)' })),
+      ]),
+      transition(':leave', [animate('500ms', style({ opacity: 0 }))]),
+    ]),
+  ],
 })
 export class LoadingIndicatorComponent implements OnInit {
   service = inject(LoadingService, { optional: true });
