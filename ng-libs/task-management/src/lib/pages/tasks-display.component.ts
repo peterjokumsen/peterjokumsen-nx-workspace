@@ -42,7 +42,16 @@ export class TasksDisplayComponent {
         const queryFilter = !filter
           ? 'all'
           : this._statuses.find((status) => status === filter.toLowerCase());
-        return this._tasksData.getTasks({ filter: queryFilter ?? 'all' });
+
+        return this._tasksData
+          .getTasks()
+          .pipe(
+            map((tasks) =>
+              tasks.filter(
+                (task) => queryFilter === 'all' || task.status === queryFilter,
+              ),
+            ),
+          );
       }),
     ),
   );

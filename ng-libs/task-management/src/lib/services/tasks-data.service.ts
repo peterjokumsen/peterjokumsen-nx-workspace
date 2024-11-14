@@ -1,7 +1,7 @@
-import { GetTasksQuery, Task } from '../models';
 import { Injectable, InjectionToken, inject } from '@angular/core';
 
 import { Observable } from 'rxjs';
+import { Task } from '../models';
 import { staticTasks } from './static-tasks';
 
 export const TOGGLE_RESPONSE_DELAY = new InjectionToken<boolean>(
