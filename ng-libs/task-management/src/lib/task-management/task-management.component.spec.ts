@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { LoadingIndicatorComponent } from '@peterjokumsen/loading-indicator';
+import { MockComponent } from 'ng-mocks';
 import { RouterModule } from '@angular/router';
 import { TaskManagementComponent } from './task-management.component';
 import { TasksDataService } from '../services';
@@ -19,7 +21,11 @@ describe('TaskManagementComponent', () => {
       imports: [TaskManagementComponent, RouterModule.forRoot([])],
     })
       .overrideComponent(TaskManagementComponent, {
-        set: {
+        remove: {
+          imports: [LoadingIndicatorComponent],
+        },
+        add: {
+          imports: [MockComponent(LoadingIndicatorComponent)],
           providers: [
             // keep split
             { provide: TasksDataService, useValue: tasksDataMock },
