@@ -27,10 +27,7 @@
             "output": "/"
           }
         ],
-        "styles": [
-          "@angular/material/prebuilt-themes/azure-blue.css",
-          "apps/tasks-to-do/src/styles.scss"
-        ],
+        "styles": ["apps/tasks-to-do/src/styles.scss"],
         "scripts": [],
         "server": "apps/tasks-to-do/src/main.server.ts",
         "prerender": true,
