@@ -1,11 +1,10 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { map, switchMap } from 'rxjs';
 
-import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { TaskState } from '../models';
 import { TaskViewComponent } from '../components';
 import { TasksDataService } from '../services';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
@@ -13,7 +12,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   standalone: true,
   imports: [CommonModule, TaskViewComponent],
   template: `
-    <h2>{{ currentFilter() }} tasks</h2>
+    <h2>{{ currentStatus() }} tasks</h2>
 
     <ng-container *ngIf="tasks() as tasks">
       @for (task of tasks; track task.id) {
@@ -21,38 +20,23 @@ import { toSignal } from '@angular/core/rxjs-interop';
       }
     </ng-container>
   `,
-  styles: ``,
+  styles: `
+    h2 {
+      padding-top: 0;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TasksDisplayComponent {
-  private readonly _statuses: TaskState[] = [
-    'backlog',
-    'active',
-    'completed',
-    'overdue',
-  ];
-  private _route = inject(ActivatedRoute);
   private _tasksData = inject(TasksDataService);
-  private _filter$ = this._route.data.pipe(map((data) => data?.['filter']));
+  private _tasks$ = this._tasksData.tasks$;
 
-  currentFilter = toSignal(this._filter$);
-  tasks = toSignal(
-    this._filter$.pipe(
-      switchMap((filter) => {
-        const queryFilter = !filter
-          ? 'all'
-          : this._statuses.find((status) => status === filter.toLowerCase());
-
-        return this._tasksData
-          .getTasks()
-          .pipe(
-            map((tasks) =>
-              tasks.filter(
-                (task) => queryFilter === 'all' || task.status === queryFilter,
-              ),
-            ),
-          );
-      }),
-    ),
+  currentStatus = toSignal(
+    combineLatest([
+      this._tasksData.currentStatus$,
+      this._tasksData.statusDescriptions$,
+    ]).pipe(map(([s, descriptions]) => descriptions[s])),
   );
+
+  tasks = toSignal(this._tasks$);
 }

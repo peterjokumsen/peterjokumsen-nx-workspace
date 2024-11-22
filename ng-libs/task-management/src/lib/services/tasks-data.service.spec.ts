@@ -1,8 +1,8 @@
 import { Observable, firstValueFrom } from 'rxjs';
-import { RESPONSE_DELAY, TasksDataService } from './tasks-data.service';
+import { OptionDetail, Task } from '../models';
+import { TasksDataService, USE_DELAY } from './tasks-data.service';
 
 import { LoadingService } from '@peterjokumsen/loading-indicator';
-import { Task } from '../models';
 import { TestBed } from '@angular/core/testing';
 
 describe('TasksDataService', () => {
@@ -21,7 +21,7 @@ describe('TasksDataService', () => {
     TestBed.configureTestingModule({
       providers: [
         // keep split
-        { provide: RESPONSE_DELAY, useValue: false },
+        { provide: USE_DELAY, useValue: false },
         { provide: LoadingService, useValue: loadingServiceMock },
         TasksDataService,
       ],
@@ -33,17 +33,63 @@ describe('TasksDataService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getTasks', () => {
+  describe('tasks$', () => {
     let result$: Observable<Task[]>;
 
     beforeEach(() => {
-      result$ = service.getTasks();
+      result$ = service.tasks$;
     });
 
     it('should return tasks', async () => {
       const tasks = await firstValueFrom(result$);
       expect(tasks).toBeTruthy();
       expect(tasks.length).toBeGreaterThan(0);
+    });
+
+    it('should start loading', () => {
+      expect(loadingServiceMock.startLoading).toHaveBeenCalledTimes(1);
+    });
+
+    it('should complete loading', async () => {
+      await firstValueFrom(result$);
+      expect(loadingServiceMock.completeLoading).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('statuses$', () => {
+    let result$: Observable<OptionDetail[]>;
+
+    beforeEach(() => {
+      result$ = service.statuses$;
+    });
+
+    it('should return statuses', async () => {
+      const statuses = await firstValueFrom(result$);
+      expect(statuses).toBeTruthy();
+      expect(statuses.length).toBeGreaterThan(0);
+    });
+
+    it('should start loading', () => {
+      expect(loadingServiceMock.startLoading).toHaveBeenCalledTimes(1);
+    });
+
+    it('should complete loading', async () => {
+      await firstValueFrom(result$);
+      expect(loadingServiceMock.completeLoading).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe('contexts$', () => {
+    let result$: Observable<OptionDetail[]>;
+
+    beforeEach(() => {
+      result$ = service.contexts$;
+    });
+
+    it('should return contexts', async () => {
+      const contexts = await firstValueFrom(result$);
+      expect(contexts).toBeTruthy();
+      expect(contexts.length).toBeGreaterThan(0);
     });
 
     it('should start loading', () => {

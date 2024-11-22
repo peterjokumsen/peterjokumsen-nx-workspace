@@ -4,7 +4,8 @@ import { LoadingIndicatorComponent } from '@peterjokumsen/loading-indicator';
 import { MockComponent } from 'ng-mocks';
 import { RouterModule } from '@angular/router';
 import { TaskManagementComponent } from './task-management.component';
-import { TasksDataService } from '../services';
+import { TasksDataService } from './services';
+import { of } from 'rxjs';
 
 describe('TaskManagementComponent', () => {
   let component: TaskManagementComponent;
@@ -15,6 +16,12 @@ describe('TaskManagementComponent', () => {
   beforeEach(async () => {
     tasksDataMock = {
       getTasks: jest.fn().mockName('getTasks'),
+      getStatuses: jest
+        .fn(() => of([{ value: 'value', label: 'label' }]))
+        .mockName('getStatuses'),
+      getContexts: jest
+        .fn(() => of([{ value: 'value', label: 'label' }]))
+        .mockName('getContexts'),
     } as unknown as jest.Mocked<TasksDataService>;
 
     await TestBed.configureTestingModule({

@@ -1,0 +1,15 @@
+@use '@angular/material' as mat;
+
+.hidden {
+  display: none;
+}
+
+.page-container {
+  padding: 1rem;
+  display: block;
+  max-width: 100%;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
