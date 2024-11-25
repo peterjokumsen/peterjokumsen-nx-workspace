@@ -20,8 +20,6 @@ jobs:
     # deploy infra and app
     name: '🏗️ & 🚀'
     uses: './.github/workflows/_workflow.jobs.cd.yml'
-    needs:
-      - lint_test_build
     with:
       project_name: 'blog'
       build_location: 'dist/apps/blog'
