@@ -288,12 +288,12 @@ jobs:
   # Close the deployed static web app
   close_deployed:
     runs-on: ubuntu-latest
-    if: github.event.action == 'closed'
     name: '🧹'
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
     steps:
       - name: 'AZ CLI login 👤'
+        if: github.event.action == 'closed'
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
@@ -301,6 +301,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: 'Get API key 🔑'
+        if: github.event.action == 'closed'
         id: static_web_app_apikey
         uses: azure/CLI@v2
         with:
