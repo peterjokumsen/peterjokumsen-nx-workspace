@@ -45,6 +45,3 @@ component_management:
     - component_id: app_blog
       paths:
         - apps/blog/**
-    - component_id: app_ttd
-      paths:
-        - apps/tasks-to-do/**
