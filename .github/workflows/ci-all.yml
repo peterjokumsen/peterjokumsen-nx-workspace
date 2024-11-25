@@ -1,27 +1,13 @@
-name: '[♻️] test and lint'
-# This workflow executes the linting, testing, and building of the affected applications
+name: '[🧪] all'
+# Workflow to test and lint all application(s)
 on:
-  workflow_call:
-    secrets:
-      AZURE_CLIENT_ID:
-        description: 'Azure Client ID'
-        required: true
-      AZURE_TENANT_ID:
-        description: 'Azure Tenant ID'
-        required: true
-      AZURE_SUBSCRIPTION_ID:
-        description: 'Azure Subscription ID'
-        required: true
-      NX_CLOUD_ACCESS_TOKEN:
-        description: 'Nx Cloud Access Token'
-        required: true
-      CODECOV_TOKEN:
-        description: 'Codecov Token'
-        required: true
-    outputs:
-      projects_affected:
-        description: 'Comma separated list of affected projects'
-        value: ${{ jobs.test_and_lint.outputs.projects_affected }}
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
 
 permissions:
   id-token: write
@@ -30,9 +16,7 @@ permissions:
   security-events: write
 
 jobs:
-  # test and lint the affected libraries/applications, when the project is affected
-  # will only test/lint affected when workflow is triggered by a pull_request
-  # will test all when workflow is triggered by a push
+  # lint and test all affected
   test_and_lint:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
@@ -55,22 +39,6 @@ jobs:
       - name: 'Set SHAs 📝'
         id: set_base
         uses: nrwl/nx-set-shas@v4
-
-      # Check if the project is affected by the latest changes
-      - name: 'Get affected applications 📦'
-        id: get_affected
-        run: |
-          echo "::group::nx show projects --type app --affected"
-          affected_projects=$(npx nx show projects --type app --affected)
-
-          # Replace newlines and spaces with commas
-          comma_separated_projects=$(echo "$affected_projects" | tr '\n' ',' | tr ' ' ',')
-
-          echo "[ $affected_projects ] to $comma_separated_projects"
-          echo "::endgroup::"
-
-          echo "output [projects_affected=$comma_separated_projects]"
-          echo "projects_affected=$comma_separated_projects" >> "$GITHUB_OUTPUT"
 
       - name: 'Check formatting 📐'
         run: npx nx format:check
