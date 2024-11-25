@@ -279,7 +279,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ github.event.pull_request.number }}
-          header: lighthouse
+          header: lighthouse_${{ inputs.project_name }}
           message: ${{ steps.format_lighthouse_score.outputs.comment }}
 
   # Close the deployed static web app
