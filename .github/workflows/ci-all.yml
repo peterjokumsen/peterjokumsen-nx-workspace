@@ -20,8 +20,6 @@ jobs:
   test_and_lint:
     if: github.event.action != 'closed'
     runs-on: ubuntu-latest
-    outputs:
-      projects_affected: ${{ steps.get_affected.outputs.projects_affected }}
     name: 'Test & lint 🧪'
     steps:
       - name: 'Checkout 📥'
