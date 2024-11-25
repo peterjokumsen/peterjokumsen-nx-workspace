@@ -1,0 +1,33 @@
+name: '[🚀] blog'
+# Workflow to build and deploy blog application
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  # build and deploy blog
+  build_deploy:
+    # deploy infra and app
+    name: '🏗️ & 🚀'
+    uses: './.github/workflows/_workflow.jobs.cd.yml'
+    with:
+      project_name: 'blog'
+      build_location: 'dist/apps/blog'
+      sub_domain: 'blog'
+      audit_urls: |
+        /
+        /about-me
+        /development-notes
+        /not/found
+    secrets: inherit

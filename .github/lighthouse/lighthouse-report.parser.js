@@ -75,91 +75,52 @@ function createURL(url) {
 
 /**
  * @param {Object} param0
- * @param {string} param0.label
  * @param {string} param0.url
  * @param {LighthouseSummary} param0.summary
+ * @param {string} param0.reportUrl
  */
-const createMarkdownTableRow = ({ label, url, summary }) =>
+const createMarkdownTableRow = ({ url, summary, reportUrl }) =>
   [
-    label ? `| ${label}` : `| [${createURL(url).pathname}](${url})`,
+    `| [${createURL(url).pathname}](${url})`,
     .../** @type {(keyof LighthouseSummary)[]} */ (
       Object.keys(summaryKeys)
     ).map((k) => scoreEntry(summary[k])),
-  ].join(' | ') + '|';
+    `[Report](${reportUrl}) |`,
+  ].join(' | ');
 
 const createMarkdownTableHeader = () => [
-  ['| URL', ...Object.values(summaryKeys)].join(' | ') + '|',
-  ['|---', ...Array(Object.keys(summaryKeys).length).fill('---')].join('|') +
+  ['| URL', ...Object.values(summaryKeys), 'Report |'].join(' | '),
+  ['|---', ...Array(Object.keys(summaryKeys).length).fill('---'), '---|'].join(
     '|',
+  ),
 ];
 
 /**
- * @param {(LighthouseOutputs & project_name: string)[]} outputs
+ * @param {LighthouseOutputs} lighthouseOutputs
  * @param {CoreSummary} coreSummary
  * @returns {string}
  */
-const createLighthouseReport = (outputs, coreSummary) => {
+const createLighthouseReport = ({ links, manifest }, coreSummary) => {
   const tableHeader = createMarkdownTableHeader();
-  const commentLines = [`## ⚡️ Lighthouse reports`];
-
-  for (const { manifest, project_name } of outputs) {
-    const averageSummary = manifest.reduce(
-      (acc, { summary }) => {
-        Object.keys(summary).forEach((key) => {
-          acc[key] += summary[key];
-        });
-        return acc;
-      },
-      {
-        performance: 0,
-        accessibility: 0,
-        'best-practices': 0,
-        seo: 0,
-        pwa: 0,
-      },
+  const tableBody = manifest.map((result) => {
+    const testUrl = /** @type {string} */ (
+      Object.keys(links).find((key) => key === result.url)
     );
-    Object.keys(averageSummary).forEach((key) => {
-      averageSummary[key] /= manifest.length;
-    });
-    const icon =
-      averageSummary.performance >= 0.85
-        ? '🤠'
-        : averageSummary.performance >= 0.5
-          ? '🐌'
-          : '🦥';
-    commentLines.push(...['', `### ${icon} ${project_name}`, '']);
-    const sortedManifest = manifest.sort((a, b) => {
-      if (a.url < b.url) {
-        return -1;
-      }
-      if (a.url > b.url) {
-        return 1;
-      }
-      return 0;
-    });
-    const tableLines = sortedManifest.map((result) => {
-      const testUrl = /** @type {string} */ result.url;
+    const reportPublicUrl = /** @type {string} */ (links[testUrl]);
 
-      return createMarkdownTableRow({
-        url: testUrl,
-        summary: result.summary,
-      });
+    return createMarkdownTableRow({
+      url: testUrl,
+      summary: result.summary,
+      reportUrl: reportPublicUrl,
     });
-
-    if (tableLines.length === 0) {
-      commentLines.push('> No reports available for this project');
-    } else {
-      commentLines.push(...tableHeader);
-      commentLines.push(...tableLines);
-      commentLines.push(
-        createMarkdownTableRow({
-          label: '**Average**',
-          url: '',
-          summary: averageSummary,
-        }),
-      );
-    }
-  }
+  });
+  const commentLines = [
+    `### ⚡️ Lighthouse report for the deploy preview of this PR`,
+    '',
+    ...tableHeader,
+    ...tableBody,
+    '',
+  ];
 
   for (const line of commentLines) {
     coreSummary.addRaw(line, true);

@@ -1,9 +1,0 @@
-{
-  "navigationFallback": {
-    "rewrite": "/index.html",
-    "exclude": [
-      "*.{js,css,png,jpg,jpeg,gif,webp,svg,woff,woff2,ttf,eot,json}",
-      "/.auth"
-    ]
-  }
-}

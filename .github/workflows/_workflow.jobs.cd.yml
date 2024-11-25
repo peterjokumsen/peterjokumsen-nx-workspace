@@ -18,10 +18,6 @@ on:
         description: 'Project name'
         required: true
         type: string
-      affected_projects:
-        description: 'Affected projects'
-        required: true
-        type: string
       # defaulted inputs:
       bicep_main_file:
         description: 'Bicep main file'
@@ -50,39 +46,47 @@ permissions:
   id-token: write
 
 jobs:
-  check_affected:
-    runs-on: ubuntu-latest
-    name: '🔍'
-    outputs:
-      project_affected: ${{ steps.compare_affected.outputs.project_affected }}
-    steps:
-      - name: 'Check ${{ inputs.project_name }} affected 📦'
-        id: compare_affected
-        run: |
-          affected_projects="${{ inputs.affected_projects }}"
-          project_name="${{ inputs.project_name }}"
-          project_affected="No"
-
-          if [[ $affected_projects == *"$project_name"* ]]; then
-              project_affected="Yes"
-          fi
-
-          echo "output [project_affected=$project_affected]"
-          echo "project_affected=$project_affected" >> "$GITHUB_OUTPUT"
-
   # build the project when it is affected by the latest changes
   build_deploy:
-    needs: check_affected
     if: github.event.action != 'closed'
-      && needs.check_affected.outputs.project_affected == 'Yes'
-      || inputs.force_deploy
     runs-on: ubuntu-latest
     name: '🏭 & 🚀'
     env:
       DOTNET_SYSTEM_GLOBALIZATION_INVARIANT: 1
     steps:
+      - name: 'Checkout 📥'
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 'Install dependencies 📦'
+        uses: ./.github/actions/install-deps
+
+      - name: 'Set SHAs 📝'
+        id: set_base
+        uses: nrwl/nx-set-shas@v4
+
+      # Check if the project is affected by the latest changes
+      - name: 'Check application is affected 📦'
+        id: is_affected
+        run: |
+          echo "::group::nx show projects --type app --affected"
+          affected_projects=$(npx nx show projects --type app --affected)
+
+          affected="No"
+          if echo "$affected_projects" | grep -q "${{ inputs.project_name }}"; then
+            affected="Yes"
+          fi
+
+          echo "$affected_projects"
+          echo "::endgroup::"
+
+          echo "output [affected=$affected]"
+          echo "affected=$affected" >> "$GITHUB_OUTPUT"
+
       - name: 'Prepare names 📝'
         id: prepare_names
+        if: steps.is_affected.outputs.affected == 'Yes'
         run: |
           gitSha='${{ github.sha }}'
           shortSha=${gitSha:0:7}
@@ -104,6 +108,7 @@ jobs:
 
       - name: 'Set group deployment parameters 📝'
         id: group_deployment_parameters
+        if: steps.is_affected.outputs.affected == 'Yes'
         run: |
           if [ -z "${{ inputs.bicep_main_file }}" ]; then
             echo "::error::Bicep main file not found"
@@ -120,15 +125,10 @@ jobs:
 
           echo "parameters=$parameters" >> "$GITHUB_OUTPUT"
 
-      - name: 'Checkout 📥'
-        uses: actions/checkout@v4
-
-      - name: 'Install dependencies 📦'
-        uses: ./.github/actions/install-deps
-
       # lint bicep files when a pull request is opened or synchronized
       - name: 'AZ CLI login 🔑'
         uses: azure/login@v2
+        if: steps.is_affected.outputs.affected == 'Yes' || inputs.force_deploy
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -153,7 +153,7 @@ jobs:
 
       - name: 'Deploy bicep 🚀'
         if: |
-          (github.event_name == 'push' && github.ref == 'refs/heads/main')
+          (github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.is_affected.outputs.affected == 'Yes')
           || inputs.force_deploy
         uses: azure/CLI@v2
         with:
@@ -167,6 +167,7 @@ jobs:
       # Build the project if it is affected
       - name: 'Build ${{ inputs.project_name }}'
         id: build_affected
+        if: steps.is_affected.outputs.affected == 'Yes'
         run: |
           echo "Setting up configuration for build step"
           build_configuration="production"
@@ -191,6 +192,7 @@ jobs:
 
       - name: 'Get SWA API key 🔑'
         id: static_web_app_apikey
+        if: steps.is_affected.outputs.affected == 'Yes'
         uses: azure/CLI@v2
         with:
           inlineScript: |
@@ -251,8 +253,8 @@ jobs:
           urls: ${{ steps.combine_urls.outputs.audit_urls }}
           configPath: ./.github/lighthouse/lighthouse.config.json
           uploadArtifacts: false
-          temporaryPublicStorage: false
-          runs: 3
+          temporaryPublicStorage: true
+          runs: 1
 
       # Prepare the audit URLs using the deployment URL
       - name: Prepare audit output 📝
@@ -261,27 +263,24 @@ jobs:
         if: steps.publish_swa.outputs.static_web_app_url != ''
         with:
           script: |
-            const fs = require('fs');
-            const path = require('path');
+            const lighthouseCommentMaker = require('./.github/lighthouse/lighthouse-report.parser.js');
 
-            const report = {
-              project_name: "${{ inputs.project_name }}",
+            const lighthouseOutputs = {
               manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
-              links: []
+              links: ${{ steps.lighthouse_audit.outputs.links }},
             };
 
-            const stringReport = JSON.stringify(report, null, 2);
-            core.startGroup('Report JSON');
-            core.info(stringReport);
-            fs.writeFileSync("${{ inputs.project_name }}_audit_output.json", stringReport);
-            core.endGroup();
+            const comment = lighthouseCommentMaker({ lighthouseOutputs }, core.summary);
+            core.setOutput("comment", comment);
 
-      - name: 'Upload audit URLS 📤'
-        uses: actions/upload-artifact@v4
-        if: steps.publish_swa.outputs.static_web_app_url != ''
+      - name: Add Lighthouse stats as comment ✍️
+        id: comment_to_pr
+        if: github.event_name == 'pull_request'
+        uses: marocchino/sticky-pull-request-comment@v2
         with:
-          name: ${{ inputs.project_name }}-audit-output
-          path: ${{ inputs.project_name }}_audit_output.json
+          number: ${{ github.event.pull_request.number }}
+          header: lighthouse_${{ inputs.project_name }}
+          message: ${{ steps.prepare_audit_output.outputs.comment }}
 
   # Close the deployed static web app
   close_deployed:
