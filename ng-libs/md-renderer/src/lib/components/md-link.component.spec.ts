@@ -92,7 +92,7 @@ describe('MdLinkComponent', () => {
       });
 
       it('should set target as "_blank"', () => {
-        expect(component.anchor()).toEqual(
+        expect(component.currentAnchor()).toEqual(
           expect.objectContaining({ target: '_blank' }),
         );
       });
@@ -113,7 +113,7 @@ describe('MdLinkComponent', () => {
         };
         fixture.detectChanges();
 
-        expect(component.anchor()).toEqual(
+        expect(component.currentAnchor()).toEqual(
           expect.objectContaining({ target: '_self' }),
         );
       });
@@ -130,16 +130,16 @@ describe('MdLinkComponent', () => {
       });
 
       it('should set anchor', () => {
-        expect(component.anchor()).toEqual(
+        expect(component.currentAnchor()).toEqual(
           expect.objectContaining({ href: 'href-value' }),
         );
-        expect(component.anchor()?.content[0]).toEqual(
+        expect(component.currentAnchor()?.content[0]).toEqual(
           expect.objectContaining({ type: 'text', content: 'content-value' }),
         );
       });
 
       it('should include aria label', () => {
-        expect(component.anchor()).toEqual(
+        expect(component.currentAnchor()).toEqual(
           expect.objectContaining({ ariaLabel: 'content-value' }),
         );
       });
@@ -166,17 +166,17 @@ describe('MdLinkComponent', () => {
       });
 
       it('should set anchor', () => {
-        expect(component.anchor()).toEqual(
+        expect(component.currentAnchor()).toEqual(
           expect.objectContaining({ href: 'href-value' }),
         );
-        expect(component.anchor()?.content).toEqual([
+        expect(component.currentAnchor()?.content).toEqual([
           expect.objectContaining({ type: 'text', content: 'text' }),
           expect.objectContaining({ type: 'text', content: 'end' }),
         ]);
       });
 
       it('should include aria label', () => {
-        expect(component.anchor()).toEqual(
+        expect(component.currentAnchor()).toEqual(
           expect.objectContaining({ ariaLabel: 'text end' }),
         );
       });
