@@ -4,7 +4,11 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { MarkdownType, mdModelCheck } from '@peterjokumsen/ts-md-models';
+import {
+  MarkdownContent,
+  MarkdownType,
+  mdModelCheck,
+} from '@peterjokumsen/ts-md-models';
 
 import { ExpectedContentTypes } from '../filter-content-types';
 import { HasContent } from '../has-content';
@@ -13,7 +17,10 @@ import { PjLogger } from '@peterjokumsen/ng-services';
 import { WithId } from '../models';
 import { logUnexpectedContent } from '../fns';
 
-type InnerAnchorTypes = Extract<ExpectedContentTypes, 'image' | 'text'>;
+type InnerAnchorTypes = Extract<
+  ExpectedContentTypes,
+  'image' | 'text' | 'code'
+>;
 
 type MdAnchorContent = WithId<MarkdownType<'link' | InnerAnchorTypes>>;
 type MappedAnchor = Omit<MarkdownType<'link'>, 'content'> & {
@@ -25,15 +32,20 @@ type MappedAnchor = Omit<MarkdownType<'link'>, 'content'> & {
 @Component({
   selector: 'pj-mdr-md-link',
   template: `
-    @if (anchor()) {
-      <a [href]="anchor()?.href" [attr.aria-label]="anchor()?.ariaLabel">
-        @for (content of anchor()?.content; track content.id) {
+    @let anchor = currentAnchor();
+    @if (anchor) {
+      <a
+        [href]="anchor.href"
+        [attr.aria-label]="anchor.ariaLabel"
+        [target]="anchor.target"
+      >
+        @for (content of anchor.content; track content.id) {
           <pj-mdr-md-wrapper
             [pjMdrMdContentInjection]="content"
           ></pj-mdr-md-wrapper>
         }
 
-        @if (anchor()?.target === '_blank') {
+        @if (anchor.target === '_blank') {
           <mat-icon aria-hidden="false" aria-label="Open in new tab">
             open_in_new
           </mat-icon>
@@ -45,10 +57,22 @@ type MappedAnchor = Omit<MarkdownType<'link'>, 'content'> & {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MdLinkComponent implements HasContent<'link'> {
+  private static readonly _allowedContentTypes: Record<
+    InnerAnchorTypes,
+    unknown
+  > = {
+    code: undefined,
+    image: undefined,
+    text: undefined,
+  };
+  private static readonly _allowedTypes = Object.keys(
+    MdLinkComponent._allowedContentTypes,
+  ) as InnerAnchorTypes[];
+
   private _mdContent = inject(MdContentService);
   private _logger = inject(PjLogger, { optional: true });
 
-  anchor = signal<MappedAnchor | null>(null);
+  currentAnchor = signal<MappedAnchor | null>(null);
 
   set content(value: HasContent<'link'>['content']) {
     let newContent: MappedAnchor | null = null;
@@ -65,7 +89,15 @@ export class MdLinkComponent implements HasContent<'link'> {
       logUnexpectedContent('MdLinkComponent', value, this._logger?.to);
     }
 
-    this.anchor.update(() => newContent);
+    this.currentAnchor.update(() => newContent);
+  }
+
+  private isAllowedContent(
+    content: MarkdownContent,
+  ): content is MarkdownType<InnerAnchorTypes> {
+    return MdLinkComponent._allowedTypes.includes(
+      content.type as InnerAnchorTypes,
+    );
   }
 
   private getContents(parent: MarkdownType<'link'>): MdAnchorContent[] {
@@ -74,19 +106,14 @@ export class MdLinkComponent implements HasContent<'link'> {
     }
 
     return parent.content.reduce((arr, content) => {
-      switch (content.type) {
-        case 'text':
-        case 'image':
-          arr.push(this._mdContent.mapContent(content));
-          break;
-
-        default:
-          this._logger?.to.error(
-            'Invalid content type "%s" for contents of MdLinkComponent, received %o',
-            content.type,
-            content,
-          );
-          break;
+      if (!this.isAllowedContent(content)) {
+        this._logger?.to.warn(
+          'Unsupported content type "%s" filtered out of %o',
+          content.type,
+          parent,
+        );
+      } else {
+        arr.push(this._mdContent.mapContent(content));
       }
 
       return arr;
@@ -102,6 +129,9 @@ export class MdLinkComponent implements HasContent<'link'> {
 
           case 'image':
             return c.alt;
+
+          case 'code':
+            return c.element;
 
           default:
             this._logger?.to.error(

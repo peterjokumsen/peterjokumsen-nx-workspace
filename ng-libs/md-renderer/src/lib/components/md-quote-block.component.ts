@@ -28,6 +28,7 @@ type MdParagraph = WithId<MarkdownType<'paragraph' | 'horizontal-rule'>>;
       display: block;
       padding: 1rem 0 0.2rem 1.5rem;
       border-left: 1px solid;
+      margin-bottom: 1rem;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
