@@ -68,7 +68,6 @@ export class PrimaryComponent implements OnInit {
   getAnimationContext() {
     const lastAnimation = this._animations.pop();
     const context = this._contexts.getContext('primary');
-    this._logger?.to.log('Primary context: ', context);
     const nextAnimation =
       context?.route?.snapshot?.data?.['animation'] ??
       context?.route?.snapshot?.url;
