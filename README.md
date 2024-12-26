@@ -16,7 +16,7 @@ Application, located in [`apps/blog`](./apps/blog), is the initial project, to b
 
 Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://blog.peterjokumsen.com](https://blog.peterjokumsen.com).
 
-Deployment worflow: [![[🚀] blog](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml)
+Deployment workflow: [![[🚀] blog](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml)
 
 ## Libraries
 
