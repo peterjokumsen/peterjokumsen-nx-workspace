@@ -1,8 +1,8 @@
 # PeterJokumsen `Nx` Workspace
 
-[![[🧪] all](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/ci-all.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/ci-all.yml) [![codecov](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graph/badge.svg?token=0QX0KNI1R4)](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace) [![🤖 MegaLinter](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/mega-linter.yml)
-
-<a href="https://nx.dev" target="_blank" rel="noreferrer"><img alt="Nx logo" src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a> ✨ **This workspace has been generated using [Nx, Smart Monorepos · Fast CI.](https://nx.dev)** ✨
+[![[🧪] all](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/ci-all.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/ci-all.yml)
+[![codecov](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graph/badge.svg?token=0QX0KNI1R4)](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace)
+[![🤖 MegaLinter](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/mega-linter.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/mega-linter.yml)
 
 This repository is meant as a playground of sorts, that I've created as a collection of applications and libraries, to play around with theories.
 
@@ -16,7 +16,7 @@ Application, located in [`apps/blog`](./apps/blog), is the initial project, to b
 
 Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://blog.peterjokumsen.com](https://blog.peterjokumsen.com).
 
-[![[🚀] blog](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml)
+Deployment workflow: [![[🚀] blog](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml)
 
 ## Libraries
 
@@ -188,3 +188,5 @@ npm run swa:tasks-to-do
 Sunburst graph of code coverage for the workspace:
 
 ![codecov coverage graph](https://codecov.io/gh/peterjokumsen/peterjokumsen-nx-workspace/graphs/sunburst.svg?token=0QX0KNI1R4)
+
+<a href="https://nx.dev" target="_blank" rel="noreferrer"><img alt="Nx logo" src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a> ✨ **This workspace has been generated using [Nx, Smart Monorepos · Fast CI.](https://nx.dev)** ✨
