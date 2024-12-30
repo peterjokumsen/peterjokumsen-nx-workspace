@@ -45,3 +45,6 @@ component_management:
     - component_id: app_blog
       paths:
         - apps/blog/**
+    - component_id: app_bullet_journal
+      paths:
+        - apps/bullet-journal/**

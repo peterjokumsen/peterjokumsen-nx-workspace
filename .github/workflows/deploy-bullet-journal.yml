@@ -1,0 +1,30 @@
+name: '[🚀] bullet-journal'
+# Workflow to build and deploy bullet-journal application
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches:
+      - main
+
+permissions:
+  id-token: write
+  contents: write
+  pull-requests: write
+  security-events: write
+
+jobs:
+  # build and deploy blog
+  build_deploy:
+    # deploy infra and app
+    name: '🏗️ & 🚀'
+    uses: './.github/workflows/_workflow.jobs.cd.yml'
+    with:
+      project_name: 'bullet-journal'
+      build_location: 'dist/apps/bullet-journal'
+      sub_domain: 'bullet-journal'
+      audit_urls: |
+        /
+    secrets: inherit
