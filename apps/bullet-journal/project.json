@@ -4,22 +4,16 @@
   "projectType": "application",
   "prefix": "bu-jo",
   "sourceRoot": "apps/bullet-journal/src",
-  "tags": [
-    "application"
-  ],
+  "tags": ["application"],
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/bullet-journal",
         "index": "apps/bullet-journal/src/index.html",
         "browser": "apps/bullet-journal/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/bullet-journal/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -86,9 +80,7 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/bullet-journal/jest.config.ts"
       }
