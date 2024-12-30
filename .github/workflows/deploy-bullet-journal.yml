@@ -22,7 +22,6 @@ jobs:
     name: '🏗️ & 🚀'
     uses: './.github/workflows/_workflow.jobs.cd.yml'
     with:
-      force_deploy: true # to be reverted after initial deployment
       project_name: 'bullet-journal'
       build_location: 'dist/apps/bullet-journal'
       sub_domain: 'bullet-journal'

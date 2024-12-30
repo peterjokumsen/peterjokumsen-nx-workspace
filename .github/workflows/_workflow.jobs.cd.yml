@@ -266,6 +266,7 @@ jobs:
             const lighthouseCommentMaker = require('./.github/lighthouse/lighthouse-report.parser.js');
 
             const lighthouseOutputs = {
+              projectName: '${{ inputs.project_name }}',
               manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
               links: ${{ steps.lighthouse_audit.outputs.links }},
             };
@@ -275,7 +276,7 @@ jobs:
 
       - name: Add Lighthouse stats as comment ✍️
         id: comment_to_pr
-        if: github.event_name == 'pull_request'
+        if: github.event_name == 'pull_request' && steps.publish_swa.outputs.static_web_app_url != ''
         uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ github.event.pull_request.number }}

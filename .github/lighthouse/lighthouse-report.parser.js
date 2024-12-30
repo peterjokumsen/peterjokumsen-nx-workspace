@@ -20,6 +20,7 @@
 
 /**
  * @typedef {Object} LighthouseOutputs
+ * @prop {string} projectName
  * @prop {Record<string, string>} links
  * @prop {Manifest[]} manifest
  */
@@ -50,7 +51,7 @@ const summaryKeys = {
   accessibility: 'Accessibility',
   'best-practices': 'Best Practices',
   seo: 'SEO',
-  //  pwa: 'PWA',
+  pwa: 'PWA',
 };
 
 /** @param {number} rawScore */
@@ -100,7 +101,10 @@ const createMarkdownTableHeader = () => [
  * @param {CoreSummary} coreSummary
  * @returns {string}
  */
-const createLighthouseReport = ({ links, manifest }, coreSummary) => {
+const createLighthouseReport = (
+  { projectName, links, manifest },
+  coreSummary,
+) => {
   const tableHeader = createMarkdownTableHeader();
   const tableBody = manifest.map((result) => {
     const testUrl = /** @type {string} */ (
@@ -115,7 +119,7 @@ const createLighthouseReport = ({ links, manifest }, coreSummary) => {
     });
   });
   const commentLines = [
-    `### ⚡️ Lighthouse report for the deploy preview of this PR`,
+    `### ⚡️ Lighthouse report for the deploy preview of ${projectName} in this PR`,
     '',
     ...tableHeader,
     ...tableBody,
@@ -138,6 +142,7 @@ module.exports = ({ lighthouseOutputs }, coreSummary) => {
 
 /** @type {LighthouseOutputs} */
 const _exampleOutputs = {
+  projectName: 'blog',
   links: {
     'https://url-to-test/': 'https://report.html',
   },
