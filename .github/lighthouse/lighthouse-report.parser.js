@@ -101,7 +101,10 @@ const createMarkdownTableHeader = () => [
  * @param {CoreSummary} coreSummary
  * @returns {string}
  */
-const createLighthouseReport = ({ projectName, links, manifest }, coreSummary) => {
+const createLighthouseReport = (
+  { projectName, links, manifest },
+  coreSummary,
+) => {
   const tableHeader = createMarkdownTableHeader();
   const tableBody = manifest.map((result) => {
     const testUrl = /** @type {string} */ (
