@@ -8,7 +8,7 @@
     "mega-lint": "npx mega-linter-runner --flavor javascript",
     "format": "nx format:write",
     "format:check": "nx format:check",
-    "pre-commit:write": "nx format:write && npm run lint:uncommitted",
+    "pre-commit:write": "nx format:write && pnpm run lint:uncommitted",
     "pre-push:check": "nx affected --base=origin/main -t lint test build --parallel=5",
     "swa-local-app-only": "swa start http://localhost:4200",
     "serve:blog": "nx run blog:serve",
@@ -19,8 +19,8 @@
     "e2e:bu-jo": "nx run bullet-journal-e2e:e2e-ci",
     "e2e:blog:local": "nx run blog-e2e:e2e",
     "e2e:bu-jo:local": "nx run bullet-journal-e2e:e2e",
-    "swa:blog": "concurrently --kill-others \"npm run serve:blog\" \"npm run swa-local-app-only\"",
-    "swa:bu-jo": "concurrently --kill-others \"npm run serve:bu-jo\" \"npm run swa-local-app-only\"",
+    "swa:blog": "concurrently --kill-others \"pnpm run serve:blog\" \"pnpm run swa-local-app-only\"",
+    "swa:bu-jo": "concurrently --kill-others \"pnpm run serve:bu-jo\" \"pnpm run swa-local-app-only\"",
     "build:all": "nx run-many --target=build --all",
     "build:affected": "nx affected --target=build --base=origin/main",
     "lint:all": "nx run-many --target=lint --all",
@@ -30,6 +30,7 @@
     "test:affected": "nx affected --target=test --base=origin/main",
     "test:uncommitted": "nx affected --target=test --uncommitted"
   },
+  "packageManager": "pnpm@9.15.2",
   "private": true,
   "dependencies": {
     "@angular/animations": "18.2.7",
