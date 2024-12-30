@@ -5,6 +5,9 @@
     },
     {
       "pattern": ".*pixabay.*"
+    },
+    {
+      "pattern": ".*bullet-journal.*"
     }
   ]
 }

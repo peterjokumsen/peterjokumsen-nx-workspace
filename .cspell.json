@@ -12,7 +12,8 @@
     ".gitignore",
     ".jscpd.json",
     ".prettierrc",
-    "*.yml"
+    "*.yml",
+    "pnpm-lock.yaml"
   ],
   "language": "en",
   "noConfigSearch": true,
@@ -51,6 +52,7 @@
     "oxsecurity",
     "packagr",
     "peterjokumsen",
+    "Playwrite",
     "prerender",
     "qodana",
     "sarif",
