@@ -4,9 +4,17 @@ description: 'Install dependencies and set NX cache'
 runs:
   using: 'composite'
   steps:
-    - uses: volta-cli/action@v4
+    - uses: pnpm/action-setup@v4
+      name: Install pnpm
       with:
-        package-json-path: '${{ github.workspace }}/package.json'
+        run_install: false
 
-    - uses: chill-viking/npm-ci@v1
-      name: 'npm CI'
+    - name: Install Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+        cache: 'pnpm'
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install

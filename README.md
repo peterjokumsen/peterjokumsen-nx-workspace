@@ -18,6 +18,16 @@ Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/stati
 
 Deployment workflow: [![[🚀] blog](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-blog.yml)
 
+### Bullet Journal
+
+<a href="https://bullet-journal.peterjokumsen.com" target="_blank" rel="noreferrer"><img alt="Bullet Journal" src="https://bullet-journal.peterjokumsen.com/logo-150.webp" width="150"></a>
+
+Application, located in [`apps/bullet-journal`](./apps/bullet-journal). This an application to apply my approach to working on, and tracking, tasks.
+
+Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://bullet-journal.peterjokumsen.com](https://bullet-journal.peterjokumsen.com).
+
+Deployment workflow: [![[🚀] bullet-journal](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-bullet-journal.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-bullet-journal.yml)
+
 ## Libraries
 
 ### ng-libs
