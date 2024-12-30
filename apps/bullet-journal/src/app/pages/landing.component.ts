@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="container">
       <ul>
-        <li>Journal</li>
+        <li class="journal-font">Journal</li>
       </ul>
     </div>
   `,
@@ -19,6 +19,10 @@ import { CommonModule } from '@angular/common';
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+    }
+
+    .journal-font {
+      font-size: 3rem;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
