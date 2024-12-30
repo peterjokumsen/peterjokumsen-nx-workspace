@@ -2,7 +2,7 @@ export default {
   displayName: 'bullet-journal',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
-  coverageDirectory: '../../coverage/apps/buillet-journal',
+  coverageDirectory: '../../coverage/apps/bullet-journal',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

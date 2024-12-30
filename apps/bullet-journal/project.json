@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "prefix": "bu-jo",
-  "sourceRoot": "apps/buillet-journal/src",
+  "sourceRoot": "apps/bullet-journal/src",
   "tags": [
     "application"
   ],
@@ -14,29 +14,29 @@
         "{options.outputPath}"
       ],
       "options": {
-        "outputPath": "dist/apps/buillet-journal",
-        "index": "apps/buillet-journal/src/index.html",
-        "browser": "apps/buillet-journal/src/main.ts",
+        "outputPath": "dist/apps/bullet-journal",
+        "index": "apps/bullet-journal/src/index.html",
+        "browser": "apps/bullet-journal/src/main.ts",
         "polyfills": [
           "zone.js"
         ],
-        "tsConfig": "apps/buillet-journal/tsconfig.app.json",
+        "tsConfig": "apps/bullet-journal/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/buillet-journal/public"
+            "input": "apps/bullet-journal/public"
           }
         ],
         "styles": [
           "@angular/material/prebuilt-themes/magenta-violet.css",
-          "apps/buillet-journal/src/styles.scss"
+          "apps/bullet-journal/src/styles.scss"
         ],
         "scripts": [],
-        "server": "apps/buillet-journal/src/main.server.ts",
+        "server": "apps/bullet-journal/src/main.server.ts",
         "prerender": true,
         "ssr": {
-          "entry": "apps/buillet-journal/server.ts"
+          "entry": "apps/bullet-journal/server.ts"
         }
       },
       "configurations": {
@@ -90,7 +90,7 @@
         "{workspaceRoot}/coverage/{projectRoot}"
       ],
       "options": {
-        "jestConfig": "apps/buillet-journal/jest.config.ts"
+        "jestConfig": "apps/bullet-journal/jest.config.ts"
       }
     },
     "serve-static": {
@@ -98,7 +98,7 @@
       "options": {
         "buildTarget": "bullet-journal:build",
         "port": 4200,
-        "staticFilePath": "dist/apps/buillet-journal/browser",
+        "staticFilePath": "dist/apps/bullet-journal/browser",
         "spa": true
       }
     }
