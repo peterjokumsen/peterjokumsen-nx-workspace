@@ -8,6 +8,13 @@ on:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
+  workflow_dispatch:
+    inputs:
+      force_deploy:
+        description: 'Force deploy'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   id-token: write
@@ -22,6 +29,7 @@ jobs:
     name: '🏗️ & 🚀'
     uses: './.github/workflows/_workflow.jobs.cd.yml'
     with:
+      force_deploy: ${{ github.event.inputs.force_deploy }}
       project_name: 'bullet-journal'
       build_location: 'dist/apps/bullet-journal'
       sub_domain: 'bullet-journal'
