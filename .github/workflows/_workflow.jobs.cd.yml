@@ -266,7 +266,7 @@ jobs:
             const lighthouseCommentMaker = require('./.github/lighthouse/lighthouse-report.parser.js');
 
             const lighthouseOutputs = {
-              projectName: ${{ inputs.project_name }},
+              projectName: '${{ inputs.project_name }}',
               manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
               links: ${{ steps.lighthouse_audit.outputs.links }},
             };
