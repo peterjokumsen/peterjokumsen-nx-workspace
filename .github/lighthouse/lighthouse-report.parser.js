@@ -43,7 +43,7 @@
  * @prop {write} write
  */
 
-/** @typedef {Record<'performance' | 'accessibility' | 'best-practices' | 'seo' | 'pwa', number>} LighthouseSummary */
+/** @typedef {Record<'performance' | 'accessibility' | 'best-practices' | 'seo', number>} LighthouseSummary */
 
 /** @type {Record<keyof LighthouseSummary, string>} */
 const summaryKeys = {
@@ -51,7 +51,7 @@ const summaryKeys = {
   accessibility: 'Accessibility',
   'best-practices': 'Best Practices',
   seo: 'SEO',
-  pwa: 'PWA',
+  // pwa: 'PWA',
 };
 
 /** @param {number} rawScore */
