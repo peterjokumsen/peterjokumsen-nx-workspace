@@ -1,13 +1,13 @@
 <!-- markdownlint-disable first-line-heading -->
 
-## Details
-
-<!-- Change details -->
-
 ## Checklist
 
 - [ ] I have made corresponding changes to the documentation
 - [ ] I have added tests that prove my fix is effective or that my feature works
+
+## Details
+
+<!-- Change details -->
 
 <!-- Additional details -->
 <details>
