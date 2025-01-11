@@ -135,7 +135,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
       - name: 'Detect changes & validate 📝'
-        if: github.event_name != 'push'
+        if: github.event_name != 'push' && steps.is_affected.outputs.affected == 'Yes'
         id: static_web_app_what_if
         uses: azure/CLI@v2
         with:
