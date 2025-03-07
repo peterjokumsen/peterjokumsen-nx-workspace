@@ -32,6 +32,7 @@ type MdParagraph = WithId<MarkdownType<'paragraph' | 'horizontal-rule'>>;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdQuoteBlockComponent implements HasContent<'quote'> {
   private _logger = inject(PjLogger, { optional: true });

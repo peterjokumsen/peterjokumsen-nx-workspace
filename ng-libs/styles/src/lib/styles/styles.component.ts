@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-styles',
-  standalone: true,
   imports: [CommonModule],
   template: `<p>styles works!</p>`,
   styles: ``,

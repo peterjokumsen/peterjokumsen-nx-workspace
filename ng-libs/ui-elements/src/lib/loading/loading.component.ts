@@ -17,7 +17,6 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'pj-ui-loading',
-  standalone: true,
   imports: [CommonModule, NgOptimizedImage],
   template: `
     <img #image [ngSrc]="imageSrc" width="150" height="150" alt="Logo" />

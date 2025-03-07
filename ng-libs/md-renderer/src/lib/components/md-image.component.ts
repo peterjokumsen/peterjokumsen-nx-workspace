@@ -19,6 +19,7 @@ import { logUnexpectedContent } from '../fns';
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdImageComponent implements HasContent<'image'> {
   private _logger = inject(PjLogger, { optional: true });

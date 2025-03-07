@@ -26,6 +26,7 @@ import { logUnexpectedContent } from '../fns';
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdSectionComponent implements HasContent<'section'> {
   private readonly _defaultSection: WithId<MarkdownType<'section'>> = {

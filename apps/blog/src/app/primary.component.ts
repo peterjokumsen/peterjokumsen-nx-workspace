@@ -21,7 +21,6 @@ import { slideInAnimation } from './animations';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  standalone: true,
   imports: [RouterOutlet, FooterComponent, HeaderComponent, LoadingComponent],
   templateUrl: './primary.component.html',
   styles: ``,

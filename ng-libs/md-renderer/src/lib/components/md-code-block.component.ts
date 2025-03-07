@@ -30,6 +30,7 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdCodeBlockComponent implements HasContent<'code-block'> {
   private _logger = inject(PjLogger, { optional: true });

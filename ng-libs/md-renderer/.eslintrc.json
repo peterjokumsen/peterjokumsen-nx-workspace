@@ -24,7 +24,8 @@
             "prefix": "pj-mdr",
             "style": "kebab-case"
           }
-        ]
+        ],
+        "@angular-eslint/prefer-standalone": "off"
       }
     },
     {

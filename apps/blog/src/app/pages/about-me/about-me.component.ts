@@ -5,7 +5,6 @@ import { DisplayMarkdownComponent } from '../../components';
 
 @Component({
   selector: 'app-about-me',
-  standalone: true,
   imports: [CommonModule, DisplayMarkdownComponent],
   template: ` <app-display-markdown [filePath]="'assets/docs/about-me.md'" /> `,
   styles: '',

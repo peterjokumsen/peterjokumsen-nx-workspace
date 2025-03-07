@@ -23,6 +23,7 @@ import { logUnexpectedContent } from '../fns';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdHorizontalRuleComponent
   implements HasContent<'horizontal-rule'>

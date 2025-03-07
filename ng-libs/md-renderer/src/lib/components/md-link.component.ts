@@ -55,6 +55,7 @@ type MappedAnchor = Omit<MarkdownType<'link'>, 'content'> & {
   `,
   styleUrl: './md-link.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdLinkComponent implements HasContent<'link'> {
   private static readonly _allowedContentTypes: Record<

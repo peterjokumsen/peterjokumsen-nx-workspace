@@ -20,7 +20,6 @@ import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'pj-ui-page-introduction',
-  standalone: true,
   imports: [CommonModule, MatButton],
   providers: [providePjBrowserTools()],
   template: `

@@ -12,7 +12,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-footer',
-  standalone: true,
   imports: [CommonModule, ThemeToggleComponent],
   providers: [],
   template: `

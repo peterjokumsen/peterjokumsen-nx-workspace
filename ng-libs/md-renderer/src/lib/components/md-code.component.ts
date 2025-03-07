@@ -24,6 +24,7 @@ import { logUnexpectedContent } from '../fns';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdCodeComponent implements HasContent<'code'> {
   private _logger = inject(PjLogger, { optional: true });

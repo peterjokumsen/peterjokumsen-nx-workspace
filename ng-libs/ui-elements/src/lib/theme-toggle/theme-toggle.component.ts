@@ -15,7 +15,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'pj-ui-theme-toggle',
-  standalone: true,
   imports: [CommonModule, FaIconComponent, MatTooltip, MatMiniFabButton],
   template: `
     <button

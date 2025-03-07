@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'bu-jo-landing',
-  standalone: true,
   imports: [CommonModule],
   template: `
     <div class="container">

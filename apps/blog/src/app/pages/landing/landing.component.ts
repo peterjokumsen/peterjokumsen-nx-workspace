@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
-  standalone: true,
   imports: [CommonModule, PageIntroductionComponent],
   template: `
     <pj-ui-page-introduction

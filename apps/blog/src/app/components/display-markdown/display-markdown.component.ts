@@ -15,7 +15,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-display-markdown',
-  standalone: true,
   imports: [
     CommonModule,
     FaIconComponent,

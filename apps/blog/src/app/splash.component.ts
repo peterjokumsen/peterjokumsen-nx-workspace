@@ -12,7 +12,6 @@ import { RouterOutlet } from '@angular/router';
 import { first } from 'rxjs';
 
 @Component({
-  standalone: true,
   selector: 'app-root',
   imports: [CommonModule, RouterOutlet, NgOptimizedImage],
   animations: [

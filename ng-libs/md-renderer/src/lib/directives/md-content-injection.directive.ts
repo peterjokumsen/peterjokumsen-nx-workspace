@@ -15,6 +15,7 @@ import { WithId } from '../models';
   host: {
     class: 'pj-mdr-md-content-injection',
   },
+  standalone: false,
 })
 export class MdContentInjectionDirective {
   private _logger = inject(PjLogger, { optional: true });
