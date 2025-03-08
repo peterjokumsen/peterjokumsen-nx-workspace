@@ -8,7 +8,7 @@
     "@angular/material": "19.2.2",
     "@angular/router": "19.2.1",
     "@nx/angular": "20.5.0",
-    "@fortawesome/angular-fontawesome": "^0.15.0",
+    "@fortawesome/angular-fontawesome": "^1.0.0",
     "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "@peterjokumsen/ng-services": "*"
   },
