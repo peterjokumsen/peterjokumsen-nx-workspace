@@ -9,17 +9,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { CommonModule } from '@angular/common';
 import { MatAnchor } from '@angular/material/button';
-import { ThemeToggleComponent } from '../theme-toggle';
 
 @Component({
   selector: 'pj-ui-router-nav',
-  imports: [
-    CommonModule,
-    RouterLinkActive,
-    RouterLink,
-    MatAnchor,
-    ThemeToggleComponent,
-  ],
+  imports: [CommonModule, RouterLinkActive, RouterLink, MatAnchor],
   template: `
     <ng-template #titleTemplate let-nav="navElement" let-isActive="isActive">
       <span [ngClass]="{ 'font-bold': isActive }"> {{ nav.title }} </span>
@@ -59,7 +52,6 @@ import { ThemeToggleComponent } from '../theme-toggle';
           ></ng-container>
         </a>
       }
-      <pj-ui-theme-toggle></pj-ui-theme-toggle>
     </nav>
   `,
   styleUrl: 'router-nav.component.scss',

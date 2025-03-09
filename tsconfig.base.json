@@ -21,7 +21,6 @@
       "@peterjokumsen/md-parser": ["ts-libs/md-parser/src/index.ts"],
       "@peterjokumsen/md-renderer": ["ng-libs/md-renderer/src/index.ts"],
       "@peterjokumsen/ng-services": ["ng-libs/services/src/index.ts"],
-      "@peterjokumsen/styles": ["ng-libs/styles/src/index.ts"],
       "@peterjokumsen/task-management": [
         "ng-libs/task-management/src/index.ts"
       ],

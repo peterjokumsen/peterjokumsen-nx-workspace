@@ -6,14 +6,11 @@ import {
   RouterOutlet,
 } from '@angular/router';
 import { Component, OnInit, inject } from '@angular/core';
-import {
-  LoadingComponent,
-  PjUiRouterNavigationElement,
-} from '@peterjokumsen/ui-elements';
 import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 
 import { FooterComponent } from './components/footer';
 import { HeaderComponent } from './components/header';
+import { PjUiRouterNavigationElement } from '@peterjokumsen/ui-elements';
 import { childRoutes } from './app.routes';
 import { filter } from 'rxjs';
 import { pjFilterMap } from '@peterjokumsen/ts-utils';
@@ -21,7 +18,7 @@ import { slideInAnimation } from './animations';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
-  imports: [RouterOutlet, FooterComponent, HeaderComponent, LoadingComponent],
+  imports: [RouterOutlet, FooterComponent, HeaderComponent],
   templateUrl: './primary.component.html',
   styles: ``,
   animations: [slideInAnimation('routeAnimations')],

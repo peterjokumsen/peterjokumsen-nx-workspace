@@ -2,5 +2,5 @@
   "singleQuote": true,
   "trailingComma": "all",
   "endOfLine": "lf",
-  "plugins": ["prettier-plugin-tailwindcss", "prettier-plugin-import-sort"]
+  "plugins": ["prettier-plugin-import-sort"]
 }

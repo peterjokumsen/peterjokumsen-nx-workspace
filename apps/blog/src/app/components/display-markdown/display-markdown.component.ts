@@ -15,12 +15,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-display-markdown',
-  imports: [
-    CommonModule,
-    FaIconComponent,
-    MdRendererComponent,
-    MatProgressSpinner,
-  ],
+  imports: [CommonModule, MdRendererComponent, MatProgressSpinner],
   template: `
     @if (markdown(); as markdown) {
       <pj-mdr-md-renderer [parsedContent]="markdown"></pj-mdr-md-renderer>

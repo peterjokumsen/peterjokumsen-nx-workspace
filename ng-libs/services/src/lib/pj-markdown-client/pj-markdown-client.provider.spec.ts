@@ -4,7 +4,7 @@ import { MarkdownParserService } from './services';
 import { TestBed } from '@angular/core/testing';
 import { providePjHttpTools } from '../pj-http-tools';
 
-describe('providePjTheme', () => {
+describe('providePjMarkdownClient', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [

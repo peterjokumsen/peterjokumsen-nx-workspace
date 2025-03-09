@@ -7,35 +7,17 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { PjTheme } from '@peterjokumsen/ng-services';
-import { ThemeToggleComponent } from '@peterjokumsen/ui-elements';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-footer',
-  imports: [CommonModule, ThemeToggleComponent],
+  imports: [CommonModule],
   providers: [],
   template: `
-    <footer class="pj-footer primary-block">
-      <div class="footer-top-left col-span-4 md:col-span-2"></div>
-      <div class="footer-top-center col-span-4 md:col-span-1"></div>
-      <div class="footer-top-right col-span-4 flex justify-end md:col-span-1">
-        <pj-ui-theme-toggle />
-      </div>
-      <p class="col-span-4 text-center text-sm font-bold">
-        © 2024 Peter Jokumsen. All rights reserved.
-      </p>
+    <footer>
+      <p>&copy; 2024 Peter Jokumsen. All rights reserved.</p>
     </footer>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FooterComponent implements OnInit {
-  private _theme = inject(PjTheme);
-  private _currentTheme = toSignal(this._theme.theme$);
-
-  ngOnInit() {
-    const theme = this._currentTheme();
-    if (theme) {
-      this._theme.setTheme(theme);
-    }
-  }
-}
+export class FooterComponent {}
