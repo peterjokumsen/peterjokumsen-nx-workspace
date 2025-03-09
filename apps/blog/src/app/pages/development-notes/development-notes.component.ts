@@ -5,7 +5,6 @@ import { DisplayMarkdownComponent } from '../../components';
 import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
 
 @Component({
-  standalone: true,
   imports: [CommonModule, PageIntroductionComponent, DisplayMarkdownComponent],
   templateUrl: './development-notes.component.html',
   styleUrl: './development-notes.component.scss',

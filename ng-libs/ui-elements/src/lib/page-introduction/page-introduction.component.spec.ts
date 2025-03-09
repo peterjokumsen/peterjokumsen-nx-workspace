@@ -9,6 +9,7 @@ import { PageIntroductionComponent } from './';
 import { PjBrowserTools } from '@peterjokumsen/ng-services';
 
 @Component({
+  imports: [PageIntroductionComponent],
   template: `
     <pj-ui-page-introduction
       [introductionTitle]="introductionTitle"
@@ -51,8 +52,10 @@ describe('PageIntroductionComponent', () => {
     browserToolSpy.getOrCreateLinkElement?.mockReturnValue(linkElement);
 
     await TestBed.configureTestingModule({
-      imports: [PageIntroductionComponent],
-      declarations: [PageIntroductionComponentTestHostComponent],
+      imports: [
+        PageIntroductionComponent,
+        PageIntroductionComponentTestHostComponent,
+      ],
     })
       .overrideComponent(PageIntroductionComponent, {
         set: {

@@ -35,6 +35,7 @@ import { logUnexpectedContent } from '../fns';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdUnknownComponent implements HasContentBase, OnInit {
   private _logger = inject(PjLogger, { optional: true });

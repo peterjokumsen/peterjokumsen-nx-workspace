@@ -19,7 +19,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header',
-  standalone: true,
   imports: [
     CommonModule,
     NgOptimizedImage,

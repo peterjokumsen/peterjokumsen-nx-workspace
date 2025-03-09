@@ -29,7 +29,6 @@ import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-table-of-contents',
-  standalone: true,
   imports: [CommonModule, MatButton],
   templateUrl: './table-of-contents.component.html',
   styleUrl: './table-of-contents.component.scss',

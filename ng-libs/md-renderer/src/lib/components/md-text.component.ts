@@ -44,6 +44,7 @@ import { mdModelCheck } from '@peterjokumsen/ts-md-models';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdTextComponent implements HasContent<'text'> {
   private _logger = inject(PjLogger, { optional: true });

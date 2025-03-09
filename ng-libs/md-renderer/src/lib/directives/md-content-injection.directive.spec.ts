@@ -23,6 +23,7 @@ class HasContentComponent implements HasContent<ExpectedContentTypes> {
 }
 
 @Component({
+  standalone: false,
   template:
     '<pj-mdr-md-wrapper [pjMdrMdContentInjection]="content"></pj-mdr-md-wrapper>',
 })
@@ -70,6 +71,7 @@ describe('MdContentInjectionDirective', () => {
       ],
       declarations: [
         MdContentInjectionDirective,
+        MdWrapperComponent,
         MockComponent(MdWrapperComponent),
         SectionHostComponent,
         HasContentComponent,

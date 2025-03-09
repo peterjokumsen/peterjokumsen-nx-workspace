@@ -88,6 +88,7 @@ import { WithId } from '../models';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdTitleComponent {
   title = signal('');

@@ -3,15 +3,14 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "ng-libs/ui-elements/src",
   "prefix": "pj-ui",
-  "tags": [],
   "projectType": "library",
+  "tags": [],
   "targets": {
     "build": {
       "executor": "@nx/angular:package",
       "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
       "options": {
-        "project": "ng-libs/ui-elements/ng-package.json",
-        "tailwindConfig": "ng-libs/ui-elements/tailwind.config.js"
+        "project": "ng-libs/ui-elements/ng-package.json"
       },
       "configurations": {
         "production": {

@@ -13,7 +13,6 @@ import { ThemeToggleComponent } from '../theme-toggle';
 
 @Component({
   selector: 'pj-ui-router-nav',
-  standalone: true,
   imports: [
     CommonModule,
     RouterLinkActive,
@@ -40,7 +39,7 @@ import { ThemeToggleComponent } from '../theme-toggle';
         'justify-start': flexJustify() === 'start',
         'gap-1': flexGap() === 1,
         'gap-2': flexGap() === 2,
-        'gap-3': flexGap() === 3
+        'gap-3': flexGap() === 3,
       }"
     >
       @for (navElement of routes(); track navElement.route) {

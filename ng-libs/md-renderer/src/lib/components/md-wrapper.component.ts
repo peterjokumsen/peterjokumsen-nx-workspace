@@ -10,6 +10,7 @@ import {
   template: `<ng-container #container></ng-container>`,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdWrapperComponent {
   @ViewChild('container', { read: ViewContainerRef, static: true })

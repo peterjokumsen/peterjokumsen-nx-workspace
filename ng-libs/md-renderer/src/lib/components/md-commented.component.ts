@@ -16,6 +16,7 @@ import { logUnexpectedContent } from '../fns';
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdCommentedComponent implements HasContent<'commented'> {
   private _logger = inject(PjLogger, { optional: true });

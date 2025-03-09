@@ -32,6 +32,7 @@ import { logUnexpectedContent } from '../fns';
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdListComponent implements HasContent<'list'> {
   private readonly _defaultList: WithId<MarkdownType<'list'>> = {

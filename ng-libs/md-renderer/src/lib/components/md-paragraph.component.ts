@@ -24,6 +24,7 @@ import { logUnexpectedContent } from '../fns';
   `,
   styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: false,
 })
 export class MdParagraphComponent implements HasContent<ExpectedContentTypes> {
   private _logger = inject(PjLogger, { optional: true });

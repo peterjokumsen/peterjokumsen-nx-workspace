@@ -23,7 +23,6 @@ import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-md-renderer',
-  standalone: true,
   imports: [CommonModule, TableOfContentsComponent, MdComponentsModule],
   providers: [MdContentService, MdComponentMapService],
   templateUrl: './md-renderer.component.html',
