@@ -27,7 +27,27 @@ import { toSignal } from '@angular/core/rxjs-interop';
     LoadingComponent,
   ],
   templateUrl: './header.component.html',
-  styles: ``,
+  styles: `
+    header {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+
+      @media (min-width: 890px) {
+        justify-content: space-between;
+        flex-direction: row;
+        align-items: end;Gw
+      }
+    }
+
+    .alt-text {
+      color: var(--mat-sys-on-surface-variant);
+    }
+
+    .title {
+      display: flex;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HeaderComponent {

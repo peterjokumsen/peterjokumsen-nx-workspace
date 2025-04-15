@@ -8,9 +8,7 @@ import {
 } from './models';
 
 import { CommonModule } from '@angular/common';
-import { MockComponent } from 'ng-mocks';
 import { RouterNavComponent } from './router-nav.component';
-import { ThemeToggleComponent } from '../theme-toggle';
 
 @Component({
   imports: [RouterNavComponent],
@@ -43,7 +41,7 @@ describe('RouterNavComponent', () => {
     })
       .overrideComponent(RouterNavComponent, {
         set: {
-          imports: [CommonModule, MockComponent(ThemeToggleComponent)],
+          imports: [CommonModule],
         },
       })
       .compileComponents();

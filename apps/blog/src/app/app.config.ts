@@ -4,7 +4,6 @@ import {
   providePjHttpTools,
   providePjLogger,
   providePjMarkdownClient,
-  providePjTheme,
 } from '@peterjokumsen/ng-services';
 
 import { appInitialRoutes } from './app-initial.routes';
@@ -26,7 +25,6 @@ export const appConfig: ApplicationConfig = {
 
     providePjBrowserTools(),
     providePjLogger({ production: !isDevMode() }),
-    providePjTheme(),
     providePjMarkdownClient(),
     providePjHttpTools({ production: !isDevMode() }, withFetch()),
   ],

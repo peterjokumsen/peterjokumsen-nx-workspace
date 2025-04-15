@@ -23,13 +23,8 @@ import { MatButton } from '@angular/material/button';
   imports: [CommonModule, MatButton],
   providers: [providePjBrowserTools()],
   template: `
-    <div
-      class="flex min-h-screen flex-col items-start"
-      [attr.style]="backgroundStyle()"
-    >
-      <div
-        class="main-colors m-5 items-center rounded border-2 bg-opacity-50 p-12"
-      >
+    <div class="intro-container" [attr.style]="backgroundStyle()">
+      <div class="intro-dialog">
         <h1 class="mb-8 justify-start text-3xl font-bold">
           {{ introductionTitle() }}
         </h1>
@@ -55,7 +50,27 @@ import { MatButton } from '@angular/material/button';
       </div>
     </div>
   `,
-  styles: ``,
+  styles: `
+    .intro-container {
+      //flex min-h-screen flex-col items-start
+      display: flex;
+      min-height: 100vh;
+      flex: flex;
+      align-items: items-start;
+    }
+
+    .intro-dialog {
+      //main-colors m-5 items-center rounded border-2 bg-opacity-50 p-12
+      background-color: var(--mat-sys-surface);
+      color: var(--mat-sys-on-surface);
+      padding: 3rem;
+      border-width: 2px;
+      align-items: center;
+      margin: 5rem;
+      font-size: 1.2rem;
+      border-radius: 10px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PageIntroductionComponent {

@@ -7,7 +7,6 @@ import {
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
 
-import { PjTheme } from '@peterjokumsen/ng-services';
 import { RouterOutlet } from '@angular/router';
 import { first } from 'rxjs';
 
@@ -40,12 +39,4 @@ import { first } from 'rxjs';
   styleUrl: './splash.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SplashComponent implements OnInit {
-  private _themeSvc = inject(PjTheme);
-
-  ngOnInit() {
-    this._themeSvc.theme$.pipe(first()).subscribe((theme) => {
-      this._themeSvc.setTheme(theme);
-    });
-  }
-}
+export class SplashComponent {}

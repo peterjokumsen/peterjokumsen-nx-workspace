@@ -20,7 +20,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 @Component({
   imports: [RouterOutlet, FooterComponent, HeaderComponent],
   templateUrl: './primary.component.html',
-  styles: ``,
+  styles: `
+    .content {
+      min-height: 100vh;
+    }
+  `,
   animations: [slideInAnimation('routeAnimations')],
 })
 export class PrimaryComponent implements OnInit {
