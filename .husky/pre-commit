@@ -1,1 +1,2 @@
-npm run lint:affected
+#!/usr/bin/env sh
+pnpm run prep-commit
