@@ -12,9 +12,9 @@ import {
   FlexJustify,
   PjUiRouterNavigationElement,
 } from './models';
+import { MatAnchor, MatButton } from '@angular/material/button';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 
-import { MatAnchor, MatButton } from '@angular/material/button';
 import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
@@ -53,7 +53,9 @@ import { MatMenuModule } from '@angular/material/menu';
       <button mat-button [matMenuTriggerFor]="menu">Theme</button>
       <mat-menu #menu="matMenu">
         @for (option of themeOptions; track option.value) {
-          <button mat-menu-item (click)="toggleColorScheme(option.value)">{{ option.name }}</button>
+          <button mat-menu-item (click)="toggleColorScheme(option.value)">
+            {{ option.name }}
+          </button>
         }
       </mat-menu>
     </nav>
@@ -67,7 +69,7 @@ export class RouterNavComponent {
     { value: 'light dark', name: 'Default' },
     { value: 'light', name: 'Light' },
     { value: 'dark', name: 'Dark' },
-  ]
+  ];
   routes = input<PjUiRouterNavigationElement[]>([]);
   flexDirection = input<FlexDirection>('row');
   flexJustify = input<FlexJustify>('end');
