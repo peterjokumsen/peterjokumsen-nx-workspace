@@ -59,10 +59,7 @@ describe('PageIntroductionComponent', () => {
     })
       .overrideComponent(PageIntroductionComponent, {
         set: {
-          providers: [
-            // keep split
-            { provide: PjBrowserTools, useValue: browserToolSpy },
-          ],
+          providers: [{ provide: PjBrowserTools, useValue: browserToolSpy }],
         },
       })
       .compileComponents();
@@ -171,9 +168,8 @@ describe('PageIntroductionComponent', () => {
       });
 
       it('should render content as paragraph elements', () => {
-        const paragraphs = hostFixture.nativeElement.querySelectorAll(
-          '.introduction-content',
-        );
+        const paragraphs =
+          hostFixture.nativeElement.querySelectorAll('.intro-paragraph');
         expect(paragraphs.length).toEqual(2);
         expect(paragraphs[0].textContent).toContain('Hello');
         expect(paragraphs[1].textContent).toContain('World');
@@ -181,7 +177,7 @@ describe('PageIntroductionComponent', () => {
     });
 
     describe('and actions', () => {
-      const actionsSelector = '.actions';
+      const actionsSelector = '.intro-actions';
 
       describe('is undefined', () => {
         it('should not render actions', () => {
@@ -192,7 +188,7 @@ describe('PageIntroductionComponent', () => {
       });
 
       describe('is set as array', () => {
-        let actionAnchors: HTMLAnchorElement[];
+        let actionButtons: HTMLButtonElement[];
 
         beforeEach(() => {
           hostComponent.actions = [
@@ -202,22 +198,22 @@ describe('PageIntroductionComponent', () => {
           hostFixture.detectChanges();
           const [actionElement] =
             hostFixture.nativeElement.querySelectorAll(actionsSelector);
-          actionAnchors = actionElement?.querySelectorAll('button');
+          actionButtons = actionElement?.querySelectorAll('button');
         });
 
         it('should render actions', () => {
-          expect(actionAnchors).toBeTruthy();
-          expect(actionAnchors.length).toEqual(2);
+          expect(actionButtons).toBeTruthy();
+          expect(actionButtons.length).toEqual(2);
         });
 
         it('should use default action type for styling', () => {
-          expect(actionAnchors[0].textContent).toContain('First action');
-          expect(actionAnchors[0].classList).toContain('mat-primary');
+          expect(actionButtons[0].textContent).toContain('First action');
+          expect(actionButtons[0].classList).toContain('mat-primary');
         });
 
         it('should use action type for styling', () => {
-          expect(actionAnchors[1].textContent).toContain('Second action');
-          expect(actionAnchors[1].classList).toContain('mat-main');
+          expect(actionButtons[1].textContent).toContain('Second action');
+          expect(actionButtons[1].classList).toContain('mat-main');
         });
 
         describe('when clicked', () => {
@@ -226,29 +222,29 @@ describe('PageIntroductionComponent', () => {
               hostComponent.pageIntroductionComponent.callToAction,
               'emit',
             );
-            actionAnchors[0].click();
+            actionButtons[0].click();
             expect(spy).toHaveBeenCalledWith({ label: 'First action' });
           });
         });
       });
 
       describe('is set as string', () => {
-        let actionAnchor: HTMLAnchorElement;
+        let actionButton: HTMLButtonElement;
 
         beforeEach(() => {
           hostComponent.actions = 'Test';
           hostFixture.detectChanges();
           const [actionsElement] =
             hostFixture.nativeElement.querySelectorAll(actionsSelector);
-          actionAnchor = actionsElement?.querySelector('button');
+          actionButton = actionsElement?.querySelector('button');
         });
 
         it('should render action', () => {
-          expect(actionAnchor).toBeTruthy();
+          expect(actionButton).toBeTruthy();
         });
 
         it('should use string as action label', () => {
-          expect(actionAnchor.textContent).toContain('Test');
+          expect(actionButton.textContent).toContain('Test');
         });
       });
     });

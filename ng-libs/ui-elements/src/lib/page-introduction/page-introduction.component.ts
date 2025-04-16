@@ -25,24 +25,24 @@ import { MatButton } from '@angular/material/button';
   template: `
     <div class="intro-container" [attr.style]="backgroundStyle()">
       <div class="intro-dialog">
-        <h1 class="mb-8 justify-start text-3xl font-bold">
+        <h1 class="intro-title">
           {{ introductionTitle() }}
         </h1>
         @for (paragraph of paragraphs(); track paragraph) {
-          <p class="introduction-content mb-6 text-xl">{{ paragraph }}</p>
+          <p class="intro-paragraph">{{ paragraph }}</p>
         }
         <ng-content />
         @if (callToActions().length > 0) {
-          <div class="actions mt-8 flex flex-col gap-4">
+          <div class="intro-actions">
             @for (action of callToActions(); track action.label) {
               <button
                 mat-raised-button
                 type="button"
                 [color]="action.type || 'primary'"
-                class="text-center"
+                class="intro-button"
                 (click)="onClick(action)"
               >
-                <span class="text-xl font-bold">{{ action.label }}</span>
+                <span class="intro-button-text">{{ action.label }}</span>
               </button>
             }
           </div>
@@ -52,16 +52,18 @@ import { MatButton } from '@angular/material/button';
   `,
   styles: `
     .intro-container {
-      //flex min-h-screen flex-col items-start
       display: flex;
       min-height: 100vh;
-      flex: flex;
-      align-items: items-start;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     .intro-dialog {
-      //main-colors m-5 items-center rounded border-2 bg-opacity-50 p-12
-      background-color: var(--mat-sys-surface);
+      background-color: color-mix(
+        in srgb,
+        var(--mat-sys-surface) 60%,
+        transparent
+      );
       color: var(--mat-sys-on-surface);
       padding: 3rem;
       border-width: 2px;
@@ -69,6 +71,37 @@ import { MatButton } from '@angular/material/button';
       margin: 5rem;
       font-size: 1.2rem;
       border-radius: 10px;
+      box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .intro-title {
+      margin-bottom: 2rem;
+      text-align: left;
+      font-size: 1.875rem;
+      font-weight: bold;
+    }
+
+    .intro-paragraph {
+      margin-bottom: 1.5rem;
+      font-size: 1.25rem;
+    }
+
+    .intro-actions {
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .intro-button {
+      text-align: center;
+    }
+
+    .intro-button-text {
+      font-size: 1.25rem;
+      font-weight: bold;
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
