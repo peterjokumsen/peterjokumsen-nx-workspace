@@ -36,7 +36,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
       @media (min-width: 890px) {
         justify-content: space-between;
         flex-direction: row;
-        align-items: end;Gw
+        align-items: end;
       }
     }
 
