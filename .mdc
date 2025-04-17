@@ -1,7 +1,0 @@
----
-description: 
-globs: 
-alwaysApply: true
----
- After changes applied, run prep-commit script to ensure formatting is correct and tests are passing.
- 
