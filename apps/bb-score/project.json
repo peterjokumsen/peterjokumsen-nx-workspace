@@ -39,7 +39,8 @@
               "maximumError": "8kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "serviceWorker": "apps/bb-score/ngsw-config.json"
         },
         "development": {
           "optimization": false,
