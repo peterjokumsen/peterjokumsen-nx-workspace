@@ -1,2 +1,2 @@
-npm run format:check
-npm run pre-push:check
+pnpm run format:check
+pnpm run prep-push

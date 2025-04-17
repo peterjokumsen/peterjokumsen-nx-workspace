@@ -9,7 +9,7 @@
     "format": "nx format:write",
     "format:check": "nx format:check",
     "prep-commit": "nx format:write && nx affected --uncommitted -t lint test --parallel=5",
-    "prep-push": "nx format:check && nx affected --base=origin/main -t lint test build --parallel=5 --skip-nx-cache",
+    "prep-push": "nx format:check && nx affected --base=origin/main -t lint test --parallel=5 --skip-nx-cache & nx affected --base=origin/main -t build --parallel=5",
     "swa-local-app-only": "swa start http://localhost:4200",
     "serve:blog": "nx run blog:serve",
     "serve:bu-jo": "nx run bullet-journal:serve",
