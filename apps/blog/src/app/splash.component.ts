@@ -1,15 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { PjTheme } from '@peterjokumsen/ng-services';
 import { RouterOutlet } from '@angular/router';
-import { first } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -40,12 +33,4 @@ import { first } from 'rxjs';
   styleUrl: './splash.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SplashComponent implements OnInit {
-  private _themeSvc = inject(PjTheme);
-
-  ngOnInit() {
-    this._themeSvc.theme$.pipe(first()).subscribe((theme) => {
-      this._themeSvc.setTheme(theme);
-    });
-  }
-}
+export class SplashComponent {}

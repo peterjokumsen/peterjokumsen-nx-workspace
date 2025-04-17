@@ -1,6 +1,6 @@
-import { PrimaryComponent } from './primary.component';
 import { Route } from '@angular/router';
 import { providePjArticleParser } from '@peterjokumsen/ng-services';
+import { PrimaryComponent } from './primary.component';
 
 export const childRoutes: Route[] = [
   {

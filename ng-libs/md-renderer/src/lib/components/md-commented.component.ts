@@ -5,9 +5,9 @@ import {
   signal,
 } from '@angular/core';
 
-import { HasContent } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { logUnexpectedContent } from '../fns';
+import { HasContent } from '../has-content';
 
 @Component({
   selector: 'pj-mdr-md-commented',

@@ -1,4 +1,3 @@
-import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
 import {
   HttpFeature,
   HttpFeatureKind,
@@ -6,6 +5,7 @@ import {
   provideHttpClient,
   withInterceptors,
 } from '@angular/common/http';
+import { EnvironmentProviders, makeEnvironmentProviders } from '@angular/core';
 import {
   debugHttpLoggerInterceptor,
   httpCountInterceptor,

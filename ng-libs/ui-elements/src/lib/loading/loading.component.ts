@@ -5,6 +5,7 @@ import {
   animate,
   style,
 } from '@angular/animations';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,7 +14,6 @@ import {
   ViewChild,
   inject,
 } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 
 @Component({
   selector: 'pj-ui-loading',

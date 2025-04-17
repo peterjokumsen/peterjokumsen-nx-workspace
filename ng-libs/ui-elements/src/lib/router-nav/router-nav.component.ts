@@ -1,15 +1,21 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  PLATFORM_ID,
+  inject,
+  input,
+} from '@angular/core';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   FlexAlign,
   FlexDirection,
   FlexJustify,
   PjUiRouterNavigationElement,
 } from './models';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
-import { CommonModule } from '@angular/common';
-import { MatAnchor } from '@angular/material/button';
-import { ThemeToggleComponent } from '../theme-toggle';
+import { MatMenuModule } from '@angular/material/menu';
 
 @Component({
   selector: 'pj-ui-router-nav',
@@ -18,30 +24,14 @@ import { ThemeToggleComponent } from '../theme-toggle';
     RouterLinkActive,
     RouterLink,
     MatAnchor,
-    ThemeToggleComponent,
+    MatButton,
+    MatMenuModule,
   ],
   template: `
     <ng-template #titleTemplate let-nav="navElement" let-isActive="isActive">
       <span [ngClass]="{ 'font-bold': isActive }"> {{ nav.title }} </span>
     </ng-template>
-    <nav
-      class="flex"
-      [ngClass]="{
-        'items-end': flexAlign() === 'end',
-        'items-center': flexAlign() === 'center',
-        'flex-row': flexDirection() === 'row',
-        'flex-col': flexDirection() === 'col',
-        'justify-end': flexJustify() === 'end',
-        'justify-center': flexJustify() === 'center',
-        'justify-between': flexJustify() === 'between',
-        'justify-around': flexJustify() === 'around',
-        'justify-evenly': flexJustify() === 'evenly',
-        'justify-start': flexJustify() === 'start',
-        'gap-1': flexGap() === 1,
-        'gap-2': flexGap() === 2,
-        'gap-3': flexGap() === 3,
-      }"
-    >
+    <nav>
       @for (navElement of routes(); track navElement.route) {
         <a
           mat-raised-button
@@ -59,13 +49,27 @@ import { ThemeToggleComponent } from '../theme-toggle';
           ></ng-container>
         </a>
       }
-      <pj-ui-theme-toggle></pj-ui-theme-toggle>
+
+      <button mat-button [matMenuTriggerFor]="menu">Theme</button>
+      <mat-menu #menu="matMenu">
+        @for (option of themeOptions; track option.value) {
+          <button mat-menu-item (click)="toggleColorScheme(option.value)">
+            {{ option.name }}
+          </button>
+        }
+      </mat-menu>
     </nav>
   `,
   styleUrl: 'router-nav.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RouterNavComponent {
+  private _platformId = inject(PLATFORM_ID);
+  themeOptions = [
+    { value: 'light dark', name: 'Default' },
+    { value: 'light', name: 'Light' },
+    { value: 'dark', name: 'Dark' },
+  ];
   routes = input<PjUiRouterNavigationElement[]>([]);
   flexDirection = input<FlexDirection>('row');
   flexJustify = input<FlexJustify>('end');
@@ -74,5 +78,12 @@ export class RouterNavComponent {
 
   isRootElement(route: PjUiRouterNavigationElement) {
     return route.route === '/' || route.route === '';
+  }
+
+  toggleColorScheme(value?: string) {
+    if (!isPlatformBrowser(this._platformId)) return;
+    const root = document.querySelector(':root') as HTMLElement;
+    if (!root) return;
+    root.style.colorScheme = value ?? 'light dark';
   }
 }

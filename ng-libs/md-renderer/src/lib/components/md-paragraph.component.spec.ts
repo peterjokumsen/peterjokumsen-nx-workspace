@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 import { MarkdownContentType, MarkdownType } from '@peterjokumsen/ts-md-models';
 
+import { logUnexpectedContent } from '../fns';
+import { WithId } from '../models';
 import { MdContentService } from '../services';
 import { MdParagraphComponent } from './md-paragraph.component';
-import { WithId } from '../models';
-import { logUnexpectedContent } from '../fns';
 
 jest.mock('../fns');
 

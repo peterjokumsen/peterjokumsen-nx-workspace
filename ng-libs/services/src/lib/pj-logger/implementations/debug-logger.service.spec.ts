@@ -1,6 +1,6 @@
-import { DebugLoggerService } from './debug-logger.service';
-import { LogFns } from '../';
 import { TestBed } from '@angular/core/testing';
+import { LogFns } from '../';
+import { DebugLoggerService } from './debug-logger.service';
 
 describe(DebugLoggerService.name, () => {
   let service: DebugLoggerService;

@@ -1,8 +1,8 @@
 import { HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { firstValueFrom, of } from 'rxjs';
 
-import { HttpCallCountService } from '../';
 import { TestBed } from '@angular/core/testing';
+import { HttpCallCountService } from '../';
 import { httpCountInterceptor } from './http-count.interceptor';
 
 describe('httpCountInterceptor', () => {

@@ -1,9 +1,9 @@
 import { firstValueFrom, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
-import { MarkdownParserService } from './services';
-import { PjMarkdownClient } from './';
 import { TestBed } from '@angular/core/testing';
+import { PjMarkdownClient } from './';
+import { MarkdownParserService } from './services';
 
 describe('PjMarkdownClientService', () => {
   let service: PjMarkdownClient;

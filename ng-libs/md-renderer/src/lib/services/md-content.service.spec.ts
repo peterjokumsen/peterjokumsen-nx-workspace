@@ -1,8 +1,8 @@
 import { MarkdownText, MarkdownType } from '@peterjokumsen/ts-md-models';
 
-import { MdContentService } from './md-content.service';
 import { TestBed } from '@angular/core/testing';
 import { WithId } from '../models';
+import { MdContentService } from './md-content.service';
 
 describe('MdContentService', () => {
   let service: MdContentService;

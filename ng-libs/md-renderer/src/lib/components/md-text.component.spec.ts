@@ -3,8 +3,8 @@ import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
 import { By } from '@angular/platform-browser';
 import { MarkdownFormatType } from '@peterjokumsen/ts-md-models';
-import { MdTextComponent } from './md-text.component';
 import { logUnexpectedContent } from '../fns';
+import { MdTextComponent } from './md-text.component';
 
 jest.mock('../fns');
 

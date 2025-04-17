@@ -1,3 +1,4 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
   ActivatedRouteSnapshot,
   ChildrenOutletContexts,
@@ -5,15 +6,14 @@ import {
   Router,
   RouterOutlet,
 } from '@angular/router';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MockComponent, MockDirective } from 'ng-mocks';
 
-import { FooterComponent } from './components/footer';
-import { HeaderComponent } from './components/header';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { PjBrowserTools } from '@peterjokumsen/ng-services';
-import { PrimaryComponent } from './primary.component';
 import { of } from 'rxjs';
+import { FooterComponent } from './components/footer';
+import { HeaderComponent } from './components/header';
+import { PrimaryComponent } from './primary.component';
 
 describe(`[blog] - ${PrimaryComponent.name}`, () => {
   let fixture: ComponentFixture<PrimaryComponent>;

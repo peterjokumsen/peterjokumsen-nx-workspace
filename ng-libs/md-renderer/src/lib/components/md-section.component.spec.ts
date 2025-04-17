@@ -2,13 +2,13 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 import { MockComponent, MockDirective } from 'ng-mocks';
 
-import { HasContent } from '../has-content';
 import { MdContentInjectionDirective } from '../directives/md-content-injection.directive';
+import { logUnexpectedContent } from '../fns';
+import { HasContent } from '../has-content';
 import { MdContentService } from '../services';
 import { MdSectionComponent } from './md-section.component';
 import { MdTitleComponent } from './md-title.component';
 import { MdWrapperComponent } from './md-wrapper.component';
-import { logUnexpectedContent } from '../fns';
 
 jest.mock('../fns');
 

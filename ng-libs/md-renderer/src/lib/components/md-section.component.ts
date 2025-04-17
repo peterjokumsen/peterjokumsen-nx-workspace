@@ -8,11 +8,11 @@ import {
 } from '@angular/core';
 import { MarkdownType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
-import { HasContent } from '../has-content';
-import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { WithId } from '../models';
 import { logUnexpectedContent } from '../fns';
+import { HasContent } from '../has-content';
+import { WithId } from '../models';
+import { MdContentService } from '../services';
 
 @Component({
   selector: 'pj-mdr-md-section',

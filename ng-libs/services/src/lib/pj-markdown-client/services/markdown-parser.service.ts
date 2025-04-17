@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { parseMarkdown } from '@peterjokumsen/md-parser';
 import { MarkdownAst } from '@peterjokumsen/ts-md-models';
 import { ToBeParsed } from '../models';
-import { parseMarkdown } from '@peterjokumsen/md-parser';
 
 /**
  * Service to parse markdown content, using parseMarkdown after adjusting the content as follows:

@@ -1,6 +1,6 @@
 import { MatchedContentMap } from '../_models';
-import { RegexContentType } from './provide-regex-tools';
 import { mapHasContent } from './map-has-content';
+import { RegexContentType } from './provide-regex-tools';
 
 describe('mapHasContent', () => {
   let map: MatchedContentMap<RegexContentType>;

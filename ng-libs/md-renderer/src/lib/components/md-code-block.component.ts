@@ -6,11 +6,11 @@ import {
   signal,
 } from '@angular/core';
 
-import { CodeHighlightService } from '../services';
-import { HasContent } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { logUnexpectedContent } from '../fns';
 import { mdModelCheck } from '@peterjokumsen/ts-md-models';
+import { logUnexpectedContent } from '../fns';
+import { HasContent } from '../has-content';
+import { CodeHighlightService } from '../services';
 
 @Component({
   selector: 'pj-mdr-md-code-block',

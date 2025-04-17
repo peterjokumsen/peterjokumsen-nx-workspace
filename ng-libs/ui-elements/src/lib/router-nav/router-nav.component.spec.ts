@@ -7,10 +7,7 @@ import {
   PjUiRouterNavigationElement,
 } from './models';
 
-import { CommonModule } from '@angular/common';
-import { MockComponent } from 'ng-mocks';
 import { RouterNavComponent } from './router-nav.component';
-import { ThemeToggleComponent } from '../theme-toggle';
 
 @Component({
   imports: [RouterNavComponent],
@@ -40,13 +37,7 @@ describe('RouterNavComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RouterNavHostComponent],
-    })
-      .overrideComponent(RouterNavComponent, {
-        set: {
-          imports: [CommonModule, MockComponent(ThemeToggleComponent)],
-        },
-      })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RouterNavHostComponent);
     hostComponent = fixture.componentInstance;

@@ -1,0 +1,40 @@
+header {
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .pj-header-title-logo {
+    flex-shrink: 0;
+  }
+
+  .pj-header-title-heading {
+    h1 {
+      margin: 0;
+    }
+
+    h2 {
+      margin: 0.5rem 0;
+    }
+
+    p {
+      display: flex;
+      align-items: center;
+      margin: 0;
+
+      fa-icon {
+        margin-right: 0.5rem;
+      }
+
+      img {
+        margin: 0 0.5rem;
+      }
+
+      img:last-child {
+        margin-left: 0.5rem;
+        margin-right: 0;
+      }
+    }
+  }
+}

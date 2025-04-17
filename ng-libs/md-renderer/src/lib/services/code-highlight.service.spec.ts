@@ -1,7 +1,7 @@
-import { CodeHighlightService } from './code-highlight.service';
-import { HighlightResult } from 'highlight.js';
 import { TestBed } from '@angular/core/testing';
+import { HighlightResult } from 'highlight.js';
 import hljs from 'highlight.js/lib/core';
+import { CodeHighlightService } from './code-highlight.service';
 
 jest.mock('highlight.js/lib/core');
 

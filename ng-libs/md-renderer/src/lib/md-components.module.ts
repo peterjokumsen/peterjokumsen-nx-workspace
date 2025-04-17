@@ -1,4 +1,4 @@
-import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from './injection.tokens';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import {
   MdCodeBlockComponent,
   MdCodeComponent,
@@ -15,7 +15,7 @@ import {
   MdUnknownComponent,
   MdWrapperComponent,
 } from './components';
-import { ModuleWithProviders, NgModule } from '@angular/core';
+import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from './injection.tokens';
 
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';

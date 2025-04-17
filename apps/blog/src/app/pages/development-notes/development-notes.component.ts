@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
-import { DisplayMarkdownComponent } from '../../components';
 import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
+import { DisplayMarkdownComponent } from '../../components';
 
 @Component({
   imports: [CommonModule, PageIntroductionComponent, DisplayMarkdownComponent],

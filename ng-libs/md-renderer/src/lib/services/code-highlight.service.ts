@@ -1,13 +1,13 @@
-import { HighlightedCode } from '../models';
 import { Injectable } from '@angular/core';
-import { MdComponentsModule } from '../md-components.module';
+import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
 import csharp from 'highlight.js/lib/languages/csharp';
-import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
 import plaintext from 'highlight.js/lib/languages/plaintext';
 import typescript from 'highlight.js/lib/languages/typescript';
 import yaml from 'highlight.js/lib/languages/yaml';
+import { MdComponentsModule } from '../md-components.module';
+import { HighlightedCode } from '../models';
 
 @Injectable({
   providedIn: MdComponentsModule,

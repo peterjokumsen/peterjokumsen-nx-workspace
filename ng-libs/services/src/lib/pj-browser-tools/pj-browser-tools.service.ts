@@ -1,7 +1,7 @@
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 
-import { PjLogger } from '../pj-logger';
 import { isPlatformBrowser } from '@angular/common';
+import { PjLogger } from '../pj-logger';
 
 @Injectable()
 export class PjBrowserTools {

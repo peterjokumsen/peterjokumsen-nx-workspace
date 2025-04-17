@@ -1,6 +1,6 @@
-import { LiveLoggerService } from './live-logger.service';
-import { LogFns } from '../log-fns.type';
 import { TestBed } from '@angular/core/testing';
+import { LogFns } from '../log-fns.type';
+import { LiveLoggerService } from './live-logger.service';
 
 describe(LiveLoggerService.name, () => {
   let service: LiveLoggerService;
