@@ -34,7 +34,7 @@ Deployment workflow: [![[🚀] bullet-journal](https://github.com/peterjokumsen/
 
 Application, located in [`apps/bb-score`](./apps/bb-score). This is an application for scoring baseball games.
 
-Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://bb-score.peterjokumsen.com](https://bb-score.peterjokumsen.com).
+<!-- Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://bb-score.peterjokumsen.com](https://bb-score.peterjokumsen.com). -->
 
 Deployment workflow: [![[🚀] bb-score](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-bb-score.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-bb-score.yml)
 
