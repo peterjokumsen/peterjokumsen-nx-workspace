@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
-import { MdHorizontalRuleComponent } from './md-horizontal-rule.component';
 import { logUnexpectedContent } from '../fns';
+import { MdHorizontalRuleComponent } from './md-horizontal-rule.component';
 
 jest.mock('../fns');
 

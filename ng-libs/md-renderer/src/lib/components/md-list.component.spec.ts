@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
+import { MockComponent } from 'ng-mocks';
+import { logUnexpectedContent } from '../fns';
 import { HasContent } from '../has-content';
 import { MdContentService } from '../services';
 import { MdListComponent } from './md-list.component';
 import { MdWrapperComponent } from './md-wrapper.component';
-import { MockComponent } from 'ng-mocks';
-import { logUnexpectedContent } from '../fns';
 
 jest.mock('../fns');
 

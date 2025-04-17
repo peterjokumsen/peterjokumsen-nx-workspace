@@ -1,7 +1,7 @@
 import { PLATFORM_ID } from '@angular/core';
-import { PjBrowserTools } from './';
-import { PjLogger } from '../pj-logger';
 import { TestBed } from '@angular/core/testing';
+import { PjLogger } from '../pj-logger';
+import { PjBrowserTools } from './';
 
 describe(PjBrowserTools.name, () => {
   let service: PjBrowserTools;

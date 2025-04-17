@@ -7,13 +7,13 @@ import {
   output,
 } from '@angular/core';
 import {
-  IntroductionBackgroundStyle,
-  IntroductionCallToAction,
-} from './models';
-import {
   PjBrowserTools,
   providePjBrowserTools,
 } from '@peterjokumsen/ng-services';
+import {
+  IntroductionBackgroundStyle,
+  IntroductionCallToAction,
+} from './models';
 
 import { CommonModule } from '@angular/common';
 import { MatButton } from '@angular/material/button';

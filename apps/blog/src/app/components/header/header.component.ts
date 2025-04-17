@@ -1,21 +1,21 @@
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   input,
 } from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 import {
   LoadingComponent,
   PjUiRouterNavigationElement,
   RouterNavComponent,
 } from '@peterjokumsen/ui-elements';
 
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faCode } from '@fortawesome/free-solid-svg-icons';
 import { HttpCallCountService } from '@peterjokumsen/ng-services';
 import { debounceTime } from 'rxjs';
-import { faCode } from '@fortawesome/free-solid-svg-icons';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-header',

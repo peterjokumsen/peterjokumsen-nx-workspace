@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AboutMeComponent } from '../../pages/about-me';
-import { DisplayMarkdownComponent } from './display-markdown.component';
-import { MarkdownAst } from '@peterjokumsen/ts-md-models';
 import { MdRendererComponent } from '@peterjokumsen/md-renderer';
+import { PjMarkdownClient } from '@peterjokumsen/ng-services';
+import { MarkdownAst } from '@peterjokumsen/ts-md-models';
 import { MockComponent } from 'ng-mocks';
 import { Observable } from 'rxjs';
-import { PjMarkdownClient } from '@peterjokumsen/ng-services';
+import { AboutMeComponent } from '../../pages/about-me';
+import { DisplayMarkdownComponent } from './display-markdown.component';
 
 describe('DisplayMarkdownComponent', () => {
   let component: DisplayMarkdownComponent;

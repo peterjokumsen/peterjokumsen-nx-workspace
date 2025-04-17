@@ -1,10 +1,10 @@
 import { LogFns, PjLogger } from '../pj-logger';
 
-import { MarkdownAst } from '@peterjokumsen/ts-md-models';
-import { PjArticleParser } from './';
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom } from 'rxjs';
 import { parseMarkdown } from '@peterjokumsen/md-parser';
+import { MarkdownAst } from '@peterjokumsen/ts-md-models';
+import { firstValueFrom } from 'rxjs';
+import { PjArticleParser } from './';
 
 jest.mock('@peterjokumsen/md-parser');
 

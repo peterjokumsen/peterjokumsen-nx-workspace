@@ -5,12 +5,12 @@ import {
 } from '@peterjokumsen/ui-elements';
 import { MockComponent, MockDirective } from 'ng-mocks';
 
+import { NgOptimizedImage } from '@angular/common';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { HeaderComponent } from './header.component';
 import { HttpCallCountService } from '@peterjokumsen/ng-services';
-import { NgOptimizedImage } from '@angular/common';
 import { of } from 'rxjs';
+import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;

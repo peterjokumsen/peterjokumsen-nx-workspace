@@ -1,4 +1,15 @@
 import {
+  animate,
+  animateChild,
+  keyframes,
+  query,
+  stagger,
+  state,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
+import {
   ChangeDetectionStrategy,
   Component,
   HostListener,
@@ -10,21 +21,10 @@ import {
   signal,
 } from '@angular/core';
 import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
-import {
-  animate,
-  animateChild,
-  keyframes,
-  query,
-  stagger,
-  state,
-  style,
-  transition,
-  trigger,
-} from '@angular/animations';
 
 import { CommonModule } from '@angular/common';
-import { MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { MatButton } from '@angular/material/button';
+import { MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { WithId } from '../models';
 
 @Component({

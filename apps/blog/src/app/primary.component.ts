@@ -1,3 +1,4 @@
+import { Component, OnInit, inject } from '@angular/core';
 import {
   ChildrenOutletContexts,
   NavigationStart,
@@ -5,17 +6,16 @@ import {
   Router,
   RouterOutlet,
 } from '@angular/router';
-import { Component, OnInit, inject } from '@angular/core';
 import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { pjFilterMap } from '@peterjokumsen/ts-utils';
+import { PjUiRouterNavigationElement } from '@peterjokumsen/ui-elements';
+import { filter } from 'rxjs';
+import { slideInAnimation } from './animations';
+import { childRoutes } from './app.routes';
 import { FooterComponent } from './components/footer';
 import { HeaderComponent } from './components/header';
-import { PjUiRouterNavigationElement } from '@peterjokumsen/ui-elements';
-import { childRoutes } from './app.routes';
-import { filter } from 'rxjs';
-import { pjFilterMap } from '@peterjokumsen/ts-utils';
-import { slideInAnimation } from './animations';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [RouterOutlet, FooterComponent, HeaderComponent],

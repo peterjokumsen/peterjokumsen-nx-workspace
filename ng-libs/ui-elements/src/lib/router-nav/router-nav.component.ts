@@ -1,3 +1,4 @@
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -5,15 +6,14 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { MatAnchor, MatButton } from '@angular/material/button';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import {
   FlexAlign,
   FlexDirection,
   FlexJustify,
   PjUiRouterNavigationElement,
 } from './models';
-import { MatAnchor, MatButton } from '@angular/material/button';
-import { RouterLink, RouterLinkActive } from '@angular/router';
 
 import { MatMenuModule } from '@angular/material/menu';
 

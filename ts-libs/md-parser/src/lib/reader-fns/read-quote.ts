@@ -1,4 +1,4 @@
-import { MarkdownParagraph, MarkdownType } from '@peterjokumsen/ts-md-models';
+import { MarkdownType } from '@peterjokumsen/ts-md-models';
 
 import { ReadResult } from '../_models';
 import { readParagraph } from './read-paragraph';

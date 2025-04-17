@@ -1,7 +1,7 @@
-import { HttpCallCountService } from '../';
 import { HttpInterceptorFn } from '@angular/common/http';
-import { finalize } from 'rxjs';
 import { inject } from '@angular/core';
+import { finalize } from 'rxjs';
+import { HttpCallCountService } from '../';
 
 export const httpCountInterceptor: HttpInterceptorFn = (req, next) => {
   const counter = inject(HttpCallCountService);

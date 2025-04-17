@@ -7,13 +7,15 @@ import {
 } from '@angular/core';
 import { MarkdownType, mdModelCheck } from '@peterjokumsen/ts-md-models';
 
-import { ExpectedContentTypes } from '../filter-content-types';
-import { HasContent } from '../has-content';
-import { MdContentService } from '../services';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { WithId } from '../models';
-import { filterContentTypes } from '../filter-content-types';
+import {
+  ExpectedContentTypes,
+  filterContentTypes,
+} from '../filter-content-types';
 import { logUnexpectedContent } from '../fns';
+import { HasContent } from '../has-content';
+import { WithId } from '../models';
+import { MdContentService } from '../services';
 
 @Component({
   selector: 'pj-mdr-md-list',

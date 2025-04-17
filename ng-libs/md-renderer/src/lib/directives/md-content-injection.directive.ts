@@ -4,11 +4,11 @@ import {
   filterContentTypes,
 } from '../filter-content-types';
 
-import { MarkdownType } from '@peterjokumsen/ts-md-models';
-import { MdComponentMapService } from '../services';
-import { MdWrapperComponent } from '../components';
 import { PjLogger } from '@peterjokumsen/ng-services';
+import { MarkdownType } from '@peterjokumsen/ts-md-models';
+import { MdWrapperComponent } from '../components';
 import { WithId } from '../models';
+import { MdComponentMapService } from '../services';
 
 @Directive({
   selector: 'pj-mdr-md-wrapper[pjMdrMdContentInjection]',

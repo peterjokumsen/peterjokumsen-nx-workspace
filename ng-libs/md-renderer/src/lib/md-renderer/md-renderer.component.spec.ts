@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CommonModule } from '@angular/common';
-import { MdRendererComponent } from './md-renderer.component';
 import { MockComponents } from 'ng-mocks';
 import { TableOfContentsComponent } from '../toc';
+import { MdRendererComponent } from './md-renderer.component';
 
 describe('MdRendererComponent', () => {
   let component: MdRendererComponent;

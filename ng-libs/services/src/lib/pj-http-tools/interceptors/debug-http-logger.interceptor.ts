@@ -1,8 +1,8 @@
 import { HttpHandlerFn, HttpRequest } from '@angular/common/http';
 
-import { PjLogger } from '../../pj-logger';
-import { finalize } from 'rxjs';
 import { inject } from '@angular/core';
+import { finalize } from 'rxjs';
+import { PjLogger } from '../../pj-logger';
 
 export function debugHttpLoggerInterceptor<T>(
   req: HttpRequest<T>,

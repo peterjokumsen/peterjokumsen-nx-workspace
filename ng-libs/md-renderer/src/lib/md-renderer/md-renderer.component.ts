@@ -1,3 +1,4 @@
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -12,14 +13,13 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { MarkdownAst, MarkdownType } from '@peterjokumsen/ts-md-models';
 import { MdComponentMapService, MdContentService } from '../services';
 
-import { MdComponentsModule } from '../md-components.module';
 import { PjLogger } from '@peterjokumsen/ng-services';
-import { TableOfContentsComponent } from '../toc';
+import { MdComponentsModule } from '../md-components.module';
 import { WithId } from '../models';
+import { TableOfContentsComponent } from '../toc';
 
 @Component({
   selector: 'pj-mdr-md-renderer',

@@ -1,5 +1,5 @@
-import { HasContent, HasContentBase } from './has-content';
 import { InjectionToken, Type } from '@angular/core';
+import { HasContent, HasContentBase } from './has-content';
 
 import { ExpectedContentTypes } from './filter-content-types';
 

@@ -1,14 +1,8 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-} from '@angular/core';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { RouterOutlet } from '@angular/router';
-import { first } from 'rxjs';
 
 @Component({
   selector: 'app-root',

@@ -1,6 +1,6 @@
-import { MarkdownParserService } from './markdown-parser.service';
 import { TestBed } from '@angular/core/testing';
 import { parseMarkdown } from '@peterjokumsen/md-parser';
+import { MarkdownParserService } from './markdown-parser.service';
 
 jest.mock('@peterjokumsen/md-parser');
 

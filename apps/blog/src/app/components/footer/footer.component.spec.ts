@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BehaviorSubject } from 'rxjs';
 import { FooterComponent } from './';
-import { MockComponent } from 'ng-mocks';
 
 describe(FooterComponent.name, () => {
   let component: FooterComponent;

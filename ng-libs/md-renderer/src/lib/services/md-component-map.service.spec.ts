@@ -1,4 +1,3 @@
-import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from '../injection.tokens';
 import {
   MdImageComponent,
   MdLinkComponent,
@@ -6,12 +5,13 @@ import {
   MdTextComponent,
   MdUnknownComponent,
 } from '../components';
+import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from '../injection.tokens';
 
+import { Type } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { ExpectedContentTypes } from '../filter-content-types';
 import { HasContentBase } from '../has-content';
 import { MdComponentMapService } from './md-component-map.service';
-import { TestBed } from '@angular/core/testing';
-import { Type } from '@angular/core';
 
 describe('MdComponentMapService', () => {
   let service: MdComponentMapService;

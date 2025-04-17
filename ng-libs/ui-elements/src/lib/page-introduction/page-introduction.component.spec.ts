@@ -5,8 +5,8 @@ import {
   IntroductionCallToAction,
 } from './models';
 
-import { PageIntroductionComponent } from './';
 import { PjBrowserTools } from '@peterjokumsen/ng-services';
+import { PageIntroductionComponent } from './';
 
 @Component({
   imports: [PageIntroductionComponent],

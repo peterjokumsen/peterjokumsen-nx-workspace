@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DevelopmentNotesComponent } from './development-notes.component';
-import { DisplayMarkdownComponent } from '../../components';
-import { MockComponent } from 'ng-mocks';
 import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
+import { MockComponent } from 'ng-mocks';
+import { DisplayMarkdownComponent } from '../../components';
+import { DevelopmentNotesComponent } from './development-notes.component';
 
 describe('DevelopmentNotesComponent', () => {
   let component: DevelopmentNotesComponent;

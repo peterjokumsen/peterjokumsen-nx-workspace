@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 
-import { CodeHighlightService } from '../services';
-import { HighlightedCode } from '../models';
-import { MdCodeBlockComponent } from './md-code-block.component';
 import { logUnexpectedContent } from '../fns';
+import { HighlightedCode } from '../models';
+import { CodeHighlightService } from '../services';
+import { MdCodeBlockComponent } from './md-code-block.component';
 
 jest.mock('../fns');
 

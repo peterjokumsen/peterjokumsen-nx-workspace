@@ -1,5 +1,5 @@
-import { HasContentBase } from '../has-content';
 import { LogFns } from '@peterjokumsen/ng-services';
+import { HasContentBase } from '../has-content';
 
 /**
  * Logs a warning when unexpected content is provided.

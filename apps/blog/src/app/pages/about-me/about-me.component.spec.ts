@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AboutMeComponent } from './about-me.component';
 import { By } from '@angular/platform-browser';
-import { DisplayMarkdownComponent } from '../../components/display-markdown/display-markdown.component';
 import { MockComponent } from 'ng-mocks';
+import { DisplayMarkdownComponent } from '../../components/display-markdown/display-markdown.component';
+import { AboutMeComponent } from './about-me.component';
 
 describe('AboutMeComponent', () => {
   let component: AboutMeComponent;

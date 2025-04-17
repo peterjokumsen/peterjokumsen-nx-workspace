@@ -1,6 +1,4 @@
-import { HasContent, HasContentBase } from '../has-content';
 import { Injectable, Type, inject } from '@angular/core';
-import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from '../injection.tokens';
 import {
   MdCodeBlockComponent,
   MdCodeComponent,
@@ -15,6 +13,8 @@ import {
   MdTextComponent,
   MdUnknownComponent,
 } from '../components';
+import { HasContent, HasContentBase } from '../has-content';
+import { MD_COMPONENT_TYPE_MAP, MdComponentTypeMap } from '../injection.tokens';
 
 import { ExpectedContentTypes } from '../filter-content-types';
 

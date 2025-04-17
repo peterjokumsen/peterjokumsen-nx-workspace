@@ -6,9 +6,9 @@ import {
   inject,
 } from '@angular/core';
 
-import { HasContentBase } from '../has-content';
 import { PjLogger } from '@peterjokumsen/ng-services';
 import { logUnexpectedContent } from '../fns';
+import { HasContentBase } from '../has-content';
 
 @Component({
   selector: 'pj-mdr-md-unknown',

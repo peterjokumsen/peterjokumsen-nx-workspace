@@ -1,6 +1,6 @@
-import { HttpCallCountService } from './http-call-count.service';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
+import { HttpCallCountService } from './http-call-count.service';
 
 describe('HttpCallCountService', () => {
   let service: HttpCallCountService;

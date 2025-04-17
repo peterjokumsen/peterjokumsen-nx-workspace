@@ -6,14 +6,14 @@ import {
 } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { MarkdownType } from '@peterjokumsen/ts-md-models';
+import { MockComponent } from 'ng-mocks';
+import { MdWrapperComponent } from '../components';
 import { ExpectedContentTypes } from '../filter-content-types';
 import { HasContent } from '../has-content';
-import { MarkdownType } from '@peterjokumsen/ts-md-models';
+import { WithId } from '../models';
 import { MdComponentMapService } from '../services';
 import { MdContentInjectionDirective } from './md-content-injection.directive';
-import { MdWrapperComponent } from '../components';
-import { MockComponent } from 'ng-mocks';
-import { WithId } from '../models';
 
 @Component({
   template: '',

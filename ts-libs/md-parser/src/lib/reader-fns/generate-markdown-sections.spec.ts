@@ -1,5 +1,5 @@
-import { generateMarkdownSections } from './';
 import { getSectionContentType } from '../helper-fns';
+import { generateMarkdownSections } from './';
 import { readList } from './read-list';
 import { readSection } from './read-section';
 

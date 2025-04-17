@@ -1,4 +1,3 @@
-import { BehaviorSubject, switchMap } from 'rxjs';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,12 +5,12 @@ import {
   inject,
 } from '@angular/core';
 import { PjLogger, PjMarkdownClient } from '@peterjokumsen/ng-services';
+import { BehaviorSubject, switchMap } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MdRendererComponent } from '@peterjokumsen/md-renderer';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-display-markdown',

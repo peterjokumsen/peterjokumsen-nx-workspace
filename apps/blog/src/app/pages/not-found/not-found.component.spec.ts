@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { Router } from '@angular/router';
+import { PjLogger } from '@peterjokumsen/ng-services';
+import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
 import { MockComponent } from 'ng-mocks';
 import { NotFoundComponent } from './not-found.component';
-import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
-import { PjLogger } from '@peterjokumsen/ng-services';
-import { Router } from '@angular/router';
 
 describe('NotFoundComponent', () => {
   let component: NotFoundComponent;

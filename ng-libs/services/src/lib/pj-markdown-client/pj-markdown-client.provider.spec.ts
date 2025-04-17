@@ -1,8 +1,8 @@
 import { PjMarkdownClient, providePjMarkdownClient } from './';
 
-import { MarkdownParserService } from './services';
 import { TestBed } from '@angular/core/testing';
 import { providePjHttpTools } from '../pj-http-tools';
+import { MarkdownParserService } from './services';
 
 describe('providePjMarkdownClient', () => {
   beforeEach(() => {

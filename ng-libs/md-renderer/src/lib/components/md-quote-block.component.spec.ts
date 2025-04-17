@@ -3,10 +3,10 @@ import { LogFns, PjLogger } from '@peterjokumsen/ng-services';
 import { MockComponent, MockDirective } from 'ng-mocks';
 
 import { MdContentInjectionDirective } from '../directives/md-content-injection.directive';
+import { logUnexpectedContent } from '../fns';
 import { MdContentService } from '../services';
 import { MdQuoteBlockComponent } from './md-quote-block.component';
 import { MdWrapperComponent } from './md-wrapper.component';
-import { logUnexpectedContent } from '../fns';
 
 jest.mock('../fns');
 
