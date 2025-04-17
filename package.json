@@ -109,6 +109,7 @@
     "prettier": "^3.5.3",
     "prettier-plugin-import-sort": "^0.0.7",
     "prettier-plugin-organize-imports": "^4.1.0",
+    "sharp": "^0.34.1",
     "ts-jest": "^29.2.6",
     "ts-node": "10.9.2",
     "typescript": "5.8.2"

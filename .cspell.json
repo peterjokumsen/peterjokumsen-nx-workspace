@@ -18,6 +18,7 @@
   "language": "en",
   "noConfigSearch": true,
   "words": [
+    "apng",
     "APPINSIGHTS",
     "Bluefield",
     "Buildable",
@@ -57,6 +58,7 @@
     "qodana",
     "sarif",
     "securestring",
+    "sidenav",
     "staticwebapp",
     "stefanzweifel",
     "strikethrough",

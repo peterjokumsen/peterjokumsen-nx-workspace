@@ -1,0 +1,19 @@
+<!-- Header -->
+<header class="app-header">
+  <h1>BB Score</h1>
+  <nav>
+    <a routerLink="/" routerLinkActive="active">Home</a>
+    <a routerLink="/scores" routerLinkActive="active">Scores</a>
+    <a routerLink="/settings" routerLinkActive="active">Settings</a>
+  </nav>
+</header>
+
+<!-- Main Content -->
+<main class="app-content">
+  <router-outlet></router-outlet>
+</main>
+
+<!-- Footer -->
+<footer class="app-footer">
+  <p>&copy; {{ currentYear }} BB Score. All rights reserved.</p>
+</footer>

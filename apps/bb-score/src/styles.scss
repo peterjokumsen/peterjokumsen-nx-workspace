@@ -1,0 +1,28 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  color-scheme: light dark;
+  @include mat.theme(
+    (
+      color: mat.$azure-palette,
+      typography: Roboto,
+      density: 0,
+    )
+  );
+}
+
+// Global styles
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+// Add smooth transitions for theme changes
+* {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}

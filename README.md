@@ -28,6 +28,16 @@ Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/stati
 
 Deployment workflow: [![[🚀] bullet-journal](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-bullet-journal.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-bullet-journal.yml)
 
+### BB Score
+
+<!-- <a href="https://bb-score.peterjokumsen.com" target="_blank" rel="noreferrer"><img alt="BB Score" src="https://bb-score.peterjokumsen.com/icons/icon-152x152.png" width="152"></a> -->
+
+Application, located in [`apps/bb-score`](./apps/bb-score). This is an application for scoring baseball games.
+
+<!-- Hosted as an [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/overview), using bicep for infrastructure as code, at [https://bb-score.peterjokumsen.com](https://bb-score.peterjokumsen.com). -->
+
+Deployment workflow: [![[🚀] bb-score](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-bb-score.yml/badge.svg)](https://github.com/peterjokumsen/peterjokumsen-nx-workspace/actions/workflows/deploy-bb-score.yml)
+
 ## Libraries
 
 ### ng-libs

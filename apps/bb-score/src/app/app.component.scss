@@ -1,0 +1,32 @@
+.sidenav-container {
+  height: 100vh;
+}
+
+.sidenav {
+  --mdc-list-list-item-hover-label-text-color: var(--mat-sys-on-primary-hover);
+  --mdc-list-list-item-focus-label-text-color: var(--mat-sys-on-primary-hover);
+  --mdc-list-list-item-label-text-color: var(--mat-sys-on-primary-container);
+
+  --mat-sidenav-container-shape: var(--mat-sys-corner-none);
+  --mat-list-active-indicator-shape: var(--mat-sys-corner-none);
+
+  width: 250px;
+  background: var(--mat-sys-primary-container);
+
+  a:hover,
+  a:focus {
+    background-color: var(--mat-sys-primary-hover);
+  }
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.content {
+  padding: 10px;
+}
+
+.active {
+  background-color: rgba(0, 0, 0, 0.04);
+}
