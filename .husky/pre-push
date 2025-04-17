@@ -1,2 +1,1 @@
-pnpm run format:check
-pnpm run prep-push
+#!/usr/bin/env sh
