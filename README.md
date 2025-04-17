@@ -42,12 +42,6 @@ Deployment workflow: [![[🚀] bullet-journal](https://github.com/peterjokumsen/
 
 [`ng-libs/services`](./ng-libs/services/README.md) is a collection of shared Angular services for the workspace. Named as `ng-services`, just in case any other `services` libraries created in the future.
 
-#### ng-libs/styles
-
-[`ng-libs/styles`](./ng-libs/styles/README.md) is a collection of shared styles for the workspace. Using [Angular material theming](https://v17.material.angular.io/guide/theming).
-
-> I wouldn't call the approach I've done as `best practice` or even `good practice`. It's more of a `practice` to see how it works out.
-
 #### ng-libs/ui-elements
 
 [`ng-libs/ui-elements`](./ng-libs/ui-elements/README.md) is a collection of shared Angular based UI elements, components, and directives.
