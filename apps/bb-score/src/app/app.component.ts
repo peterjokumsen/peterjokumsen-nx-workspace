@@ -36,6 +36,7 @@ export class AppComponent {
 
   navRoutes = [
     { route: '/', icon: 'home', title: 'Home' },
+    { route: '/games', icon: 'sports_baseball', title: 'Games' },
     { route: '/scores', icon: 'scoreboard', title: 'Scores' },
     { route: '/settings', icon: 'settings', title: 'Settings' },
   ];
@@ -57,7 +58,6 @@ export class AppComponent {
   }
 
   navClicked() {
-    console.log('navClicked');
     if (this.isMobile()) {
       this.sidenav.close();
     }
