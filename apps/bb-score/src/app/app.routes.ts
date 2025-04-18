@@ -16,4 +16,9 @@ export const appRoutes: Routes = [
     loadComponent: () =>
       import('./settings/settings.component').then((m) => m.SettingsComponent),
   },
+  {
+    path: 'games',
+    loadChildren: () =>
+      import('./games/games.routes').then((m) => m.gamesRoutes),
+  },
 ];
