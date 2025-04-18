@@ -58,7 +58,6 @@ export class AppComponent {
   }
 
   navClicked() {
-    console.log('navClicked');
     if (this.isMobile()) {
       this.sidenav.close();
     }

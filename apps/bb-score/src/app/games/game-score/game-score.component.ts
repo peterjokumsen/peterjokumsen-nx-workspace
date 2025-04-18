@@ -6,7 +6,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { filter, map, switchMap } from 'rxjs';
-import { Game, GameService } from '../../core/services/game.service';
+import { GameService } from '../game.service';
+import { Game } from '../models';
 
 @Component({
   selector: 'app-game-score',
@@ -23,8 +24,12 @@ import { Game, GameService } from '../../core/services/game.service';
       @if (game(); as game) {
         <mat-card>
           <mat-card-header>
-            <mat-card-title>{{ game.name }}</mat-card-title>
-            <mat-card-subtitle>{{ game.date | date }}</mat-card-subtitle>
+            <mat-card-title
+              >{{ game.homeTeam }} vs {{ game.awayTeam }}</mat-card-title
+            >
+            <mat-card-subtitle
+              >{{ game.league }} - {{ game.date | date }}</mat-card-subtitle
+            >
           </mat-card-header>
           <mat-card-content>
             <div class="teams">

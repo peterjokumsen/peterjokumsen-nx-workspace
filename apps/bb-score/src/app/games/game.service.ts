@@ -1,14 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, first, Observable } from 'rxjs';
-
-export interface Game {
-  id: string;
-  name: string;
-  date: Date;
-  status: 'pending' | 'in-progress' | 'completed';
-  homeTeam: string;
-  awayTeam: string;
-}
+import { Game } from './models';
 
 @Injectable({
   providedIn: 'root',
@@ -25,11 +17,11 @@ export class GameService {
     this.gamesSubject.next([
       {
         id: '1',
-        name: 'Game 1',
         date: new Date(),
         status: 'pending',
         homeTeam: 'Team A',
         awayTeam: 'Team B',
+        league: 'League A',
       },
     ]);
   }
@@ -44,10 +36,11 @@ export class GameService {
     return this.selectedGame$.pipe(first());
   }
 
-  createGame(game: Omit<Game, 'id'>): void {
+  createGame(game: Omit<Game, 'id' | 'status'>): void {
     const newGame: Game = {
       ...game,
       id: Math.random().toString(36).substring(2, 9),
+      status: 'pending',
     };
     this.gamesSubject.next([...this.gamesSubject.value, newGame]);
   }

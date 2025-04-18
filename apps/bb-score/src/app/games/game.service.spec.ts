@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { Game, GameService } from './game.service';
+import { GameService } from './game.service';
+import { Game } from './models';
 
 describe('GameService', () => {
   let service: GameService;
@@ -17,7 +18,7 @@ describe('GameService', () => {
     service.getGames().subscribe((games) => {
       expect(games.length).toBe(1);
       expect(games[0].id).toBe('1');
-      expect(games[0].name).toBe('Game 1');
+      expect(games[0].league).toBe('League A');
       expect(games[0].status).toBe('pending');
       done();
     });
@@ -25,7 +26,7 @@ describe('GameService', () => {
 
   it('should create a new game', (done) => {
     const newGame: Omit<Game, 'id'> = {
-      name: 'Test Game',
+      league: 'League 1',
       date: new Date(),
       status: 'pending',
       homeTeam: 'Team C',
@@ -36,7 +37,7 @@ describe('GameService', () => {
 
     service.getGames().subscribe((games) => {
       expect(games.length).toBe(2);
-      const createdGame = games.find((g) => g.name === 'Test Game');
+      const createdGame = games.find((g) => g.league === 'League 1');
       expect(createdGame).toBeTruthy();
       expect(createdGame?.homeTeam).toBe('Team C');
       expect(createdGame?.awayTeam).toBe('Team D');
@@ -47,7 +48,7 @@ describe('GameService', () => {
   it('should update an existing game', (done) => {
     const updatedGame: Game = {
       id: '1',
-      name: 'Updated Game',
+      league: 'League 2',
       date: new Date(),
       status: 'in-progress',
       homeTeam: 'Team A',
@@ -58,7 +59,7 @@ describe('GameService', () => {
 
     service.getGames().subscribe((games) => {
       const game = games.find((g) => g.id === '1');
-      expect(game?.name).toBe('Updated Game');
+      expect(game?.league).toBe('League 2');
       expect(game?.status).toBe('in-progress');
       done();
     });

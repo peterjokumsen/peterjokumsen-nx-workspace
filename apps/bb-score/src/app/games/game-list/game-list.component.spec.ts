@@ -1,7 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { Game, GameService } from '../../core/services/game.service';
+import { GameService } from '../game.service';
+import { Game } from '../models';
 import { GameListComponent } from './game-list.component';
 
 describe('GameListComponent', () => {
@@ -12,19 +14,19 @@ describe('GameListComponent', () => {
   const mockGames: Game[] = [
     {
       id: '1',
-      name: 'Game 1',
       date: new Date(),
       status: 'pending',
       homeTeam: 'Team A',
       awayTeam: 'Team B',
+      league: 'League A',
     },
     {
       id: '2',
-      name: 'Game 2',
       date: new Date(),
       status: 'in-progress',
       homeTeam: 'Team C',
       awayTeam: 'Team D',
+      league: 'League B',
     },
   ];
 
@@ -34,7 +36,7 @@ describe('GameListComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [GameListComponent],
+      imports: [GameListComponent, NoopAnimationsModule],
       providers: [
         provideRouter([]),
         { provide: GameService, useValue: gameService },

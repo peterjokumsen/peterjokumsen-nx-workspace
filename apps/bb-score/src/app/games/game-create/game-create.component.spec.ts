@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { GameService } from '../../core/services/game.service';
+import { of } from 'rxjs';
+import { GameService } from '../game.service';
 import { GameCreateComponent } from './game-create.component';
 
 describe('GameCreateComponent', () => {
@@ -10,6 +11,7 @@ describe('GameCreateComponent', () => {
 
   beforeEach(async () => {
     gameService = {
+      getGames: jest.fn(() => of([])).mockName('getGames'),
       createGame: jest.fn().mockName('createGame'),
     };
 

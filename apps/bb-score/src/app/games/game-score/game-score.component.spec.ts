@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter } from '@angular/router';
 import { of } from 'rxjs';
-import { Game, GameService } from '../../core/services/game.service';
+import { GameService } from '../game.service';
+import { Game } from '../models';
 import { GameScoreComponent } from './game-score.component';
 
 describe('GameScoreComponent', () => {
@@ -11,11 +12,11 @@ describe('GameScoreComponent', () => {
 
   const mockGame: Game = {
     id: '1',
-    name: 'Game 1',
     date: new Date(),
     status: 'in-progress',
     homeTeam: 'Team A',
     awayTeam: 'Team B',
+    league: 'League A',
   };
 
   beforeEach(async () => {
