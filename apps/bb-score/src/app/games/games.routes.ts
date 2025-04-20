@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { GameCreateComponent } from './game-create/game-create.component';
 import { GameListComponent } from './game-list/game-list.component';
-import { GameScoreComponent } from './game-score/game-score.component';
 
 export const gamesRoutes: Routes = [
   {
@@ -13,7 +12,8 @@ export const gamesRoutes: Routes = [
     component: GameCreateComponent,
   },
   {
-    path: 'score/:id',
-    component: GameScoreComponent,
+    path: 'score',
+    loadChildren: () =>
+      import('./game-score/games-score.routes').then((m) => m.gameScoreRoutes),
   },
 ];
