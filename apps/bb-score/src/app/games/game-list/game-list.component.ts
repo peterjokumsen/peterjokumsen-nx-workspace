@@ -18,6 +18,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { map, startWith, switchMap } from 'rxjs/operators';
+import { GameCardComponent } from '../game-card/game-card.component';
 import { GameService } from '../game.service';
 
 @Component({
@@ -33,6 +34,7 @@ import { GameService } from '../game.service';
     MatSelectModule,
     RouterModule,
     ReactiveFormsModule,
+    GameCardComponent,
   ],
   template: `
     <div class="game-list-container">
@@ -88,28 +90,13 @@ import { GameService } from '../game.service';
 
       <div class="games-grid" [@listAnimation]>
         @for (game of filteredGames(); track game.id) {
-          <mat-card class="game-card">
-            <mat-card-header>
-              <mat-card-title
-                >{{ game.homeTeam }} vs {{ game.awayTeam }}</mat-card-title
-              >
-              <mat-card-subtitle
-                >{{ game.league }} - {{ game.date | date }}</mat-card-subtitle
-              >
-            </mat-card-header>
-            <mat-card-content>
-              <p>Status: {{ game.status }}</p>
-            </mat-card-content>
+          <app-game-card [game]="game">
             <mat-card-actions>
-              <button
-                mat-button
-                color="primary"
-                [routerLink]="['score', game.id]"
-              >
+              <button mat-raised-button [routerLink]="['score', game.id]">
                 Score Game
               </button>
             </mat-card-actions>
-          </mat-card>
+          </app-game-card>
         }
       </div>
     </div>
@@ -144,9 +131,6 @@ import { GameService } from '../game.service';
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 20px;
-      }
-      .game-card {
-        height: 100%;
       }
     `,
   ],
