@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatNativeDateModule } from '@angular/material/core';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { combineLatest, Observable, of } from 'rxjs';
+import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { GameService } from '../game.service';
 import { Game } from '../models';
 
@@ -25,14 +25,17 @@ import { Game } from '../models';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     MatAutocompleteModule,
   ],
+  providers: [provideNativeDateAdapter()],
   template: `
     <div class="create-container">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Create New Game</mat-card-title>
+          <mat-card-subtitle *ngIf="gamesCreated > 0">
+            {{ gamesCreated }} game{{ gamesCreated > 1 ? 's' : '' }} created
+          </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content class="create-form">
           <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
@@ -70,6 +73,7 @@ import { Game } from '../models';
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Home Team</mat-label>
               <input
+                #homeTeamInput
                 matInput
                 formControlName="homeTeam"
                 placeholder="Enter home team name"
@@ -110,10 +114,19 @@ import { Game } from '../models';
               <button
                 mat-raised-button
                 color="primary"
+                type="button"
+                [disabled]="!gameForm.valid"
+                (click)="onSubmit(true)"
+              >
+                Add Another Game
+              </button>
+              <button
+                mat-raised-button
+                color="accent"
                 type="submit"
                 [disabled]="!gameForm.valid"
               >
-                Create Game
+                Save and Close
               </button>
             </div>
           </form>
@@ -150,7 +163,11 @@ import { Game } from '../models';
 export class GameCreateComponent {
   private _fb = inject(FormBuilder);
   private _gameService = inject(GameService);
-  private _router = inject(Router);
+  private _bottomSheetRef = inject(MatBottomSheetRef);
+
+  @ViewChild('homeTeamInput') homeTeamInput!: ElementRef<HTMLInputElement>;
+
+  gamesCreated = 0;
 
   gameForm = this._fb.group({
     league: ['', Validators.required],
@@ -160,39 +177,56 @@ export class GameCreateComponent {
   });
 
   // Get unique leagues and teams from existing games
-  private leagues = this.getUniqueValues('league');
-  private teams = this.getUniqueValues('homeTeam', 'awayTeam');
+  private _leagues$ = this.getUniqueValues('league');
+  private _teams$ = this.getUniqueValues('homeTeam', 'awayTeam');
 
   // Create filtered observables for autocomplete
-  filteredLeagues$ = this.createFilteredObservable('league', this.leagues);
-  filteredHomeTeams$ = this.createFilteredObservable('homeTeam', this.teams);
-  filteredAwayTeams$ = this.createFilteredObservable('awayTeam', this.teams);
+  filteredLeagues$ = this.createFilteredObservable('league', this._leagues$);
+  filteredHomeTeams$ = this.createFilteredObservable('homeTeam', this._teams$);
+  filteredAwayTeams$ = this.createFilteredObservable('awayTeam', this._teams$);
 
-  private getUniqueValues(...fields: Array<keyof Game>): string[] {
-    const values = new Set<string>();
-    this._gameService.getGames().subscribe((games) => {
-      games.forEach((game) => {
-        fields.forEach((field) => {
-          if (game[field]) {
-            values.add(game[field] as string);
-          }
+  private getUniqueValues(...fields: Array<keyof Game>): Observable<string[]> {
+    return this._gameService.games$.pipe(
+      map((games) => {
+        const values = new Set<string>();
+        games.forEach((game) => {
+          fields.forEach((field) => {
+            if (game[field]) {
+              values.add(game[field] as string);
+            }
+          });
         });
-      });
-    });
-    return Array.from(values);
+        return Array.from(values);
+      }),
+      shareReplay(1),
+    );
   }
 
   private createFilteredObservable(
-    controlName: string,
-    options: string[],
+    controlName: 'league' | 'homeTeam' | 'awayTeam',
+    options: Observable<string[]>,
   ): Observable<string[]> {
     return (
       this.gameForm.get(controlName)?.valueChanges.pipe(
         startWith(''),
-        map((value) => {
-          const filterValue = value.toLowerCase();
-          return options.filter((option) =>
-            option.toLowerCase().includes(filterValue),
+        switchMap((value) => {
+          const otherControl =
+            controlName === 'homeTeam'
+              ? this.gameForm.get('awayTeam')
+              : this.gameForm.get('homeTeam');
+          const otherValue$ = (otherControl?.valueChanges ?? of(null)).pipe(
+            startWith(otherControl?.value),
+          );
+
+          const filterValue = value?.toLowerCase() ?? '';
+          return combineLatest([options, otherValue$]).pipe(
+            map(([options, otherCtrlValue]) =>
+              options.filter(
+                (option) =>
+                  option !== otherCtrlValue &&
+                  option.toLowerCase().includes(filterValue),
+              ),
+            ),
           );
         }),
       ) ?? of([])
@@ -200,19 +234,46 @@ export class GameCreateComponent {
   }
 
   onCancel(): void {
-    this._router.navigate(['/games']);
+    this._bottomSheetRef.dismiss();
   }
 
-  onSubmit(): void {
+  onSubmit(addAnother = false): void {
     if (this.gameForm.valid) {
-      this.gameForm.getRawValue();
       this._gameService.createGame({
         league: this.gameForm.value.league as string,
         homeTeam: this.gameForm.value.homeTeam as string,
         awayTeam: this.gameForm.value.awayTeam as string,
         date: this.gameForm.value.date as Date,
       });
-      this._router.navigate(['/games']);
+
+      this.gamesCreated++;
+
+      if (addAnother) {
+        // Get current date and add 7 days
+        const currentDate = this.gameForm.value.date as Date;
+        const nextDate = new Date(currentDate);
+        nextDate.setDate(nextDate.getDate() + 7);
+
+        // Reset form but keep the league and update date
+        const league = this.gameForm.value.league;
+        this.gameForm.reset({
+          league,
+          date: nextDate,
+          homeTeam: '',
+          awayTeam: '',
+        });
+
+        // Focus and scroll to home team input
+        setTimeout(() => {
+          this.homeTeamInput.nativeElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+          });
+          this.homeTeamInput.nativeElement.focus();
+        });
+      } else {
+        this._bottomSheetRef.dismiss();
+      }
     }
   }
 }

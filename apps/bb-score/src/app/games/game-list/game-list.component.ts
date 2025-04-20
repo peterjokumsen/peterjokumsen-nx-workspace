@@ -10,6 +10,10 @@ import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {
+  MatBottomSheet,
+  MatBottomSheetModule,
+} from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,6 +23,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterModule } from '@angular/router';
 import { map, startWith, switchMap } from 'rxjs/operators';
 import { GameCardComponent } from '../game-card/game-card.component';
+import { GameCreateComponent } from '../game-create/game-create.component';
 import { GameService } from '../game.service';
 
 @Component({
@@ -35,14 +40,19 @@ import { GameService } from '../game.service';
     RouterModule,
     ReactiveFormsModule,
     GameCardComponent,
+    MatBottomSheetModule,
   ],
   template: `
     <div class="game-list-container">
       <div class="header">
         <h1>Available Games</h1>
-        <button mat-raised-button color="primary" routerLink="new">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="openCreateGameSheet()"
+        >
           <mat-icon>add</mat-icon>
-          New Game
+          New Game(s)
         </button>
       </div>
 
@@ -106,27 +116,32 @@ import { GameService } from '../game.service';
       .game-list-container {
         padding: 20px;
       }
+
       .header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 20px;
       }
+
       .filters {
         display: flex;
         gap: 16px;
         flex-wrap: wrap;
       }
+
       .filter-controls {
         display: flex;
         flex-direction: row-reverse;
         gap: 16px;
         margin-bottom: 20px;
       }
+
       .filters mat-form-field {
         flex: 1;
         min-width: 200px;
       }
+
       .games-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -157,6 +172,7 @@ import { GameService } from '../game.service';
 export class GameListComponent {
   private _gameService = inject(GameService);
   private _fb = inject(FormBuilder);
+  private _bottomSheet = inject(MatBottomSheet);
 
   games = toSignal(this._gameService.games$);
 
@@ -221,5 +237,9 @@ export class GameListComponent {
       team: '',
       status: '',
     });
+  }
+
+  openCreateGameSheet(): void {
+    this._bottomSheet.open(GameCreateComponent);
   }
 }
