@@ -1,8 +1,10 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter, RouterOutlet } from '@angular/router';
+import { MockComponent } from 'ng-mocks';
 import { of } from 'rxjs';
 import { AppComponent } from './app.component';
+import { UpdateToastComponent } from './core/components/update-toast/update-toast.component';
 import { ThemeService } from './core/services/theme.service';
 
 describe('AppComponent', () => {
@@ -27,7 +29,16 @@ describe('AppComponent', () => {
         { provide: BreakpointObserver, useValue: breakpointObserver },
         provideRouter([]),
       ],
-    }).compileComponents();
+    })
+      .overrideComponent(AppComponent, {
+        remove: {
+          imports: [UpdateToastComponent],
+        },
+        add: {
+          imports: [MockComponent(UpdateToastComponent)],
+        },
+      })
+      .compileComponents();
 
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
