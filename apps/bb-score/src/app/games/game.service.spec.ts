@@ -1,53 +1,105 @@
 import { TestBed } from '@angular/core/testing';
+import { firstValueFrom } from 'rxjs';
 import { GameService } from './game.service';
 import { Game } from './models';
 
 describe('GameService', () => {
   let service: GameService;
+  let mockLocalStorage: { [key: string]: string };
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    mockLocalStorage = {};
+    const storage: Pick<Storage, 'getItem' | 'setItem'> = {
+      getItem: jest
+        .fn()
+        .mockImplementation((key: string) => mockLocalStorage[key] || null),
+      setItem: jest.fn().mockImplementation((key: string, value: string) => {
+        mockLocalStorage[key] = value;
+      }),
+    };
+
+    TestBed.configureTestingModule({
+      providers: [{ provide: Storage, useValue: storage }],
+    });
     service = TestBed.inject(GameService);
+  });
+
+  afterEach(() => {
+    // Clear mock localStorage after each test
+    mockLocalStorage = {};
+    jest.clearAllMocks();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should initialize with mock data', (done) => {
+  it('should initialize with empty array when no saved games exist', (done) => {
     service.getGames().subscribe((games) => {
-      expect(games.length).toBe(1);
-      expect(games[0].id).toBe('1');
-      expect(games[0].league).toBe('League A');
-      expect(games[0].status).toBe('pending');
+      expect(games).toHaveLength(0);
       done();
     });
   });
 
-  it('should create a new game', (done) => {
-    const newGame: Omit<Game, 'id'> = {
+  it('should load saved games from localStorage', async () => {
+    const savedGames: Game[] = [
+      {
+        id: '1',
+        date: new Date(),
+        status: 'pending',
+        homeTeam: 'Team A',
+        awayTeam: 'Team B',
+        league: 'League A',
+      },
+    ];
+    mockLocalStorage['bb-score-games'] = JSON.stringify(savedGames);
+
+    const games = await firstValueFrom(service.getGames());
+    expect(games).toHaveLength(1);
+    expect(games[0].id).toBe('1');
+    expect(games[0].league).toBe('League A');
+  });
+
+  it('should create a new game and save to localStorage', async () => {
+    const newGame: Omit<Game, 'id' | 'status'> = {
       league: 'League 1',
       date: new Date(),
-      status: 'pending',
       homeTeam: 'Team C',
       awayTeam: 'Team D',
     };
 
     service.createGame(newGame);
 
-    service.getGames().subscribe((games) => {
-      expect(games.length).toBe(2);
-      const createdGame = games.find((g) => g.league === 'League 1');
-      expect(createdGame).toBeTruthy();
-      expect(createdGame?.homeTeam).toBe('Team C');
-      expect(createdGame?.awayTeam).toBe('Team D');
-      done();
-    });
+    const games = await firstValueFrom(service.getGames());
+    expect(games).toHaveLength(1);
+    const createdGame = games[0];
+    expect(createdGame.league).toBe('League 1');
+    expect(createdGame.homeTeam).toBe('Team C');
+    expect(createdGame.awayTeam).toBe('Team D');
+    expect(createdGame.status).toBe('pending');
+    expect(createdGame.id).toBeDefined();
+
+    // Verify localStorage was updated
+    const savedGames = JSON.parse(mockLocalStorage['bb-score-games']);
+    expect(savedGames).toHaveLength(1);
+    expect(savedGames[0].league).toBe('League 1');
   });
 
-  it('should update an existing game', (done) => {
+  it('should update an existing game and save to localStorage', async () => {
+    // First create a game
+    const initialGame: Omit<Game, 'id' | 'status'> = {
+      league: 'League 1',
+      date: new Date(),
+      homeTeam: 'Team A',
+      awayTeam: 'Team B',
+    };
+    service.createGame(initialGame);
+
+    // Then update it
+    const games = await firstValueFrom(service.getGames());
+    const gameId = games[0].id;
     const updatedGame: Game = {
-      id: '1',
+      id: gameId,
       league: 'League 2',
       date: new Date(),
       status: 'in-progress',
@@ -57,35 +109,58 @@ describe('GameService', () => {
 
     service.updateGame(updatedGame);
 
-    service.getGames().subscribe((games) => {
-      const game = games.find((g) => g.id === '1');
-      expect(game?.league).toBe('League 2');
-      expect(game?.status).toBe('in-progress');
-      done();
-    });
+    const updatedGames = await firstValueFrom(service.getGames());
+    const game = updatedGames[0];
+    expect(game.league).toBe('League 2');
+    expect(game.status).toBe('in-progress');
+
+    // Verify localStorage was updated
+    const savedGames = JSON.parse(mockLocalStorage['bb-score-games']);
+    expect(savedGames[0].league).toBe('League 2');
+    expect(savedGames[0].status).toBe('in-progress');
   });
 
-  it('should delete a game', (done) => {
-    service.deleteGame('1');
+  it('should delete a game and update localStorage', async () => {
+    // First create a game
+    const game: Omit<Game, 'id' | 'status'> = {
+      league: 'League 1',
+      date: new Date(),
+      homeTeam: 'Team A',
+      awayTeam: 'Team B',
+    };
+    service.createGame(game);
 
-    service.getGames().subscribe((games) => {
-      expect(games.length).toBe(0);
-      done();
-    });
+    const games = await firstValueFrom(service.getGames());
+    const gameId = games[0].id;
+    service.deleteGame(gameId);
+
+    const remainingGames = await firstValueFrom(service.getGames());
+    expect(remainingGames).toHaveLength(0);
+
+    // Verify localStorage was updated
+    const savedGames = JSON.parse(mockLocalStorage['bb-score-games']);
+    expect(savedGames).toHaveLength(0);
   });
 
-  it('should get a game by id', (done) => {
-    service.getGame('1').subscribe((game) => {
-      expect(game).toBeTruthy();
-      expect(game?.id).toBe('1');
-      done();
-    });
+  it('should get a game by id', async () => {
+    // First create a game
+    const game: Omit<Game, 'id' | 'status'> = {
+      league: 'League 1',
+      date: new Date(),
+      homeTeam: 'Team A',
+      awayTeam: 'Team B',
+    };
+    service.createGame(game);
+
+    const games = await firstValueFrom(service.getGames());
+    const gameId = games[0].id;
+    const retrievedGame = await firstValueFrom(service.getGame(gameId));
+    expect(retrievedGame).toBeTruthy();
+    expect(retrievedGame?.id).toBe(gameId);
   });
 
-  it('should return null for non-existent game', (done) => {
-    service.getGame('non-existent').subscribe((game) => {
-      expect(game).toBeNull();
-      done();
-    });
+  it('should return null for non-existent game', async () => {
+    const retrievedGame = await firstValueFrom(service.getGame('non-existent'));
+    expect(retrievedGame).toBeNull();
   });
 });

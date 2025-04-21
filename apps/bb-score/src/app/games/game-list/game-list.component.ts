@@ -98,17 +98,22 @@ import { GameService } from '../game.service';
         </button>
       </div>
 
-      <div class="games-grid" [@listAnimation]>
-        @for (game of filteredGames(); track game.id) {
-          <app-game-card [game]="game">
-            <mat-card-actions>
-              <button mat-raised-button [routerLink]="['score', game.id]">
-                Score Game
-              </button>
-            </mat-card-actions>
-          </app-game-card>
-        }
-      </div>
+      @let filtered = filteredGames();
+      @if (filtered && filtered.length > 0) {
+        <div class="games-grid" [@listAnimation]>
+          @for (game of filtered; track game.id) {
+            <app-game-card [game]="game">
+              <mat-card-actions>
+                <button mat-raised-button [routerLink]="['score', game.id]">
+                  Score Game
+                </button>
+              </mat-card-actions>
+            </app-game-card>
+          }
+        </div>
+      } @else {
+        <h2>No games found</h2>
+      }
     </div>
   `,
   styles: [
@@ -174,7 +179,7 @@ export class GameListComponent {
   private _fb = inject(FormBuilder);
   private _bottomSheet = inject(MatBottomSheet);
 
-  games = toSignal(this._gameService.games$);
+  games = toSignal(this._gameService.getGames());
 
   filters = this._fb.group({
     league: [''],
