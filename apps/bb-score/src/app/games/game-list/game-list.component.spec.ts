@@ -11,7 +11,7 @@ import { GameListComponent } from './game-list.component';
 describe('GameListComponent', () => {
   let component: GameListComponent;
   let fixture: ComponentFixture<GameListComponent>;
-  let gameService: Partial<GameService>;
+  let gameService: Pick<jest.Mocked<GameService>, 'getGames' | 'games$'>;
   let bottomSheet: Pick<jest.Mocked<MatBottomSheet>, 'open'>;
 
   const mockGames: Game[] = [
@@ -38,6 +38,7 @@ describe('GameListComponent', () => {
       open: jest.fn().mockName('open'),
     };
     gameService = {
+      getGames: jest.fn().mockName('getGames').mockReturnValue(of(mockGames)),
       games$: of(mockGames),
     };
 
