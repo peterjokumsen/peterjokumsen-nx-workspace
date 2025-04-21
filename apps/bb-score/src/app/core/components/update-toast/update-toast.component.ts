@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { SwUpdateService } from '../../services/sw-update.service';
 
 @Component({
@@ -10,10 +10,13 @@ import { SwUpdateService } from '../../services/sw-update.service';
   standalone: true,
   imports: [CommonModule, MatSnackBarModule, MatButtonModule],
   template: `
-    <div class="update-toast">
-      <span>A new version is available!</span>
-      <button mat-button color="accent" (click)="update()">Update Now</button>
-    </div>
+    @if (inToast) {
+      <div class="update-toast">
+        <span>A new version is available!</span>
+        <button mat-button color="primary" (click)="update()">Update Now</button>
+        <button mat-button color="accent" (click)="dismiss()">Dismiss</button>
+      </div>
+    }
   `,
   styles: [
     `
@@ -25,16 +28,22 @@ import { SwUpdateService } from '../../services/sw-update.service';
     `,
   ],
 })
-export class UpdateToastComponent {
+export class UpdateToastComponent implements OnInit {
   private _swUpdateService = inject(SwUpdateService);
   private _snackBar = inject(MatSnackBar);
+  private _snackBarData = inject(MAT_SNACK_BAR_DATA, { optional: true });
 
   updateAvailable = toSignal(this._swUpdateService.updateAvailable$);
+  inToast = this._snackBarData?.inToast ?? false;
 
-  constructor() {
+  ngOnInit(): void {
     if (this.updateAvailable()) {
       this.showToast();
     }
+  }
+
+  dismiss(): void {
+    this._snackBar.dismiss();
   }
 
   showToast(): void {
@@ -42,11 +51,14 @@ export class UpdateToastComponent {
       duration: undefined, // Keep open until user action
       horizontalPosition: 'center',
       verticalPosition: 'bottom',
+      data: {
+        inToast: true,
+      },
     });
   }
 
-  update(): void {
-    this._swUpdateService.activateUpdate();
+  async update(): Promise<void> {
+    await this._swUpdateService.activateUpdate();
     this._snackBar.dismiss();
   }
 }

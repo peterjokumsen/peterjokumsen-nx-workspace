@@ -2,7 +2,7 @@
   <mat-sidenav
     #sidenav
     [mode]="isMobile() ? 'over' : 'side'"
-    opened
+    [opened]="!isMobile()"
     class="sidenav"
   >
     <mat-nav-list>

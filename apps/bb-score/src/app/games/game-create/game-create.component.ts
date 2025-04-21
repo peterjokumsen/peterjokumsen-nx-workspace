@@ -29,121 +29,115 @@ import { Game } from '../models';
   ],
   providers: [provideNativeDateAdapter()],
   template: `
-    <div class="create-container">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Create New Game</mat-card-title>
-          <mat-card-subtitle *ngIf="gamesCreated > 0">
-            {{ gamesCreated }} game{{ gamesCreated > 1 ? 's' : '' }} created
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content class="create-form">
-          <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>League</mat-label>
-              <input
-                matInput
-                formControlName="league"
-                placeholder="Enter league name"
-                [matAutocomplete]="leagueAuto"
-              />
-              <mat-autocomplete #leagueAuto="matAutocomplete">
-                @for (option of filteredLeagues$ | async; track option) {
-                  <mat-option [value]="option">{{ option }}</mat-option>
-                }
-              </mat-autocomplete>
-              @if (gameForm.get('league')?.hasError('required')) {
-                <mat-error>League is required</mat-error>
+    <div class="create-header">
+      <h1>Create New Game</h1>
+      <h3 *ngIf="gamesCreated > 0">
+        {{ gamesCreated }} game{{ gamesCreated > 1 ? 's' : '' }} created
+      </h3>
+    </div>
+      <div class="create-form">
+        <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>League</mat-label>
+            <input
+              matInput
+              formControlName="league"
+              placeholder="Enter league name"
+              [matAutocomplete]="leagueAuto"
+            />
+            <mat-autocomplete #leagueAuto="matAutocomplete">
+              @for (option of filteredLeagues$ | async; track option) {
+                <mat-option [value]="option">{{ option }}</mat-option>
               }
-            </mat-form-field>
+            </mat-autocomplete>
+            @if (gameForm.get('league')?.hasError('required')) {
+              <mat-error>League is required</mat-error>
+            }
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Date</mat-label>
-              <input matInput [matDatepicker]="picker" formControlName="date" />
-              <mat-datepicker-toggle
-                matIconSuffix
-                [for]="picker"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #picker></mat-datepicker>
-              @if (gameForm.get('date')?.hasError('required')) {
-                <mat-error>Date is required</mat-error>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="date" />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            @if (gameForm.get('date')?.hasError('required')) {
+              <mat-error>Date is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Home Team</mat-label>
+            <input
+              #homeTeamInput
+              matInput
+              formControlName="homeTeam"
+              placeholder="Enter home team name"
+              [matAutocomplete]="homeTeamAuto"
+            />
+            <mat-autocomplete #homeTeamAuto="matAutocomplete">
+              @for (option of filteredHomeTeams$ | async; track option) {
+                <mat-option [value]="option">{{ option }}</mat-option>
               }
-            </mat-form-field>
+            </mat-autocomplete>
+            @if (gameForm.get('homeTeam')?.hasError('required')) {
+              <mat-error>Home team is required</mat-error>
+            }
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Home Team</mat-label>
-              <input
-                #homeTeamInput
-                matInput
-                formControlName="homeTeam"
-                placeholder="Enter home team name"
-                [matAutocomplete]="homeTeamAuto"
-              />
-              <mat-autocomplete #homeTeamAuto="matAutocomplete">
-                @for (option of filteredHomeTeams$ | async; track option) {
-                  <mat-option [value]="option">{{ option }}</mat-option>
-                }
-              </mat-autocomplete>
-              @if (gameForm.get('homeTeam')?.hasError('required')) {
-                <mat-error>Home team is required</mat-error>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Away Team</mat-label>
+            <input
+              matInput
+              formControlName="awayTeam"
+              placeholder="Enter away team name"
+              [matAutocomplete]="awayTeamAuto"
+            />
+            <mat-autocomplete #awayTeamAuto="matAutocomplete">
+              @for (option of filteredAwayTeams$ | async; track option) {
+                <mat-option [value]="option">{{ option }}</mat-option>
               }
-            </mat-form-field>
+            </mat-autocomplete>
+            @if (gameForm.get('awayTeam')?.hasError('required')) {
+              <mat-error>Away team is required</mat-error>
+            }
+          </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Away Team</mat-label>
-              <input
-                matInput
-                formControlName="awayTeam"
-                placeholder="Enter away team name"
-                [matAutocomplete]="awayTeamAuto"
-              />
-              <mat-autocomplete #awayTeamAuto="matAutocomplete">
-                @for (option of filteredAwayTeams$ | async; track option) {
-                  <mat-option [value]="option">{{ option }}</mat-option>
-                }
-              </mat-autocomplete>
-              @if (gameForm.get('awayTeam')?.hasError('required')) {
-                <mat-error>Away team is required</mat-error>
-              }
-            </mat-form-field>
-
-            <div class="button-container">
-              <button mat-button type="button" (click)="onCancel()">
-                Cancel
-              </button>
-              <button
-                mat-raised-button
-                color="primary"
-                type="button"
-                [disabled]="!gameForm.valid"
-                (click)="onSubmit(true)"
-              >
-                Add Another Game
-              </button>
-              <button
-                mat-raised-button
-                color="accent"
-                type="submit"
-                [disabled]="!gameForm.valid"
-              >
-                Save and Close
-              </button>
-            </div>
-          </form>
-        </mat-card-content>
-      </mat-card>
+          <div class="button-container">
+            <button mat-button type="button" (click)="onCancel()">
+              Cancel
+            </button>
+            <button
+              mat-raised-button
+              color="primary"
+              type="button"
+              [disabled]="!gameForm.valid"
+              (click)="onSubmit(true)"
+            >
+              Add Another Game
+            </button>
+            <button
+              mat-raised-button
+              color="accent"
+              type="submit"
+              [disabled]="!gameForm.valid"
+            >
+              Save and Close
+            </button>
+          </div>
+        </form>
     </div>
   `,
   styles: [
     `
-      .create-container {
-        padding: 20px;
+      .create-form {
         max-width: 600px;
-        margin: 0 auto;
       }
 
-      .create-form {
-        padding-top: 15px;
+      .create-header {
+        padding: 10px 0;
       }
 
       .full-width {
@@ -152,10 +146,15 @@ import { Game } from '../models';
       }
 
       .button-container {
-        display: flex;
-        justify-content: flex-end;
         gap: 16px;
-        margin-top: 16px;
+        display: flex;
+        flex-direction: column-reverse;
+
+        @media (min-width: 600px) {
+          margin-top: 16px;
+          flex-direction: row;
+          justify-content: flex-end;
+        }
       }
     `,
   ],
