@@ -10,6 +10,7 @@ import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
+import { UpdateToastComponent } from './core/components/update-toast/update-toast.component';
 import { Theme, ThemeService } from './core/services/theme.service';
 
 @Component({
@@ -26,6 +27,7 @@ import { Theme, ThemeService } from './core/services/theme.service';
     MatMenuModule,
     MatSidenavModule,
     MatListModule,
+    UpdateToastComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
