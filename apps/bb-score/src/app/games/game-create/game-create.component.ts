@@ -35,99 +35,97 @@ import { Game } from '../models';
         {{ gamesCreated }} game{{ gamesCreated > 1 ? 's' : '' }} created
       </h3>
     </div>
-      <div class="create-form">
-        <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>League</mat-label>
-            <input
-              matInput
-              formControlName="league"
-              placeholder="Enter league name"
-              [matAutocomplete]="leagueAuto"
-            />
-            <mat-autocomplete #leagueAuto="matAutocomplete">
-              @for (option of filteredLeagues$ | async; track option) {
-                <mat-option [value]="option">{{ option }}</mat-option>
-              }
-            </mat-autocomplete>
-            @if (gameForm.get('league')?.hasError('required')) {
-              <mat-error>League is required</mat-error>
+    <div class="create-form">
+      <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>League</mat-label>
+          <input
+            matInput
+            formControlName="league"
+            placeholder="Enter league name"
+            [matAutocomplete]="leagueAuto"
+          />
+          <mat-autocomplete #leagueAuto="matAutocomplete">
+            @for (option of filteredLeagues$ | async; track option) {
+              <mat-option [value]="option">{{ option }}</mat-option>
             }
-          </mat-form-field>
+          </mat-autocomplete>
+          @if (gameForm.get('league')?.hasError('required')) {
+            <mat-error>League is required</mat-error>
+          }
+        </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Date</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="date" />
-            <mat-datepicker-toggle
-              matIconSuffix
-              [for]="picker"
-            ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            @if (gameForm.get('date')?.hasError('required')) {
-              <mat-error>Date is required</mat-error>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="date" />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          @if (gameForm.get('date')?.hasError('required')) {
+            <mat-error>Date is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Home Team</mat-label>
+          <input
+            #homeTeamInput
+            matInput
+            formControlName="homeTeam"
+            placeholder="Enter home team name"
+            [matAutocomplete]="homeTeamAuto"
+          />
+          <mat-autocomplete #homeTeamAuto="matAutocomplete">
+            @for (option of filteredHomeTeams$ | async; track option) {
+              <mat-option [value]="option">{{ option }}</mat-option>
             }
-          </mat-form-field>
+          </mat-autocomplete>
+          @if (gameForm.get('homeTeam')?.hasError('required')) {
+            <mat-error>Home team is required</mat-error>
+          }
+        </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Home Team</mat-label>
-            <input
-              #homeTeamInput
-              matInput
-              formControlName="homeTeam"
-              placeholder="Enter home team name"
-              [matAutocomplete]="homeTeamAuto"
-            />
-            <mat-autocomplete #homeTeamAuto="matAutocomplete">
-              @for (option of filteredHomeTeams$ | async; track option) {
-                <mat-option [value]="option">{{ option }}</mat-option>
-              }
-            </mat-autocomplete>
-            @if (gameForm.get('homeTeam')?.hasError('required')) {
-              <mat-error>Home team is required</mat-error>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Away Team</mat-label>
+          <input
+            matInput
+            formControlName="awayTeam"
+            placeholder="Enter away team name"
+            [matAutocomplete]="awayTeamAuto"
+          />
+          <mat-autocomplete #awayTeamAuto="matAutocomplete">
+            @for (option of filteredAwayTeams$ | async; track option) {
+              <mat-option [value]="option">{{ option }}</mat-option>
             }
-          </mat-form-field>
+          </mat-autocomplete>
+          @if (gameForm.get('awayTeam')?.hasError('required')) {
+            <mat-error>Away team is required</mat-error>
+          }
+        </mat-form-field>
 
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Away Team</mat-label>
-            <input
-              matInput
-              formControlName="awayTeam"
-              placeholder="Enter away team name"
-              [matAutocomplete]="awayTeamAuto"
-            />
-            <mat-autocomplete #awayTeamAuto="matAutocomplete">
-              @for (option of filteredAwayTeams$ | async; track option) {
-                <mat-option [value]="option">{{ option }}</mat-option>
-              }
-            </mat-autocomplete>
-            @if (gameForm.get('awayTeam')?.hasError('required')) {
-              <mat-error>Away team is required</mat-error>
-            }
-          </mat-form-field>
-
-          <div class="button-container">
-            <button mat-button type="button" (click)="onCancel()">
-              Cancel
-            </button>
-            <button
-              mat-raised-button
-              color="primary"
-              type="button"
-              [disabled]="!gameForm.valid"
-              (click)="onSubmit(true)"
-            >
-              Add Another Game
-            </button>
-            <button
-              mat-raised-button
-              color="accent"
-              type="submit"
-              [disabled]="!gameForm.valid"
-            >
-              Save and Close
-            </button>
-          </div>
-        </form>
+        <div class="button-container">
+          <button mat-button type="button" (click)="onCancel()">Cancel</button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="button"
+            [disabled]="!gameForm.valid"
+            (click)="onSubmit(true)"
+          >
+            Add Another Game
+          </button>
+          <button
+            mat-raised-button
+            color="accent"
+            type="submit"
+            [disabled]="!gameForm.valid"
+          >
+            Save and Close
+          </button>
+        </div>
+      </form>
     </div>
   `,
   styles: [

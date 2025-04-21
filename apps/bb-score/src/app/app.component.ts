@@ -9,7 +9,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { map, noop, tap } from 'rxjs';
+import { map } from 'rxjs';
 import { UpdateToastComponent } from './core/components/update-toast/update-toast.component';
 import { Theme, ThemeService } from './core/services/theme.service';
 
@@ -46,9 +46,7 @@ export class AppComponent {
   isMobile = toSignal(
     this._breakpointObserver
       .observe('(max-width: 600px)')
-      .pipe(
-        map(({ matches }) => matches),
-      ),
+      .pipe(map(({ matches }) => matches)),
   );
 
   constructor(private themeService: ThemeService) {}

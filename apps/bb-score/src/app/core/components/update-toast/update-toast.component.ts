@@ -2,7 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_SNACK_BAR_DATA, MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import {
+  MAT_SNACK_BAR_DATA,
+  MatSnackBar,
+  MatSnackBarModule,
+} from '@angular/material/snack-bar';
 import { SwUpdateService } from '../../services/sw-update.service';
 
 @Component({
@@ -13,7 +17,9 @@ import { SwUpdateService } from '../../services/sw-update.service';
     @if (inToast) {
       <div class="update-toast">
         <span>A new version is available!</span>
-        <button mat-button color="primary" (click)="update()">Update Now</button>
+        <button mat-button color="primary" (click)="update()">
+          Update Now
+        </button>
         <button mat-button color="accent" (click)="dismiss()">Dismiss</button>
       </div>
     }
