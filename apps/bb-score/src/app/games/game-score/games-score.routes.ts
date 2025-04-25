@@ -1,10 +1,12 @@
 import { Route } from '@angular/router';
+import { gameGuard } from '../game.guard';
 import { GameScoreContainerComponent } from './game-score-container.component';
 
 export const gameScoreRoutes: Route[] = [
   {
     path: ':id',
     component: GameScoreContainerComponent,
+    canActivate: [gameGuard],
     children: [
       {
         path: '',

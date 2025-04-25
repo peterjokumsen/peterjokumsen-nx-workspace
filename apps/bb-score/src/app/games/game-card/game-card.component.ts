@@ -11,7 +11,9 @@ import { Game } from '../models';
     <mat-card>
       <mat-card-header>
         <mat-card-title>
-          {{ game().homeTeam }} vs {{ game().awayTeam }} ({{ game().status }})
+          {{ game().homeTeamName }} vs {{ game().awayTeamName }} ({{
+            game().status
+          }})
         </mat-card-title>
         <mat-card-subtitle>
           <span class="league">{{ game().league }}</span>

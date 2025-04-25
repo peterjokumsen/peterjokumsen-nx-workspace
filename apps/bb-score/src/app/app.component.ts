@@ -39,6 +39,7 @@ export class AppComponent {
   navRoutes = [
     { route: '/', icon: 'home', title: 'Home' },
     { route: '/games', icon: 'sports_baseball', title: 'Games' },
+    { route: '/teams', icon: 'groups', title: 'Teams' },
     { route: '/scores', icon: 'scoreboard', title: 'Scores' },
     { route: '/settings', icon: 'settings', title: 'Settings' },
   ];

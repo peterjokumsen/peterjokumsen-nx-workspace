@@ -4,11 +4,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardActions, MatCardContent } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { filter, map, switchMap } from 'rxjs';
+import { RouterModule } from '@angular/router';
 import { GameCardComponent } from '../game-card/game-card.component';
 import { GameService } from '../game.service';
-import { Game } from '../models';
 
 @Component({
   selector: 'app-game-score-container',
@@ -67,14 +65,6 @@ import { Game } from '../models';
   ],
 })
 export class GameScoreContainerComponent {
-  private _route = inject(ActivatedRoute);
   private _gameService = inject(GameService);
-
-  game = toSignal(
-    this._route.params.pipe(
-      map((params) => params['id']),
-      switchMap((id) => this._gameService.getGame(id)),
-      filter((game): game is Game => game !== null),
-    ),
-  );
+  game = toSignal(this._gameService.selectedGame$);
 }

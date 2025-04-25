@@ -21,4 +21,9 @@ export const appRoutes: Routes = [
     loadChildren: () =>
       import('./games/games.routes').then((m) => m.gamesRoutes),
   },
+  {
+    path: 'teams',
+    loadChildren: () =>
+      import('./teams/teams.routes').then((m) => m.teamsRoutes),
+  },
 ];

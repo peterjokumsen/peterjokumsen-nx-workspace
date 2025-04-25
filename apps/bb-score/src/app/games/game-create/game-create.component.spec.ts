@@ -45,15 +45,16 @@ describe('GameCreateComponent', () => {
     expect(bottomSheetRef.dismiss).toHaveBeenCalled();
   });
 
-  it('should create game and dismiss bottom sheet when submitting valid form', () => {
-    component.gameForm.setValue({
+  it('should create game and dismiss bottom sheet when submitting valid form', async () => {
+    component.gameForm.patchValue({
       league: 'Test League',
       date: new Date(),
       homeTeam: 'Team A',
       awayTeam: 'Team B',
     });
+    component.gameForm.updateValueAndValidity();
 
-    component.onSubmit();
+    await component.onSubmit();
 
     expect(gameService.createGame).toHaveBeenCalled();
     expect(bottomSheetRef.dismiss).toHaveBeenCalled();

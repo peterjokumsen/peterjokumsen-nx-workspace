@@ -47,8 +47,8 @@ describe('GameService', () => {
         id: '1',
         date: new Date(),
         status: 'pending',
-        homeTeam: 'Team A',
-        awayTeam: 'Team B',
+        homeTeamName: 'Team A',
+        awayTeamName: 'Team B',
         league: 'League A',
       },
     ];
@@ -64,8 +64,8 @@ describe('GameService', () => {
     const newGame: Omit<Game, 'id' | 'status'> = {
       league: 'League 1',
       date: new Date(),
-      homeTeam: 'Team C',
-      awayTeam: 'Team D',
+      homeTeamName: 'Team C',
+      awayTeamName: 'Team D',
     };
 
     service.createGame(newGame);
@@ -74,8 +74,8 @@ describe('GameService', () => {
     expect(games).toHaveLength(1);
     const createdGame = games[0];
     expect(createdGame.league).toBe('League 1');
-    expect(createdGame.homeTeam).toBe('Team C');
-    expect(createdGame.awayTeam).toBe('Team D');
+    expect(createdGame.homeTeamName).toBe('Team C');
+    expect(createdGame.awayTeamName).toBe('Team D');
     expect(createdGame.status).toBe('pending');
     expect(createdGame.id).toBeDefined();
 
@@ -90,8 +90,8 @@ describe('GameService', () => {
     const initialGame: Omit<Game, 'id' | 'status'> = {
       league: 'League 1',
       date: new Date(),
-      homeTeam: 'Team A',
-      awayTeam: 'Team B',
+      homeTeamName: 'Team A',
+      awayTeamName: 'Team B',
     };
     service.createGame(initialGame);
 
@@ -103,8 +103,8 @@ describe('GameService', () => {
       league: 'League 2',
       date: new Date(),
       status: 'in-progress',
-      homeTeam: 'Team A',
-      awayTeam: 'Team B',
+      homeTeamName: 'Team A',
+      awayTeamName: 'Team B',
     };
 
     service.updateGame(updatedGame);
@@ -125,8 +125,8 @@ describe('GameService', () => {
     const game: Omit<Game, 'id' | 'status'> = {
       league: 'League 1',
       date: new Date(),
-      homeTeam: 'Team A',
-      awayTeam: 'Team B',
+      homeTeamName: 'Team A',
+      awayTeamName: 'Team B',
     };
     service.createGame(game);
 
@@ -147,8 +147,8 @@ describe('GameService', () => {
     const game: Omit<Game, 'id' | 'status'> = {
       league: 'League 1',
       date: new Date(),
-      homeTeam: 'Team A',
-      awayTeam: 'Team B',
+      homeTeamName: 'Team A',
+      awayTeamName: 'Team B',
     };
     service.createGame(game);
 
