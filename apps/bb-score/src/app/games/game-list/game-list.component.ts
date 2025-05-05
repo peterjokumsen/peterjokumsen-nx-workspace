@@ -103,9 +103,16 @@ import { GameService } from '../game.service';
         <div class="games-grid" [@listAnimation]>
           @for (game of filtered; track game.id) {
             <app-game-card [game]="game">
-              <mat-card-actions>
+              <mat-card-actions class="game-actions">
                 <button mat-raised-button [routerLink]="['score', game.id]">
                   Score Game
+                </button>
+                <button
+                  class="delete-game"
+                  mat-raised-button
+                  (click)="deleteGame(game.id)"
+                >
+                  Delete Game
                 </button>
               </mat-card-actions>
             </app-game-card>
@@ -116,44 +123,7 @@ import { GameService } from '../game.service';
       }
     </div>
   `,
-  styles: [
-    `
-      .game-list-container {
-        padding: 20px;
-      }
-
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-      }
-
-      .filters {
-        display: flex;
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-
-      .filter-controls {
-        display: flex;
-        flex-direction: row-reverse;
-        gap: 16px;
-        margin-bottom: 20px;
-      }
-
-      .filters mat-form-field {
-        flex: 1;
-        min-width: 200px;
-      }
-
-      .games-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-      }
-    `,
-  ],
+  styleUrl: 'game-list.component.scss',
   animations: [
     trigger('listAnimation', [
       transition('* => *', [
@@ -187,17 +157,6 @@ export class GameListComponent {
     status: [''],
   });
 
-  get isFiltered(): boolean {
-    return (
-      !this.filters.dirty &&
-      !!(
-        this.filters.value.league ||
-        this.filters.value.team ||
-        this.filters.value.status
-      )
-    );
-  }
-
   uniqueLeagues = toSignal(
     this._gameService.games$.pipe(
       map((games) => [...new Set(games.map((g) => g.league))]),
@@ -207,7 +166,7 @@ export class GameListComponent {
   uniqueTeams = toSignal(
     this._gameService.games$.pipe(
       map((games) => [
-        ...new Set(games.flatMap((g) => [g.homeTeam, g.awayTeam])),
+        ...new Set(games.flatMap((g) => [g.homeTeamName, g.awayTeamName])),
       ]),
     ),
   );
@@ -225,12 +184,13 @@ export class GameListComponent {
           if (filters.league && game.league !== filters.league) return false;
           if (
             filters.team &&
-            game.homeTeam !== filters.team &&
-            game.awayTeam !== filters.team
-          )
+            game.homeTeamName !== filters.team &&
+            game.awayTeamName !== filters.team
+          ) {
             return false;
-          if (filters.status && game.status !== filters.status) return false;
-          return true;
+          }
+
+          return !(filters.status && game.status !== filters.status);
         });
       }),
     ),
@@ -246,5 +206,10 @@ export class GameListComponent {
 
   openCreateGameSheet(): void {
     this._bottomSheet.open(GameCreateComponent);
+  }
+
+  deleteGame(gameId: string): void {
+    if (!confirm('Are you sure you want to delete this game?')) return;
+    this._gameService.deleteGame(gameId);
   }
 }

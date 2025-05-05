@@ -9,8 +9,9 @@ import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { combineLatest, Observable, of } from 'rxjs';
+import { combineLatest, firstValueFrom, Observable, of } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+import { TeamService } from '../../teams';
 import { GameService } from '../game.service';
 import { Game } from '../models';
 
@@ -50,7 +51,7 @@ import { Game } from '../models';
               <mat-option [value]="option">{{ option }}</mat-option>
             }
           </mat-autocomplete>
-          @if (gameForm.get('league')?.hasError('required')) {
+          @if (inputs.league.hasError('required')) {
             <mat-error>League is required</mat-error>
           }
         </mat-form-field>
@@ -63,7 +64,7 @@ import { Game } from '../models';
             [for]="picker"
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          @if (gameForm.get('date')?.hasError('required')) {
+          @if (inputs.date.hasError('required')) {
             <mat-error>Date is required</mat-error>
           }
         </mat-form-field>
@@ -82,7 +83,7 @@ import { Game } from '../models';
               <mat-option [value]="option">{{ option }}</mat-option>
             }
           </mat-autocomplete>
-          @if (gameForm.get('homeTeam')?.hasError('required')) {
+          @if (inputs.homeTeam.hasError('required')) {
             <mat-error>Home team is required</mat-error>
           }
         </mat-form-field>
@@ -100,7 +101,7 @@ import { Game } from '../models';
               <mat-option [value]="option">{{ option }}</mat-option>
             }
           </mat-autocomplete>
-          @if (gameForm.get('awayTeam')?.hasError('required')) {
+          @if (inputs.awayTeam.hasError('required')) {
             <mat-error>Away team is required</mat-error>
           }
         </mat-form-field>
@@ -160,6 +161,7 @@ import { Game } from '../models';
 export class GameCreateComponent {
   private _fb = inject(FormBuilder);
   private _gameService = inject(GameService);
+  private _teamService = inject(TeamService);
   private _bottomSheetRef = inject(MatBottomSheetRef);
 
   @ViewChild('homeTeamInput') homeTeamInput!: ElementRef<HTMLInputElement>;
@@ -173,28 +175,51 @@ export class GameCreateComponent {
     awayTeam: ['', Validators.required],
   });
 
-  // Get unique leagues and teams from existing games
+  get inputs() {
+    return this.gameForm.controls;
+  }
+
+  // Get unique leagues from existing games
   private _leagues$ = this.getUniqueValues('league');
-  private _teams$ = this.getUniqueValues('homeTeam', 'awayTeam');
+
+  // Get team names from TeamService
+  private _teams$ = this.getTeamNames();
+  private _teamIdByName$ = this._teamService.teams$.pipe(
+    map((teams) =>
+      teams.reduce(
+        (acc, team) => {
+          acc[team.name] = team.id;
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
+    ),
+    shareReplay(1),
+  );
 
   // Create filtered observables for autocomplete
   filteredLeagues$ = this.createFilteredObservable('league', this._leagues$);
   filteredHomeTeams$ = this.createFilteredObservable('homeTeam', this._teams$);
   filteredAwayTeams$ = this.createFilteredObservable('awayTeam', this._teams$);
 
-  private getUniqueValues(...fields: Array<keyof Game>): Observable<string[]> {
+  private getUniqueValues(field: keyof Game): Observable<string[]> {
     return this._gameService.games$.pipe(
       map((games) => {
         const values = new Set<string>();
         games.forEach((game) => {
-          fields.forEach((field) => {
-            if (game[field]) {
-              values.add(game[field] as string);
-            }
-          });
+          if (game[field]) {
+            values.add(game[field] as string);
+          }
         });
         return Array.from(values);
       }),
+      shareReplay(1),
+    );
+  }
+
+  private getTeamNames(): Observable<string[]> {
+    return this._teamService.getTeams().pipe(
+      map((teams) => teams.map((team) => team.name)),
       shareReplay(1),
     );
   }
@@ -234,13 +259,17 @@ export class GameCreateComponent {
     this._bottomSheetRef.dismiss();
   }
 
-  onSubmit(addAnother = false): void {
+  async onSubmit(addAnother = false): Promise<void> {
     if (this.gameForm.valid) {
+      const teams = await firstValueFrom(this._teamIdByName$);
+      const fv = this.gameForm.value;
       this._gameService.createGame({
-        league: this.gameForm.value.league as string,
-        homeTeam: this.gameForm.value.homeTeam as string,
-        awayTeam: this.gameForm.value.awayTeam as string,
-        date: this.gameForm.value.date as Date,
+        league: fv.league as string,
+        homeTeamId: teams[fv.homeTeam as string],
+        homeTeamName: fv.homeTeam as string,
+        awayTeamId: teams[fv.awayTeam as string],
+        awayTeamName: fv.awayTeam as string,
+        date: fv.date as Date,
       });
 
       this.gamesCreated++;

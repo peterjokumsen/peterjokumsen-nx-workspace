@@ -12,12 +12,12 @@ import { GameService } from '../game.service';
       @if (game(); as game) {
         <div class="teams">
           <div class="team">
-            <h2>{{ game.homeTeam }}</h2>
+            <h2>{{ game.homeTeamName }}</h2>
             <div class="score">0</div>
           </div>
           <div class="vs">VS</div>
           <div class="team">
-            <h2>{{ game.awayTeam }}</h2>
+            <h2>{{ game.awayTeamName }}</h2>
             <div class="score">0</div>
           </div>
         </div>

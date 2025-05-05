@@ -3,6 +3,8 @@ export interface Game {
   date: Date;
   league: string;
   status: 'pending' | 'in-progress' | 'completed';
-  homeTeam: string;
-  awayTeam: string;
+  homeTeamId?: string;
+  homeTeamName: string;
+  awayTeamId?: string;
+  awayTeamName: string;
 }
