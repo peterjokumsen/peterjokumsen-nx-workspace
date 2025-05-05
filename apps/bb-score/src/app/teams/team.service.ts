@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { Player, Team, TeamSummary } from './models';
 
 const STORAGE_KEY = 'bb-score-teams';
@@ -96,33 +96,38 @@ export class TeamService {
     this.saveTeams(teams);
   }
 
-  addPlayer(teamId: string, player: Omit<Player, 'id'>): void {
+  addPlayer(
+    teamId: string,
+    player: Omit<Player, 'id'>,
+  ): Observable<Player | null> {
     const team = this.loadTeams().find((t) => t.id === teamId);
-    if (team) {
-      const newPlayer: Player = {
-        ...player,
-        id: Math.random().toString(36).substring(2, 9),
-      };
-      const updatedTeam: Team = {
-        ...team,
-        players: [...team.players, newPlayer],
-      };
-      this.updateTeam(updatedTeam);
-    }
+    if (!team) return of(null);
+
+    const newPlayer: Player = {
+      ...player,
+      id: Math.random().toString(36).substring(2, 9),
+    };
+    const updatedTeam: Team = {
+      ...team,
+      players: [...team.players, newPlayer],
+    };
+    this.updateTeam(updatedTeam);
+    return of(newPlayer);
   }
 
-  updatePlayer(teamId: string, player: Player): void {
+  updatePlayer(teamId: string, player: Player): Observable<Player | null> {
     const team = this.loadTeams().find((t) => t.id === teamId);
-    if (team) {
-      const updatedPlayers = team.players.map((p) =>
-        p.id === player.id ? player : p,
-      );
-      const updatedTeam: Team = {
-        ...team,
-        players: updatedPlayers,
-      };
-      this.updateTeam(updatedTeam);
-    }
+    if (!team) return of(null);
+
+    const updatedPlayers = team.players.map((p) =>
+      p.id === player.id ? player : p,
+    );
+    const updatedTeam: Team = {
+      ...team,
+      players: updatedPlayers,
+    };
+    this.updateTeam(updatedTeam);
+    return of(player);
   }
 
   removePlayer(teamId: string, playerId: string): void {

@@ -1,16 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  MatBottomSheet,
-  MatBottomSheetModule,
-} from '@angular/material/bottom-sheet';
+import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
-import { PlayerEditComponent, Team, TeamService } from '../../teams';
+import { Team, TeamService } from '../../teams';
 import { GameService } from '../game.service';
 import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
 
@@ -34,7 +31,6 @@ import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
         <mat-tab label="Home Team">
           <app-lineup-edit
             [team]="currentTeam$ | async"
-            (addPlayer)="addNewPlayer($event)"
             (saveLineup)="saveLineup()"
           >
           </app-lineup-edit>
@@ -43,7 +39,6 @@ import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
         <mat-tab label="Away Team">
           <app-lineup-edit
             [team]="currentTeam$ | async"
-            (addPlayer)="addNewPlayer($event)"
             (saveLineup)="saveLineup()"
           >
           </app-lineup-edit>
@@ -87,7 +82,6 @@ import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
 export class GameScoreManageComponent implements OnInit {
   private _teamService = inject(TeamService);
   private _gameService = inject(GameService);
-  private _bottomSheet = inject(MatBottomSheet);
   private _snackBar = inject(MatSnackBar);
   private _currentTeamIdSubject = new BehaviorSubject<string | null>(null);
   private _game = toSignal(this._gameService.selectedGame$);
@@ -115,20 +109,6 @@ export class GameScoreManageComponent implements OnInit {
     } else if (index === 1 && this.awayTeamId()) {
       this._currentTeamIdSubject.next(this.awayTeamId());
     }
-  }
-
-  addNewPlayer(teamId: string): void {
-    this._bottomSheet
-      .open(PlayerEditComponent, {
-        data: { teamId },
-      })
-      .afterDismissed()
-      .subscribe(() => {
-        // Refresh the current team to get the updated player list
-        if (teamId) {
-          this._teamService.getTeam(teamId).subscribe();
-        }
-      });
   }
 
   saveLineup(): void {

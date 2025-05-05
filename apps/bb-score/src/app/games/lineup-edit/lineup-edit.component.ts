@@ -49,10 +49,9 @@ import { PlayerSelectComponent } from './player-select/player-select.component';
           >
             <div [formGroupName]="i">
               <app-player-select
-                [team]="team"
                 [playerForm]="playerCtrl"
                 [label]="'Player ' + (i + 1)"
-                (addPlayer)="onAddNewPlayer($event)"
+                [isStarter]="true"
               ></app-player-select>
             </div>
           </div>
@@ -66,10 +65,8 @@ import { PlayerSelectComponent } from './player-select/player-select.component';
           >
             <div [formGroupName]="i">
               <app-player-select
-                [team]="team"
                 [playerForm]="playerCtrl"
                 [label]="'Bench Player ' + (i + 1)"
-                (addPlayer)="onAddNewPlayer($event)"
               ></app-player-select>
             </div>
           </div>
@@ -94,7 +91,11 @@ import { PlayerSelectComponent } from './player-select/player-select.component';
     }
 
     .player-row {
-      margin-bottom: 8px;
+      padding: 20px 10px 0;
+
+      &:nth-child(even) {
+        background-color: var(--mat-sys-surface-container-high);
+      }
     }
 
     .player-select-container {
@@ -118,10 +119,13 @@ export class LineupEditComponent {
   currentTeam = signal<Team | null>(null);
 
   @Input() set team(value: Team | null) {
+    const current = this.currentTeam();
+    if (current?.id === value?.id) return;
+
     this.currentTeam.update(() => value);
     this.resetLineupForm();
   }
-  @Output() addPlayer = new EventEmitter<string>();
+
   @Output() saveLineup = new EventEmitter<unknown>();
 
   lineupForm = this._fb.group({
@@ -146,7 +150,7 @@ export class LineupEditComponent {
 
     // Add 9 starter slots
     for (let i = 0; i < 9; i++) {
-      this.lineupForm.controls.starters.push(this.createPlayerFormGroup());
+      this.lineupForm.controls.starters.push(this.createPlayerFormGroup(true));
     }
 
     // Add 6 bench slots
@@ -155,16 +159,19 @@ export class LineupEditComponent {
     }
   }
 
-  createPlayerFormGroup(): FormGroup {
+  createPlayerFormGroup(starter = false): FormGroup {
+    if (starter) {
+      return this._fb.group({
+        playerId: [null],
+        playerNumber: [null],
+        position: [null],
+      });
+    }
+
     return this._fb.group({
       playerId: [null],
       playerNumber: [null],
-      position: [null],
     });
-  }
-
-  onAddNewPlayer(teamId: string): void {
-    this.addPlayer.emit(teamId);
   }
 
   onSaveLineup(): void {

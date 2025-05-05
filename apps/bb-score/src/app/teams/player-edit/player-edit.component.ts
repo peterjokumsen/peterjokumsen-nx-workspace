@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { firstValueFrom, Observable } from 'rxjs';
 import { Player } from '../models';
 import { TeamService } from '../team.service';
 
@@ -144,35 +145,41 @@ export class PlayerEditComponent {
   });
 
   onCancel(): void {
-    this._bottomSheetRef.dismiss();
+    this._bottomSheetRef.dismiss(null);
   }
 
-  onSubmit(): void {
-    if (this.playerForm.valid) {
-      const playerData: Omit<Player, 'id'> = {
-        name: this.playerForm.value.name as string,
-        number: this.playerForm.value.number || undefined,
-        league: (this.playerForm.value.league ?? '')
-          .split(' ')
-          .filter((l) => l),
-      };
-
-      if (this.isEdit && this.player) {
-        this._teamService.updatePlayer(this.teamId, {
-          ...this.player,
-          ...playerData,
-        });
-        this._snackBar.open('Player updated successfully', 'Close', {
-          duration: 3000,
-        });
-      } else {
-        this._teamService.addPlayer(this.teamId, playerData);
-        this._snackBar.open('Player added successfully', 'Close', {
-          duration: 3000,
-        });
-      }
-
-      this._bottomSheetRef.dismiss();
+  async onSubmit(): Promise<void> {
+    if (!this.playerForm.valid) {
+      this._snackBar.open('Unable to submit player details', 'Close', {
+        duration: 3000,
+      });
+      return;
     }
+
+    const playerData: Omit<Player, 'id'> = {
+      name: this.playerForm.value.name as string,
+      number: this.playerForm.value.number || undefined,
+      league: (this.playerForm.value.league ?? '').split(' ').filter((l) => l),
+    };
+
+    let resultPlayer$: Observable<Player | null>;
+    let snackBarMessage: string;
+    if (this.isEdit && this.player) {
+      resultPlayer$ = this._teamService.updatePlayer(this.teamId, {
+        ...this.player,
+        ...playerData,
+      });
+      snackBarMessage = 'Player updated successfully';
+    } else {
+      resultPlayer$ = this._teamService.addPlayer(this.teamId, playerData);
+      snackBarMessage = 'Player added successfully';
+    }
+
+    const result = await firstValueFrom(resultPlayer$);
+    this._snackBar.open(snackBarMessage, 'Close', {
+      duration: 3000,
+    });
+
+    this._bottomSheetRef.dismiss(result);
   }
 }
