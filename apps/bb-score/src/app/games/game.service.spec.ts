@@ -50,6 +50,10 @@ describe('GameService', () => {
         homeTeamName: 'Team A',
         awayTeamName: 'Team B',
         league: 'League A',
+        homeTeamId: 'a',
+        homeLineup: undefined,
+        awayTeamId: 'b',
+        awayLineup: undefined,
       },
     ];
     mockLocalStorage['bb-score-games'] = JSON.stringify(savedGames);
@@ -61,11 +65,13 @@ describe('GameService', () => {
   });
 
   it('should create a new game and save to localStorage', async () => {
-    const newGame: Omit<Game, 'id' | 'status'> = {
+    const newGame: Parameters<GameService['createGame']>[0] = {
       league: 'League 1',
       date: new Date(),
       homeTeamName: 'Team C',
       awayTeamName: 'Team D',
+      homeTeamId: 'c',
+      awayTeamId: 'd',
     };
 
     service.createGame(newGame);
@@ -87,11 +93,13 @@ describe('GameService', () => {
 
   it('should update an existing game and save to localStorage', async () => {
     // First create a game
-    const initialGame: Omit<Game, 'id' | 'status'> = {
+    const initialGame: Parameters<GameService['createGame']>[0] = {
       league: 'League 1',
       date: new Date(),
       homeTeamName: 'Team A',
       awayTeamName: 'Team B',
+      homeTeamId: 'a',
+      awayTeamId: 'b',
     };
     service.createGame(initialGame);
 
@@ -105,6 +113,10 @@ describe('GameService', () => {
       status: 'in-progress',
       homeTeamName: 'Team A',
       awayTeamName: 'Team B',
+      homeTeamId: 'a',
+      homeLineup: undefined,
+      awayTeamId: 'b',
+      awayLineup: undefined,
     };
 
     service.updateGame(updatedGame);
@@ -122,10 +134,12 @@ describe('GameService', () => {
 
   it('should delete a game and update localStorage', async () => {
     // First create a game
-    const game: Omit<Game, 'id' | 'status'> = {
+    const game: Parameters<GameService['createGame']>[0] = {
       league: 'League 1',
       date: new Date(),
+      homeTeamId: 'a',
       homeTeamName: 'Team A',
+      awayTeamId: 'b',
       awayTeamName: 'Team B',
     };
     service.createGame(game);
@@ -144,11 +158,13 @@ describe('GameService', () => {
 
   it('should get a game by id', async () => {
     // First create a game
-    const game: Omit<Game, 'id' | 'status'> = {
+    const game: Parameters<GameService['createGame']>[0] = {
       league: 'League 1',
       date: new Date(),
       homeTeamName: 'Team A',
       awayTeamName: 'Team B',
+      homeTeamId: 'a',
+      awayTeamId: 'b',
     };
     service.createGame(game);
 

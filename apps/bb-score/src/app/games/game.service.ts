@@ -20,9 +20,9 @@ export class GameService {
     const savedGames = this._storage.getItem(STORAGE_KEY);
     if (savedGames) {
       try {
-        const games = JSON.parse(savedGames);
+        const games = JSON.parse(savedGames) as Game[];
         // Convert date strings back to Date objects
-        return games.map((game: any) => ({
+        return games.map((game) => ({
           ...game,
           date: new Date(game.date),
         }));
@@ -59,11 +59,21 @@ export class GameService {
     return this.selectedGame$.pipe(first());
   }
 
-  createGame(game: Omit<Game, 'id' | 'status'>): void {
+  createGame(
+    game: Omit<Game, 'id' | 'status' | 'homeLineup' | 'awayLineup'>,
+  ): void {
     const newGame: Game = {
       ...game,
       id: Math.random().toString(36).substring(2, 9),
       status: 'pending',
+      homeLineup: {
+        starters: [],
+        bench: [],
+      },
+      awayLineup: {
+        starters: [],
+        bench: [],
+      },
     };
     const updatedGames = [...this._gamesSubject.value, newGame];
     this._gamesSubject.next(updatedGames);
