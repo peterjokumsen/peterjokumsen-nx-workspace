@@ -11,6 +11,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { map, Observable, startWith, tap } from 'rxjs';
 import { Player, PlayerEditComponent, TeamService } from '../../../teams';
+import { Position } from '../../models';
 
 @Component({
   selector: 'app-player-select',
@@ -120,17 +121,16 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
   @Input() label = 'Player';
   @Input() isStarter = false;
 
-  fieldPositions = [
-    { value: 'P', viewValue: 'Pitcher' },
-    { value: 'C', viewValue: 'Catcher' },
-    { value: '1B', viewValue: '1st Base' },
-    { value: '2B', viewValue: '2nd Base' },
-    { value: '3B', viewValue: '3rd Base' },
-    { value: 'SS', viewValue: 'Shortstop' },
-    { value: 'LF', viewValue: 'Left Field' },
-    { value: 'CF', viewValue: 'Center Field' },
-    { value: 'RF', viewValue: 'Right Field' },
-    { value: 'DH', viewValue: 'Designated Hitter' },
+  fieldPositions: Array<{ value: Position; viewValue: string }> = [
+    this.createPlayerLookup('P', 'Pitcher'),
+    this.createPlayerLookup('C', 'Catcher'),
+    this.createPlayerLookup('1', '1st Base'),
+    this.createPlayerLookup('2', '2nd Base'),
+    this.createPlayerLookup('3', '3rd Base'),
+    this.createPlayerLookup('SS', 'Shortstop'),
+    this.createPlayerLookup('LF', 'Left Field'),
+    this.createPlayerLookup('CF', 'Center Field'),
+    this.createPlayerLookup('RF', 'Right Field'),
   ];
 
   filteredPlayers$!: Observable<Player[]>;
@@ -145,6 +145,10 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
 
   get playerPositionControl() {
     return this.playerForm.get('position');
+  }
+
+  private createPlayerLookup(value: Position, viewValue: string) {
+    return { value, viewValue };
   }
 
   ngOnInit(): void {
@@ -197,7 +201,6 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
   }
 
   displayFn(playerId: string): string {
-    console.log('displayFn: ', playerId);
     if (!playerId || !this.team() || !this.team()?.players) {
       return '';
     }

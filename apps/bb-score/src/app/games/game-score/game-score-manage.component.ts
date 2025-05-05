@@ -10,6 +10,7 @@ import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
 import { Team, TeamService } from '../../teams';
 import { GameService } from '../game.service';
 import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
+import { Lineup } from '../models';
 
 @Component({
   selector: 'app-game-score-manage',
@@ -31,7 +32,8 @@ import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
         <mat-tab label="Home Team">
           <app-lineup-edit
             [team]="currentTeam$ | async"
-            (saveLineup)="saveLineup()"
+            [lineup]="homeLineup()"
+            (saveLineup)="saveLineup($event)"
           >
           </app-lineup-edit>
         </mat-tab>
@@ -39,7 +41,8 @@ import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
         <mat-tab label="Away Team">
           <app-lineup-edit
             [team]="currentTeam$ | async"
-            (saveLineup)="saveLineup()"
+            [lineup]="awayLineup()"
+            (saveLineup)="saveLineup($event)"
           >
           </app-lineup-edit>
         </mat-tab>
@@ -90,6 +93,8 @@ export class GameScoreManageComponent implements OnInit {
   awayTeamId = computed(() => this._game()?.awayTeamId ?? '');
   homeTeamName = computed(() => this._game()?.homeTeamName ?? '');
   awayTeamName = computed(() => this._game()?.awayTeamName ?? '');
+  homeLineup = computed(() => this._game()?.homeLineup);
+  awayLineup = computed(() => this._game()?.awayLineup);
 
   currentTeam$: Observable<Team | null> = this._currentTeamIdSubject.pipe(
     switchMap((teamId) => {
@@ -111,10 +116,35 @@ export class GameScoreManageComponent implements OnInit {
     }
   }
 
-  saveLineup(): void {
-    // Here you would save the lineup data to your game model
-    // For now, just show a success message
-    this._snackBar.open('Lineup save to be implemented', 'Close', {
+  saveLineup(lineupData: Lineup | null): void {
+    const game = this._game();
+    if (!game) {
+      this._snackBar.open('No game selected', 'Close', {
+        duration: 3000,
+      });
+      return;
+    }
+
+    // Determine if we're saving home or away lineup based on the current team
+    const currentTeamId = this._currentTeamIdSubject.value;
+    const isHomeTeam = currentTeamId === game.homeTeamId;
+
+    // Create a copy of the game to update
+    const updatedGame = { ...game };
+
+    // Update the appropriate lineup
+    if (isHomeTeam) {
+      updatedGame.homeLineup = lineupData ?? undefined;
+    } else {
+      updatedGame.awayLineup = lineupData ?? undefined;
+    }
+
+    // Save the updated game
+    this._gameService.updateGame(updatedGame);
+
+    // Show success message
+    const teamType = isHomeTeam ? 'Home' : 'Away';
+    this._snackBar.open(`${teamType} team lineup saved successfully`, 'Close', {
       duration: 3000,
     });
   }
