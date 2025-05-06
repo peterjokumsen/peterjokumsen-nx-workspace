@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, first, Observable } from 'rxjs';
+import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
 import { Game } from './models';
 
 const STORAGE_KEY = 'bb-score-games';
@@ -21,6 +21,8 @@ export class GameService {
     if (savedGames) {
       try {
         const games = JSON.parse(savedGames) as Game[];
+        this._loaded = true;
+
         // Convert date strings back to Date objects
         return games.map((game) => ({
           ...game,
@@ -54,9 +56,15 @@ export class GameService {
   }
 
   getGame(id: string): Observable<Game | null> {
-    const game = this._gamesSubject.value.find((game) => game.id === id);
-    this._selectedGameSubject.next(game ?? null);
-    return this.selectedGame$.pipe(first());
+    const games$ = this.getGames();
+
+    return games$.pipe(
+      map((games) => games.find((game) => game.id === id) ?? null),
+      tap((game) => {
+        this._selectedGameSubject.next(game);
+      }),
+      first(),
+    );
   }
 
   createGame(
