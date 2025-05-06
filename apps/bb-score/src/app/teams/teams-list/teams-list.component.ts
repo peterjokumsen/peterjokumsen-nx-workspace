@@ -37,9 +37,8 @@ import { TeamService } from '../team.service';
           @if (teams.length === 0) {
             <mat-card>
               <mat-card-content>
-                <p class="no-teams">
-                  No teams found. Create a team to get started.
-                </p>
+                <p class="no-teams">No teams found.</p>
+                <p class="no-teams">Create a team to get started.</p>
               </mat-card-content>
             </mat-card>
           } @else {
@@ -80,10 +79,20 @@ import { TeamService } from '../team.service';
         margin-bottom: 16px;
       }
 
+      mat-card > mat-card-content {
+        align-items: center;
+        display: flex;
+        flex-flow: column nowrap;
+        gap: 16px;
+        justify-content: center;
+        padding: 24px;
+      }
+
       .no-teams {
         text-align: center;
-        padding: 24px;
-        color: rgba(0, 0, 0, 0.54);
+        padding: 0;
+        margin: 0;
+        color: var(--mat-sys-on-surface);
       }
 
       .teams-list {

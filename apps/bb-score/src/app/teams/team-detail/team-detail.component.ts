@@ -138,7 +138,8 @@ import { TeamService } from '../team.service';
       .no-players {
         text-align: center;
         padding: 24px;
-        color: rgba(0, 0, 0, 0.54);
+        margin: 0;
+        color: var(--mat-sys-on-surface);
       }
 
       .players-list {
