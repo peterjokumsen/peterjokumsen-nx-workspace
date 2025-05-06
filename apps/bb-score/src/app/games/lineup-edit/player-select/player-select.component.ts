@@ -93,6 +93,7 @@ import { Position } from '../../models';
       display: flex;
       align-items: center;
       margin-bottom: 1rem;
+      gap: 10px;
 
       .header {
         font-size: 1.25rem;
@@ -166,22 +167,13 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
     return this.playerForm.get('playerNumber');
   }
 
-  get playerPositionControl() {
-    return this.playerForm.get('position');
-  }
-
   private createPlayerLookup(value: Position, viewValue: string) {
     return { value, viewValue };
   }
 
-  ngOnInit(): void {
-    this.initFilteredPlayers();
-  }
-
-  ngOnChanges(): void {
-    if (this.team() && this.playerForm) {
-      this.initFilteredPlayers();
-    }
+  private updatePlayerNumber(playerNumber: number | undefined): void {
+    if (!this.playerNumberControl || this.playerNumberControl.value) return;
+    this.playerNumberControl.patchValue(playerNumber ?? null);
   }
 
   private initFilteredPlayers(): void {
@@ -198,10 +190,8 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
           const selectedPlayer = this.team()?.players.find(
             (p) => p.id === playerId,
           );
-          if (selectedPlayer && this.playerNumberControl) {
-            // Update player number if available
-            this.playerNumberControl.patchValue(selectedPlayer.number || null);
-          }
+          if (!this.playerNumberControl) return;
+          this.updatePlayerNumber(selectedPlayer?.number);
         }
       });
     }
@@ -221,6 +211,16 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
           (player.number && player.number.toString().includes(filterValue)),
       ) ?? []
     );
+  }
+
+  ngOnInit(): void {
+    this.initFilteredPlayers();
+  }
+
+  ngOnChanges(): void {
+    if (this.team() && this.playerForm) {
+      this.initFilteredPlayers();
+    }
   }
 
   displayFn(playerId: string): string {
@@ -243,11 +243,7 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
       .subscribe((p: Player | null) => {
         if (p) {
           this.playerIdControl?.patchValue(p.id);
-
-          // If the player has a number, update the playerNumber field
-          if (p.number && this.playerNumberControl) {
-            this.playerNumberControl.patchValue(p.number);
-          }
+          this.updatePlayerNumber(p.number);
         }
       });
   }
