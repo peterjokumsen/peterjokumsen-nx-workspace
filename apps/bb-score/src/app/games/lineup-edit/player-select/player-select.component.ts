@@ -96,7 +96,6 @@ import { Position } from '../../models';
       gap: 10px;
 
       .header {
-        font-size: 1.25rem;
         font-weight: bold;
       }
 
