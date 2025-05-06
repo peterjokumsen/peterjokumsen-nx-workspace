@@ -27,25 +27,40 @@ import { Position } from '../../models';
     MatSelectModule,
   ],
   template: `
+    <div class="title">
+      <span class="header">{{ label }}</span>
+      <span class="spacer"></span>
+      <button
+        matSuffix
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="addNewPlayer()"
+        tabindex="-1"
+      >
+        <mat-icon>add_circle</mat-icon>
+        Add New Player
+      </button>
+    </div>
     <div [formGroup]="playerForm" class="player-select-container">
+      <mat-form-field appearance="outline" class="player-number">
+        <mat-label>Number</mat-label>
+        <input
+          matInput
+          type="number"
+          formControlName="playerNumber"
+          placeholder="Player #"
+        />
+      </mat-form-field>
+
       <mat-form-field appearance="outline" class="player-select">
-        <mat-label>{{ label }}</mat-label>
+        <mat-label>Name</mat-label>
         <input
           matInput
           formControlName="playerId"
           [matAutocomplete]="playerAuto"
           placeholder="Type player name or number to find player"
         />
-        <button
-          matSuffix
-          mat-icon-button
-          color="primary"
-          type="button"
-          (click)="addNewPlayer()"
-          tabindex="-1"
-        >
-          <mat-icon>add_circle</mat-icon>
-        </button>
         <mat-autocomplete
           #playerAuto="matAutocomplete"
           [displayWith]="displayFn.bind(this)"
@@ -60,55 +75,63 @@ import { Position } from '../../models';
       </mat-form-field>
 
       @if (isStarter) {
-        <div class="additional-fields">
-          <mat-form-field appearance="outline" class="player-number">
-            <mat-label>Number</mat-label>
-            <input
-              matInput
-              type="number"
-              formControlName="playerNumber"
-              placeholder="Player #"
-            />
-          </mat-form-field>
-
-          <mat-form-field appearance="outline" class="player-position">
-            <mat-label>Position</mat-label>
-            <mat-select formControlName="position">
-              @for (position of fieldPositions; track position.value) {
-                <mat-option [value]="position.value">
-                  {{ position.viewValue }}
-                </mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        </div>
+        <mat-form-field appearance="outline" class="player-position">
+          <mat-label>Position</mat-label>
+          <mat-select formControlName="position">
+            @for (position of fieldPositions; track position.value) {
+              <mat-option [value]="position.value">
+                {{ position.viewValue }}
+              </mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
       }
     </div>
   `,
   styles: `
+    .title {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 10px;
+
+      .header {
+        font-weight: bold;
+      }
+
+      .spacer {
+        flex-grow: 1;
+      }
+    }
+
     .player-select-container {
       display: flex;
       flex-direction: column;
+      gap: 5px;
       width: 100%;
+
+      @media (min-width: 710px) {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: end;
+      }
     }
 
     .player-select {
-      width: 100%;
-    }
-
-    .additional-fields {
-      display: flex;
-      gap: 16px;
-      margin-top: 8px;
-      width: 100%;
+      flex-grow: 1;
     }
 
     .player-number {
-      width: 100px;
+      @media (min-width: 710px) {
+        max-width: 10ch;
+
+        input {
+          text-align: center;
+        }
+      }
     }
 
     .player-position {
-      flex: 1;
     }
   `,
 })
@@ -143,22 +166,13 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
     return this.playerForm.get('playerNumber');
   }
 
-  get playerPositionControl() {
-    return this.playerForm.get('position');
-  }
-
   private createPlayerLookup(value: Position, viewValue: string) {
     return { value, viewValue };
   }
 
-  ngOnInit(): void {
-    this.initFilteredPlayers();
-  }
-
-  ngOnChanges(): void {
-    if (this.team() && this.playerForm) {
-      this.initFilteredPlayers();
-    }
+  private updatePlayerNumber(playerNumber: number | undefined): void {
+    if (!this.playerNumberControl || this.playerNumberControl.value) return;
+    this.playerNumberControl.patchValue(playerNumber ?? null);
   }
 
   private initFilteredPlayers(): void {
@@ -175,10 +189,8 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
           const selectedPlayer = this.team()?.players.find(
             (p) => p.id === playerId,
           );
-          if (selectedPlayer && this.playerNumberControl) {
-            // Update player number if available
-            this.playerNumberControl.patchValue(selectedPlayer.number || null);
-          }
+          if (!this.playerNumberControl) return;
+          this.updatePlayerNumber(selectedPlayer?.number);
         }
       });
     }
@@ -198,6 +210,16 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
           (player.number && player.number.toString().includes(filterValue)),
       ) ?? []
     );
+  }
+
+  ngOnInit(): void {
+    this.initFilteredPlayers();
+  }
+
+  ngOnChanges(): void {
+    if (this.team() && this.playerForm) {
+      this.initFilteredPlayers();
+    }
   }
 
   displayFn(playerId: string): string {
@@ -220,11 +242,7 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
       .subscribe((p: Player | null) => {
         if (p) {
           this.playerIdControl?.patchValue(p.id);
-
-          // If the player has a number, update the playerNumber field
-          if (p.number && this.playerNumberControl) {
-            this.playerNumberControl.patchValue(p.number);
-          }
+          this.updatePlayerNumber(p.number);
         }
       });
   }
