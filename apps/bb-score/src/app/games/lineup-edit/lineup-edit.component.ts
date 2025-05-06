@@ -93,10 +93,11 @@ import { PlayerSelectComponent } from './player-select/player-select.component';
     }
 
     .player-row {
-      padding: 20px 10px 0;
+      padding: 8px 10px 0;
 
       &:nth-child(even) {
         background-color: var(--mat-sys-surface-container-high);
+        border-radius: 12px;
       }
     }
 
