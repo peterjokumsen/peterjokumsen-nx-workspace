@@ -1,0 +1,79 @@
+<div class="game-list-container">
+  <div class="header">
+    <h1>Available Games</h1>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="openCreateGameSheet()"
+    >
+      <mat-icon>add</mat-icon>
+      New Game(s)
+    </button>
+  </div>
+
+  <div class="filters">
+    <mat-form-field>
+      <mat-label>League</mat-label>
+      <mat-select [formControl]="filters.controls.league">
+        <mat-option [value]="''">All Leagues</mat-option>
+        @for (league of uniqueLeagues(); track league) {
+          <mat-option [value]="league">{{ league }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Team</mat-label>
+      <mat-select [formControl]="filters.controls.team">
+        <mat-option [value]="''">All Teams</mat-option>
+        @for (team of uniqueTeams(); track team) {
+          <mat-option [value]="team">{{ team }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="filters.controls.status">
+        <mat-option [value]="''">All Statuses</mat-option>
+        <mat-option value="pending">Pending</mat-option>
+        <mat-option value="in-progress">In Progress</mat-option>
+        <mat-option value="completed">Completed</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="filter-controls">
+    <button
+      mat-stroked-button
+      (click)="clearFilters()"
+      [disabled]="!filters.dirty"
+    >
+      <mat-icon>clear_all</mat-icon>
+      Clear Filters
+    </button>
+  </div>
+
+  @let filtered = filteredGames();
+  @if (filtered && filtered.length > 0) {
+    <div class="games-grid" [@listAnimation]>
+      @for (game of filtered; track game.id) {
+        <app-game-card [game]="game">
+          <mat-card-actions class="game-actions">
+            <button mat-raised-button [routerLink]="['score', game.id]">
+              Score Game
+            </button>
+            <button
+              class="delete-game"
+              mat-raised-button
+              (click)="deleteGame(game.id)"
+            >
+              Delete Game
+            </button>
+          </mat-card-actions>
+        </app-game-card>
+      }
+    </div>
+  } @else {
+    <h2>No games found</h2>
+  }
+</div>

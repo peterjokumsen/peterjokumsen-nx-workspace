@@ -1,0 +1,23 @@
+<div class="game-lineup-container">
+  <h2>Game Lineup</h2>
+
+  <mat-tab-group (selectedIndexChange)="onTeamTabChange($event)">
+    <mat-tab label="Home Team">
+      <app-lineup-edit
+        [team]="currentTeam$ | async"
+        [lineup]="homeLineup()"
+        (saveLineup)="saveLineup($event)"
+      >
+      </app-lineup-edit>
+    </mat-tab>
+
+    <mat-tab label="Away Team">
+      <app-lineup-edit
+        [team]="currentTeam$ | async"
+        [lineup]="awayLineup()"
+        (saveLineup)="saveLineup($event)"
+      >
+      </app-lineup-edit>
+    </mat-tab>
+  </mat-tab-group>
+</div>

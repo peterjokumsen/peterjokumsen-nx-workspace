@@ -38,84 +38,8 @@ import { PlayerSelectComponent } from './player-select/player-select.component';
     MatBottomSheetModule,
     PlayerSelectComponent,
   ],
-  template: `
-    @let team = currentTeam();
-    <div class="lineup-form" *ngIf="team">
-      <h3>{{ team.name }} Lineup</h3>
-      <form [formGroup]="lineupForm">
-        <div formArrayName="starters">
-          <h4>Starting Lineup (9)</h4>
-          <div
-            class="player-row"
-            *ngFor="let playerCtrl of starterFormGroups; let i = index"
-          >
-            <div [formGroupName]="i">
-              <app-player-select
-                [playerForm]="playerCtrl"
-                [label]="'Player ' + (i + 1)"
-                [isStarter]="true"
-              ></app-player-select>
-            </div>
-          </div>
-        </div>
-
-        <div formArrayName="bench">
-          <h4>Bench Players</h4>
-          <div
-            class="player-row"
-            *ngFor="let playerCtrl of benchFormGroups; let i = index"
-          >
-            <div [formGroupName]="i">
-              <app-player-select
-                [playerForm]="playerCtrl"
-                [label]="'Bench Player ' + (i + 1)"
-              ></app-player-select>
-            </div>
-          </div>
-        </div>
-
-        <div class="actions">
-          <button
-            mat-raised-button
-            color="primary"
-            type="button"
-            (click)="onSaveLineup()"
-          >
-            Save Lineup
-          </button>
-        </div>
-      </form>
-    </div>
-  `,
-  styles: `
-    .lineup-form {
-      padding: 10px;
-    }
-
-    .player-row {
-      padding: 8px 10px 0;
-
-      &:nth-child(even) {
-        background-color: var(--mat-sys-surface-container-high);
-        border-radius: 12px;
-      }
-    }
-
-    .player-select-container {
-      display: flex;
-      align-items: center;
-    }
-
-    .player-select {
-      flex: 1;
-    }
-
-    .actions {
-      margin-top: 24px;
-      display: flex;
-      justify-content: flex-end;
-    }
-  `,
+  templateUrl: './lineup-edit.component.html',
+  styleUrl: './lineup-edit.component.scss',
 })
 export class LineupEditComponent {
   private _fb = inject(FormBuilder);

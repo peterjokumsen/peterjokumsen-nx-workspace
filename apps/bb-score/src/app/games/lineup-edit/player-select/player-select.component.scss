@@ -1,0 +1,44 @@
+.title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 10px;
+
+  .header {
+    font-weight: bold;
+  }
+
+  .spacer {
+    flex-grow: 1;
+  }
+}
+
+.player-select-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+
+  @media (min-width: 710px) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: end;
+  }
+}
+
+.player-select {
+  flex-grow: 1;
+}
+
+.player-number {
+  @media (min-width: 710px) {
+    max-width: 10ch;
+
+    input {
+      text-align: center;
+    }
+  }
+}
+
+.player-position {
+}

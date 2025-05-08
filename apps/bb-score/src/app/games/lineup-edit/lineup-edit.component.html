@@ -1,0 +1,47 @@
+@let team = currentTeam();
+<div class="lineup-form" *ngIf="team">
+  <h3>{{ team.name }} Lineup</h3>
+  <form [formGroup]="lineupForm">
+    <div formArrayName="starters">
+      <h4>Starting Lineup (9)</h4>
+      <div
+        class="player-row"
+        *ngFor="let playerCtrl of starterFormGroups; let i = index"
+      >
+        <div [formGroupName]="i">
+          <app-player-select
+            [playerForm]="playerCtrl"
+            [label]="'Player ' + (i + 1)"
+            [isStarter]="true"
+          ></app-player-select>
+        </div>
+      </div>
+    </div>
+
+    <div formArrayName="bench">
+      <h4>Bench Players</h4>
+      <div
+        class="player-row"
+        *ngFor="let playerCtrl of benchFormGroups; let i = index"
+      >
+        <div [formGroupName]="i">
+          <app-player-select
+            [playerForm]="playerCtrl"
+            [label]="'Bench Player ' + (i + 1)"
+          ></app-player-select>
+        </div>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        (click)="onSaveLineup()"
+      >
+        Save Lineup
+      </button>
+    </div>
+  </form>
+</div>

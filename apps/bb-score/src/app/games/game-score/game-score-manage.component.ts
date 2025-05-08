@@ -24,63 +24,8 @@ import { Lineup } from '../models';
     MatSnackBarModule,
     LineupEditComponent,
   ],
-  template: `
-    <div class="game-lineup-container">
-      <h2>Game Lineup</h2>
-
-      <mat-tab-group (selectedIndexChange)="onTeamTabChange($event)">
-        <mat-tab label="Home Team">
-          <app-lineup-edit
-            [team]="currentTeam$ | async"
-            [lineup]="homeLineup()"
-            (saveLineup)="saveLineup($event)"
-          >
-          </app-lineup-edit>
-        </mat-tab>
-
-        <mat-tab label="Away Team">
-          <app-lineup-edit
-            [team]="currentTeam$ | async"
-            [lineup]="awayLineup()"
-            (saveLineup)="saveLineup($event)"
-          >
-          </app-lineup-edit>
-        </mat-tab>
-      </mat-tab-group>
-    </div>
-  `,
-  styles: `
-    .game-lineup-container {
-      padding: 16px;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .team-info {
-      display: flex;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-
-    .team-card {
-      flex: 1;
-      padding: 16px;
-      border-radius: 8px;
-      background-color: #f5f5f5;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-
-    .team-card h3 {
-      margin-top: 0;
-      color: #555;
-    }
-
-    .team-card p {
-      font-size: 18px;
-      font-weight: 500;
-      margin-bottom: 0;
-    }
-  `,
+  templateUrl: './game-score-manage.component.html',
+  styleUrl: './game-score-manage.component.scss',
 })
 export class GameScoreManageComponent implements OnInit {
   private _teamService = inject(TeamService);
