@@ -9,9 +9,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { map, Observable, startWith, tap } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { Player, PlayerEditComponent, TeamService } from '../../../teams';
-import { Position } from '../../models';
+import { LineupService } from '../lineup.service';
 
 @Component({
   selector: 'app-player-select',
@@ -31,6 +31,7 @@ import { Position } from '../../models';
 })
 export class PlayerSelectComponent implements OnInit, OnChanges {
   private _bottomSheet = inject(MatBottomSheet);
+  private _lineupService = inject(LineupService);
   private _teamService = inject(TeamService);
 
   team = toSignal(this._teamService.selectedTeam$);
@@ -38,17 +39,8 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
   @Input() label = 'Player';
   @Input() isStarter = false;
 
-  fieldPositions: Array<{ value: Position; viewValue: string }> = [
-    this.createPlayerLookup('P', 'Pitcher'),
-    this.createPlayerLookup('C', 'Catcher'),
-    this.createPlayerLookup('1', '1st Base'),
-    this.createPlayerLookup('2', '2nd Base'),
-    this.createPlayerLookup('3', '3rd Base'),
-    this.createPlayerLookup('SS', 'Shortstop'),
-    this.createPlayerLookup('LF', 'Left Field'),
-    this.createPlayerLookup('CF', 'Center Field'),
-    this.createPlayerLookup('RF', 'Right Field'),
-  ];
+  fieldPositions = this._lineupService.fieldPositions;
+  disabledPositions = toSignal(this._lineupService.disabledPositions$);
 
   filteredPlayers$!: Observable<Player[]>;
 
@@ -60,8 +52,8 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
     return this.playerForm.get('playerNumber');
   }
 
-  private createPlayerLookup(value: Position, viewValue: string) {
-    return { value, viewValue };
+  get playerPositionControl() {
+    return this.playerForm.get('position');
   }
 
   private updatePlayerNumber(playerNumber: number | undefined): void {
@@ -72,9 +64,7 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
   private initFilteredPlayers(): void {
     if (this.playerIdControl) {
       this.filteredPlayers$ = this.playerIdControl.valueChanges.pipe(
-        tap((v) => console.log('value changed: ', v)),
-        startWith(''),
-        map((value) => (value.length < 1 ? [] : this.filterPlayers(value))),
+        map((value) => (value?.length >= 1 ? this.filterPlayers(value) : [])),
       );
 
       // Listen for player selection changes to update number and position

@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  DestroyRef,
   EventEmitter,
   inject,
   Input,
+  OnInit,
   Output,
   signal,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   FormArray,
   FormBuilder,
@@ -20,8 +23,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import {
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  Observable,
+} from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { Team } from '../../teams';
-import { GamePlayer, Lineup, StartingPlayer } from '../models';
+import { GamePlayer, Lineup, Position, StartingPlayer } from '../models';
+import { LineupService } from './lineup.service';
 import { PlayerSelectComponent } from './player-select/player-select.component';
 
 @Component({
@@ -38,11 +50,14 @@ import { PlayerSelectComponent } from './player-select/player-select.component';
     MatBottomSheetModule,
     PlayerSelectComponent,
   ],
+  providers: [LineupService],
   templateUrl: './lineup-edit.component.html',
   styleUrl: './lineup-edit.component.scss',
 })
-export class LineupEditComponent {
+export class LineupEditComponent implements OnInit {
+  private _destroyRef = inject(DestroyRef);
   private _fb = inject(FormBuilder);
+  private _lineupSvc = inject(LineupService);
   private _lineup: Lineup | undefined;
 
   currentTeam = signal<Team | null>(null);
@@ -65,11 +80,17 @@ export class LineupEditComponent {
   @Output() saveLineup = new EventEmitter<Lineup>();
 
   lineupForm = this._fb.group({
-    starters: this._fb.array([this.createStarterPlayerFormGroup()]),
+    starters: this._fb.array(
+      this._lineupSvc.fieldPositions.map(() =>
+        this.createStarterPlayerFormGroup(),
+      ),
+    ),
     bench: this._fb.array([this.createPlayerFormGroup()]),
   });
 
-  get starterFormGroups(): FormGroup[] {
+  get starterFormGroups(): Array<
+    ReturnType<LineupEditComponent['createStarterPlayerFormGroup']>
+  > {
     const arr = this.lineupForm.get('starters') as FormArray;
     return arr.controls as FormGroup[];
   }
@@ -77,6 +98,25 @@ export class LineupEditComponent {
   get benchFormGroups(): FormGroup[] {
     const arr = this.lineupForm.get('bench') as FormArray;
     return arr.controls as FormGroup[];
+  }
+
+  ngOnInit(): void {
+    const positionValueChanges: Observable<Position | null>[] = [];
+    for (const ctrl of this.starterFormGroups.map((c) => c.controls.position)) {
+      positionValueChanges.push(
+        ctrl.valueChanges.pipe(
+          startWith(ctrl.value),
+          map((v) => v ?? null),
+          distinctUntilChanged(),
+        ),
+      );
+    }
+
+    combineLatest(positionValueChanges)
+      .pipe(takeUntilDestroyed(this._destroyRef), debounceTime(10))
+      .subscribe((positions) => {
+        this._lineupSvc.updateDisabledPositions(positions.filter((p) => !!p));
+      });
   }
 
   createStarterPlayerFormGroup(init?: StartingPlayer) {
@@ -100,30 +140,14 @@ export class LineupEditComponent {
 
   populateLineupForm(lineup?: Lineup): void {
     lineup = lineup ?? this._lineup;
-    // Clear existing form arrays
-    this.lineupForm.controls.starters.clear();
+
+    const startingPlayers = this._lineupSvc.fieldPositions.map(
+      (_, i) => lineup?.starters[i] ?? {},
+    );
+    this.lineupForm.controls.starters.patchValue(startingPlayers);
+
+    // clear and populate bench
     this.lineupForm.controls.bench.clear();
-
-    console.log('lineup', lineup);
-
-    // Populate starters
-    if (Array.isArray(lineup?.starters)) {
-      lineup.starters.forEach((starter) => {
-        this.lineupForm.controls.starters.push(
-          this.createStarterPlayerFormGroup(starter),
-        );
-      });
-    }
-
-    // Add empty starter slots if needed to reach 9
-    const currentStarterCount = this.lineupForm.controls.starters.length;
-    for (let i = currentStarterCount; i < 9; i++) {
-      this.lineupForm.controls.starters.push(
-        this.createStarterPlayerFormGroup(),
-      );
-    }
-
-    // Populate bench
     if (Array.isArray(lineup?.bench)) {
       lineup.bench.forEach((benchPlayer) => {
         this.lineupForm.controls.bench.push(

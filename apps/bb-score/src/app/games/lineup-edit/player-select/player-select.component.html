@@ -20,7 +20,7 @@
       matInput
       type="number"
       formControlName="playerNumber"
-      placeholder="Player #"
+      placeholder="#"
     />
   </mat-form-field>
 
@@ -49,9 +49,16 @@
     <mat-form-field appearance="outline" class="player-position">
       <mat-label>Position</mat-label>
       <mat-select formControlName="position">
+        @let positionsUsed = disabledPositions() ?? [];
         @for (position of fieldPositions; track position.value) {
-          <mat-option [value]="position.value">
-            {{ position.viewValue }}
+          <mat-option
+            [value]="position.value"
+            [disabled]="
+              positionsUsed.includes(position.value) &&
+              position.value !== playerPositionControl?.value
+            "
+          >
+            {{ position.label }}
           </mat-option>
         }
       </mat-select>
