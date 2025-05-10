@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { SwUpdate, VersionEvent } from '@angular/service-worker';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { UpdateStatus } from '../models';
 import { SwUpdateService } from './sw-update.service';
 
 describe('SwUpdateService', () => {
@@ -40,40 +41,41 @@ describe('SwUpdateService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should emit true when a new version is ready', async () => {
-    versionUpdatesSubject.next({ type: 'VERSION_READY' } as VersionEvent);
+  describe('status$', () => {
+    const cases: Array<[VersionEvent['type'], UpdateStatus]> = [
+      ['VERSION_DETECTED', 'updating'],
+      ['NO_NEW_VERSION_DETECTED', 'current'],
+      ['VERSION_INSTALLATION_FAILED', 'failed'],
+      ['VERSION_READY', 'updated'],
+    ];
 
-    const isUpdateAvailable = await firstValueFrom(service.updateAvailable$);
-    expect(isUpdateAvailable).toBe(true);
+    describe.each(cases)(
+      'when version event type is "%s"',
+      (type, expectedStatus) => {
+        it(`should emit "${expectedStatus}"`, async () => {
+          versionUpdatesSubject.next({ type } as VersionEvent);
+
+          const actual = await firstValueFrom(service.status$);
+          expect(actual).toBe(expectedStatus);
+        });
+      },
+    );
   });
 
-  it('should not emit when other version update events occur', async () => {
-    versionUpdatesSubject.next({
-      type: 'VERSION_INSTALLATION_FAILED',
-    } as VersionEvent);
+  describe('activateUpdate', () => {
+    beforeEach(async () => {
+      versionUpdatesSubject.next({ type: 'VERSION_READY' } as VersionEvent);
+      await service.activateUpdate();
+    });
 
-    const isUpdateAvailable = await firstValueFrom(service.updateAvailable$);
-    expect(isUpdateAvailable).toBe(false);
-  });
+    it('should activate update and reload page', () => {
+      expect(mockSwUpdate.activateUpdate).toHaveBeenCalled();
+      expect(mockLocation.reload).toHaveBeenCalled();
+    });
 
-  it('should activate update and reload page', async () => {
-    await service.activateUpdate();
-
-    expect(mockSwUpdate.activateUpdate).toHaveBeenCalled();
-    expect(mockLocation.reload).toHaveBeenCalled();
-  });
-
-  it('should emit false after activating update', async () => {
-    // First emit true
-    versionUpdatesSubject.next({ type: 'VERSION_READY' } as VersionEvent);
-    let isUpdateAvailable = await firstValueFrom(service.updateAvailable$);
-    expect(isUpdateAvailable).toBe(true);
-
-    // Activate update
-    await service.activateUpdate();
-
-    // Should now be false
-    isUpdateAvailable = await firstValueFrom(service.updateAvailable$);
-    expect(isUpdateAvailable).toBe(false);
+    it('should emit "current" status after activating update', async () => {
+      const latestStatus = await firstValueFrom(service.status$);
+      expect(latestStatus).toEqual('current');
+    });
   });
 });
