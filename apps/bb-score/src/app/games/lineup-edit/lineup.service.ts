@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Position } from '../models';
+import { Lineup, Position } from '../models';
 
 @Injectable()
 export class LineupService {
+  private _playerIdsUsed = new BehaviorSubject<string[]>([]);
   private _inUsePositions = new BehaviorSubject<Position[]>([]);
   disabledPositions$ = this._inUsePositions.asObservable();
+  playerIdsUsed$ = this._playerIdsUsed.asObservable();
 
   readonly fieldPositions: Array<{
     value: Position;
@@ -33,5 +35,15 @@ export class LineupService {
 
   updateDisabledPositions(positions: Position[]): void {
     this._inUsePositions.next(positions);
+  }
+
+  updatePlayersUsed(lineup: Partial<Lineup>): void {
+    const starterIds = (lineup?.starters
+      ?.map((s) => s.playerId)
+      .filter((pId) => !!pId) ?? []) as string[];
+    const benchIds = (lineup?.bench
+      ?.map((b) => b.playerId)
+      .filter((pId) => !!pId) ?? []) as string[];
+    this._playerIdsUsed.next([...starterIds, ...benchIds]);
   }
 }
