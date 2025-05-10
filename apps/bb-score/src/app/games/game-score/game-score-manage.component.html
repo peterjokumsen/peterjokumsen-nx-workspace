@@ -1,9 +1,14 @@
 <mat-accordion>
-  <mat-expansion-panel [expanded]="true">
+  <mat-expansion-panel [expanded]="missingStarters()">
     <mat-expansion-panel-header>
-      <mat-panel-title> Lineup </mat-panel-title>
+      <mat-panel-title [class]="{ urgent: missingStarters() }"> Lineup </mat-panel-title>
       <mat-panel-description>
-        <!-- TODO: set description for lineup... -->
+        Update lineup details
+        @if (missingStarters()) {
+          <span class="urgent">
+            , {{ missingStarters() }}
+          </span>
+        }
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="lineup-container">

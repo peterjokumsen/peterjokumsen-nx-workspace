@@ -43,6 +43,23 @@ export class GameScoreManageComponent implements OnInit {
   homeLineup = computed(() => this._game()?.homeLineup);
   awayLineup = computed(() => this._game()?.awayLineup);
 
+  missingStarters = computed(() => {
+    const home =
+      this._game()?.homeLineup?.starters?.filter(
+        (s) => s.playerNumber || s.playerId,
+      ) ?? [];
+    const away =
+      this._game()?.awayLineup?.starters?.filter(
+        (s) => s.playerNumber || s.playerId,
+      ) ?? [];
+    if (home.length === 9 && away.length === 9) return null;
+    const messages = [
+      home.length !== 9 ? 'Home team is missing starting players' : null,
+      away.length !== 9 ? 'Away team is missing starting players' : null,
+    ];
+    return messages.filter((m) => m).join(' & ');
+  });
+
   currentTeam$: Observable<Team | null> = this._currentTeamIdSubject.pipe(
     switchMap((teamId) => {
       if (!teamId) return of(null);
