@@ -1,13 +1,36 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { Lineup, Position } from '../models';
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, map, switchMap } from 'rxjs';
+import { GameService } from '../game.service';
+import { Position } from '../models';
 
 @Injectable()
 export class LineupService {
-  private _playerIdsUsed = new BehaviorSubject<string[]>([]);
-  private _inUsePositions = new BehaviorSubject<Position[]>([]);
-  disabledPositions$ = this._inUsePositions.asObservable();
-  playerIdsUsed$ = this._playerIdsUsed.asObservable();
+  private _gameService = inject(GameService);
+  private _currentSide = new BehaviorSubject<'home' | 'away'>('home');
+  private _currentLineup$ = this._currentSide.pipe(
+    switchMap((side) =>
+      this._gameService.selectedGame$.pipe(
+        map((game) => game?.[`${side}Lineup`]),
+      ),
+    ),
+  );
+  disabledPositions$ = this._currentLineup$.pipe(
+    map((lineup) => {
+      const positions = lineup?.starters?.map((s) => s.position) ?? [];
+      return (positions.filter((p) => !!p) as Position[]) ?? [];
+    }),
+  );
+  playerIdsUsed$ = this._currentLineup$.pipe(
+    map((lineup) => {
+      const starterIds = (lineup?.starters
+        ?.map((s) => s.playerId)
+        .filter((pId) => !!pId) ?? []) as string[];
+      const benchIds = (lineup?.bench
+        ?.map((b) => b.playerId)
+        .filter((pId) => !!pId) ?? []) as string[];
+      return [...starterIds, ...benchIds];
+    }),
+  );
 
   readonly fieldPositions: Array<{
     value: Position;
@@ -33,17 +56,7 @@ export class LineupService {
     return { value, label, positionNumber };
   }
 
-  updateDisabledPositions(positions: Position[]): void {
-    this._inUsePositions.next(positions);
-  }
-
-  updatePlayersUsed(lineup: Partial<Lineup>): void {
-    const starterIds = (lineup?.starters
-      ?.map((s) => s.playerId)
-      .filter((pId) => !!pId) ?? []) as string[];
-    const benchIds = (lineup?.bench
-      ?.map((b) => b.playerId)
-      .filter((pId) => !!pId) ?? []) as string[];
-    this._playerIdsUsed.next([...starterIds, ...benchIds]);
+  sideChanged(side: 'home' | 'away'): void {
+    this._currentSide.next(side);
   }
 }
