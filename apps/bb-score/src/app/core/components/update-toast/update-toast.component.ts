@@ -28,7 +28,7 @@ import { SwUpdateService } from '../../services/sw-update.service';
             <span>Updating...</span>
           }
           @case ('failed') {
-            <span>Something went wrong while updating</span>
+            <span>Something went wrong while updating...</span>
             <button mat-button color="primary" (click)="refresh()">
               Refresh
             </button>
