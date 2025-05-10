@@ -78,6 +78,7 @@ export class LineupEditComponent implements OnInit {
   }
 
   @Output() saveLineup = new EventEmitter<Lineup>();
+  @Output() lineupUpdate = new EventEmitter<Lineup>();
 
   lineupForm = this._fb.group({
     starters: this._fb.array(
@@ -100,6 +101,15 @@ export class LineupEditComponent implements OnInit {
     return arr.controls as FormGroup[];
   }
 
+  private subscribeToSaveValueChanges(): void {
+    this.lineupForm.valueChanges
+      .pipe(takeUntilDestroyed(this._destroyRef), debounceTime(500))
+      .subscribe((value) => {
+        console.log('lineupUpdate', value);
+        this.lineupUpdate.emit(value as Lineup);
+      });
+  }
+
   ngOnInit(): void {
     const positionValueChanges: Observable<Position | null>[] = [];
     for (const ctrl of this.starterFormGroups.map((c) => c.controls.position)) {
@@ -117,6 +127,8 @@ export class LineupEditComponent implements OnInit {
       .subscribe((positions) => {
         this._lineupSvc.updateDisabledPositions(positions.filter((p) => !!p));
       });
+
+    this.subscribeToSaveValueChanges();
   }
 
   createStarterPlayerFormGroup(init?: StartingPlayer) {

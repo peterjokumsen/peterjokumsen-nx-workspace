@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, first, map, Observable, switchMap, tap } from 'rxjs';
-import { Game } from './models';
 import { startWith } from 'rxjs/operators';
+import { Game } from './models';
 
 const STORAGE_KEY = 'bb-score-games';
 

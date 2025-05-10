@@ -42,6 +42,7 @@ export class GameScoreManageComponent implements OnInit {
   awayTeamName = computed(() => this._game()?.awayTeamName ?? '');
   homeLineup = computed(() => this._game()?.homeLineup);
   awayLineup = computed(() => this._game()?.awayLineup);
+  expandLineup = false;
 
   missingStarters = computed(() => {
     const home =
@@ -69,6 +70,7 @@ export class GameScoreManageComponent implements OnInit {
 
   ngOnInit() {
     this._currentTeamIdSubject.next(this.homeTeamId());
+    if (this.missingStarters()) this.expandLineup = true;
   }
 
   onTeamTabChange(index: number): void {
@@ -80,9 +82,10 @@ export class GameScoreManageComponent implements OnInit {
     }
   }
 
-  saveLineup(lineupData: Lineup | null): void {
+  saveLineup(lineupData: Lineup | null, hideMessage = false): void {
     const game = this._game();
     if (!game) {
+      if (hideMessage) return;
       this._snackBar.open('No game selected', 'Close', {
         duration: 3000,
       });
@@ -105,6 +108,9 @@ export class GameScoreManageComponent implements OnInit {
 
     // Save the updated game
     this._gameService.updateGame(updatedGame);
+    if (hideMessage) {
+      return;
+    }
 
     // Show success message
     const teamType = isHomeTeam ? 'Home' : 'Away';
