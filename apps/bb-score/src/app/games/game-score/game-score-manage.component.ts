@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
@@ -23,6 +24,7 @@ import { Lineup } from '../models';
     MatBottomSheetModule,
     MatSnackBarModule,
     LineupEditComponent,
+    MatExpansionModule,
   ],
   templateUrl: './game-score-manage.component.html',
   styleUrl: './game-score-manage.component.scss',
