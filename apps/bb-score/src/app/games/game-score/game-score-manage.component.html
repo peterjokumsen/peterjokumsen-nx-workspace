@@ -1,23 +1,48 @@
-<div class="game-lineup-container">
-  <h2>Game Lineup</h2>
+<mat-accordion>
+  <mat-expansion-panel [expanded]="expandLineup">
+    <mat-expansion-panel-header>
+      <mat-panel-title [class]="{ urgent: missingStarters() }">
+        Lineup
+      </mat-panel-title>
+      <mat-panel-description>
+        Update lineup details
+        @if (missingStarters()) {
+          <span class="urgent"> , {{ missingStarters() }} </span>
+        }
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="lineup-container">
+      <mat-tab-group (selectedIndexChange)="onTeamTabChange($event)">
+        <mat-tab label="Home Team">
+          <app-lineup-edit
+            [team]="currentTeam$ | async"
+            [lineup]="homeLineup()"
+            (saveLineup)="saveLineup($event)"
+            (lineupUpdate)="saveLineup($event, true)"
+          >
+          </app-lineup-edit>
+        </mat-tab>
 
-  <mat-tab-group (selectedIndexChange)="onTeamTabChange($event)">
-    <mat-tab label="Home Team">
-      <app-lineup-edit
-        [team]="currentTeam$ | async"
-        [lineup]="homeLineup()"
-        (saveLineup)="saveLineup($event)"
-      >
-      </app-lineup-edit>
-    </mat-tab>
-
-    <mat-tab label="Away Team">
-      <app-lineup-edit
-        [team]="currentTeam$ | async"
-        [lineup]="awayLineup()"
-        (saveLineup)="saveLineup($event)"
-      >
-      </app-lineup-edit>
-    </mat-tab>
-  </mat-tab-group>
-</div>
+        <mat-tab label="Away Team">
+          <app-lineup-edit
+            [team]="currentTeam$ | async"
+            [lineup]="awayLineup()"
+            (saveLineup)="saveLineup($event)"
+            (lineupUpdate)="saveLineup($event, true)"
+          >
+          </app-lineup-edit>
+        </mat-tab>
+      </mat-tab-group>
+    </div>
+  </mat-expansion-panel>
+  <!--
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title> Self aware panel </mat-panel-title>
+      <mat-panel-description>
+      </mat-panel-description>
+    </mat-expansion-panel-header>
+    <p>I'm visible because I am open</p>
+  </mat-expansion-panel>
+  -->
+</mat-accordion>

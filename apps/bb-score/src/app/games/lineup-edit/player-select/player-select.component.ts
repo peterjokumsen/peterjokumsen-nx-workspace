@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnChanges, OnInit } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
@@ -29,20 +29,33 @@ import { LineupService } from '../lineup.service';
   templateUrl: './player-select.component.html',
   styleUrl: './player-select.component.scss',
 })
-export class PlayerSelectComponent implements OnInit, OnChanges {
+export class PlayerSelectComponent implements OnInit {
   private _bottomSheet = inject(MatBottomSheet);
   private _lineupService = inject(LineupService);
   private _teamService = inject(TeamService);
+  private _fb = inject(FormBuilder);
+  private _destroyRef = inject(DestroyRef);
 
   team = toSignal(this._teamService.selectedTeam$);
   @Input() playerForm!: FormGroup;
   @Input() label = 'Player';
   @Input() isStarter = false;
 
+  playerFilterFormGroup = this._fb.group({
+    searchPlayer: [''],
+  });
+
   fieldPositions = this._lineupService.fieldPositions;
   disabledPositions = toSignal(this._lineupService.disabledPositions$);
+  playerIdsInUse = toSignal(this._lineupService.playerIdsUsed$);
 
-  filteredPlayers$!: Observable<Player[]>;
+  filteredPlayers$: Observable<Player[]> =
+    this.playerFilterFormGroup.controls.searchPlayer.valueChanges.pipe(
+      map((value) => {
+        if ((value ?? '').length >= 1) return this.filterPlayers(value);
+        return [];
+      }),
+    );
 
   get playerIdControl() {
     return this.playerForm.get('playerId');
@@ -61,25 +74,6 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
     this.playerNumberControl.patchValue(playerNumber ?? null);
   }
 
-  private initFilteredPlayers(): void {
-    if (this.playerIdControl) {
-      this.filteredPlayers$ = this.playerIdControl.valueChanges.pipe(
-        map((value) => (value?.length >= 1 ? this.filterPlayers(value) : [])),
-      );
-
-      // Listen for player selection changes to update number and position
-      this.playerIdControl.valueChanges.subscribe((playerId) => {
-        if (playerId && typeof playerId === 'string' && this.team()?.players) {
-          const selectedPlayer = this.team()?.players.find(
-            (p) => p.id === playerId,
-          );
-          if (!this.playerNumberControl) return;
-          this.updatePlayerNumber(selectedPlayer?.number);
-        }
-      });
-    }
-  }
-
   private filterPlayers(value: string | null): Player[] {
     if (!this.team() || !this.team()?.players) {
       return [];
@@ -96,14 +90,22 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
     );
   }
 
-  ngOnInit(): void {
-    this.initFilteredPlayers();
-  }
+  ngOnInit() {
+    this.playerFilterFormGroup.controls.searchPlayer.patchValue(
+      this.playerIdControl?.value ?? '',
+      { emitEvent: false },
+    );
 
-  ngOnChanges(): void {
-    if (this.team() && this.playerForm) {
-      this.initFilteredPlayers();
-    }
+    if (!this.playerIdControl) return;
+    this.playerIdControl.valueChanges
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((value) => {
+        if (value === this.playerFilterFormGroup.controls.searchPlayer.value)
+          return;
+        this.playerFilterFormGroup.controls.searchPlayer.patchValue(value, {
+          emitEvent: false,
+        });
+      });
   }
 
   displayFn(playerId: string): string {
@@ -112,6 +114,10 @@ export class PlayerSelectComponent implements OnInit, OnChanges {
     }
 
     const player = this.team()?.players.find((p) => p.id === playerId);
+    if (player && this.playerIdControl?.value !== playerId) {
+      this.playerIdControl?.patchValue(player.id);
+    }
+
     return player
       ? player.name + (player.number ? ' #' + player.number : '')
       : '';

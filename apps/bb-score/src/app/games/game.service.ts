@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, first, map, Observable, tap } from 'rxjs';
+import { BehaviorSubject, first, map, Observable, switchMap, tap } from 'rxjs';
+import { startWith } from 'rxjs/operators';
 import { Game } from './models';
 
 const STORAGE_KEY = 'bb-score-games';
@@ -14,7 +15,14 @@ export class GameService {
   private _storage = inject(Storage, { optional: true }) ?? localStorage;
 
   games$ = this._gamesSubject.asObservable();
-  selectedGame$ = this._selectedGameSubject.asObservable();
+  selectedGame$ = this._selectedGameSubject.asObservable().pipe(
+    switchMap((game) =>
+      this.games$.pipe(
+        map((games) => games.find((g) => g.id === game?.id)),
+        startWith(game),
+      ),
+    ),
+  );
 
   private loadGames(): Game[] {
     const savedGames = this._storage.getItem(STORAGE_KEY);
