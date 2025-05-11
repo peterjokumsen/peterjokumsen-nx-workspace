@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input, OnInit } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
@@ -34,6 +34,7 @@ export class PlayerSelectComponent implements OnInit {
   private _lineupService = inject(LineupService);
   private _teamService = inject(TeamService);
   private _fb = inject(FormBuilder);
+  private _destroyRef = inject(DestroyRef);
 
   team = toSignal(this._teamService.selectedTeam$);
   @Input() playerForm!: FormGroup;
@@ -94,6 +95,17 @@ export class PlayerSelectComponent implements OnInit {
       this.playerIdControl?.value ?? '',
       { emitEvent: false },
     );
+
+    if (!this.playerIdControl) return;
+    this.playerIdControl.valueChanges
+      .pipe(takeUntilDestroyed(this._destroyRef))
+      .subscribe((value) => {
+        if (value === this.playerFilterFormGroup.controls.searchPlayer.value)
+          return;
+        this.playerFilterFormGroup.controls.searchPlayer.patchValue(value, {
+          emitEvent: false,
+        });
+      });
   }
 
   displayFn(playerId: string): string {
