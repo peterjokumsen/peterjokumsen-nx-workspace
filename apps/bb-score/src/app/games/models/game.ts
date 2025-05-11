@@ -6,7 +6,7 @@ export interface GamePlayer {
 export type Position = 'P' | 'C' | '1' | '2' | '3' | 'SS' | 'LF' | 'CF' | 'RF';
 
 export interface StartingPlayer extends GamePlayer {
-  position: Position;
+  position?: Position;
 }
 
 export interface Lineup {

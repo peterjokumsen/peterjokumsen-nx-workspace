@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { LineupService } from './lineup.service';
 import { GameService } from '../game.service';
 import { Game, StartingPlayer } from '../models';
+import { LineupService } from './lineup.service';
 
 describe('LineUpService', () => {
   let service: LineupService;

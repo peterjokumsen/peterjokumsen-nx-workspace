@@ -1,17 +1,19 @@
 <div class="title">
   <span class="header">{{ label }}</span>
-  <span class="spacer"></span>
-  <button
-    matSuffix
-    mat-raised-button
-    color="primary"
-    type="button"
-    (click)="addNewPlayer()"
-    tabindex="-1"
-  >
-    <mat-icon>add_circle</mat-icon>
-    Add New Player
-  </button>
+  @if (!playerIdControl?.value) {
+    <span class="spacer"></span>
+    <button
+      matSuffix
+      mat-raised-button
+      color="primary"
+      type="button"
+      (click)="addNewPlayer()"
+      tabindex="-1"
+    >
+      <mat-icon>add_circle</mat-icon>
+      Add New Player
+    </button>
+  }
 </div>
 <div [formGroup]="playerForm" class="player-select-container">
   <mat-form-field appearance="outline" class="player-number">
@@ -24,20 +26,28 @@
     />
   </mat-form-field>
 
-  <mat-form-field appearance="outline" class="player-select">
+  <mat-form-field
+    [formGroup]="playerFilterFormGroup"
+    appearance="outline"
+    class="player-select"
+  >
     <mat-label>Name</mat-label>
     <input
       matInput
-      formControlName="playerId"
+      formControlName="searchPlayer"
       [matAutocomplete]="playerAuto"
       placeholder="Type player name or number to find player"
     />
+    @let playersInUse = playerIdsInUse() ?? [];
     <mat-autocomplete
       #playerAuto="matAutocomplete"
       [displayWith]="displayFn.bind(this)"
     >
       @for (player of filteredPlayers$ | async; track player.id) {
-        <mat-option [value]="player.id">
+        <mat-option
+          [value]="player.id"
+          [disabled]="playersInUse.includes(player.id)"
+        >
           {{ player.name }}
           {{ player.number ? '#' + player.number : '' }}
         </mat-option>
