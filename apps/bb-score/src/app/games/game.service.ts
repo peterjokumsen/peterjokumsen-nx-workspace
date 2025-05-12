@@ -1,6 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, first, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  first,
+  firstValueFrom,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { GameSnapshot } from './game-score/scoring/models';
 import { Game } from './models';
 
 const STORAGE_KEY = 'bb-score-games';
@@ -108,5 +117,23 @@ export class GameService {
     const games = this._gamesSubject.value.filter((g) => g.id !== gameId);
     this._gamesSubject.next(games);
     this.saveGames(games);
+  }
+
+  async appendSnapshot(gameId: string, snapshot: GameSnapshot): Promise<void> {
+    const game = await firstValueFrom(this.getGame(gameId));
+    if (!game) return;
+    if (!game.snapshots) {
+      game.snapshots = [snapshot];
+    } else {
+      game.snapshots.push(snapshot);
+    }
+
+    switch (game.status) {
+      case 'pending':
+        game.status = 'in-progress';
+        break;
+    }
+
+    this.updateGame(game);
   }
 }

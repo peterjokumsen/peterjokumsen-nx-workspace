@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, of } from 'rxjs';
+import { GameSnapshot } from './game-score/scoring/models';
 import { GameService } from './game.service';
 import { Game } from './models';
 
@@ -178,5 +179,83 @@ describe('GameService', () => {
   it('should return null for non-existent game', async () => {
     const retrievedGame = await firstValueFrom(service.getGame('non-existent'));
     expect(retrievedGame).toBeNull();
+  });
+
+  describe('appendSnapshot', () => {
+    let game: Game;
+    let snapshot: GameSnapshot;
+    let updateGameSpy: jest.SpyInstance;
+
+    beforeEach(() => {
+      snapshot = {
+        balls: 0,
+        batterId: 'b-id',
+        frame: 'top',
+        inning: 1,
+        outs: 0,
+        pitcherId: 'p-id',
+        runners: {},
+        strikes: 0,
+      };
+      game = {
+        awayLineup: undefined,
+        awayTeamId: undefined,
+        awayTeamName: '',
+        date: new Date(),
+        homeLineup: undefined,
+        homeTeamId: undefined,
+        homeTeamName: '',
+        id: '',
+        league: '',
+        snapshots: undefined,
+        status: 'pending',
+      };
+      jest.spyOn(service, 'getGame').mockImplementation(() => of(game));
+      updateGameSpy = jest
+        .spyOn(service, 'updateGame')
+        .mockName('updateGame')
+        .mockImplementation();
+    });
+
+    function assertUpdateUsed(expected: Partial<Game>) {
+      expect(updateGameSpy).toHaveBeenCalledWith(
+        expect.objectContaining(expected),
+      );
+    }
+
+    it('should append a snapshot to the game and update it', async () => {
+      await service.appendSnapshot('1', snapshot);
+      assertUpdateUsed({
+        snapshots: [snapshot],
+      });
+    });
+
+    describe('when game has status "pending"', () => {
+      it('should update to "in-progress"', async () => {
+        await service.appendSnapshot('1', snapshot);
+        assertUpdateUsed({
+          status: 'in-progress',
+        });
+      });
+    });
+
+    describe('when game has status "in-progress" with existing snapshot', () => {
+      beforeEach(async () => {
+        game.status = 'in-progress';
+        game.snapshots = [snapshot];
+
+        await service.appendSnapshot('1', snapshot);
+      });
+
+      it('should leave status as "in-progress"', () => {
+        assertUpdateUsed({
+          status: 'in-progress',
+        });
+      });
+
+      it('should append snapshot', () => {
+        assertUpdateUsed({ snapshots: [snapshot, snapshot] });
+      });
+    });
   });
 });

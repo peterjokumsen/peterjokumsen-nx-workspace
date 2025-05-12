@@ -21,6 +21,8 @@ export const gameScoreRoutes: Route[] = [
           import('./game-score-edit.component').then(
             (m) => m.GameScoreEditComponent,
           ),
+        loadChildren: () =>
+          import('./scoring/scoring.routes').then((r) => r.scoringRoutes),
       },
       {
         path: 'manage',
