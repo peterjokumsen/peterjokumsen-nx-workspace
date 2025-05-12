@@ -1,3 +1,5 @@
+import { GameSnapshot } from '../game-score/scoring/models';
+
 export interface GamePlayer {
   playerId?: string;
   playerNumber: string;
@@ -31,4 +33,5 @@ export interface Game extends Combined {
   date: Date;
   league: string;
   status: 'pending' | 'in-progress' | 'completed';
+  snapshots?: Array<GameSnapshot>;
 }
