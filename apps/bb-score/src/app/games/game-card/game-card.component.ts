@@ -16,7 +16,6 @@ import { Game } from '../models';
           }})
         </mat-card-title>
         <mat-card-subtitle>
-          <span class="league">{{ game().league }}</span>
           <span class="date">{{ game().date | date: 'fullDate' }}</span>
         </mat-card-subtitle>
       </mat-card-header>

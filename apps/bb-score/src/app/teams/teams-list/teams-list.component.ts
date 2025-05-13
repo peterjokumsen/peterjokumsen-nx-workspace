@@ -47,11 +47,6 @@ import { TeamService } from '../team.service';
                 @for (team of teams; track team.id) {
                   <a mat-list-item (click)="viewTeam(team.id)">
                     <span matListItemTitle>{{ team.name }}</span>
-                    @if (team.leagues; as leagues) {
-                      <div matListItemLine>
-                        {{ leagues.join(', ') }}
-                      </div>
-                    }
                     <span matListItemLine>
                       {{ team.playerCount }} player(s)
                     </span>
@@ -107,7 +102,7 @@ export class TeamsListComponent {
   private _bottomSheet = inject(MatBottomSheet);
   private _router = inject(Router);
 
-  teams$ = this._teamService.getTeams();
+  teams$ = this._teamService.getTeamSummaries();
 
   openCreateTeam(): void {
     this._bottomSheet.open(TeamCreateComponent);

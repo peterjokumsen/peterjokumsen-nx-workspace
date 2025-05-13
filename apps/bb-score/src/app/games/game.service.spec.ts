@@ -50,7 +50,6 @@ describe('GameService', () => {
         status: 'pending',
         homeTeamName: 'Team A',
         awayTeamName: 'Team B',
-        league: 'League A',
         homeTeamId: 'a',
         homeLineup: undefined,
         awayTeamId: 'b',
@@ -62,12 +61,10 @@ describe('GameService', () => {
     const games = await firstValueFrom(service.getGames());
     expect(games).toHaveLength(1);
     expect(games[0].id).toBe('1');
-    expect(games[0].league).toBe('League A');
   });
 
   it('should create a new game and save to localStorage', async () => {
     const newGame: Parameters<GameService['createGame']>[0] = {
-      league: 'League 1',
       date: new Date(),
       homeTeamName: 'Team C',
       awayTeamName: 'Team D',
@@ -80,22 +77,19 @@ describe('GameService', () => {
     const games = await firstValueFrom(service.getGames());
     expect(games).toHaveLength(1);
     const createdGame = games[0];
-    expect(createdGame.league).toBe('League 1');
     expect(createdGame.homeTeamName).toBe('Team C');
     expect(createdGame.awayTeamName).toBe('Team D');
     expect(createdGame.status).toBe('pending');
     expect(createdGame.id).toBeDefined();
 
     // Verify localStorage was updated
-    const savedGames = JSON.parse(mockLocalStorage['bb-score-games']);
+    const savedGames = JSON.parse(mockLocalStorage['bb-score-games']) as Game[];
     expect(savedGames).toHaveLength(1);
-    expect(savedGames[0].league).toBe('League 1');
   });
 
   it('should update an existing game and save to localStorage', async () => {
     // First create a game
     const initialGame: Parameters<GameService['createGame']>[0] = {
-      league: 'League 1',
       date: new Date(),
       homeTeamName: 'Team A',
       awayTeamName: 'Team B',
@@ -109,7 +103,6 @@ describe('GameService', () => {
     const gameId = games[0].id;
     const updatedGame: Game = {
       id: gameId,
-      league: 'League 2',
       date: new Date(),
       status: 'in-progress',
       homeTeamName: 'Team A',
@@ -124,19 +117,16 @@ describe('GameService', () => {
 
     const updatedGames = await firstValueFrom(service.getGames());
     const game = updatedGames[0];
-    expect(game.league).toBe('League 2');
     expect(game.status).toBe('in-progress');
 
     // Verify localStorage was updated
-    const savedGames = JSON.parse(mockLocalStorage['bb-score-games']);
-    expect(savedGames[0].league).toBe('League 2');
+    const savedGames = JSON.parse(mockLocalStorage['bb-score-games']) as Game[];
     expect(savedGames[0].status).toBe('in-progress');
   });
 
   it('should delete a game and update localStorage', async () => {
     // First create a game
     const game: Parameters<GameService['createGame']>[0] = {
-      league: 'League 1',
       date: new Date(),
       homeTeamId: 'a',
       homeTeamName: 'Team A',
@@ -160,7 +150,6 @@ describe('GameService', () => {
   it('should get a game by id', async () => {
     // First create a game
     const game: Parameters<GameService['createGame']>[0] = {
-      league: 'League 1',
       date: new Date(),
       homeTeamName: 'Team A',
       awayTeamName: 'Team B',
@@ -206,7 +195,6 @@ describe('GameService', () => {
         homeTeamId: undefined,
         homeTeamName: '',
         id: '',
-        league: '',
         snapshots: undefined,
         status: 'pending',
       };

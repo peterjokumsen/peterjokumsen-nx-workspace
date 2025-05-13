@@ -6,9 +6,7 @@ import {
   map,
   Observable,
   switchMap,
-  tap,
 } from 'rxjs';
-import { startWith } from 'rxjs/operators';
 import { GameSnapshot } from './game-score/scoring/models';
 import { Game } from './models';
 
@@ -19,19 +17,20 @@ const STORAGE_KEY = 'bb-score-games';
 })
 export class GameService {
   private _gamesSubject = new BehaviorSubject<Game[]>([]);
-  private _selectedGameSubject = new BehaviorSubject<Game | null>(null);
+  private _selectedGameIdSubject = new BehaviorSubject<string | null>(null);
   private _loaded = false;
   private _storage = inject(Storage, { optional: true }) ?? localStorage;
 
   games$ = this._gamesSubject.asObservable();
-  selectedGame$ = this._selectedGameSubject.asObservable().pipe(
-    switchMap((game) =>
-      this.games$.pipe(
-        map((games) => games.find((g) => g.id === game?.id)),
-        startWith(game),
+  selectedGame$: Observable<Game | null> = this._selectedGameIdSubject
+    .asObservable()
+    .pipe(
+      switchMap((gameId) =>
+        this.getGames().pipe(
+          map((games) => games.find((g) => g.id === gameId) ?? null),
+        ),
       ),
-    ),
-  );
+    );
 
   private loadGames(): Game[] {
     const savedGames = this._storage.getItem(STORAGE_KEY);
@@ -73,15 +72,9 @@ export class GameService {
   }
 
   getGame(id: string): Observable<Game | null> {
-    const games$ = this.getGames();
+    this._selectedGameIdSubject.next(id);
 
-    return games$.pipe(
-      map((games) => games.find((game) => game.id === id) ?? null),
-      tap((game) => {
-        this._selectedGameSubject.next(game);
-      }),
-      first(),
-    );
+    return this.selectedGame$.pipe(first());
   }
 
   createGame(

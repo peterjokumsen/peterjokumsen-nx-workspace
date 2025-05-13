@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
   MatBottomSheet,
@@ -42,9 +42,6 @@ import { TeamService } from '../team.service';
       <mat-card>
         <mat-card-content>
           <div class="team-info">
-            <p *ngIf="uniqueLeagues()">
-              <strong>League(s):</strong> {{ uniqueLeagues() }}
-            </p>
             <p><strong>Players:</strong> {{ team.players.length }}</p>
           </div>
         </mat-card-content>
@@ -92,11 +89,6 @@ import { TeamService } from '../team.service';
                   <span matListItemLine *ngIf="player.number">
                     # {{ player.number }}
                   </span>
-                  @if (player.league; as playerLeagues) {
-                    <span matListItemLine>
-                      {{ playerLeagues.join(', ') }}
-                    </span>
-                  }
                 </mat-list-item>
               }
             </mat-nav-list>
@@ -165,14 +157,6 @@ export class TeamDetailComponent {
   private _bottomSheet = inject(MatBottomSheet);
 
   team = toSignal(this._teamService.selectedTeam$);
-  uniqueLeagues = computed(() => {
-    const team = this.team();
-    if (!team) return '';
-    const unique = team.players
-      .flatMap((player) => player.league ?? [])
-      .filter((v, i, a) => a.indexOf(v) === i);
-    return unique.join(', ');
-  });
 
   goBack(): void {
     this._router.navigate(['/teams']);

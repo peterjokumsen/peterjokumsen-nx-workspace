@@ -47,7 +47,6 @@ describe('GameCreateComponent', () => {
 
   it('should create game and dismiss bottom sheet when submitting valid form', async () => {
     component.gameForm.patchValue({
-      league: 'Test League',
       date: new Date(),
       homeTeam: 'Team A',
       awayTeam: 'Team B',

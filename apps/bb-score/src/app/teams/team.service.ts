@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { Player, Team, TeamSummary } from './models';
 
 const STORAGE_KEY = 'bb-score-teams';
@@ -9,15 +9,22 @@ const STORAGE_KEY = 'bb-score-teams';
 })
 export class TeamService {
   private _teamsSubject = new BehaviorSubject<Team[]>([]);
-  private _selectedTeamSubject = new BehaviorSubject<Team | null>(null);
+  private _selectedTeamIdSubject = new BehaviorSubject<string | null>(null);
   private _loaded = false;
   private _storage = inject(Storage, { optional: true }) ?? localStorage;
 
   teams$ = this._teamsSubject.asObservable();
-  selectedTeam$ = this._selectedTeamSubject.asObservable();
+  selectedTeam$ = this._selectedTeamIdSubject.pipe(
+    switchMap((teamId) =>
+      this.getTeams().pipe(
+        map((teams) => teams.find((t) => t.id === teamId) ?? null),
+      ),
+    ),
+  );
 
   private loadTeams(): Team[] {
-    if (this._teamsSubject.value.length > 0) return this._teamsSubject.value;
+    if (this._teamsSubject.value?.length > 0) return this._teamsSubject.value;
+    this._loaded = true;
     const savedTeams = this._storage.getItem(STORAGE_KEY);
     if (savedTeams) {
       try {
@@ -35,29 +42,26 @@ export class TeamService {
       this._storage.setItem(STORAGE_KEY, JSON.stringify(teams));
     } catch (error) {
       console.error('Error saving teams to localStorage:', error);
+    } finally {
+      this._teamsSubject.next(teams);
     }
   }
 
-  getTeams(): Observable<TeamSummary[]> {
-    if (!this._loaded) {
-      const savedTeams = this.loadTeams();
-      if (savedTeams.length > 0) {
-        this._teamsSubject.next(savedTeams);
-      }
-      this._loaded = true;
-    }
+  getTeams(): Observable<Team[]> {
+    const savedTeams = this.loadTeams();
+    this._teamsSubject.next(savedTeams);
 
-    return this.teams$.pipe(
+    return this.teams$;
+  }
+
+  getTeamSummaries(): Observable<TeamSummary[]> {
+    return this.getTeams().pipe(
       map((teams) =>
         teams.map((team) => {
-          const leagues = team.players
-            .flatMap((p) => p.league ?? [])
-            .filter((v, i, a) => a.indexOf(v) === i);
           return {
             id: team.id,
             name: team.name,
             location: team.location,
-            leagues,
             playerCount: team.players?.length ?? 0,
           };
         }),
@@ -66,8 +70,7 @@ export class TeamService {
   }
 
   getTeam(id: string): Observable<Team | null> {
-    const team = this.loadTeams().find((team) => team.id === id);
-    this._selectedTeamSubject.next(team ?? null);
+    this._selectedTeamIdSubject.next(id);
     return this.selectedTeam$;
   }
 
@@ -78,22 +81,17 @@ export class TeamService {
       players: [],
     };
     const updatedTeams = [...this.loadTeams(), newTeam];
-    this._teamsSubject.next(updatedTeams);
     this.saveTeams(updatedTeams);
   }
 
   updateTeam(team: Team): void {
-    const teams = this.loadTeams().map((t) => (t.id === team.id ? team : t));
-    this._teamsSubject.next(teams);
-    this._selectedTeamSubject.next(team);
-    this.saveTeams(teams);
+    this.saveTeams(this.loadTeams().map((t) => (t.id === team.id ? team : t)));
+    this._selectedTeamIdSubject.next(team.id);
   }
 
   deleteTeam(teamId: string): void {
-    const teams = this.loadTeams().filter((t) => t.id !== teamId);
-    this._teamsSubject.next(teams);
-    this._selectedTeamSubject.next(null);
-    this.saveTeams(teams);
+    this.saveTeams(this.loadTeams().filter((t) => t.id !== teamId));
+    this._selectedTeamIdSubject.next(null);
   }
 
   addPlayer(
