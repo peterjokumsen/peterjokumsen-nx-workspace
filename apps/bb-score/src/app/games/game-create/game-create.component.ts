@@ -13,7 +13,6 @@ import { combineLatest, firstValueFrom, Observable, of } from 'rxjs';
 import { map, shareReplay, startWith, switchMap } from 'rxjs/operators';
 import { TeamService } from '../../teams';
 import { GameService } from '../game.service';
-import { Game } from '../models';
 
 @Component({
   selector: 'app-game-create',
@@ -36,112 +35,87 @@ import { Game } from '../models';
         {{ gamesCreated }} game{{ gamesCreated > 1 ? 's' : '' }} created
       </h3>
     </div>
-    <div class="create-form">
-      <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>League</mat-label>
-          <input
-            matInput
-            formControlName="league"
-            placeholder="Enter league name"
-            [matAutocomplete]="leagueAuto"
-          />
-          <mat-autocomplete #leagueAuto="matAutocomplete">
-            @for (option of filteredLeagues$ | async; track option) {
-              <mat-option [value]="option">{{ option }}</mat-option>
-            }
-          </mat-autocomplete>
-          @if (inputs.league.hasError('required')) {
-            <mat-error>League is required</mat-error>
-          }
-        </mat-form-field>
+    <form [formGroup]="gameForm" (ngSubmit)="onSubmit()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Date</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="date" />
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="picker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+        @if (inputs.date.hasError('required')) {
+          <mat-error>Date is required</mat-error>
+        }
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Date</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="date" />
-          <mat-datepicker-toggle
-            matIconSuffix
-            [for]="picker"
-          ></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-          @if (inputs.date.hasError('required')) {
-            <mat-error>Date is required</mat-error>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Home Team</mat-label>
+        <input
+          #homeTeamInput
+          matInput
+          formControlName="homeTeam"
+          placeholder="Enter home team name"
+          [matAutocomplete]="homeTeamAuto"
+        />
+        <mat-autocomplete #homeTeamAuto="matAutocomplete">
+          @for (option of filteredHomeTeams$ | async; track option) {
+            <mat-option [value]="option">{{ option }}</mat-option>
           }
-        </mat-form-field>
+        </mat-autocomplete>
+        @if (inputs.homeTeam.hasError('required')) {
+          <mat-error>Home team is required</mat-error>
+        }
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Home Team</mat-label>
-          <input
-            #homeTeamInput
-            matInput
-            formControlName="homeTeam"
-            placeholder="Enter home team name"
-            [matAutocomplete]="homeTeamAuto"
-          />
-          <mat-autocomplete #homeTeamAuto="matAutocomplete">
-            @for (option of filteredHomeTeams$ | async; track option) {
-              <mat-option [value]="option">{{ option }}</mat-option>
-            }
-          </mat-autocomplete>
-          @if (inputs.homeTeam.hasError('required')) {
-            <mat-error>Home team is required</mat-error>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Away Team</mat-label>
+        <input
+          matInput
+          formControlName="awayTeam"
+          placeholder="Enter away team name"
+          [matAutocomplete]="awayTeamAuto"
+        />
+        <mat-autocomplete #awayTeamAuto="matAutocomplete">
+          @for (option of filteredAwayTeams$ | async; track option) {
+            <mat-option [value]="option">{{ option }}</mat-option>
           }
-        </mat-form-field>
+        </mat-autocomplete>
+        @if (inputs.awayTeam.hasError('required')) {
+          <mat-error>Away team is required</mat-error>
+        }
+      </mat-form-field>
 
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Away Team</mat-label>
-          <input
-            matInput
-            formControlName="awayTeam"
-            placeholder="Enter away team name"
-            [matAutocomplete]="awayTeamAuto"
-          />
-          <mat-autocomplete #awayTeamAuto="matAutocomplete">
-            @for (option of filteredAwayTeams$ | async; track option) {
-              <mat-option [value]="option">{{ option }}</mat-option>
-            }
-          </mat-autocomplete>
-          @if (inputs.awayTeam.hasError('required')) {
-            <mat-error>Away team is required</mat-error>
-          }
-        </mat-form-field>
-
-        <div class="button-container">
-          <button mat-button type="button" (click)="onCancel()">Cancel</button>
-          <button
-            mat-raised-button
-            color="primary"
-            type="button"
-            [disabled]="!gameForm.valid"
-            (click)="onSubmit(true)"
-          >
-            Add Another Game
-          </button>
-          <button
-            mat-raised-button
-            color="accent"
-            type="submit"
-            [disabled]="!gameForm.valid"
-          >
-            Save and Close
-          </button>
-        </div>
-      </form>
-    </div>
+      <div class="button-container">
+        <button mat-button type="button" (click)="onCancel()">Cancel</button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          [disabled]="!gameForm.valid"
+          (click)="onSubmit(true)"
+        >
+          Add Another Game
+        </button>
+        <button
+          mat-raised-button
+          color="accent"
+          type="submit"
+          [disabled]="!gameForm.valid"
+        >
+          Save and Close
+        </button>
+      </div>
+    </form>
   `,
   styles: [
     `
-      .create-form {
-        max-width: 600px;
-      }
-
       .create-header {
         padding: 10px 0;
       }
 
       .full-width {
         width: 100%;
-        margin-bottom: 16px;
       }
 
       .button-container {
@@ -169,7 +143,6 @@ export class GameCreateComponent {
   gamesCreated = 0;
 
   gameForm = this._fb.group({
-    league: ['', Validators.required],
     date: [new Date(), Validators.required],
     homeTeam: ['', Validators.required],
     awayTeam: ['', Validators.required],
@@ -178,9 +151,6 @@ export class GameCreateComponent {
   get inputs() {
     return this.gameForm.controls;
   }
-
-  // Get unique leagues from existing games
-  private _leagues$ = this.getUniqueValues('league');
 
   // Get team names from TeamService
   private _teams$ = this.getTeamNames();
@@ -198,34 +168,18 @@ export class GameCreateComponent {
   );
 
   // Create filtered observables for autocomplete
-  filteredLeagues$ = this.createFilteredObservable('league', this._leagues$);
   filteredHomeTeams$ = this.createFilteredObservable('homeTeam', this._teams$);
   filteredAwayTeams$ = this.createFilteredObservable('awayTeam', this._teams$);
 
-  private getUniqueValues(field: keyof Game): Observable<string[]> {
-    return this._gameService.games$.pipe(
-      map((games) => {
-        const values = new Set<string>();
-        games.forEach((game) => {
-          if (game[field]) {
-            values.add(game[field] as string);
-          }
-        });
-        return Array.from(values);
-      }),
-      shareReplay(1),
-    );
-  }
-
   private getTeamNames(): Observable<string[]> {
-    return this._teamService.getTeams().pipe(
+    return this._teamService.getTeamSummaries().pipe(
       map((teams) => teams.map((team) => team.name)),
       shareReplay(1),
     );
   }
 
   private createFilteredObservable(
-    controlName: 'league' | 'homeTeam' | 'awayTeam',
+    controlName: 'homeTeam' | 'awayTeam',
     options: Observable<string[]>,
   ): Observable<string[]> {
     return (
@@ -264,7 +218,6 @@ export class GameCreateComponent {
       const teams = await firstValueFrom(this._teamIdByName$);
       const fv = this.gameForm.value;
       this._gameService.createGame({
-        league: fv.league as string,
         homeTeamId: teams[fv.homeTeam as string],
         homeTeamName: fv.homeTeam as string,
         awayTeamId: teams[fv.awayTeam as string],
@@ -281,9 +234,7 @@ export class GameCreateComponent {
         nextDate.setDate(nextDate.getDate() + 7);
 
         // Reset form but keep the league and update date
-        const league = this.gameForm.value.league;
         this.gameForm.reset({
-          league,
           date: nextDate,
           homeTeam: '',
           awayTeam: '',

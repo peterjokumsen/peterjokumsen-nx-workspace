@@ -38,14 +38,13 @@ describe('TeamService', () => {
   });
 
   it('should initialize with empty array when no saved teams exist', async () => {
-    const teams = await firstValueFrom(service.getTeams());
+    const teams = await firstValueFrom(service.getTeamSummaries());
     expect(teams).toHaveLength(0);
   });
 
   it('should load saved teams from localStorage', async () => {
     const player: Player = {
       id: '2',
-      league: ['League', 'League2'],
       name: 'Player1',
       number: 123,
     };
@@ -61,18 +60,16 @@ describe('TeamService', () => {
             id: '3',
             name: 'Player2',
             number: 456,
-            league: ['League'],
           },
         ],
       },
     ];
     mockLocalStorage['bb-score-teams'] = JSON.stringify(savedTeams);
 
-    const teams = await firstValueFrom(service.getTeams());
+    const teams = await firstValueFrom(service.getTeamSummaries());
     expect(teams).toHaveLength(1);
     expect(teams[0].id).toBe('1');
     expect(teams[0].name).toBe('Team A');
-    expect(teams[0].leagues).toEqual(['League', 'League2']);
     expect(teams[0].location).toBe('Loc1');
     expect(teams[0].playerCount).toBe(2);
   });
@@ -85,7 +82,7 @@ describe('TeamService', () => {
 
     service.createTeam(newTeam);
 
-    const teams = await firstValueFrom(service.getTeams());
+    const teams = await firstValueFrom(service.getTeamSummaries());
     expect(teams).toHaveLength(1);
     const createdTeam = teams[0];
     expect(createdTeam.name).toBe('Team B');
@@ -122,7 +119,7 @@ describe('TeamService', () => {
 
       service.updateTeam(updatedTeam);
 
-      const updatedTeams = await firstValueFrom(service.getTeams());
+      const updatedTeams = await firstValueFrom(service.getTeamSummaries());
       const team = updatedTeams[0];
       expect(team.name).toBe('Team A Updated');
       expect(team.location).toBe('Loc2');
@@ -139,7 +136,7 @@ describe('TeamService', () => {
       const teamId = createdTeam.id;
       service.deleteTeam(teamId);
 
-      const remainingTeams = await firstValueFrom(service.getTeams());
+      const remainingTeams = await firstValueFrom(service.getTeamSummaries());
       expect(remainingTeams).toHaveLength(0);
 
       // Verify localStorage was updated
@@ -171,7 +168,6 @@ describe('TeamService', () => {
     const player: Omit<Player, 'id'> = {
       name: 'John Doe',
       number: 23,
-      league: ['League 1'],
     };
     service.addPlayer(team.id, player);
 
@@ -180,7 +176,6 @@ describe('TeamService', () => {
     expect(updatedTeam?.players).toHaveLength(1);
     expect(updatedTeam?.players[0].name).toBe('John Doe');
     expect(updatedTeam?.players[0].number).toBe(23);
-    expect(updatedTeam?.players[0].league).toEqual(['League 1']);
   });
 
   describe('player management', () => {
@@ -195,7 +190,6 @@ describe('TeamService', () => {
         players: [
           {
             id: 'p-1',
-            league: [],
             number: 23,
             name: 'John Doe',
           },
@@ -212,7 +206,6 @@ describe('TeamService', () => {
         id: playerId,
         name: 'John Doe Jr.',
         number: 24,
-        league: ['League 1'],
       };
       service.updatePlayer(teamId, updatedPlayer);
 
@@ -221,7 +214,6 @@ describe('TeamService', () => {
       expect(updatedTeam?.players).toHaveLength(1);
       expect(updatedTeam?.players[0].name).toBe('John Doe Jr.');
       expect(updatedTeam?.players[0].number).toBe(24);
-      expect(updatedTeam?.players[0].league).toEqual(['League 1']);
     });
 
     it('should remove a player from a team', async () => {

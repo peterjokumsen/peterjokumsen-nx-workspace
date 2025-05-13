@@ -79,7 +79,6 @@ describe('ScoringService', () => {
       homeTeamId: 'h-1',
       homeTeamName: 'Home',
       id: '',
-      league: '',
       snapshots: undefined,
       status: 'pending',
     };

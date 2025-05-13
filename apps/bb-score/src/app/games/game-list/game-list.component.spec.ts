@@ -25,7 +25,6 @@ describe('GameListComponent', () => {
       awayTeamId: 'b',
       awayTeamName: 'Team B',
       awayLineup: undefined,
-      league: 'League A',
     },
     {
       id: '2',
@@ -37,7 +36,6 @@ describe('GameListComponent', () => {
       awayTeamId: 'd',
       awayTeamName: 'Team D',
       awayLineup: undefined,
-      league: 'League B',
     },
   ];
 

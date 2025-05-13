@@ -31,7 +31,6 @@ type Combined = GameWithTeam<'home'> & GameWithTeam<'away'>;
 export interface Game extends Combined {
   id: string;
   date: Date;
-  league: string;
   status: 'pending' | 'in-progress' | 'completed';
   snapshots?: Array<GameSnapshot>;
 }

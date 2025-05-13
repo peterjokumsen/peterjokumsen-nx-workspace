@@ -9,16 +9,6 @@
 
   <div class="filters">
     <mat-form-field>
-      <mat-label>League</mat-label>
-      <mat-select [formControl]="filters.controls.league">
-        <mat-option [value]="''">All Leagues</mat-option>
-        @for (league of uniqueLeagues(); track league) {
-          <mat-option [value]="league">{{ league }}</mat-option>
-        }
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field>
       <mat-label>Team</mat-label>
       <mat-select [formControl]="filters.controls.team">
         <mat-option [value]="''">All Teams</mat-option>

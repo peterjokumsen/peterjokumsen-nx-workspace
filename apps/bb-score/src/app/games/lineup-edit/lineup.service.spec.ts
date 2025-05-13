@@ -20,7 +20,6 @@ describe('LineUpService', () => {
       homeTeamId: undefined,
       homeTeamName: '',
       id: '',
-      league: '',
       status: 'pending',
     };
     gameSubject = new BehaviorSubject<Game>(initialGame);

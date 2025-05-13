@@ -30,9 +30,9 @@ import { TeamService } from '../team.service';
     <div class="edit-header">
       <h1>{{ isEdit ? 'Edit Player' : 'Add Player' }}</h1>
     </div>
-    <div class="edit-form">
-      <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
-        <mat-form-field appearance="outline" class="full-width">
+    <form [formGroup]="playerForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="grow">
           <mat-label>Player Name</mat-label>
           <input
             matInput
@@ -44,63 +44,48 @@ import { TeamService } from '../team.service';
           }
         </mat-form-field>
 
-        <div class="form-row">
-          <mat-form-field appearance="outline" class="half-width">
-            <mat-label>Number</mat-label>
-            <input
-              matInput
-              formControlName="number"
-              type="number"
-              placeholder="Jersey number"
-            />
-          </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Number</mat-label>
+          <input
+            matInput
+            formControlName="number"
+            type="number"
+            placeholder="Jersey number"
+          />
+        </mat-form-field>
+      </div>
 
-          <mat-form-field appearance="outline" class="half-width">
-            <mat-label>Registered league(s)</mat-label>
-            <input
-              matInput
-              formControlName="league"
-              placeholder="League(s) separated by spaces"
-            />
-          </mat-form-field>
-        </div>
-
-        <div class="button-container">
-          <button mat-button type="button" (click)="onCancel()">Cancel</button>
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            [disabled]="!playerForm.valid"
-          >
-            {{ isEdit ? 'Update Player' : 'Add Player' }}
-          </button>
-        </div>
-      </form>
-    </div>
+      <div class="button-container">
+        <button mat-button type="button" (click)="onCancel()">Cancel</button>
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          [disabled]="!playerForm.valid"
+        >
+          {{ isEdit ? 'Update Player' : 'Add Player' }}
+        </button>
+      </div>
+    </form>
   `,
   styles: [
     `
-      .edit-form {
-        max-width: 600px;
-      }
-
       .edit-header {
         padding: 10px 0;
       }
 
-      .full-width {
-        width: 100%;
-        margin-bottom: 16px;
-      }
-
       .form-row {
         display: flex;
+        flex-direction: column;
         gap: 16px;
+
+        @media (min-width: 500px) {
+          flex-direction: row;
+        }
       }
 
-      .half-width {
-        width: 50%;
+      .grow {
+        flex-grow: 1;
       }
 
       .button-container {
@@ -141,7 +126,6 @@ export class PlayerEditComponent {
   playerForm = this._fb.group({
     name: [this._data.player?.name ?? '', Validators.required],
     number: [this._data.player?.number ?? (null as number | null)],
-    league: [this._data.player?.league?.join(' ') ?? ''],
   });
 
   onCancel(): void {
@@ -159,7 +143,6 @@ export class PlayerEditComponent {
     const playerData: Omit<Player, 'id'> = {
       name: this.playerForm.value.name as string,
       number: this.playerForm.value.number || undefined,
-      league: (this.playerForm.value.league ?? '').split(' ').filter((l) => l),
     };
 
     let resultPlayer$: Observable<Player | null>;

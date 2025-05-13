@@ -72,16 +72,9 @@ export class GameListComponent {
   games = toSignal(this._gameService.getGames());
 
   filters = this._fb.group({
-    league: [''],
     team: [''],
     status: [''],
   });
-
-  uniqueLeagues = toSignal(
-    this._gameService.games$.pipe(
-      map((games) => [...new Set(games.map((g) => g.league))]),
-    ),
-  );
 
   uniqueTeams = toSignal(
     this._gameService.games$.pipe(
@@ -101,7 +94,6 @@ export class GameListComponent {
       ),
       map(({ games, filters }) => {
         return games.filter((game) => {
-          if (filters.league && game.league !== filters.league) return false;
           if (
             filters.team &&
             game.homeTeamName !== filters.team &&
@@ -118,7 +110,6 @@ export class GameListComponent {
 
   clearFilters(): void {
     this.filters.reset({
-      league: '',
       team: '',
       status: '',
     });
