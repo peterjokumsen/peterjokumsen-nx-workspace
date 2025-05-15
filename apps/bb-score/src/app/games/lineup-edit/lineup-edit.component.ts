@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
+  computed,
   DestroyRef,
   EventEmitter,
   inject,
+  input,
   Input,
   OnInit,
   Output,
-  signal,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormArray, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
@@ -18,8 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { debounceTime } from 'rxjs';
-import { Team } from '../../teams';
-import { Lineup } from '../models';
+import { Game, Lineup } from '../models';
 import { LineupService } from './lineup.service';
 import { PlayerSelectComponent } from './player-select/player-select.component';
 
@@ -45,17 +45,20 @@ export class LineupEditComponent implements OnInit {
   private _destroyRef = inject(DestroyRef);
   private _lineupSvc = inject(LineupService);
   private _lineup: Lineup | undefined;
+  private _teams = toSignal(this._lineupSvc.teams$);
 
-  currentTeam = signal<Team | null>(null);
   readonly lineupForm = this._lineupSvc.lineupForm;
 
-  @Input() set team(value: Team | null) {
-    const current = this.currentTeam();
-    if (current?.id === value?.id) return;
-
-    this.currentTeam.update(() => value);
-    this._lineupSvc.populateLineupForm();
-  }
+  game = input.required<Game | null>();
+  teamType = input.required<'home' | 'away'>();
+  currentTeam = computed(() => {
+    const game = this.game();
+    const teamType = this.teamType();
+    const teams = this._teams();
+    if (!game || !teamType || !teams) return null;
+    const id = game[`${teamType}TeamId`];
+    return teams.find((t) => t.id === id) ?? null;
+  });
 
   @Input() set lineup(value: Lineup | undefined) {
     if (value && this.currentTeam() && !this._lineup) {

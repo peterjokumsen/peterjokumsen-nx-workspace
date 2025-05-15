@@ -2,10 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, map } from 'rxjs';
 import { GamePlayer, Lineup, Position, StartingPlayer } from '../models';
+import { TeamService } from '../../teams';
 
 @Injectable()
 export class LineupService {
   private _fb = inject(FormBuilder);
+  private _teamService = inject(TeamService);
   private _currentLineupSubject = new BehaviorSubject<Lineup | null>(null);
   private _currentLineup$ = this._currentLineupSubject.asObservable();
   disabledPositions$ = this._currentLineup$.pipe(
@@ -48,6 +50,7 @@ export class LineupService {
     ),
     bench: this._fb.array([this.createPlayerFormGroup()]),
   });
+  teams$ = this._teamService.getTeams();
 
   private createPlayerLookup(
     value: Position,

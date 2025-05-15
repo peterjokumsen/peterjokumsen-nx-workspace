@@ -7,6 +7,7 @@ import {
   input,
   Input,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MatSelect, MatSelectModule } from '@angular/material/select';
 import { map, Observable } from 'rxjs';
 import { Player, PlayerEditComponent, Team } from '../../../teams';
 import {
@@ -46,6 +47,8 @@ export class PlayerSelectComponent implements OnInit {
   private _lineupService = inject(LineupService);
   private _fb = inject(FormBuilder);
   private _destroyRef = inject(DestroyRef);
+
+  @ViewChild('positionSelect') positionSelect?: MatSelect;
 
   team = input.required<Team | null>();
   playerForm = input.required<StarterFormGroup | BenchFormGroup>();
@@ -154,6 +157,9 @@ export class PlayerSelectComponent implements OnInit {
         if (p) {
           this.playerIdControl?.patchValue(p.id);
           this.updatePlayerNumber(p.number);
+          if (this.positionSelect) {
+            this.positionSelect.focus();
+          }
         }
       });
   }

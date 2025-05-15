@@ -7,7 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { Team, TeamService } from '../../teams';
+import { Team } from '../../teams';
 import { GameService } from '../game.service';
 import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
 import { Lineup, StartingPlayer } from '../models';
@@ -29,27 +29,23 @@ import { Lineup, StartingPlayer } from '../models';
   styleUrl: './game-score-manage.component.scss',
 })
 export class GameScoreManageComponent implements OnInit {
-  private _teamService = inject(TeamService);
   private _gameService = inject(GameService);
   private _snackBar = inject(MatSnackBar);
-  private _teams = toSignal(this._teamService.getTeams());
-  private _game = toSignal(this._gameService.selectedGame$);
   private _currentTeam: 'home' | 'away' = 'home';
 
-  homeTeamId = computed(() => this._game()?.homeTeamId ?? '');
-  homeTeam = computed(() => this.getTeam(this.homeTeamId(), this._teams()));
-  homeTeamName = computed(() => this._game()?.homeTeamName ?? '');
-  homeLineup = computed(() => this._game()?.homeLineup);
+  game = toSignal(this._gameService.selectedGame$);
+  homeTeamId = computed(() => this.game()?.homeTeamId ?? '');
+  homeTeamName = computed(() => this.game()?.homeTeamName ?? '');
+  homeLineup = computed(() => this.game()?.homeLineup);
 
-  awayTeamId = computed(() => this._game()?.awayTeamId ?? '');
-  awayTeam = computed(() => this.getTeam(this.awayTeamId(), this._teams()));
-  awayTeamName = computed(() => this._game()?.awayTeamName ?? '');
-  awayLineup = computed(() => this._game()?.awayLineup);
+  awayTeamId = computed(() => this.game()?.awayTeamId ?? '');
+  awayTeamName = computed(() => this.game()?.awayTeamName ?? '');
+  awayLineup = computed(() => this.game()?.awayLineup);
   expandLineup = false;
 
   missingStarters = computed(() => {
-    const home = this.getValid(this._game()?.homeLineup?.starters);
-    const away = this.getValid(this._game()?.awayLineup?.starters);
+    const home = this.getValid(this.game()?.homeLineup?.starters);
+    const away = this.getValid(this.game()?.awayLineup?.starters);
     if (home.length === 9 && away.length === 9) return '';
     const messages = [
       home.length !== 9 ? 'home' : null,
@@ -84,7 +80,7 @@ export class GameScoreManageComponent implements OnInit {
   }
 
   saveLineup(lineupData: Lineup | null, hideMessage = false): void {
-    const game = this._game();
+    const game = this.game();
     if (!game) {
       if (hideMessage) return;
       this._snackBar.open('No game selected', 'Close', {
