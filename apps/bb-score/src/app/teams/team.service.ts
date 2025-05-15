@@ -47,6 +47,12 @@ export class TeamService {
     }
   }
 
+  resetTeams(): void {
+    this._teamsSubject.next([]);
+    this._loaded = false;
+    this._storage.removeItem(STORAGE_KEY);
+  }
+
   getTeams(): Observable<Team[]> {
     const savedTeams = this.loadTeams();
     this._teamsSubject.next(savedTeams);

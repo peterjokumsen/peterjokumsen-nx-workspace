@@ -60,6 +60,12 @@ export class GameService {
     }
   }
 
+  resetGames(): void {
+    this._gamesSubject.next([]);
+    this._loaded = false;
+    this._storage.removeItem(STORAGE_KEY);
+  }
+
   getGames(): Observable<Game[]> {
     if (!this._loaded) {
       const savedGames = this.loadGames();
