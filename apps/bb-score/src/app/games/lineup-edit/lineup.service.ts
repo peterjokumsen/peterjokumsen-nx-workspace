@@ -65,6 +65,7 @@ export class LineupService {
       playerId: [init?.playerId ?? ''],
       playerNumber: [init?.playerNumber, Validators.required],
       position: [init?.position, Validators.required],
+      playerLabel: [''],
     });
   }
 
@@ -72,6 +73,7 @@ export class LineupService {
     return this._fb.group({
       playerId: [init?.playerId ?? ''],
       playerNumber: [init?.playerNumber, Validators.required],
+      playerLabel: [''],
     });
   }
 

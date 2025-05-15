@@ -1,11 +1,14 @@
 <div class="title">
   <span class="header">{{ label }}</span>
   <span class="spacer"></span>
+
+  <button matSuffix mat-raised-button (click)="clearPlayer()" [disabled]="!playerIdControl.value">
+    <mat-icon>delete</mat-icon>
+    Clear player
+  </button>
   <button
     matSuffix
     mat-raised-button
-    color="primary"
-    type="button"
     (click)="addNewPlayer()"
     [disabled]="!!playerIdControl.value"
   >

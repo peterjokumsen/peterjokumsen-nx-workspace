@@ -131,6 +131,13 @@ export class PlayerSelectComponent implements OnInit {
       });
   }
 
+  clearPlayer(): void {
+    this.playerIdControl?.patchValue('');
+    this.playerNumberControl?.patchValue('');
+    this.playerForm().controls.playerLabel.patchValue('');
+    this.playerFilterFormGroup.controls.searchPlayer.patchValue('');
+  }
+
   displayFn(playerId: string): string {
     if (!playerId || !this.team() || !this.team()?.players) {
       return '';
@@ -140,10 +147,12 @@ export class PlayerSelectComponent implements OnInit {
     if (player && this.playerIdControl?.value !== playerId) {
       this.playerIdControl?.patchValue(player.id);
       this.updatePlayerNumber(player.number);
+      const label = `${player.name} #${this.playerNumberControl.value ?? player.number}`;
+      this.playerForm().controls.playerLabel.patchValue(label);
     }
 
     return player
-      ? player.name + (player.number ? ' #' + player.number : '')
+      ? `${player.name}${player.number ? ' #' + player.number : ''}`
       : '';
   }
 
