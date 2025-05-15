@@ -1,35 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
-import { GameService } from '../game.service';
-import { Game, StartingPlayer } from '../models';
+import { firstValueFrom } from 'rxjs';
+import { StartingPlayer } from '../models';
 import { LineupService } from './lineup.service';
 
 describe('LineUpService', () => {
   let service: LineupService;
-  let gameService: jest.Mocked<Pick<GameService, 'selectedGame$'>>;
-  let gameSubject: BehaviorSubject<Game>;
 
   beforeEach(() => {
-    const initialGame: Game = {
-      awayLineup: undefined,
-      awayTeamId: undefined,
-      awayTeamName: '',
-      date: new Date(),
-      homeLineup: undefined,
-      homeTeamId: undefined,
-      homeTeamName: '',
-      id: '',
-      status: 'pending',
-    };
-    gameSubject = new BehaviorSubject<Game>(initialGame);
-    gameService = {
-      selectedGame$: gameSubject.asObservable(),
-    };
     TestBed.configureTestingModule({
       providers: [
-        { provide: GameService, useValue: gameService },
-        // actual
+        // sut
         LineupService,
       ],
     });
@@ -40,26 +21,26 @@ describe('LineUpService', () => {
     expect(service).toBeTruthy();
   });
 
-  function prepareGame() {
-    gameSubject.next({
-      ...gameSubject.value,
-      homeLineup: {
+  function prepareGame(team: 'home' | 'away' = 'home') {
+    if (team === 'home') {
+      service.populateLineupForm({
         starters: [
           { playerId: 'id-1', playerNumber: '123', position: 'P' },
           { playerId: 'id-2', playerNumber: '23', position: 'CF' },
           {} as StartingPlayer,
         ],
         bench: [{ playerId: 'id-3', playerNumber: '321' }],
-      },
-      awayLineup: {
+      });
+    } else {
+      service.populateLineupForm({
         starters: [
           { playerId: 'id-4', playerNumber: '123', position: '1' },
           { playerId: 'id-5', playerNumber: '23', position: '2' },
           {} as StartingPlayer,
         ],
         bench: [{ playerId: 'id-6', playerNumber: '321' }],
-      },
-    });
+      });
+    }
   }
 
   describe('disabledPositions$', () => {
@@ -67,17 +48,9 @@ describe('LineUpService', () => {
       prepareGame();
     });
 
-    it('should default using home team lineup', async () => {
+    it('should use lineup in use', async () => {
       const actual = await firstValueFrom(service.disabledPositions$);
       expect(actual).toEqual(['P', 'CF']);
-    });
-
-    describe('when side changed', () => {
-      it('should use away team lineup', async () => {
-        service.sideChanged('away');
-        const actual = await firstValueFrom(service.disabledPositions$);
-        expect(actual).toEqual(['1', '2']);
-      });
     });
   });
 
@@ -86,17 +59,9 @@ describe('LineUpService', () => {
       prepareGame();
     });
 
-    it('should default using home team lineup', async () => {
+    it('should lineup in use', async () => {
       const actual = await firstValueFrom(service.playerIdsUsed$);
       expect(actual).toEqual(['id-1', 'id-2', 'id-3']);
-    });
-
-    describe('when side changed', () => {
-      it('should use away team lineup', async () => {
-        service.sideChanged('away');
-        const actual = await firstValueFrom(service.playerIdsUsed$);
-        expect(actual).toEqual(['id-4', 'id-5', 'id-6']);
-      });
     });
   });
 });

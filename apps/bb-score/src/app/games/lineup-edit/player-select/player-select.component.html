@@ -1,21 +1,19 @@
 <div class="title">
   <span class="header">{{ label }}</span>
-  @if (!playerIdControl?.value) {
-    <span class="spacer"></span>
-    <button
-      matSuffix
-      mat-raised-button
-      color="primary"
-      type="button"
-      (click)="addNewPlayer()"
-      tabindex="-1"
-    >
-      <mat-icon>add_circle</mat-icon>
-      Add New Player
-    </button>
-  }
+  <span class="spacer"></span>
+  <button
+    matSuffix
+    mat-raised-button
+    color="primary"
+    type="button"
+    (click)="addNewPlayer()"
+    [disabled]="playerIdControl.value"
+  >
+    <mat-icon>add_circle</mat-icon>
+    Add New Player
+  </button>
 </div>
-<div [formGroup]="playerForm" class="player-select-container">
+<div [formGroup]="playerForm()" class="player-select-container">
   <mat-form-field appearance="outline" class="player-number">
     <mat-label>Number</mat-label>
     <input
@@ -55,7 +53,7 @@
     </mat-autocomplete>
   </mat-form-field>
 
-  @if (isStarter) {
+  @if (isStarter()) {
     <mat-form-field appearance="outline" class="player-position">
       <mat-label>Position</mat-label>
       <mat-select formControlName="position">

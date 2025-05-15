@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  input,
+  Input,
+  OnInit,
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,8 +18,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { map, Observable } from 'rxjs';
-import { Player, PlayerEditComponent, TeamService } from '../../../teams';
-import { LineupService } from '../lineup.service';
+import { Player, PlayerEditComponent, Team } from '../../../teams';
+import {
+  BenchFormGroup,
+  LineupService,
+  StarterFormGroup,
+} from '../lineup.service';
 
 @Component({
   selector: 'app-player-select',
@@ -32,14 +44,14 @@ import { LineupService } from '../lineup.service';
 export class PlayerSelectComponent implements OnInit {
   private _bottomSheet = inject(MatBottomSheet);
   private _lineupService = inject(LineupService);
-  private _teamService = inject(TeamService);
   private _fb = inject(FormBuilder);
   private _destroyRef = inject(DestroyRef);
 
-  team = toSignal(this._teamService.selectedTeam$);
-  @Input() playerForm!: FormGroup;
+  team = input.required<Team | null>();
+  playerForm = input.required<StarterFormGroup | BenchFormGroup>();
   @Input() label = 'Player';
-  @Input() isStarter = false;
+
+  isStarter = computed(() => 'position' in this.playerForm().controls);
 
   playerFilterFormGroup = this._fb.group({
     searchPlayer: [''],
@@ -52,26 +64,34 @@ export class PlayerSelectComponent implements OnInit {
   filteredPlayers$: Observable<Player[]> =
     this.playerFilterFormGroup.controls.searchPlayer.valueChanges.pipe(
       map((value) => {
-        if ((value ?? '').length >= 1) return this.filterPlayers(value);
-        return [];
+        return this.filterPlayers(value);
       }),
     );
 
   get playerIdControl() {
-    return this.playerForm.get('playerId');
+    return this.playerForm().controls.playerId;
   }
 
   get playerNumberControl() {
-    return this.playerForm.get('playerNumber');
+    return this.playerForm().controls.playerNumber;
   }
 
   get playerPositionControl() {
-    return this.playerForm.get('position');
+    const fg = this.playerForm();
+    return this.isStarterFormGroup(fg) ? fg.controls.position : null;
+  }
+
+  private isStarterFormGroup(
+    group: StarterFormGroup | BenchFormGroup,
+  ): group is StarterFormGroup {
+    return 'position' in group.controls;
   }
 
   private updatePlayerNumber(playerNumber: number | undefined): void {
     if (!this.playerNumberControl || this.playerNumberControl.value) return;
-    this.playerNumberControl.patchValue(playerNumber ?? null);
+    this.playerNumberControl.patchValue(
+      playerNumber ? `${playerNumber}` : null,
+    );
   }
 
   private filterPlayers(value: string | null): Player[] {
@@ -116,6 +136,7 @@ export class PlayerSelectComponent implements OnInit {
     const player = this.team()?.players.find((p) => p.id === playerId);
     if (player && this.playerIdControl?.value !== playerId) {
       this.playerIdControl?.patchValue(player.id);
+      this.updatePlayerNumber(player.number);
     }
 
     return player

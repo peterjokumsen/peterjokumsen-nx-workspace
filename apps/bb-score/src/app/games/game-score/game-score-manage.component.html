@@ -5,17 +5,14 @@
         Lineup
       </mat-panel-title>
       <mat-panel-description>
-        Update lineup details
-        @if (missingStarters()) {
-          <span class="urgent"> , {{ missingStarters() }} </span>
-        }
+        Update lineup details{{ missingStarters() }}
       </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="lineup-container">
       <mat-tab-group (selectedIndexChange)="onTeamTabChange($event)">
         <mat-tab label="Home Team">
           <app-lineup-edit
-            [team]="currentTeam$ | async"
+            [team]="homeTeam()"
             [lineup]="homeLineup()"
             (saveLineup)="saveLineup($event)"
             (lineupUpdate)="saveLineup($event, true)"
@@ -25,7 +22,7 @@
 
         <mat-tab label="Away Team">
           <app-lineup-edit
-            [team]="currentTeam$ | async"
+            [team]="awayTeam()"
             [lineup]="awayLineup()"
             (saveLineup)="saveLineup($event)"
             (lineupUpdate)="saveLineup($event, true)"

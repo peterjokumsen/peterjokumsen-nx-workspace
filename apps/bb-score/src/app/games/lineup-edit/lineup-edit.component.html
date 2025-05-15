@@ -10,9 +10,9 @@
       >
         <div [formGroupName]="i">
           <app-player-select
+            [team]="currentTeam()"
             [playerForm]="playerCtrl"
             [label]="'Batting #' + (i + 1)"
-            [isStarter]="true"
           ></app-player-select>
         </div>
       </div>
@@ -26,6 +26,7 @@
       >
         <div [formGroupName]="i">
           <app-player-select
+            [team]="currentTeam()"
             [playerForm]="playerCtrl"
             [label]="'Bench Player ' + (i + 1)"
           ></app-player-select>
