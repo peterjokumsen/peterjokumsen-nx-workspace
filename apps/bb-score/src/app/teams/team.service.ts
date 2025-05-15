@@ -80,7 +80,7 @@ export class TeamService {
     return this.selectedTeam$;
   }
 
-  createTeam(team: Omit<Team, 'id' | 'players'>): void {
+  createTeam(team: Omit<Team, 'id' | 'players'>): Team {
     const newTeam: Team = {
       ...team,
       id: Math.random().toString(36).substring(2, 9),
@@ -88,6 +88,7 @@ export class TeamService {
     };
     const updatedTeams = [...this.loadTeams(), newTeam];
     this.saveTeams(updatedTeams);
+    return newTeam;
   }
 
   updateTeam(team: Team): void {
