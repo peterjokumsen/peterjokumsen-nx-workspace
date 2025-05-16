@@ -3,6 +3,7 @@ import { GameSnapshot } from '../game-score/scoring/models';
 export interface GamePlayer {
   playerId?: string;
   playerNumber: string;
+  playerLabel: string;
 }
 
 export type Position = 'P' | 'C' | '1' | '2' | '3' | 'SS' | 'LF' | 'CF' | 'RF';

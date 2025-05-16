@@ -47,6 +47,12 @@ export class TeamService {
     }
   }
 
+  resetTeams(): void {
+    this._teamsSubject.next([]);
+    this._loaded = false;
+    this._storage.removeItem(STORAGE_KEY);
+  }
+
   getTeams(): Observable<Team[]> {
     const savedTeams = this.loadTeams();
     this._teamsSubject.next(savedTeams);
@@ -74,7 +80,7 @@ export class TeamService {
     return this.selectedTeam$;
   }
 
-  createTeam(team: Omit<Team, 'id' | 'players'>): void {
+  createTeam(team: Omit<Team, 'id' | 'players'>): Team {
     const newTeam: Team = {
       ...team,
       id: Math.random().toString(36).substring(2, 9),
@@ -82,6 +88,7 @@ export class TeamService {
     };
     const updatedTeams = [...this.loadTeams(), newTeam];
     this.saveTeams(updatedTeams);
+    return newTeam;
   }
 
   updateTeam(team: Team): void {

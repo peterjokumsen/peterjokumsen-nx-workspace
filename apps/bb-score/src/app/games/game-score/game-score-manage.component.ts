@@ -7,11 +7,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { BehaviorSubject, Observable, of, switchMap } from 'rxjs';
-import { Team, TeamService } from '../../teams';
+import { Team } from '../../teams';
 import { GameService } from '../game.service';
 import { LineupEditComponent } from '../lineup-edit/lineup-edit.component';
-import { Lineup } from '../models';
+import { Lineup, StartingPlayer } from '../models';
 
 @Component({
   selector: 'app-game-score-manage',
@@ -30,60 +29,58 @@ import { Lineup } from '../models';
   styleUrl: './game-score-manage.component.scss',
 })
 export class GameScoreManageComponent implements OnInit {
-  private _teamService = inject(TeamService);
   private _gameService = inject(GameService);
   private _snackBar = inject(MatSnackBar);
-  private _currentTeamIdSubject = new BehaviorSubject<string | null>(null);
-  private _game = toSignal(this._gameService.selectedGame$);
+  private _currentTeam: 'home' | 'away' = 'home';
 
-  homeTeamId = computed(() => this._game()?.homeTeamId ?? '');
-  awayTeamId = computed(() => this._game()?.awayTeamId ?? '');
-  homeTeamName = computed(() => this._game()?.homeTeamName ?? '');
-  awayTeamName = computed(() => this._game()?.awayTeamName ?? '');
-  homeLineup = computed(() => this._game()?.homeLineup);
-  awayLineup = computed(() => this._game()?.awayLineup);
+  game = toSignal(this._gameService.selectedGame$);
+  homeTeamId = computed(() => this.game()?.homeTeamId ?? '');
+  homeTeamName = computed(() => this.game()?.homeTeamName ?? '');
+  homeLineup = computed(() => this.game()?.homeLineup);
+
+  awayTeamId = computed(() => this.game()?.awayTeamId ?? '');
+  awayTeamName = computed(() => this.game()?.awayTeamName ?? '');
+  awayLineup = computed(() => this.game()?.awayLineup);
   expandLineup = false;
 
   missingStarters = computed(() => {
-    const home =
-      this._game()?.homeLineup?.starters?.filter(
-        (s) => s.playerNumber || s.playerId,
-      ) ?? [];
-    const away =
-      this._game()?.awayLineup?.starters?.filter(
-        (s) => s.playerNumber || s.playerId,
-      ) ?? [];
-    if (home.length === 9 && away.length === 9) return null;
+    const home = this.getValid(this.game()?.homeLineup?.starters);
+    const away = this.getValid(this.game()?.awayLineup?.starters);
+    if (home.length === 9 && away.length === 9) return '';
     const messages = [
-      home.length !== 9 ? 'Home team is missing starting players' : null,
-      away.length !== 9 ? 'Away team is missing starting players' : null,
-    ];
-    return messages.filter((m) => m).join(' & ');
+      home.length !== 9 ? 'home' : null,
+      away.length !== 9 ? 'away' : null,
+    ].filter((m) => m);
+    const prefix = messages.join(' & ');
+    return `, ${prefix} team${messages.length > 1 ? 's are' : ' is'} missing starting players`;
   });
 
-  currentTeam$: Observable<Team | null> = this._currentTeamIdSubject.pipe(
-    switchMap((teamId) => {
-      if (!teamId) return of(null);
-      return this._teamService.getTeam(teamId);
-    }),
-  );
+  private getValid(starters: StartingPlayer[] | undefined): StartingPlayer[] {
+    return (
+      starters?.filter((s) => s.position && s.playerId && s.playerNumber) ?? []
+    );
+  }
+
+  private getTeam(id: string | null, teams: Team[] | undefined): Team | null {
+    if (!id || !teams) return null;
+    return teams.find((t) => t.id === id) ?? null;
+  }
 
   ngOnInit() {
-    this._currentTeamIdSubject.next(this.homeTeamId());
     if (this.missingStarters()) this.expandLineup = true;
   }
 
   onTeamTabChange(index: number): void {
     // Switch between home and away team
     if (index === 0 && this.homeTeamId()) {
-      this._currentTeamIdSubject.next(this.homeTeamId());
+      this._currentTeam = 'home';
     } else if (index === 1 && this.awayTeamId()) {
-      this._currentTeamIdSubject.next(this.awayTeamId());
+      this._currentTeam = 'away';
     }
   }
 
   saveLineup(lineupData: Lineup | null, hideMessage = false): void {
-    const game = this._game();
+    const game = this.game();
     if (!game) {
       if (hideMessage) return;
       this._snackBar.open('No game selected', 'Close', {
@@ -92,11 +89,7 @@ export class GameScoreManageComponent implements OnInit {
       return;
     }
 
-    // Determine if we're saving home or away lineup based on the current team
-    const currentTeamId = this._currentTeamIdSubject.value;
-    const isHomeTeam = currentTeamId === game.homeTeamId;
-
-    // Create a copy of the game to update
+    const isHomeTeam = this._currentTeam === 'home';
     const updatedGame = { ...game };
 
     // Update the appropriate lineup
