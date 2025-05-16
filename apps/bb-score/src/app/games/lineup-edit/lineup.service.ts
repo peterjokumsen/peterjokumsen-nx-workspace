@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { BehaviorSubject, map } from 'rxjs';
-import { GamePlayer, Lineup, Position, StartingPlayer } from '../models';
 import { TeamService } from '../../teams';
+import { GamePlayer, Lineup, Position, StartingPlayer } from '../models';
 
 @Injectable()
 export class LineupService {

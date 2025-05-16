@@ -25,20 +25,40 @@ describe('LineUpService', () => {
     if (team === 'home') {
       service.populateLineupForm({
         starters: [
-          { playerId: 'id-1', playerNumber: '123', position: 'P' },
-          { playerId: 'id-2', playerNumber: '23', position: 'CF' },
+          {
+            playerId: 'id-1',
+            playerNumber: '123',
+            position: 'P',
+            playerLabel: '',
+          },
+          {
+            playerId: 'id-2',
+            playerNumber: '23',
+            position: 'CF',
+            playerLabel: '',
+          },
           {} as StartingPlayer,
         ],
-        bench: [{ playerId: 'id-3', playerNumber: '321' }],
+        bench: [{ playerId: 'id-3', playerNumber: '321', playerLabel: '' }],
       });
     } else {
       service.populateLineupForm({
         starters: [
-          { playerId: 'id-4', playerNumber: '123', position: '1' },
-          { playerId: 'id-5', playerNumber: '23', position: '2' },
+          {
+            playerId: 'id-4',
+            playerNumber: '123',
+            position: '1',
+            playerLabel: '',
+          },
+          {
+            playerId: 'id-5',
+            playerNumber: '23',
+            position: '2',
+            playerLabel: '',
+          },
           {} as StartingPlayer,
         ],
-        bench: [{ playerId: 'id-6', playerNumber: '321' }],
+        bench: [{ playerId: 'id-6', playerNumber: '321', playerLabel: '' }],
       });
     }
   }
