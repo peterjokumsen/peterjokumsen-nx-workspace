@@ -4,12 +4,6 @@ export interface GameState {
   outs: number;
   strikes: number;
   balls: number;
+  awayScore: number;
+  homeScore: number;
 }
-
-export const initialGameState: GameState = {
-  inning: 1,
-  frame: 'top',
-  outs: 0,
-  strikes: 0,
-  balls: 0,
-};

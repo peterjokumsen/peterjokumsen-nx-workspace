@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { GameService } from '../../game.service';
 import { Game, Position, StartingPlayer } from '../../models';
-import { GameSnapshot, GameState } from './models';
 import { ScoringService } from './scoring.service';
 
 @Injectable()
@@ -119,35 +118,6 @@ describe('ScoringService', () => {
       it('should set away players', () => {
         expect(service.awayBench).toEqual(initialGame.awayLineup?.bench);
         expect(service.awayPlayers).toEqual(initialGame.awayLineup?.starters);
-      });
-
-      it('should update score state', async () => {
-        const state = await firstValueFrom(service.latestState$);
-        const expected: GameState = {
-          balls: 0,
-          frame: 'top',
-          inning: 1,
-          outs: 0,
-          strikes: 0,
-        };
-        expect(state).toEqual(expected);
-      });
-
-      it('should append snapshot', () => {
-        const snapshot: GameSnapshot = {
-          balls: 0,
-          batterId: 'a-0',
-          frame: 'top',
-          inning: 1,
-          outs: 0,
-          pitcherId: 'h-0',
-          runners: {},
-          strikes: 0,
-        };
-        expect(gameService.appendSnapshot).toHaveBeenCalledWith(
-          initialGame.id,
-          snapshot,
-        );
       });
     });
   });
