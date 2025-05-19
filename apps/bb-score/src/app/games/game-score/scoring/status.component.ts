@@ -1,8 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
-import { map } from 'rxjs';
 import { ScoringService } from './scoring.service';
 
 @Component({
@@ -11,6 +15,18 @@ import { ScoringService } from './scoring.service';
   imports: [CommonModule, MatIcon],
   template: `
     <div class="status-table">
+      <div class="score">
+        <div class="team">
+          <mat-icon>home</mat-icon>
+          <span class="label">{{ homeScore() }}</span>
+        </div>
+
+        <div class="team">
+          <span class="label">{{ awayScore() }}</span>
+          <mat-icon>toys</mat-icon>
+        </div>
+      </div>
+
       <div class="row">
         <span class="header">Inning</span>
         <span class="label">
@@ -54,11 +70,30 @@ import { ScoringService } from './scoring.service';
       column-gap: 10px;
       row-gap: 10px;
       grid-template-columns: 1fr 1fr;
+
+      &:nth-child(odd) {
+        color: var(--mat-sys-primary-container);
+      }
+    }
+
+    .score {
+      padding: 10px;
+      display: flex;
+      border-radius: 10px;
+      border: 1px solid var(--mat-sys-primary-container);
+      justify-content: space-around;
+      margin-bottom: 1.5rem;
+    }
+
+    .team {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      justify-content: center;
     }
 
     .header {
       font-weight: bold;
-      font-size: 1.2rem;
     }
 
     .label {
@@ -72,13 +107,12 @@ import { ScoringService } from './scoring.service';
 })
 export class ScoreStatusComponent {
   private _scoringService = inject(ScoringService);
-  inning = toSignal(
-    this._scoringService.latestState$.pipe(map((m) => m.inning)),
-  );
-  frame = toSignal(this._scoringService.latestState$.pipe(map((m) => m.frame)));
-  outs = toSignal(this._scoringService.latestState$.pipe(map((m) => m.outs)));
-  strikes = toSignal(
-    this._scoringService.latestState$.pipe(map((m) => m.strikes)),
-  );
-  balls = toSignal(this._scoringService.latestState$.pipe(map((m) => m.balls)));
+  private _state = toSignal(this._scoringService.latestState$);
+  awayScore = computed(() => this._state()?.awayScore ?? 0);
+  homeScore = computed(() => this._state()?.homeScore ?? 0);
+  inning = computed(() => this._state()?.inning ?? '');
+  frame = computed(() => this._state()?.frame ?? '');
+  outs = computed(() => this._state()?.outs ?? '');
+  strikes = computed(() => this._state()?.strikes ?? '');
+  balls = computed(() => this._state()?.balls ?? '');
 }

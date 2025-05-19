@@ -58,9 +58,9 @@ export class ScoringService {
         if (runners['3']) {
           // todo: figure out a way to record which player scored and add an RBI for the batter.
           if (state.frame === 'top') {
-            state.awayScore += 1;
+            state.awayScore = (state.awayScore || 0) + 1;
           } else {
-            state.homeScore += 1;
+            state.homeScore = (state.homeScore || 0) + 1;
           }
         }
       }
