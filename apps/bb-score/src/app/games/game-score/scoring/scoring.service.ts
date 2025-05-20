@@ -172,40 +172,28 @@ export class ScoringService {
       return 'failed';
     }
     this._game = game;
+    const mapPlayer = (player: GamePlayer) => ({
+      ...player,
+      playerId: player.playerId ?? '',
+      playerNumber: player.playerNumber,
+      playerLabel: player.playerLabel,
+    });
+
+    const mapStarter = (player: StartingPlayer) => ({
+      ...mapPlayer(player),
+      position: player.position ?? 'P',
+    });
+
     this._awayBench = (this._game.awayLineup?.bench ?? [])
       .filter((p) => p.playerId)
-      .map((player) => ({
-        ...player,
-        playerId: player.playerId ?? '',
-        playerNumber: player.playerNumber,
-        playerLabel: player.playerLabel,
-      }));
-    this._awayPlayers = (this._game.awayLineup?.starters ?? []).map(
-      (player) => ({
-        ...player,
-        playerId: player.playerId ?? '',
-        playerNumber: player.playerNumber,
-        playerLabel: player.playerLabel,
-        position: player.position ?? 'P',
-      }),
-    );
+      .map(mapPlayer);
+
+    this._awayPlayers = (this._game.awayLineup?.starters ?? []).map(mapStarter);
+
     this._homeBench = (this._game.homeLineup?.bench ?? [])
       .filter((p) => p.playerId)
-      .map((player) => ({
-        ...player,
-        playerId: player.playerId ?? '',
-        playerNumber: player.playerNumber,
-        playerLabel: player.playerLabel,
-      }));
-    this._homePlayers = (this._game.homeLineup?.starters ?? []).map(
-      (player) => ({
-        ...player,
-        playerId: player.playerId ?? '',
-        playerNumber: player.playerNumber,
-        playerLabel: player.playerLabel,
-        position: player.position ?? 'P',
-      }),
-    );
+      .map(mapPlayer);
+    this._homePlayers = (this._game.homeLineup?.starters ?? []).map(mapStarter);
 
     const teams = await firstValueFrom(
       this._teamService
