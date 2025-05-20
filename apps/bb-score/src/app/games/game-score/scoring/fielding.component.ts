@@ -6,12 +6,23 @@ import { ScoringService } from './scoring.service';
 @Component({
   imports: [CommonModule, MatButton],
   template: `
-    <p>Fielding</p>
-    <button mat-raised-button (click)="scoring.switchState()">
-      Switch state
+    <button mat-raised-button (click)="scoring.updateState({ type: 'foul' })">
+      Foul
+    </button>
+    <button
+      mat-raised-button
+      (click)="scoring.updateState({ type: 'home-run' })"
+    >
+      Home Run
     </button>
   `,
-  styles: ``,
+  styles: `
+    :host {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FieldingComponent {

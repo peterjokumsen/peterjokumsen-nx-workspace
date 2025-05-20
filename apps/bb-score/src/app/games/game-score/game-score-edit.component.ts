@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { distinctUntilChanged, filter, map } from 'rxjs';
@@ -19,6 +20,7 @@ import { ScoreStatusComponent } from './scoring/status.component';
     ScoreStatusComponent,
     BasesStatusComponent,
     FieldStatusComponent,
+    MatButton,
   ],
   providers: [ScoringService],
   template: `
@@ -31,6 +33,35 @@ import { ScoreStatusComponent } from './scoring/status.component';
             </mat-card-header>
             <mat-card-content>
               <router-outlet></router-outlet>
+              <div class="admin-controls">
+                <button
+                  mat-raised-button
+                  (click)="scoringService.updateState({ type: 'out' })"
+                >
+                  Out
+                </button>
+                <button
+                  mat-raised-button
+                  (click)="scoringService.updateState({ type: 'ballgame' })"
+                >
+                  Ballgame
+                </button>
+                @if (currentAction() === 'time-out') {
+                  <button
+                    mat-raised-button
+                    (click)="scoringService.updateState({ type: 'time-in' })"
+                  >
+                    Time In
+                  </button>
+                } @else {
+                  <button
+                    mat-raised-button
+                    (click)="scoringService.updateState({ type: 'time-out' })"
+                  >
+                    Time Out
+                  </button>
+                }
+              </div>
             </mat-card-content>
           </mat-card>
 
@@ -71,6 +102,17 @@ import { ScoreStatusComponent } from './scoring/status.component';
     }
   `,
   styles: `
+    .admin-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+      background: var(--mat-sys-outline);
+      color: var(--mat-sys-on-outline);
+      padding: 5px;
+      border-radius: 10px;
+    }
+
     .score-edit-container {
       display: grid;
       grid-template-columns: 1fr;
@@ -104,20 +146,24 @@ import { ScoreStatusComponent } from './scoring/status.component';
   `,
 })
 export class GameScoreEditComponent implements OnInit {
-  private _scoringService = inject(ScoringService);
+  scoringService = inject(ScoringService);
   private _router = inject(Router);
   private _route = inject(ActivatedRoute);
-  private _state$ = this._scoringService.latestState$.pipe(
+  private _state$ = this.scoringService.latestState$.pipe(
     map((s) => s.state),
     filter((s) => !!s),
     distinctUntilChanged(),
     takeUntilDestroyed(),
   );
 
+  currentAction = toSignal(
+    this.scoringService.latestState$.pipe(map((s) => s.currentAction)),
+  );
+
   state = signal<'loading' | 'ready' | 'failed'>('loading');
 
   async ngOnInit() {
-    const result = await this._scoringService.load();
+    const result = await this.scoringService.load();
     this.state.update(() => result);
     if (result !== 'failed') {
       this._state$.subscribe((state) =>

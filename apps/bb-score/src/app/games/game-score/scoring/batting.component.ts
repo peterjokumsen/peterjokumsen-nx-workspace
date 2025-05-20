@@ -12,8 +12,8 @@ import { ScoringService } from './scoring.service';
     <button mat-raised-button (click)="scoring.updateState({ type: 'strike' })">
       Strike
     </button>
-    <button mat-raised-button (click)="scoring.switchState()">
-      Switch to fielding
+    <button mat-raised-button (click)="scoring.updateState({ type: 'hit' })">
+      Hit
     </button>
   `,
   styles: `
