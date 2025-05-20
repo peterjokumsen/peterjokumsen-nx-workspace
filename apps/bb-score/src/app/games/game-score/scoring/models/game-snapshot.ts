@@ -1,3 +1,4 @@
+import { GameActionTypes } from './game-action';
 import { GameState } from './game-state';
 
 export interface GameSnapshot extends GameState {
@@ -5,6 +6,8 @@ export interface GameSnapshot extends GameState {
   batterId: string;
   runners: Partial<Record<'1' | '2' | '3', string>>;
   state: 'batting' | 'fielding';
+  hit?: 'hit' | 'fielded' | 'caught' | 'foul';
+  currentAction?: GameActionTypes;
 }
 
 export const initialGameState: GameSnapshot = {

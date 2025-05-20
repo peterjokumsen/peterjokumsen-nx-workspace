@@ -143,9 +143,20 @@ export class ScoringService {
     };
   }
 
+  protected onFoul(action: GameAction, state: GameSnapshot): GameSnapshot {
+    let strikeCount = state.strikes + 1;
+    if (strikeCount === 3) strikeCount = 2;
+    return {
+      ...state,
+      strikes: strikeCount,
+      state: 'batting',
+    };
+  }
+
   async updateState(action: GameAction) {
     if (!this._game) return;
     const state = await firstValueFrom(this.latestState$);
+    state.currentAction = action.type;
     switch (action.type) {
       case 'strike':
         await this._gameService.appendSnapshot(
@@ -159,6 +170,21 @@ export class ScoringService {
           this.onBall(action, state),
         );
         break;
+      case 'foul':
+        await this._gameService.appendSnapshot(
+          this._game.id,
+          this.onFoul(action, state),
+        );
+        break;
+      case 'hit':
+        await this._gameService.appendSnapshot(this._game.id, {
+          ...state,
+          state: 'fielding',
+        });
+        break;
+      case 'time-out':
+      case 'time-in':
+        await this._gameService.appendSnapshot(this._game.id, { ...state });
     }
   }
 
