@@ -7,6 +7,11 @@ export const scoringRoutes: Route[] = [
       import('./batting.component').then((c) => c.BattingComponent),
   },
   {
+    path: 'fielding',
+    loadComponent: () =>
+      import('./fielding.component').then((c) => c.FieldingComponent),
+  },
+  {
     path: '',
     pathMatch: 'full',
     redirectTo: 'batting',

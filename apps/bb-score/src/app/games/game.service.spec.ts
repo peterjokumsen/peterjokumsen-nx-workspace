@@ -185,6 +185,9 @@ describe('GameService', () => {
         pitcherId: 'p-id',
         runners: {},
         strikes: 0,
+        state: 'batting',
+        awayScore: 0,
+        homeScore: 0,
       };
       game = {
         awayLineup: undefined,
