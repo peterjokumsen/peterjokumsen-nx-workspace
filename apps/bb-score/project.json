@@ -8,12 +8,16 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:application",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/bb-score",
         "index": "apps/bb-score/src/index.html",
         "browser": "apps/bb-score/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/bb-score/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
@@ -22,7 +26,9 @@
             "input": "apps/bb-score/public"
           }
         ],
-        "styles": ["apps/bb-score/src/styles.scss"],
+        "styles": [
+          "apps/bb-score/src/styles.scss"
+        ],
         "scripts": []
       },
       "configurations": {
@@ -72,7 +78,9 @@
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/bb-score/jest.config.ts"
       }

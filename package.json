@@ -51,6 +51,7 @@
     "@fortawesome/angular-fontawesome": "^1.0.0",
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@ngrx/signals": "^19.2.0",
     "@nx/angular": "20.5.0",
     "express": "^4.21.2",
     "highlight.js": "^11.11.1",
