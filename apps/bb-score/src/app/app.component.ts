@@ -2,11 +2,17 @@ import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { GameStore } from './signal-store';
 import { CommonModule } from '@angular/common';
-import { TeamComponent } from './components';
+import { GameStatusComponent, TeamComponent } from './components';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
-  imports: [CommonModule, RouterModule, TeamComponent, MatExpansionModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    TeamComponent,
+    MatExpansionModule,
+    GameStatusComponent,
+  ],
   standalone: true,
   selector: 'app-root',
   template: `
@@ -20,6 +26,15 @@ import { MatExpansionModule } from '@angular/material/expansion';
         <app-team side="home" />
         <app-team side="away" />
       </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Game Status </mat-panel-title>
+        <mat-panel-description>
+          Status of the current game
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-game-status />
     </mat-expansion-panel>
   `,
   styles: `

@@ -34,17 +34,7 @@ function createPositions(
 function createBattingOrder(
   players: Player[],
 ): Record<BattingPosition, PlayerIdentifier> {
-  const batting: BattingPosition[] = [
-    '1',
-    '9',
-    '2',
-    '3',
-    '4',
-    '5',
-    '6',
-    '7',
-    '8',
-  ];
+  const batting: BattingPosition[] = [1, 9, 2, 3, 4, 5, 6, 7, 8];
   return batting.reduce(
     (acc, position, i) => {
       acc[position] = { id: players[i].id };
@@ -127,17 +117,17 @@ export function createGameState(): GameState {
   return {
     game,
     status: {
-      inning: 0,
+      inning: 1,
       frame: 'top',
       outs: 0,
       strikes: 0,
       balls: 0,
       batting: {
-        home: '1',
-        away: '1',
+        home: 1,
+        away: 1,
       },
       currentFielders: game.home.positions,
-      currentRunners: {},
+      currentRunners: { '1B': { id: 'a1' }, '3B': { id: 'a4' } },
       actions: [],
     },
   };

@@ -1,5 +1,6 @@
-export type BattingPosition = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
+export type BattingPosition = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 export type GamePosition = 'P' | 'C' | '1B' | '2B' | '3B' | 'SS' | 'LF' | 'CF' | 'RF';
+export type Bases = Extract<GamePosition, '1B' | '2B' | '3B'> | 'H';
 export type GameTeam = 'home' | 'away';
 
 export interface Player {
@@ -59,7 +60,7 @@ export interface FieldAction {
 export interface RunnerAction {
   type: 'steal' | 'picked' | 'progress';
   runner: PlayerIdentifier;
-  base: Extract<GamePosition, '2B' | '3B' | 'C'>
+  base: Exclude<Bases, '1B'>;
   fielder?: PlayerIdentifier;
   pitcher?: PlayerIdentifier;
 }
@@ -97,7 +98,7 @@ export interface GameStatus {
     away: BattingPosition;
   };
   currentFielders: Lineup['positions'];
-  currentRunners: Partial<Record<Extract<GamePosition, '1B' | '2B' | '3B'>, PlayerIdentifier>>;
+  currentRunners: Partial<Record<Bases, PlayerIdentifier>>;
   actions: GameAction[];
 }
 
