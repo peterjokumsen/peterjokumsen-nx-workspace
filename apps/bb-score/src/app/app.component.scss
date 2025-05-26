@@ -1,0 +1,22 @@
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+  padding: 1rem;
+
+  @include mat.expansion-overrides((
+    header-text-color: var(--mat-sys-primary),
+    header-description-color: var(--mat-sys-on-primary-container),
+  ));
+}
+
+.teams {
+  display: flex;
+  gap: 10px;
+  justify-content: space-around;
+  flex-direction: column;
+
+  @media (min-width: 800px) {
+    flex-direction: row;
+  }
+}

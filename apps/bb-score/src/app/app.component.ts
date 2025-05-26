@@ -4,6 +4,8 @@ import { GameStore } from './signal-store';
 import { CommonModule } from '@angular/common';
 import { GameStatusComponent, TeamComponent } from './components';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
+import { GamePlayComponent } from './components/game-play.component';
 
 @Component({
   imports: [
@@ -12,6 +14,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     TeamComponent,
     MatExpansionModule,
     GameStatusComponent,
+    GamePlayComponent,
   ],
   standalone: true,
   selector: 'app-root',
@@ -36,24 +39,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
       </mat-expansion-panel-header>
       <app-game-status />
     </mat-expansion-panel>
-  `,
-  styles: `
-    :host {
-      display: block;
-      padding: 1rem;
-    }
 
-    .teams {
-      display: flex;
-      gap: 10px;
-      justify-content: space-around;
-      flex-direction: column;
-
-      @media (min-width: 800px) {
-        flex-direction: row;
-      }
-    }
+    <app-game-play />
   `,
+  styleUrl: 'app.component.scss',
   providers: [GameStore],
 })
 export class AppComponent {
