@@ -45,12 +45,12 @@ export const GameStore = signalStore(
         [] as Array<Player & { base: Bases }>,
       );
     }),
-    currentBatter: computed((): string => {
+    currentBatter: computed(() => {
       const teamDetails = game()[battingTeam()];
       const battingOrder = teamDetails.battingOrder;
       const currentPosition = status().batting[battingTeam()];
       const batterId = battingOrder[currentPosition].id;
-      return teamDetails.players[batterId].name;
+      return teamDetails.players[batterId];
     }),
   })),
   withComputed(({ game, fieldingTeam }) => ({
@@ -67,6 +67,11 @@ export const GameStore = signalStore(
         },
         [] as Array<Player & { position: GamePosition }>,
       );
+    }),
+    currentPitcher: computed(() => {
+      const teamDetails = game()[fieldingTeam()];
+      const pitcherId = teamDetails.positions.P.id;
+      return teamDetails.players[pitcherId];
     }),
   })),
   withMethods((state) => ({
