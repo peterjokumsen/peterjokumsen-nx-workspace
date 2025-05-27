@@ -4,10 +4,12 @@
   display: block;
   padding: 1rem;
 
-  @include mat.expansion-overrides((
-    header-text-color: var(--mat-sys-primary),
-    header-description-color: var(--mat-sys-on-primary-container),
-  ));
+  @include mat.expansion-overrides(
+    (
+      header-text-color: var(--mat-sys-primary),
+      header-description-color: var(--mat-sys-on-primary-container),
+    )
+  );
 }
 
 .teams {

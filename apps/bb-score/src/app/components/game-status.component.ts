@@ -5,10 +5,10 @@ import {
   computed,
   inject,
 } from '@angular/core';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
 import { GameStore } from '../signal-store';
-import { MatIcon } from '@angular/material/icon';
-import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-game-status',
@@ -22,9 +22,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
           {{ inning() }}
         </mat-panel-description>
       </mat-expansion-panel-header>
-      <p class="inning">
-
-      </p>
+      <p class="inning"></p>
     </mat-expansion-panel>
 
     <mat-expansion-panel>
@@ -60,7 +58,10 @@ import { MatExpansionModule } from '@angular/material/expansion';
           </ng-container>
         }
 
-        <tr mat-header-row *matHeaderRowDef="['name', 'number', 'position']"></tr>
+        <tr
+          mat-header-row
+          *matHeaderRowDef="['name', 'number', 'position']"
+        ></tr>
         <tr
           mat-row
           *matRowDef="let row; columns: ['name', 'number', 'position']"

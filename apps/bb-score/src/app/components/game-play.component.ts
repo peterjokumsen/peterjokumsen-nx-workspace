@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { GameStore } from '../signal-store';
 import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { GameStore } from '../signal-store';
 import { InningInfoComponent } from './inning-info.component';
 
 @Component({

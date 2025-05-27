@@ -1,5 +1,5 @@
-import { GameStore } from './game-store';
 import { TestBed } from '@angular/core/testing';
+import { GameStore } from './game-store';
 
 describe('GameStore', () => {
   beforeEach(() => {
@@ -15,6 +15,4 @@ describe('GameStore', () => {
   it('should be created', () => {
     expect(getStore()).toBeTruthy();
   });
-
-  describe('update', () => {});
 });

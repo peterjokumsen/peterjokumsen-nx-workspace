@@ -6,6 +6,7 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import {
   BattingPosition,
   GamePosition,
@@ -14,7 +15,6 @@ import {
   PlayerWithStats,
 } from '../models';
 import { GameStore } from '../signal-store';
-import { MatTableModule } from '@angular/material/table';
 
 type PlayerDetails = PlayerWithStats & {
   position?: GamePosition;

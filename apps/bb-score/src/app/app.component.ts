@@ -1,11 +1,10 @@
-import { Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { GameStore } from './signal-store';
 import { CommonModule } from '@angular/common';
-import { GameStatusComponent, TeamComponent } from './components';
+import { Component, inject } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
+import { GameStatusComponent, TeamComponent } from './components';
 import { GamePlayComponent } from './components/game-play.component';
+import { GameStore } from './signal-store';
 
 @Component({
   imports: [

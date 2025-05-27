@@ -1,5 +1,14 @@
 export type BattingPosition = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-export type GamePosition = 'P' | 'C' | '1B' | '2B' | '3B' | 'SS' | 'LF' | 'CF' | 'RF';
+export type GamePosition =
+  | 'P'
+  | 'C'
+  | '1B'
+  | '2B'
+  | '3B'
+  | 'SS'
+  | 'LF'
+  | 'CF'
+  | 'RF';
 export type Bases = Extract<GamePosition, '1B' | '2B' | '3B'> | 'H';
 export type GameTeam = 'home' | 'away';
 
@@ -89,7 +98,12 @@ export interface ManualAction {
 
 type AdminActions = SwapPlayerAction | SwapPositionAction | ManualAction;
 
-export type GameAction = PitchAction | HitAction | FieldAction | RunnerAction | AdminActions;
+export type GameAction =
+  | PitchAction
+  | HitAction
+  | FieldAction
+  | RunnerAction
+  | AdminActions;
 
 export interface GameStatus {
   inning: number;
@@ -106,10 +120,13 @@ export interface GameStatus {
   actions: GameAction[];
 }
 
-export type InningDetails = Pick<GameStatus, 'inning' | 'frame' | 'outs' | 'balls' | 'strikes'> & {
+export type InningDetails = Pick<
+  GameStatus,
+  'inning' | 'frame' | 'outs' | 'balls' | 'strikes'
+> & {
   batter: Player;
   pitcher: Player;
-}
+};
 
 export interface GameState {
   game: Game;

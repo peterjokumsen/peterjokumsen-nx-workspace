@@ -1,3 +1,4 @@
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
@@ -5,13 +6,12 @@ import {
   computed,
   inject,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MatIcon } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { map } from 'rxjs';
 import { InningDetails } from '../models';
 import { GameStore } from '../signal-store';
-import { MatIcon } from '@angular/material/icon';
-import { BreakpointObserver } from '@angular/cdk/layout';
-import { map } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-inning-info',

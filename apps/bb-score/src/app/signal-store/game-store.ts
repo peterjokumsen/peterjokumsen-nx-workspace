@@ -1,3 +1,4 @@
+import { computed, inject, InjectionToken } from '@angular/core';
 import {
   patchState,
   signalStore,
@@ -6,6 +7,8 @@ import {
   withMethods,
   withState,
 } from '@ngrx/signals';
+import { Dispatcher, event, Events, withEffects } from '@ngrx/signals/events';
+import { tap } from 'rxjs';
 import {
   Bases,
   BattingPosition,
@@ -18,9 +21,6 @@ import {
   PlayerIdentifier,
 } from '../models';
 import { createGameState } from './create-game';
-import { computed, inject, InjectionToken } from '@angular/core';
-import { Dispatcher, event, Events, withEffects } from '@ngrx/signals/events';
-import { tap } from 'rxjs';
 
 export const GAME_STATE = new InjectionToken<GameState>('GAME_STATE', {
   factory: () => createGameState(),
