@@ -19,7 +19,8 @@
     "**/tailwind.config.js",
     "**/.eslintrc.json",
     "apps/**/server.ts",
-    "**/playwright.config.ts"
+    "**/playwright.config.ts",
+    "**/index.html"
   ],
   "ignorePattern": ["import.*from\\s*'.*'"]
 }
