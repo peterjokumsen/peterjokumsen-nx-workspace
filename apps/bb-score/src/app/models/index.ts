@@ -16,7 +16,10 @@ export interface GameStats {
   homeRuns?: number;
   runs?: number;
   earnedRuns?: number;
+  strikes?: number;
+  balls?: number;
   strikeOuts?: number;
+  strikeOutSwings?: number;
   walks?: number;
   outs?: number;
   assists?: number;
@@ -40,6 +43,7 @@ export interface Game extends Record<GameTeam, Lineup> {
 
 export interface PitchAction {
   type: 'strike' | 'ball' | 'hit' | 'foul' | 'walk' | 'balk';
+  swung?: boolean;
   pitcher: PlayerIdentifier;
   batter: PlayerIdentifier;
 }
@@ -100,6 +104,11 @@ export interface GameStatus {
   currentFielders: Lineup['positions'];
   currentRunners: Partial<Record<Bases, PlayerIdentifier>>;
   actions: GameAction[];
+}
+
+export type InningDetails = Pick<GameStatus, 'inning' | 'frame' | 'outs' | 'balls' | 'strikes'> & {
+  batter: Player;
+  pitcher: Player;
 }
 
 export interface GameState {
