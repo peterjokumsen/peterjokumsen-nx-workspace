@@ -1,5 +1,4 @@
-// Custom Theming for Angular Material
-// For more information: https://material.angular.io/guide/theming
+/* You can add global styles to this file, and also import other style files */
 @use '@angular/material' as mat;
 
 html {
@@ -13,22 +12,13 @@ html {
   );
 }
 
-// Global styles
 html,
 body {
   height: 100%;
-  margin: 0;
 }
-
 body {
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
-}
-
-// Add smooth transitions for theme changes
-* {
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  background: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
 }

@@ -1,32 +1,24 @@
-.sidenav-container {
-  height: 100vh;
+@use '@angular/material' as mat;
+
+:host {
+  display: block;
+  padding: 1rem;
+
+  @include mat.expansion-overrides(
+    (
+      header-text-color: var(--mat-sys-primary),
+      header-description-color: var(--mat-sys-on-primary-container),
+    )
+  );
 }
 
-.sidenav {
-  --mdc-list-list-item-hover-label-text-color: var(--mat-sys-on-primary-hover);
-  --mdc-list-list-item-focus-label-text-color: var(--mat-sys-on-primary-hover);
-  --mdc-list-list-item-label-text-color: var(--mat-sys-on-primary-container);
+.teams {
+  display: flex;
+  gap: 10px;
+  justify-content: space-around;
+  flex-direction: column;
 
-  --mat-sidenav-container-shape: var(--mat-sys-corner-none);
-  --mat-list-active-indicator-shape: var(--mat-sys-corner-none);
-
-  width: 250px;
-  background: var(--mat-sys-primary-container);
-
-  a:hover,
-  a:focus {
-    background-color: var(--mat-sys-primary-hover);
+  @media (min-width: 800px) {
+    flex-direction: row;
   }
-}
-
-.spacer {
-  flex: 1 1 auto;
-}
-
-.content {
-  padding: 10px;
-}
-
-.active {
-  background-color: rgba(0, 0, 0, 0.04);
 }

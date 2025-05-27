@@ -1,68 +1,50 @@
-import { BreakpointObserver } from '@angular/cdk/layout';
 import { CommonModule } from '@angular/common';
-import { Component, inject, ViewChild } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { map } from 'rxjs';
-import { UpdateToastComponent } from './core/components/update-toast/update-toast.component';
-import { Theme, ThemeService } from './core/services/theme.service';
+import { Component, inject } from '@angular/core';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { RouterModule } from '@angular/router';
+import { GameStatusComponent, TeamComponent } from './components';
+import { GamePlayComponent } from './components/game-play.component';
+import { GameStore } from './signal-store';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
   imports: [
     CommonModule,
-    RouterOutlet,
-    RouterLink,
-    RouterLinkActive,
-    MatButtonModule,
-    MatIconModule,
-    MatToolbarModule,
-    MatMenuModule,
-    MatSidenavModule,
-    MatListModule,
-    UpdateToastComponent,
+    RouterModule,
+    TeamComponent,
+    MatExpansionModule,
+    GameStatusComponent,
+    GamePlayComponent,
   ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  standalone: true,
+  selector: 'app-root',
+  template: `
+    <h1>Simple bb-score</h1>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Players </mat-panel-title>
+        <mat-panel-description> Player details by teams </mat-panel-description>
+      </mat-expansion-panel-header>
+      <div class="teams">
+        <app-team side="home" />
+        <app-team side="away" />
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title> Game Status </mat-panel-title>
+        <mat-panel-description>
+          Status of the current game
+        </mat-panel-description>
+      </mat-expansion-panel-header>
+      <app-game-status />
+    </mat-expansion-panel>
+
+    <app-game-play />
+  `,
+  styleUrl: 'app.component.scss',
+  providers: [GameStore],
 })
 export class AppComponent {
-  private _breakpointObserver = inject(BreakpointObserver);
-  @ViewChild('sidenav') sidenav!: MatSidenav;
-
-  navRoutes = [
-    { route: '/', icon: 'home', title: 'Home' },
-    { route: '/games', icon: 'sports_baseball', title: 'Games' },
-    { route: '/teams', icon: 'groups', title: 'Teams' },
-    { route: '/scores', icon: 'scoreboard', title: 'Scores' },
-    { route: '/settings', icon: 'settings', title: 'Settings' },
-  ];
-
-  isMobile = toSignal(
-    this._breakpointObserver
-      .observe('(max-width: 600px)')
-      .pipe(map(({ matches }) => matches)),
-  );
-
-  constructor(private themeService: ThemeService) {}
-
-  toggleSidenav() {
-    this.sidenav.toggle();
-  }
-
-  setTheme(theme: Theme) {
-    this.themeService.setTheme(theme);
-  }
-
-  navClicked() {
-    if (this.isMobile()) {
-      this.sidenav.close();
-    }
-  }
+  store = inject(GameStore);
+  game = this.store.game;
 }
