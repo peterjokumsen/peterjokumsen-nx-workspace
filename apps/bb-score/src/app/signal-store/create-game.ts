@@ -126,8 +126,9 @@ export function createGameState(): GameState {
         home: 1,
         away: 1,
       },
+      liveBall: false,
       currentFielders: game.home.positions,
-      currentRunners: { '1B': { id: 'a1' }, '3B': { id: 'a4' } },
+      currentRunners: {},
       actions: [],
     },
   };
