@@ -17,8 +17,4 @@
   gap: 10px;
   justify-content: space-around;
   flex-direction: column;
-
-  @media (min-width: 800px) {
-    flex-direction: row;
-  }
 }

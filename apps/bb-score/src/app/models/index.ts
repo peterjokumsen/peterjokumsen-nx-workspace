@@ -19,7 +19,6 @@ export interface Player {
 }
 
 export interface GameStats {
-  pitches?: number;
   hits?: number;
   errors?: number;
   homeRuns?: number;
@@ -27,9 +26,11 @@ export interface GameStats {
   earnedRuns?: number;
   strikes?: number;
   balls?: number;
-  strikeOuts?: number;
-  strikeOutSwings?: number;
   walks?: number;
+  walked?: number;
+  walkedByHit?: number;
+  struckOut?: number;
+  struckOutSwung?: number;
   outs?: number;
   assists?: number;
 }
@@ -97,6 +98,9 @@ export interface ManualAction {
 }
 
 type AdminActions = SwapPlayerAction | SwapPositionAction | ManualAction;
+
+type UnionKeys<T> = T extends T ? keyof T : never;
+export type GameActionKeys = UnionKeys<GameAction>;
 
 export type GameAction =
   | PitchAction
