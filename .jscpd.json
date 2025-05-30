@@ -20,7 +20,8 @@
     "**/.eslintrc.json",
     "apps/**/server.ts",
     "**/playwright.config.ts",
-    "**/index.html"
+    "**/index.html",
+    "**/game-store.ts"
   ],
   "ignorePattern": ["import.*from\\s*'.*'"]
 }

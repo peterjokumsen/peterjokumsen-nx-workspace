@@ -48,6 +48,19 @@ export class TeamComponent {
     'number',
     'position',
     'battingPosition',
+    'strikes',
+    'balls',
+    'outs',
+    'walks',
+    'struckOut',
+    'struckOutSwung',
+    'walked',
+    'walkedByHit',
+    'earnedRuns',
+    'homeRuns',
+    'runs',
+    'assists',
+    'errors',
   ];
   columnsToDisplay: string[] = this.displayedColumns.slice();
 
