@@ -12,6 +12,7 @@ import { tap } from 'rxjs';
 import {
   Bases,
   BattingPosition,
+  Game,
   GameAction,
   GamePosition,
   GameState,
@@ -32,6 +33,7 @@ export const GAME_STATE = new InjectionToken<GameState>('GAME_STATE', {
 
 const strikeEvent = event('STRIKE', type<{ action: PitchAction }>());
 const ballEvent = event('BALL', type<{ action: PitchAction }>());
+const balkEvent = event('BALK');
 const outEvent = event('BATTER_OUT', type<{ count: number }>());
 const nextBatterEvent = event(
   'NEXT_BATTER',
@@ -42,6 +44,8 @@ const nextBatterEvent = event(
     >;
   }>(),
 );
+const hitEvent = event('HIT');
+const foulEvent = event('FOUL');
 
 function incrementStat(
   player: PlayerWithStats,
@@ -50,6 +54,49 @@ function incrementStat(
 ) {
   player[stat] = (player[stat] ?? 0) + diff;
   return player;
+}
+
+function incrementPitcherStat(
+  status: GameStatus,
+  game: Game,
+  stat: keyof GameStats,
+  diff = 1,
+) {
+  const fieldingTeam = getTeam('field', status.frame);
+  const fielders = game[fieldingTeam];
+  const pitcher = fielders.players[fielders.positions.P.id];
+  fielders.players[pitcher.id] = incrementStat(
+    fielders.players[pitcher.id],
+    stat,
+    diff,
+  );
+  return { fieldingTeam, fielders };
+}
+
+function incrementBatterStat(
+  status: GameStatus,
+  game: Game,
+  stat: keyof GameStats,
+  diff = 1,
+) {
+  const battingTeam = getTeam('bat', status.frame);
+  const batters = game[battingTeam];
+  const battingOrder = batters.battingOrder;
+  const currentPosition = status.batting[battingTeam];
+  const batterId = battingOrder[currentPosition].id;
+  const batter = batters.players[batterId];
+  batters.players[batter.id] = incrementStat(
+    batters.players[batter.id],
+    stat,
+    diff,
+  );
+  return { battingTeam, batters };
+}
+
+function isBasesLoaded(
+  runners: Partial<Record<Bases, PlayerIdentifier>>,
+): boolean {
+  return !!runners['3B']?.id && !!runners['2B']?.id && !!runners['1B']?.id;
 }
 
 function getTeam<T extends 'field' | 'bat'>(
@@ -119,10 +166,6 @@ export const GameStore = signalStore(
         ...currentGame.away.players,
         ...currentGame.home.players,
       };
-    }),
-    actions: computed(() => {
-      const actions = status().actions;
-      return actions;
     }),
   })),
   withComputed(({ game, status }) => ({
@@ -210,6 +253,52 @@ export const GameStore = signalStore(
           dispatcher.dispatch(ballEvent({ action }));
           break;
         }
+        case 'batter-hit':
+          dispatcher.dispatch(nextBatterEvent({ stat: 'walkedByHit' }));
+          break;
+        case 'balk':
+          dispatcher.dispatch(balkEvent());
+          break;
+        case 'hit':
+          dispatcher.dispatch(hitEvent());
+          break;
+        case 'foul':
+          dispatcher.dispatch(foulEvent());
+          break;
+        case 'progress': {
+          const runners = state.status.currentRunners();
+          const runner = action.runner;
+          const current = Object.entries(runners).find(
+            ([, p]) => p?.id === runner.id,
+          ) as [Bases, PlayerIdentifier];
+          if (current && current[0] !== action.base) {
+            delete runners[current[0]];
+          }
+
+          if (action.base === 'H') {
+            const batting = getTeam('bat', state.status.frame());
+            const batters = state.game()[batting];
+            batters.players[runner.id] = incrementStat(
+              batters.players[runner.id],
+              'runs',
+            );
+            patchState(state, {
+              game: {
+                ...state.game(),
+                [batting]: batters,
+              },
+              status: {
+                ...state.status(),
+              },
+            });
+          } else {
+            runners[action.base] = runner;
+            patchState(state, {
+              game: { ...state.game() },
+              status: { ...gameStatus, currentRunners: runners },
+            });
+          }
+        }
       }
     },
   })),
@@ -219,19 +308,16 @@ export const GameStore = signalStore(
         tap((event) => {
           const status = state.status();
           const currentGame = state.game();
-          const fieldingTeam = getTeam('field', state.status().frame);
-          const fielders = currentGame[fieldingTeam];
-          const pitcher = state.currentPitcher();
-          status.strikes++;
-          fielders.players[pitcher.id] = incrementStat(
-            fielders.players[pitcher.id],
+          const { fieldingTeam, fielders } = incrementPitcherStat(
+            status,
+            currentGame,
             'strikes',
           );
-          const game = state.game();
+          status.strikes++;
 
           patchState(state, {
             game: {
-              ...game,
+              ...currentGame,
               [fieldingTeam]: fielders,
             },
             status,
@@ -252,35 +338,38 @@ export const GameStore = signalStore(
         tap((event) => {
           const status = state.status();
           const currentGame = state.game();
-          const fieldingTeam = getTeam('field', state.status().frame);
-          const fielders = currentGame[fieldingTeam];
-          const pitcher = state.currentPitcher();
-          const battingTeam = getTeam('bat', state.status().frame);
-          const batters = currentGame[battingTeam];
-          const batter = state.currentBatter();
-          batters.players[batter.id] = incrementStat(
-            batters.players[batter.id],
+          const { fieldingTeam, fielders } = incrementPitcherStat(
+            status,
+            currentGame,
+            event.payload.stat.startsWith('walk') ? 'walks' : 'outs',
+          );
+          const { battingTeam, batters } = incrementBatterStat(
+            status,
+            currentGame,
             event.payload.stat,
           );
+          const batter = state.currentBatter();
           // Increment batting order
           let battingOrder = status.batting[battingTeam];
           battingOrder = battingOrder + 1;
           if (battingOrder > 9) battingOrder = 1;
           status.batting[battingTeam] = battingOrder as BattingPosition;
+          const runners = { ...status.currentRunners };
           switch (event.payload.stat) {
             case 'walked':
-            case 'walkedByHit':
-              fielders.players[pitcher.id] = incrementStat(
-                fielders.players[pitcher.id],
-                'walks',
-              );
+            case 'walkedByHit': {
+              if (isBasesLoaded(runners)) {
+                batters.players[batter.id] = incrementStat(
+                  batters.players[batter.id],
+                  'earnedRuns',
+                );
+              }
+              status.currentRunners['1B'] = { id: batter.id };
+
               break;
+            }
             case 'struckOutSwung':
             case 'struckOut':
-              fielders.players[pitcher.id] = incrementStat(
-                fielders.players[pitcher.id],
-                'outs',
-              );
               status.outs++;
               dispatcher.dispatch(outEvent({ count: status.outs }));
               break;
@@ -296,20 +385,44 @@ export const GameStore = signalStore(
             },
             status,
           });
+
+          if (event.payload.stat.startsWith('walk')) {
+            if (runners['1B']) {
+              state.update({
+                type: 'progress',
+                runner: runners['1B'],
+                base: '2B',
+              });
+
+              if (runners['2B']) {
+                state.update({
+                  type: 'progress',
+                  runner: runners['2B'],
+                  base: '3B',
+                });
+
+                if (runners['3B']) {
+                  state.update({
+                    type: 'progress',
+                    runner: runners['3B'],
+                    base: 'H',
+                  });
+                }
+              }
+            }
+          }
         }),
       ),
       ballCount$: events.on(ballEvent).pipe(
         tap(() => {
           const status = state.status();
           const currentGame = state.game();
-          const fieldingTeam = getTeam('field', state.status().frame);
-          const fielders = currentGame[fieldingTeam];
-          const pitcher = state.currentPitcher();
-          status.balls++;
-          fielders.players[pitcher.id] = incrementStat(
-            fielders.players[pitcher.id],
+          const { fieldingTeam, fielders } = incrementPitcherStat(
+            status,
+            currentGame,
             'balls',
           );
+          status.balls++;
 
           patchState(state, {
             game: {
@@ -324,6 +437,37 @@ export const GameStore = signalStore(
           }
         }),
       ),
+      onBalk$: events.on(balkEvent).pipe(
+        tap(() => {
+          const status = state.status();
+          const game = state.game();
+          const { fieldingTeam, fielders } = incrementPitcherStat(
+            status,
+            game,
+            'balks',
+          );
+          patchState(state, {
+            game: { ...game, [fieldingTeam]: fielders },
+            status,
+          });
+
+          for (const [base, runner] of Object.entries(
+            state.status.currentRunners(),
+          ) as Array<[Bases, PlayerIdentifier]>) {
+            let nextBase: Bases = '2B';
+            switch (base) {
+              case '2B':
+                nextBase = '3B';
+                break;
+              case '3B':
+                nextBase = 'H';
+                break;
+            }
+
+            state.update({ type: 'progress', runner, base: nextBase });
+          }
+        }),
+      ),
       outCount$: events.on(outEvent).pipe(
         tap((event) => {
           if (event.payload.count < 3) return;
@@ -332,9 +476,48 @@ export const GameStore = signalStore(
           status.outs = 0;
           if (status.frame === 'bottom') status.inning++;
           status.frame = status.frame === 'top' ? 'bottom' : 'top';
-          console.log('patching status', status);
 
           patchState(state, { game, status });
+        }),
+      ),
+      onHit$: events.on(hitEvent).pipe(
+        tap(() => {
+          const { battingTeam, batters } = incrementBatterStat(
+            state.status(),
+            state.game(),
+            'hits',
+          );
+          patchState(state, {
+            game: {
+              ...state.game(),
+              [battingTeam]: batters,
+            },
+            status: { ...state.status(), liveBall: true },
+          });
+        }),
+      ),
+      onFoul$: events.on(foulEvent).pipe(
+        tap(() => {
+          const status = state.status();
+          if (status.strikes < 2) status.strikes++;
+          const { fieldingTeam, fielders } = incrementPitcherStat(
+            status,
+            state.game(),
+            'strikes',
+          );
+          const { battingTeam, batters } = incrementBatterStat(
+            status,
+            state.game(),
+            'fouls',
+          );
+          patchState(state, {
+            game: {
+              ...state.game(),
+              [battingTeam]: batters,
+              [fieldingTeam]: fielders,
+            },
+            status: { ...status, liveBall: false },
+          });
         }),
       ),
     }),

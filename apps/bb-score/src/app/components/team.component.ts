@@ -29,7 +29,9 @@ type PlayerDetails = PlayerWithStats & {
     <table mat-table [dataSource]="players()" class="mat-elevation-z8">
       @for (column of displayedColumns; track column) {
         <ng-container [matColumnDef]="column">
-          <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+          <th mat-header-cell *matHeaderCellDef>
+            {{ columnDescription[column] }}
+          </th>
           <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
         </ng-container>
       }
@@ -43,25 +45,32 @@ type PlayerDetails = PlayerWithStats & {
 })
 export class TeamComponent {
   private _store = inject(GameStore);
-  displayedColumns: Array<keyof PlayerDetails> = [
-    'name',
-    'number',
-    'position',
-    'battingPosition',
-    'strikes',
-    'balls',
-    'outs',
-    'walks',
-    'struckOut',
-    'struckOutSwung',
-    'walked',
-    'walkedByHit',
-    'earnedRuns',
-    'homeRuns',
-    'runs',
-    'assists',
-    'errors',
-  ];
+  columnDescription: Record<keyof PlayerDetails, string> = {
+    id: 'ID',
+    number: '#',
+    name: 'Name',
+    position: 'Position',
+    battingPosition: 'Batting position',
+    hits: 'Hits',
+    errors: 'Errors',
+    homeRuns: 'Home runs',
+    runs: 'Runs',
+    earnedRuns: 'Earned runs',
+    strikes: 'Strikes',
+    balls: 'Balls',
+    balks: 'Balks',
+    walks: 'Walks',
+    fouls: 'Fouls',
+    walked: 'Walked',
+    walkedByHit: 'Hit by pitch',
+    struckOut: 'K',
+    struckOutSwung: 'ꓘ',
+    outs: 'Outs',
+    assists: 'Assists',
+  };
+  displayedColumns = (
+    Object.keys(this.columnDescription) as Array<keyof PlayerDetails>
+  ).filter((k) => this.columnDescription[k] !== '');
   columnsToDisplay: string[] = this.displayedColumns.slice();
 
   side = input.required<GameTeam>();

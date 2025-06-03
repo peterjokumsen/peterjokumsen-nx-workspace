@@ -27,13 +27,7 @@ import { GameStore } from '../signal-store';
       <p>No actions</p>
     }
   `,
-  styles: `
-    .inning {
-      display: flex;
-      align-items: center;
-      gap: 1ch;
-    }
-  `,
+  styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GameActionsComponent {
@@ -57,7 +51,7 @@ export class GameActionsComponent {
   };
   columns = Object.keys(this.columnNames) as Array<GameActionKeys>;
 
-  dataSource = this._store.actions;
+  dataSource = this._store.status.actions;
 
   private getPlayerName(identifier?: PlayerIdentifier): string {
     if (!identifier) return '';

@@ -26,8 +26,10 @@ export interface GameStats {
   earnedRuns?: number;
   strikes?: number;
   balls?: number;
+  balks?: number;
   walks?: number;
   walked?: number;
+  fouls?: number;
   walkedByHit?: number;
   struckOut?: number;
   struckOutSwung?: number;
@@ -52,15 +54,15 @@ export interface Game extends Record<GameTeam, Lineup> {
 }
 
 export interface PitchAction {
-  type: 'strike' | 'ball' | 'hit' | 'foul' | 'walk' | 'balk';
+  type: 'strike' | 'ball' | 'hit' | 'batter-hit' | 'balk';
   swung?: boolean;
   pitcher: PlayerIdentifier;
   batter: PlayerIdentifier;
 }
 
 export interface HitAction {
-  type: 'ground' | 'catch' | 'error' | 'home-run';
-  fielder: PlayerIdentifier;
+  type: 'foul' | 'ground' | 'catch' | 'error' | 'home-run';
+  fielder?: PlayerIdentifier;
   batter: PlayerIdentifier;
 }
 
@@ -115,6 +117,7 @@ export interface GameStatus {
   outs: number;
   strikes: number;
   balls: number;
+  liveBall: boolean;
   batting: {
     home: BattingPosition;
     away: BattingPosition;
