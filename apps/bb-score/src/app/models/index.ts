@@ -117,7 +117,7 @@ export interface GameStatus {
   outs: number;
   strikes: number;
   balls: number;
-  liveBall: boolean;
+  ballState: 'dead' | 'live' | 'fielded';
   batting: {
     home: BattingPosition;
     away: BattingPosition;

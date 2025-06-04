@@ -126,7 +126,7 @@ export function createGameState(): GameState {
         home: 1,
         away: 1,
       },
-      liveBall: false,
+      ballState: 'dead',
       currentFielders: game.home.positions,
       currentRunners: {},
       actions: [],

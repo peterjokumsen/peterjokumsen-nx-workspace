@@ -5,11 +5,14 @@ import {
   computed,
   inject,
 } from '@angular/core';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 import { MatButton } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { firstValueFrom } from 'rxjs';
 import { HitAction, PitchAction, PlayerIdentifier } from '../models';
 import { GameStore } from '../signal-store';
+import { DidTheySwingComponent } from './did-they-swing.component';
 import { GameActionsComponent } from './game-actions.component';
 import { InningInfoComponent } from './inning-info.component';
 
@@ -42,6 +45,7 @@ import { InningInfoComponent } from './inning-info.component';
           <h4>Batting</h4>
           <button mat-button (click)="onPitch('hit')">Hit</button>
           @if (liveBall()) {
+            <h5>Where did the ball go?</h5>
             <button mat-button (click)="onHit('foul')">Foul</button>
           }
         </div>
@@ -80,11 +84,12 @@ import { InningInfoComponent } from './inning-info.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GamePlayComponent {
+  private _bottomSheet = inject(MatBottomSheet);
   private _store = inject(GameStore);
   private _isNextStrikeThird = computed(
     () => this._store.status().strikes === 2,
   );
-  liveBall = computed(() => this._store.status().liveBall);
+  liveBall = computed(() => this._store.status().ballState !== 'dead');
   hasRunners = computed(() => {
     const runners = this._store.status().currentRunners;
     console.log(
@@ -96,9 +101,17 @@ export class GamePlayComponent {
     return !!runners['1B'] || !!runners['2B'] || !!runners['3B'];
   });
 
-  onPitch(pitch: PitchAction['type']) {
+  async onPitch(pitch: PitchAction['type']) {
     if (pitch === 'strike' && this._isNextStrikeThird()) {
-      // ask if batter swung
+      const instance = this._bottomSheet.open(DidTheySwingComponent);
+      const swung = await firstValueFrom(instance.afterDismissed());
+      this._store.update({
+        type: pitch,
+        swung,
+        pitcher: this._store.currentPitcher(),
+        batter: this._store.currentBatter(),
+      });
+      return;
     }
 
     this._store.update({
