@@ -15,12 +15,11 @@ import {
   IntroductionCallToAction,
 } from './models';
 
-import { CommonModule } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'pj-ui-page-introduction',
-  imports: [CommonModule, MatButton],
+  imports: [MatButton],
   providers: [providePjBrowserTools()],
   template: `
     <div class="intro-container" [attr.style]="backgroundStyle()">

@@ -5,7 +5,7 @@ import {
   animate,
   style,
 } from '@angular/animations';
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +17,7 @@ import {
 
 @Component({
   selector: 'pj-ui-loading',
-  imports: [CommonModule, NgOptimizedImage],
+  imports: [NgOptimizedImage],
   template: `
     <img #image [ngSrc]="imageSrc" width="150" height="150" alt="Logo" />
   `,
