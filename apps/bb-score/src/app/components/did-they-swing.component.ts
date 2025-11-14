@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatBottomSheetRef } from '@angular/material/bottom-sheet';
 import { MatButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-did-he-swing',
-  imports: [CommonModule, MatButton],
+  imports: [MatButton],
   template: `
     <h3>Did the batter swing?</h3>
     <div class="questions">

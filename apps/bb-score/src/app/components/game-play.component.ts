@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -19,7 +18,6 @@ import { InningInfoComponent } from './inning-info.component';
 @Component({
   selector: 'app-game-play',
   imports: [
-    CommonModule,
     GameActionsComponent,
     MatButton,
     MatCardModule,
