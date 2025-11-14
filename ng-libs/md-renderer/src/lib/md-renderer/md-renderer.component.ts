@@ -1,4 +1,4 @@
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
@@ -23,7 +23,7 @@ import { TableOfContentsComponent } from '../toc';
 
 @Component({
   selector: 'pj-mdr-md-renderer',
-  imports: [CommonModule, TableOfContentsComponent, MdComponentsModule],
+  imports: [TableOfContentsComponent, MdComponentsModule],
   providers: [MdContentService, MdComponentMapService],
   templateUrl: './md-renderer.component.html',
   styleUrl: './md-renderer.component.scss',

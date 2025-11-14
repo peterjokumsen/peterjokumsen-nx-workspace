@@ -21,9 +21,13 @@ import { MdContentService } from '../services';
   selector: 'pj-mdr-md-list',
   template: `
     <ul id="{{ list().id }}">
-      <li *ngFor="let item of items()">
-        <pj-mdr-md-wrapper [pjMdrMdContentInjection]="item"></pj-mdr-md-wrapper>
-      </li>
+      @for (item of items(); track item) {
+        <li>
+          <pj-mdr-md-wrapper
+            [pjMdrMdContentInjection]="item"
+          ></pj-mdr-md-wrapper>
+        </li>
+      }
     </ul>
   `,
   styles: `

@@ -22,14 +22,13 @@ import {
 } from '@angular/core';
 import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
 
-import { CommonModule } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MarkdownSection } from '@peterjokumsen/ts-md-models';
 import { WithId } from '../models';
 
 @Component({
   selector: 'pj-mdr-table-of-contents',
-  imports: [CommonModule, MatButton],
+  imports: [MatButton],
   templateUrl: './table-of-contents.component.html',
   styleUrl: './table-of-contents.component.scss',
   animations: [
