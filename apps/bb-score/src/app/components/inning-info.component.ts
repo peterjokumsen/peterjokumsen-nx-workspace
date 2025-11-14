@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { CommonModule } from '@angular/common';
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,7 +15,7 @@ import { GameStore } from '../signal-store';
 
 @Component({
   selector: 'app-inning-info',
-  imports: [CommonModule, MatTableModule, MatIcon],
+  imports: [MatTableModule, MatIcon],
   template: `
     <table mat-table [dataSource]="dataSource()" class="mat-elevation-z8">
       <ng-container matColumnDef="inning">

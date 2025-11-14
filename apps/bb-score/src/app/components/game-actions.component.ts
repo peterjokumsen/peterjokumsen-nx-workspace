@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { GameAction, GameActionKeys, PlayerIdentifier } from '../models';
@@ -6,7 +5,7 @@ import { GameStore } from '../signal-store';
 
 @Component({
   selector: 'app-game-actions',
-  imports: [CommonModule, MatTableModule],
+  imports: [MatTableModule],
   template: `
     @let data = dataSource();
     @if (data.length > 0) {

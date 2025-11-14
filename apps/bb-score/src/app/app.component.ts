@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { RouterModule } from '@angular/router';
@@ -8,7 +7,6 @@ import { GameStore } from './signal-store';
 
 @Component({
   imports: [
-    CommonModule,
     RouterModule,
     TeamComponent,
     MatExpansionModule,

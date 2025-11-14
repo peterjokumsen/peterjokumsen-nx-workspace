@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,7 +22,7 @@ type PlayerDetails = PlayerWithStats & {
 
 @Component({
   selector: 'app-team',
-  imports: [CommonModule, MatTableModule],
+  imports: [MatTableModule],
   template: `
     <h2>{{ side() }}</h2>
     <table mat-table [dataSource]="players()" class="mat-elevation-z8">
