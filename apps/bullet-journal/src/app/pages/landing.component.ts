@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
-
 @Component({
   selector: 'bu-jo-landing',
-  imports: [CommonModule],
+  imports: [],
   template: `
     <div class="container">
       <ul>
