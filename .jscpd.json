@@ -21,7 +21,8 @@
     "apps/**/server.ts",
     "**/playwright.config.ts",
     "**/index.html",
-    "**/game-store.ts"
+    "**/game-store.ts",
+    "**/tsconfig.lib.json"
   ],
   "ignorePattern": ["import.*from\\s*'.*'"]
 }
