@@ -492,7 +492,7 @@ export const GameStore = signalStore(
               ...state.game(),
               [battingTeam]: batters,
             },
-            status: { ...state.status(), liveBall: true },
+            status: { ...state.status(), ballState: 'live' },
           });
         }),
       ),
@@ -516,7 +516,7 @@ export const GameStore = signalStore(
               [battingTeam]: batters,
               [fieldingTeam]: fielders,
             },
-            status: { ...status, liveBall: false },
+            status: { ...status, ballState: 'dead' },
           });
         }),
       ),
