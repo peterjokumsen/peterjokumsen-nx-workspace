@@ -1,4 +1,4 @@
-import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NgOptimizedImage } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -20,7 +20,6 @@ import { debounceTime } from 'rxjs';
 @Component({
   selector: 'app-header',
   imports: [
-    CommonModule,
     NgOptimizedImage,
     RouterNavComponent,
     FaIconComponent,
