@@ -7,14 +7,13 @@ import {
 import { PjLogger, PjMarkdownClient } from '@peterjokumsen/ng-services';
 import { BehaviorSubject, switchMap } from 'rxjs';
 
-import { CommonModule } from '@angular/common';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MdRendererComponent } from '@peterjokumsen/md-renderer';
 
 @Component({
   selector: 'app-display-markdown',
-  imports: [CommonModule, MdRendererComponent, MatProgressSpinner],
+  imports: [MdRendererComponent, MatProgressSpinner],
   template: `
     @if (markdown(); as markdown) {
       <pj-mdr-md-renderer [parsedContent]="markdown"></pj-mdr-md-renderer>

@@ -4,11 +4,10 @@ import {
   PageIntroductionComponent,
 } from '@peterjokumsen/ui-elements';
 
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 @Component({
-  imports: [CommonModule, PageIntroductionComponent],
+  imports: [PageIntroductionComponent],
   template: `
     <pj-ui-page-introduction
       [paragraphs]="introductionContent"

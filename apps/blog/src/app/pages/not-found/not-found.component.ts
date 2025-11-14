@@ -9,12 +9,11 @@ import {
   PageIntroductionComponent,
 } from '@peterjokumsen/ui-elements';
 
-import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { PjLogger } from '@peterjokumsen/ng-services';
 
 @Component({
-  imports: [CommonModule, PageIntroductionComponent],
+  imports: [PageIntroductionComponent],
   template: `
     <pj-ui-page-introduction
       introductionTitle="🫣 Oops!"
