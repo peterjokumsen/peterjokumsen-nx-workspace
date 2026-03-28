@@ -4,15 +4,15 @@ description: 'Install dependencies and set NX cache'
 runs:
   using: 'composite'
   steps:
-    - uses: pnpm/action-setup@v4
+    - uses: pnpm/action-setup@v5
       name: Install pnpm
       with:
         run_install: false
 
     - name: Install Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v6
       with:
-        node-version: 20
+        node-version: 24
         cache: 'pnpm'
 
     - name: Install dependencies
