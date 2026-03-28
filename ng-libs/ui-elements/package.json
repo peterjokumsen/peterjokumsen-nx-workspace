@@ -2,11 +2,11 @@
   "name": "@peterjokumsen/ui-elements",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/animations": "19.2.1",
-    "@angular/common": "19.2.1",
-    "@angular/core": "19.2.1",
-    "@angular/material": "19.2.2",
-    "@angular/router": "19.2.1",
+    "@angular/animations": "*",
+    "@angular/common": "*",
+    "@angular/core": "*",
+    "@angular/material": "*",
+    "@angular/router": "*",
     "@peterjokumsen/ng-services": "*"
   },
   "dependencies": {},

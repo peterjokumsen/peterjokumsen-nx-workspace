@@ -15,14 +15,14 @@
     "**/*.spec.ts",
     "dist/**",
     "**/tsconfig.json",
+    "**/tsconfig.*.json",
     ".biceps/*",
     "**/tailwind.config.js",
     "**/.eslintrc.json",
     "apps/**/server.ts",
     "**/playwright.config.ts",
     "**/index.html",
-    "**/game-store.ts",
-    "**/tsconfig.lib.json"
+    "**/game-store.ts"
   ],
   "ignorePattern": ["import.*from\\s*'.*'"]
 }
