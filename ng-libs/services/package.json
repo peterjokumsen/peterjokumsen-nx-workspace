@@ -2,9 +2,9 @@
   "name": "@peterjokumsen/ng-services",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "19.2.1",
-    "@angular/core": "19.2.1",
-    "rxjs": "~7.8.0",
+    "@angular/common": "*",
+    "@angular/core": "*",
+    "rxjs": "*",
     "@peterjokumsen/ts-md-models": "*",
     "@peterjokumsen/md-parser": "*"
   },
