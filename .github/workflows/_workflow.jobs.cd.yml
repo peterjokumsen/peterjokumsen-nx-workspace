@@ -267,7 +267,7 @@ jobs:
 
             const lighthouseOutputs = {
               projectName: '${{ inputs.project_name }}',
-              manifest: ${{ steps.lighthouse_audit.outputs['manifest'] }},
+              manifest: ${{ steps.lighthouse_audit.outputs.manifest }},
               links: ${{ steps.lighthouse_audit.outputs.links }},
             };
 
