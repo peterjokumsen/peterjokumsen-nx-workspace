@@ -1,7 +1,7 @@
 {
   "angular.enable-strict-mode-prompt": false,
-"nxConsole.generateAiAgentRules": true,
-"workbench.colorCustomizations": {
+  "nxConsole.generateAiAgentRules": true,
+  "workbench.colorCustomizations": {
     "activityBar.activeBackground": "#5c6fe3",
     "activityBar.background": "#5c6fe3",
     "activityBar.foreground": "#e7e7e7",
@@ -25,6 +25,6 @@
     "titleBar.activeForeground": "#e7e7e7",
     "titleBar.inactiveBackground": "#3049dc99",
     "titleBar.inactiveForeground": "#e7e7e799"
-},
-"peacock.color": "#3049dc"
+  },
+  "peacock.color": "#3049dc"
 }
