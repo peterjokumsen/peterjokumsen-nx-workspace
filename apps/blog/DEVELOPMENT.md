@@ -20,19 +20,23 @@ The blog is built with **Angular (Standalone)** and is designed to be a lightwei
 Currently, adding a new post is a 3-step manual process:
 
 1. **Create Markdown File**: Place your `.md` file in `apps/blog/src/assets/docs/`.
-   - Example: `apps/blog/src/assets/docs/my-new-post.md`
+
+- Example: `apps/blog/src/assets/docs/my-new-post.md`
+
 2. **Create Page Component**: Create a new component in `apps/blog/src/app/pages/` that uses `DisplayMarkdownComponent`.
-   ```typescript
-   // Example Page Component
-   @Component({
-     imports: [PageIntroductionComponent, DisplayMarkdownComponent],
-     template: `
-       <pj-ui-page-introduction introductionTitle="My New Post" ...></pj-ui-page-introduction>
-       <app-display-markdown [filePath]="'/assets/docs/my-new-post.md'"></app-display-markdown>
-     `,
-   })
-   export class MyNewPostComponent {}
-   ```
+
+```typescript
+// Example Page Component
+@Component({
+  imports: [PageIntroductionComponent, DisplayMarkdownComponent],
+  template: `
+    <pj-ui-page-introduction introductionTitle="My New Post" ...></pj-ui-page-introduction>
+    <app-display-markdown [filePath]="'/assets/docs/my-new-post.md'"></app-display-markdown>
+  `,
+})
+export class MyNewPostComponent {}
+```
+
 3. **Add Route**: Update `apps/blog/src/app/app.routes.ts` to include the new page.
 
 ---

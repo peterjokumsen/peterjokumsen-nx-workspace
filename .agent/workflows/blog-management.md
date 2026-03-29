@@ -11,18 +11,26 @@ This workflow provides automated and manual steps for adding content to the Blog
 To add a new learning journey or documentation post, follow these steps:
 
 1. **Create Markdown File**
-   - Place a new `.md` file in `apps/blog/src/assets/docs/`.
-   - Name it with a URL-friendly name (e.g., `learning-ngrx.md`).
+
+- Place a new `.md` file in `apps/blog/src/assets/docs/`.
+- Name it with a URL-friendly name (e.g., `learning-ngrx.md`).
+
 2. **Setup Page Component**
-   - Run the follow to generate a new component in `apps/blog/src/app/pages/`:
-   ```bash
-   npx nx g @nx/angular:component <post-name> --project=blog --path=apps/blog/src/app/pages/<post-name> --style=scss --standalone
-   ```
+
+- Run the follow to generate a new component in `apps/blog/src/app/pages/`:
+
+```bash
+npx nx g @nx/angular:component <post-name> --project=blog --path=apps/blog/src/app/pages/<post-name> --style=scss --standalone
+```
+
 3. **Connect Display Markdown**
-   - Update the generated component to import `DisplayMarkdownComponent` from `../../components`.
-   - Set the `[filePath]` input to the path of your new markdown file.
+
+- Update the generated component to import `DisplayMarkdownComponent` from `../../components`.
+- Set the `[filePath]` input to the path of your new markdown file.
+
 4. **Update Routes**
-   - Add a new entry to the `childRoutes` array in `apps/blog/src/app/app.routes.ts`.
+
+- Add a new entry to the `childRoutes` array in `apps/blog/src/app/app.routes.ts`.
 
 ---
 

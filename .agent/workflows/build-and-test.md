@@ -9,28 +9,24 @@ When an agent needs to build, lint, and test affected code after making modifica
 ## Step-by-Step
 
 1. First, check code formatting (or format it) by running:
-   // turbo
 
 ```bash
 pnpm run format:write
 ```
 
 2. After ensuring format is correct, test if any uncommitted changes break the local linting config:
-   // turbo
 
 ```bash
 pnpm run lint:uncommitted
 ```
 
 3. Run uncommitted tests:
-   // turbo
 
 ```bash
 pnpm run test:uncommitted
 ```
 
 4. Or alternatively, run the combined fast check:
-   // turbo
 
 ```bash
 pnpm run prep-commit
