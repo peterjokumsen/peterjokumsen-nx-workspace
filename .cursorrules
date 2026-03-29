@@ -1,0 +1,46 @@
+# Agent Directives & Architecture Context
+
+This document outlines the standard rules and practices for the `peterjokumsen-nx-workspace` repository. Any AI agent modifying code in this repository must align with these directives.
+
+## Tech Stack & Architecture
+
+- **Monorepo Strategy**: Nx Workspaces (`@nx/angular`).
+- **Framework**: Angular 21 (SCSS, TypeScript).
+- **Package Manager**: `pnpm`
+- **Testing**: Jest for Unit Tests, Playwright for E2E Tests.
+
+## Coding Conventions
+
+1. **Angular Components**:
+  - ALWAYS use `ChangeDetectionStrategy.OnPush`.
+  - Use `standalone` components.
+  - Defaults per `nx.json`: Inline style (`inlineStyle: true`), Inline template (`inlineTemplate: true`), and styles via `scss`.
+
+2. **Generators**: Strongly recommend using strict Nx generators to create any component or module so it pulls the workspace defaults.
+  - *Example*: `pnpm exec nx g @nx/angular:component [name] --project=[project-name]`
+
+3. **Workspace Structure**:
+  - `apps/`: Deployable applications (e.g., `blog`, `bullet-journal`).
+  - `ng-libs/`: Shared Angular specific libraries/components.
+  - `ts-libs/`: Shared pure TypeScript utilities.
+
+## Agent Workflows
+
+Before performing workflows like building, linting, testing, or creating components, agents should check out the following `workflows/` directory relative to project root: `.agent/workflows/`.
+
+## Task Execution & Output Limits
+
+To avoid "the model's generation exceeded the maximum output token limit" errors, agents MUST:
+- Split complex tasks into smaller, incremental steps.
+- Output intermediate results and specifically ask for user feedback before proceeding to the next increment.
+- Avoid large-scale rewrites or processing in a single operation. Break it down.
+
+## Committing & Validating Changes
+
+Before finalizing changes, ALWAYS validate formatting and testing with our local pipeline.
+Run the command:
+```bash
+pnpm run prep-commit
+```
+(This formats files and runs tests internally).
+If only formatting needs a fix, use: `pnpm run format:write`
