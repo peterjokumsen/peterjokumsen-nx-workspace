@@ -24,7 +24,8 @@ export function* generateMarkdownSections(
   const lines = markdown.replace('\r', '').split('\n');
   let next: MarkdownType<SectionContentType>;
   let start = -1;
-  if (lines[0].trim() === '---') { // initial `---` is frontmatter
+  if (lines[0].trim() === '---') {
+    // initial `---` is frontmatter
     const { result, lastLineIndex } = readMetadata(lines, 0);
     start = lastLineIndex;
     yield result;

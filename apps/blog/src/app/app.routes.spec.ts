@@ -18,8 +18,8 @@ describe('childRoutes', () => {
       expect(route).toBeDefined();
     });
 
-    it('should have a title', () => {
-      expect(route?.data?.['title']).toBeDefined();
+    it('should have a title or filePath', () => {
+      expect(route?.data?.['title'] || route?.data?.['filePath']).toBeTruthy();
     });
 
     it('should lazy load component or child routes', () => {

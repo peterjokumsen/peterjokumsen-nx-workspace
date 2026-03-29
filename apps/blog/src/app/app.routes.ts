@@ -12,15 +12,14 @@ export const childRoutes: Route[] = [
   {
     path: 'about-me',
     loadComponent: () =>
-      import('./pages/about-me').then((m) => m.AboutMeComponent),
+      import('./pages/markdown-entry').then((m) => m.MarkdownEntryComponent),
+    data: { filePath: 'assets/docs/about-me.md' },
   },
   {
     path: 'development-notes',
     loadComponent: () =>
-      import('./pages/development-notes').then(
-        (m) => m.DevelopmentNotesComponent,
-      ),
-    data: { title: 'Development Notes' },
+      import('./pages/markdown-entry').then((m) => m.MarkdownEntryComponent),
+    data: { filePath: '/assets/docs/development-notes/README.md' },
   },
   {
     path: '**',

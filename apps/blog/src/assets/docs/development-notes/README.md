@@ -1,3 +1,9 @@
+---
+title: Development Notes 📝
+description: A collection of notes and thoughts on the development of this application and its libraries.
+image: /assets/development_notes_background.webp
+---
+
 ## Work in progress
 
 Hoping to create a collection of my journeys into learning new things.
@@ -87,3 +93,12 @@ This approach had a few hiccups from 9 to 12, although I was unable to run tests
 My next steps is to check if it actually functions properly 🤞 I'm hoping the passing tests are a good sign, but with the last commit for the project being 24 August 2022 I am pretty sure I'm going to have a few headaches reading my old code.
 
 Hopefully will get back to Angular Material theming in the very near future. Overall, it's been a decent week at least.
+
+## Belayed changes (2026-03-29)
+
+It's been ages since I've updated. I have a new goal to achieve, which I would like to document on this blog. So busy getting into it to update the blog 😅
+
+The latest changes:
+
+> I would like to simplify the process of adding blog entries, so got Google Antigravity to assist me with updating the current markdown rendering process to consume tags to describe the opening page of an article.
+> The next element will be to get the blog to be able to render pages by consuming markdown directly without the need to create a new component for each page. This will allow me to add new pages to an article by simply adding a new markdown file to a directory, where the README.md of a folder would be the entry point.

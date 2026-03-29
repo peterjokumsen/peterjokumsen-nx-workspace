@@ -1,3 +1,9 @@
+---
+title: Who am I?
+description: A software engineer who loves to build things.
+image: /assets/about_me_background.webp
+---
+
 # Who am I?
 
 I am a software engineer who **loves** to build things.
