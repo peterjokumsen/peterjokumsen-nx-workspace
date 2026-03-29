@@ -89,7 +89,7 @@ export function readSection(
 
       default:
         throw new Error(
-          `Content type: "${type}" not supported, attempting to read line ${i}: "${line}"`,
+          `Content type: "${type}" not supported, as section content (attempting to read line ${i}: "${line}")`,
         );
     }
   }

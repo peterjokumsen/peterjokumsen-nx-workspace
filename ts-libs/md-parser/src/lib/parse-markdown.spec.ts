@@ -1,7 +1,12 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import { MarkdownContent, MarkdownSection } from '@peterjokumsen/ts-md-models';
+import {
+  MarkdownAst,
+  MarkdownContent,
+  MarkdownMetaData,
+  MarkdownSection,
+} from '@peterjokumsen/ts-md-models';
 
 import { parseMarkdown } from './';
 
@@ -43,8 +48,10 @@ describe('parseMarkdown', () => {
 
   function itShouldBeParsed(
     fileName: string,
-    ...expectations: Array<[string, MarkdownContent[]]>
+    ...expectations: Array<[string, MarkdownContent[]] | MarkdownMetaData>
   ) {
+    let assertingMetaData: boolean;
+    let result: MarkdownAst;
     let sections: MarkdownSection[];
 
     beforeEach(() => {
@@ -57,23 +64,48 @@ describe('parseMarkdown', () => {
         throw new Error(`Could not read file '${fileName}' for test`);
       }
 
-      const result = parseMarkdown(markdown);
+      result = parseMarkdown(markdown);
       sections = result.sections;
-      if (sections.length !== expectations.length) {
+      if (
+        sections.length !== expectations.filter((e) => Array.isArray(e)).length
+      ) {
         throw new Error(
-          `Expected ${expectations.length} sections, but got ${sections.length}`,
+          `Expected ${expectations.filter((e) => Array.isArray(e)).length} sections, but got ${sections.length}`,
         );
       }
     });
 
-    it.each(expectations.map((v, i) => [...v, i]))(
-      'should have section "%s" with expected content',
-      (title, contents, index) => {
-        const actualSection = sections[index];
-        expect(actualSection.title).toEqual(title);
-        expect(actualSection.contents).toEqual(contents);
-      },
-    );
+    const testCases = expectations.map((expectation, index) => {
+      if (Array.isArray(expectation)) {
+        const [title, contents] = expectation;
+        return {
+          testName: `should have section "${title}" @ ${index}`,
+          index,
+          expectation: {
+            title,
+            contents,
+          },
+        };
+      } else {
+        assertingMetaData = true;
+        return {
+          testName: `should use meta data to describe Markdown`,
+          index,
+          expectation,
+        };
+      }
+    });
+
+    it.each(testCases)(`$testName`, ({ expectation, index }) => {
+      if ('title' in expectation && 'contents' in expectation) {
+        const actualSection = sections[assertingMetaData ? index - 1 : index];
+        expect(actualSection.title).toEqual(expectation.title);
+        expect(actualSection.contents).toEqual(expectation.contents);
+      } else {
+        const { type, ...details } = expectation;
+        expect(result).toEqual(expect.objectContaining(details));
+      }
+    });
   }
 
   describe(`when reading basic.md`, () => {
@@ -699,6 +731,30 @@ describe('parseMarkdown', () => {
                 ],
               },
             ],
+          },
+        ],
+      ],
+    );
+  });
+
+  describe('when reading has-meta-data.md', () => {
+    itShouldBeParsed(
+      'has-meta-data.md',
+      {
+        type: 'frontmatter',
+        description: 'A description of the frontmatter.',
+        title: 'Frontmatter',
+        tags: ['test', 'frontmatter'],
+        image: 'an-image.png',
+        imageAlt: 'An image',
+        date: '2026-03-29',
+      },
+      [
+        'Section title',
+        [
+          {
+            type: 'paragraph',
+            content: [{ type: 'text', content: 'Section text.' }],
           },
         ],
       ],

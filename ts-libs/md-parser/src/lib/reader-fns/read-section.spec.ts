@@ -153,7 +153,7 @@ describe('readSection', () => {
       );
 
       expect(() => readSection(lines, 0)).toThrow(
-        'Content type: "unsupported" not supported, attempting to read line 1: "Some content"',
+        'Content type: "unsupported" not supported, as section content (attempting to read line 1: "Some content")',
       );
     });
   });
