@@ -193,7 +193,7 @@ describe('PageIntroductionComponent', () => {
         beforeEach(() => {
           hostComponent.actions = [
             { label: 'First action' },
-            { label: 'Second action', type: 'main' },
+            { label: 'Second action', type: 'primary' },
           ];
           hostFixture.detectChanges();
           const [actionElement] =
@@ -213,7 +213,7 @@ describe('PageIntroductionComponent', () => {
 
         it('should use action type for styling', () => {
           expect(actionButtons[1].textContent).toContain('Second action');
-          expect(actionButtons[1].classList).toContain('mat-main');
+          expect(actionButtons[1].classList).toContain('mat-primary');
         });
 
         describe('when clicked', () => {

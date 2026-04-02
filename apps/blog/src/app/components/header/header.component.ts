@@ -56,4 +56,5 @@ export class HeaderComponent {
   loadingCount = toSignal(this._httpCount.count$.pipe(debounceTime(10)));
   codeIcon = faCode;
   navElements = input<PjUiRouterNavigationElement[]>([]);
+  blogArticles = input<PjUiRouterNavigationElement[]>([]);
 }

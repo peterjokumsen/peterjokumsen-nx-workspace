@@ -1,15 +1,19 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  effect,
   ElementRef,
   inject,
+  OnDestroy,
   signal,
   viewChild,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SeoService } from '@peterjokumsen/ng-services';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PjMarkdownClient, SeoService } from '@peterjokumsen/ng-services';
 import { MarkdownAst } from '@peterjokumsen/ts-md-models';
 import { PageIntroductionComponent } from '@peterjokumsen/ui-elements';
+import { first, map, tap } from 'rxjs';
 import { DisplayMarkdownComponent } from '../../components';
 
 @Component({
@@ -30,27 +34,57 @@ import { DisplayMarkdownComponent } from '../../components';
     }
 
     <div #content>
-      <app-display-markdown
-        [filePath]="filePath()"
-        (metadataLoaded)="onMetadataLoaded($event)"
-      />
+      @if (workingPath(); as path) {
+        <app-display-markdown
+          [filePath]="path"
+          (metadataLoaded)="onMetadataLoaded($event)"
+        />
+      }
     </div>
   `,
   styleUrl: './markdown-entry.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MarkdownEntryComponent {
+export class MarkdownEntryComponent implements OnDestroy {
   private _route = inject(ActivatedRoute);
+  private _routePath = toSignal(
+    this._route.params.pipe(
+      map((params) => decodeURIComponent(params['articlePath'])),
+      tap((p) => console.log('param', p)),
+    ),
+  );
+  private _router = inject(Router);
   private _seoService = inject(SeoService);
+  private _markdownClient = inject(PjMarkdownClient);
+
+  private _onPathChange = effect(() => {
+    const path = this._routePath();
+    console.log('path', path);
+    if (!path) return;
+    this.workingPath.set(undefined);
+    this.metadata.set(undefined);
+    this._markdownClient
+      .resolveMarkdown(path)
+      .pipe(first())
+      .subscribe({
+        next: (result) => {
+          this.workingPath.set(result.resolvedPath);
+        },
+        error: () => {
+          this._router.navigate(['/404'], { skipLocationChange: true });
+        },
+      });
+  });
 
   content = viewChild<ElementRef<HTMLDivElement>>('content');
 
-  filePath = signal<string>(
-    (this._route.snapshot.data as { filePath?: string })['filePath'] ||
-      (this._route.snapshot.params as { filePath?: string })['filePath'] ||
-      '',
-  );
+  workingPath = signal<string | undefined>(undefined);
   metadata = signal<MarkdownAst | undefined>(undefined);
+
+  ngOnDestroy(): void {
+    console.log('destroyed', this._routePath());
+    this._onPathChange.destroy();
+  }
 
   onMetadataLoaded(metadata: MarkdownAst) {
     this.metadata.set(metadata);

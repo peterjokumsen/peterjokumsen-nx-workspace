@@ -16,12 +16,7 @@ import { HasContent } from '../has-content';
       <hr />
     }
   `,
-  styles: `
-    hr {
-      margin-top: 15px;
-      padding: 15px;
-    }
-  `,
+  styles: ``,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })

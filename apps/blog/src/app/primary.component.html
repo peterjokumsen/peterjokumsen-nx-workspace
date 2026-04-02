@@ -1,4 +1,4 @@
-<app-header [navElements]="navElements" />
+<app-header [navElements]="navElements" [blogArticles]="blogElements() ?? []" />
 <div class="content" [@routeAnimations]="getAnimationContext()">
   <router-outlet></router-outlet>
 </div>

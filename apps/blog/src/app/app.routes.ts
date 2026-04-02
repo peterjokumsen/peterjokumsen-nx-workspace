@@ -10,21 +10,18 @@ export const childRoutes: Route[] = [
     data: { title: 'Home' },
   },
   {
-    path: 'about-me',
+    path: 'articles/:articlePath',
     loadComponent: () =>
       import('./pages/markdown-entry').then((m) => m.MarkdownEntryComponent),
-    data: { filePath: 'assets/docs/about-me.md' },
   },
   {
-    path: 'development-notes',
+    path: '404',
     loadComponent: () =>
-      import('./pages/markdown-entry').then((m) => m.MarkdownEntryComponent),
-    data: { filePath: '/assets/docs/development-notes/README.md' },
+      import('./pages/not-found').then((m) => m.NotFoundComponent),
   },
   {
     path: '**',
-    loadComponent: () =>
-      import('./pages/not-found').then((m) => m.NotFoundComponent),
+    redirectTo: '404',
   },
 ];
 

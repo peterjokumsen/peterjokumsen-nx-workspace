@@ -1,5 +1,12 @@
 export interface IntroductionCallToAction {
   id?: string;
   label: string;
-  type?: 'primary' | 'main' | 'accent' | 'danger';
+  type?:
+    | 'primary'
+    | 'secondary'
+    | 'tertiary'
+    | 'error'
+    | 'main'
+    | 'accent'
+    | 'danger';
 }
