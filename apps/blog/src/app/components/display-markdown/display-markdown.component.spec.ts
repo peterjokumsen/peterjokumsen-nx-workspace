@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MdRendererComponent } from '@peterjokumsen/md-renderer';
 import { PjMarkdownClient } from '@peterjokumsen/ng-services';
 import { MarkdownAst } from '@peterjokumsen/ts-md-models';
 import { MockComponent } from 'ng-mocks';
 import { Observable } from 'rxjs';
-import { AboutMeComponent } from '../../pages/about-me';
 import { DisplayMarkdownComponent } from './display-markdown.component';
 
 describe('DisplayMarkdownComponent', () => {
@@ -21,18 +21,16 @@ describe('DisplayMarkdownComponent', () => {
         .mockReturnValue(new Observable<MarkdownAst>()),
     };
     await TestBed.configureTestingModule({
+      imports: [
+        DisplayMarkdownComponent,
+        MockComponent(MdRendererComponent),
+        MockComponent(MatProgressSpinner),
+      ],
       providers: [
         // keep split
         { provide: PjMarkdownClient, useValue: mdClient },
       ],
-      imports: [AboutMeComponent],
-    })
-      .overrideComponent(AboutMeComponent, {
-        set: {
-          imports: [MockComponent(MdRendererComponent)],
-        },
-      })
-      .compileComponents();
+    }).compileComponents();
 
     fixture = TestBed.createComponent(DisplayMarkdownComponent);
     component = fixture.componentInstance;

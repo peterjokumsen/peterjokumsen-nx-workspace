@@ -6,12 +6,16 @@ import {
   Router,
   RouterOutlet,
 } from '@angular/router';
-import { PjBrowserTools, PjLogger } from '@peterjokumsen/ng-services';
+import {
+  DocsIndexService,
+  PjBrowserTools,
+  PjLogger,
+} from '@peterjokumsen/ng-services';
 
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { pjFilterMap } from '@peterjokumsen/ts-utils';
 import { PjUiRouterNavigationElement } from '@peterjokumsen/ui-elements';
-import { filter } from 'rxjs';
+import { filter, map, startWith } from 'rxjs';
 import { slideInAnimation } from './animations';
 import { childRoutes } from './app.routes';
 import { FooterComponent } from './components/footer';
@@ -32,6 +36,7 @@ export class PrimaryComponent implements OnInit {
   private _browserTools = inject(PjBrowserTools);
   private _router = inject(Router);
   private _contexts = inject(ChildrenOutletContexts);
+  private _docsIndex = inject(DocsIndexService);
   private _animations: string[] = [];
 
   private _navigationStart$ = this._router.events.pipe(
@@ -42,11 +47,17 @@ export class PrimaryComponent implements OnInit {
   );
   loading = true;
   readonly navElements: PjUiRouterNavigationElement[] = [];
+  blogElements = toSignal<PjUiRouterNavigationElement[]>(
+    this._docsIndex.getIndex().pipe(
+      map((docs) => docs.map((doc) => ({ route: doc.path, title: doc.title }))),
+      startWith([]),
+    ),
+  );
 
-  private createNavElement(route: Route): PjUiRouterNavigationElement {
+  private createNavElement(navData: Route): PjUiRouterNavigationElement {
     return {
-      route: route.path ?? '/',
-      title: route.data?.['title'] ?? '',
+      route: navData.path ?? '/',
+      title: navData.data?.['title'] ?? '',
     };
   }
 

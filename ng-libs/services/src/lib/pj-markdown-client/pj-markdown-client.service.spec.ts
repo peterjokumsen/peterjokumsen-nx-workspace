@@ -1,4 +1,4 @@
-import { firstValueFrom, of } from 'rxjs';
+import { Observable, firstValueFrom, of } from 'rxjs';
 
 import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
@@ -63,6 +63,70 @@ describe('PjMarkdownClientService', () => {
       );
 
       expect(result).toEqual({ sections: [], tags: [] });
+    });
+  });
+
+  describe('resolveMarkdown', () => {
+    it('should try [path].md first', async () => {
+      httpClient?.get?.mockReturnValue(of('markdown'));
+      markdownParserService?.parse?.mockReturnValue({ sections: [], tags: [] });
+
+      const result = await firstValueFrom(service.resolveMarkdown('test'));
+
+      expect(httpClient.get).toHaveBeenCalledWith('assets/docs/test.md', {
+        responseType: 'text',
+      });
+      expect(result.resolvedPath).toBe('assets/docs/test.md');
+    });
+
+    it('should fallback to [path]/README.md if [path].md fails', (done) => {
+      const errorResponse = new Error('404');
+      const successResponse = 'readme markdown';
+
+      httpClient.get = jest
+        .fn()
+        .mockReturnValueOnce(
+          new Observable((subscriber) => subscriber.error(errorResponse)),
+        )
+        .mockReturnValueOnce(of(successResponse));
+
+      markdownParserService?.parse?.mockReturnValue({ sections: [], tags: [] });
+
+      service.resolveMarkdown('test').subscribe({
+        next: (result) => {
+          expect(httpClient.get).toHaveBeenCalledTimes(2);
+          expect(httpClient.get).toHaveBeenNthCalledWith(
+            1,
+            'assets/docs/test.md',
+            { responseType: 'text' },
+          );
+          expect(httpClient.get).toHaveBeenNthCalledWith(
+            2,
+            'assets/docs/test/README.md',
+            { responseType: 'text' },
+          );
+          expect(result.resolvedPath).toBe('assets/docs/test/README.md');
+          done();
+        },
+      });
+    });
+
+    it('should error if both paths fail', (done) => {
+      const errorResponse = new Error('404');
+
+      httpClient.get = jest
+        .fn()
+        .mockReturnValue(
+          new Observable((subscriber) => subscriber.error(errorResponse)),
+        );
+
+      service.resolveMarkdown('test').subscribe({
+        error: (err) => {
+          expect(err).toEqual(errorResponse);
+          expect(httpClient.get).toHaveBeenCalledTimes(2);
+          done();
+        },
+      });
     });
   });
 });

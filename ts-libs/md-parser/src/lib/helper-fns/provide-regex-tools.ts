@@ -17,6 +17,7 @@ export type RegexContentType = Exclude<
   | 'code-block'
   | 'quote'
   | 'ordered-list'
+  | 'frontmatter'
 >;
 
 /**

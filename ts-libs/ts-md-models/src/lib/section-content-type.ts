@@ -10,4 +10,5 @@ export type SectionContentType = Extract<
   | 'paragraph'
   | 'quote'
   | 'section'
+  | 'frontmatter'
 >;

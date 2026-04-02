@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
+  Output,
   inject,
 } from '@angular/core';
 import { PjLogger, PjMarkdownClient } from '@peterjokumsen/ng-services';
@@ -10,6 +12,8 @@ import { BehaviorSubject, switchMap } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MdRendererComponent } from '@peterjokumsen/md-renderer';
+import { MarkdownAst } from '@peterjokumsen/ts-md-models';
+import { filter, shareReplay, tap } from 'rxjs';
 
 @Component({
   selector: 'app-display-markdown',
@@ -40,12 +44,18 @@ export class DisplayMarkdownComponent {
     this._filePathSubject.next(value);
   }
 
-  markdown = toSignal(
-    this._filePathSubject.pipe(
-      switchMap((path) => {
-        if (!path) return [undefined];
-        return this._mdClient.readMarkdown(path);
-      }),
-    ),
+  @Output()
+  metadataLoaded = new EventEmitter<MarkdownAst>();
+
+  private _markdownAst$ = this._filePathSubject.pipe(
+    switchMap((path) => {
+      if (!path) return [undefined];
+      return this._mdClient.readMarkdown(path);
+    }),
+    filter((m): m is MarkdownAst => !!m),
+    tap((m) => this.metadataLoaded.emit(m)),
+    shareReplay(1),
   );
+
+  markdown = toSignal(this._markdownAst$);
 }

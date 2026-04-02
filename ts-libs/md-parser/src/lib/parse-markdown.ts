@@ -1,4 +1,8 @@
-import { MarkdownAst, MarkdownSection } from '@peterjokumsen/ts-md-models';
+import {
+  MarkdownAst,
+  MarkdownMetaData,
+  MarkdownSection,
+} from '@peterjokumsen/ts-md-models';
 
 import { generateMarkdownSections } from './reader-fns';
 
@@ -21,8 +25,14 @@ export function parseMarkdown(markdown: string): MarkdownAst {
   }
 
   const sections: MarkdownSection[] = [];
+  let metaData: MarkdownMetaData = { type: 'frontmatter' };
   let currentSection: MarkdownSection | undefined;
   for (const content of generateMarkdownSections(markdown)) {
+    if (content.type === 'frontmatter') {
+      metaData = content;
+      continue;
+    }
+
     if (content.type === 'section') {
       currentSection = content;
       sections.push(currentSection);
@@ -41,5 +51,6 @@ export function parseMarkdown(markdown: string): MarkdownAst {
     currentSection.contents.push(content);
   }
 
-  return { sections };
+  const { type, ...metaDataWithoutType } = metaData;
+  return { ...metaDataWithoutType, sections };
 }

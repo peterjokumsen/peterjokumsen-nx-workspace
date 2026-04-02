@@ -1,6 +1,11 @@
-import { MarkdownType, SectionContentType } from '@peterjokumsen/ts-md-models';
+import {
+  MarkdownMetaData,
+  MarkdownType,
+  SectionContentType,
+} from '@peterjokumsen/ts-md-models';
 
 import { getSectionContentType } from '../helper-fns';
+import { readMetadata } from './read-frontmatter';
 import { readList } from './read-list';
 import { readParagraph } from './read-paragraph';
 import { readQuote } from './read-quote';
@@ -15,10 +20,18 @@ import { readSection } from './read-section';
  */
 export function* generateMarkdownSections(
   markdown: string,
-): Generator<MarkdownType<SectionContentType>> {
+): Generator<MarkdownType<SectionContentType> | MarkdownMetaData> {
   const lines = markdown.replace('\r', '').split('\n');
   let next: MarkdownType<SectionContentType>;
-  for (let idx = 0; idx < lines.length; idx++) {
+  let start = -1;
+  if (lines[0].trim() === '---') {
+    // initial `---` is frontmatter
+    const { result, lastLineIndex } = readMetadata(lines, 0);
+    start = lastLineIndex;
+    yield result;
+  }
+
+  for (let idx = start + 1; idx < lines.length; idx++) {
     const line = lines[idx];
     if (line.trim() === '') continue;
 

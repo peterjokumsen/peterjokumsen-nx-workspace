@@ -10,22 +10,18 @@ export const childRoutes: Route[] = [
     data: { title: 'Home' },
   },
   {
-    path: 'about-me',
+    path: 'articles/:articlePath',
     loadComponent: () =>
-      import('./pages/about-me').then((m) => m.AboutMeComponent),
+      import('./pages/markdown-entry').then((m) => m.MarkdownEntryComponent),
   },
   {
-    path: 'development-notes',
+    path: '404',
     loadComponent: () =>
-      import('./pages/development-notes').then(
-        (m) => m.DevelopmentNotesComponent,
-      ),
-    data: { title: 'Development Notes' },
+      import('./pages/not-found').then((m) => m.NotFoundComponent),
   },
   {
     path: '**',
-    loadComponent: () =>
-      import('./pages/not-found').then((m) => m.NotFoundComponent),
+    redirectTo: '404',
   },
 ];
 

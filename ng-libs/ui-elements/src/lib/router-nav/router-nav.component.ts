@@ -50,6 +50,25 @@ import { MatMenuModule } from '@angular/material/menu';
         </a>
       }
 
+      @let articles = blogArticles();
+      @if (articles.length > 0) {
+        <button mat-button [matMenuTriggerFor]="blogMenu">Blog</button>
+        <mat-menu #blogMenu="matMenu">
+          @for (article of articles; track article.route) {
+            <a
+              mat-menu-item
+              [routerLink]="article.route"
+              [routerLinkActive]="'is-active'"
+              ariaCurrentWhenActive="page"
+              #rla="routerLinkActive"
+              [disabled]="rla.isActive"
+            >
+              {{ article.title }}
+            </a>
+          }
+        </mat-menu>
+      }
+
       <button mat-button [matMenuTriggerFor]="menu">Theme</button>
       <mat-menu #menu="matMenu">
         @for (option of themeOptions; track option.value) {
@@ -71,6 +90,7 @@ export class RouterNavComponent {
     { value: 'dark', name: 'Dark' },
   ];
   routes = input<PjUiRouterNavigationElement[]>([]);
+  blogArticles = input<PjUiRouterNavigationElement[]>([]);
   flexDirection = input<FlexDirection>('row');
   flexJustify = input<FlexJustify>('end');
   flexAlign = input<FlexAlign>('end');

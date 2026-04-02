@@ -9,8 +9,12 @@ import {
 import { MockComponent, MockDirective } from 'ng-mocks';
 
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { PjBrowserTools } from '@peterjokumsen/ng-services';
-import { of } from 'rxjs';
+import {
+  DocIndexEntry,
+  DocsIndexService,
+  PjBrowserTools,
+} from '@peterjokumsen/ng-services';
+import { BehaviorSubject, of } from 'rxjs';
 import { FooterComponent } from './components/footer';
 import { HeaderComponent } from './components/header';
 import { PrimaryComponent } from './primary.component';
@@ -20,14 +24,25 @@ describe(`[blog] - ${PrimaryComponent.name}`, () => {
   let component: PrimaryComponent;
 
   let contextSpy: Partial<jest.Mocked<ChildrenOutletContexts>>;
+  let docsIndexSpy: Pick<jest.Mocked<DocsIndexService>, 'getIndex'>;
+  let docsSubject: BehaviorSubject<DocIndexEntry[]>;
 
   beforeEach(async () => {
     contextSpy = {
       getContext: jest.fn().mockName('getContext'),
     };
+    docsSubject = new BehaviorSubject<DocIndexEntry[]>([]);
+    docsIndexSpy = {
+      getIndex: jest
+        .fn()
+        .mockName('getIndex')
+        .mockReturnValue(docsSubject.asObservable()),
+    };
+
     await TestBed.configureTestingModule({
       imports: [PrimaryComponent, NoopAnimationsModule],
       providers: [
+        { provide: DocsIndexService, useValue: docsIndexSpy },
         { provide: PjBrowserTools, useValue: {} },
         { provide: Router, useValue: { events: of() } },
         { provide: ChildrenOutletContexts, useValue: contextSpy },
@@ -52,11 +67,31 @@ describe(`[blog] - ${PrimaryComponent.name}`, () => {
     expect(component).toBeTruthy();
   });
 
+  it('should use getIndex', () => {
+    expect(docsIndexSpy.getIndex).toHaveBeenCalled();
+  });
+
   it('should create nav elements', () => {
     fixture.detectChanges();
     expect(component.navElements).toEqual(
       expect.arrayContaining([{ route: '', title: 'Home' }]),
     );
+  });
+
+  describe('blogElements', () => {
+    it('should default as empty', () => {
+      expect(component.blogElements()).toEqual([]);
+    });
+
+    describe('when docIndex emits', () => {
+      it('should update blogElements', () => {
+        docsSubject.next([{ path: 'about-me', title: 'About Me' }]);
+        fixture.detectChanges();
+        expect(component.blogElements()).toEqual([
+          { route: 'about-me', title: 'About Me' },
+        ]);
+      });
+    });
   });
 
   describe('getAnimationContext', () => {

@@ -17,7 +17,11 @@ import { HasContent } from '../has-content';
       <img [src]="imageValue()?.src" [alt]="imageValue()?.alt" />
     }
   `,
-  styles: ``,
+  styles: `
+    img {
+      max-width: 100%;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   standalone: false,
 })

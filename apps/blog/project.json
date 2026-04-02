@@ -9,6 +9,7 @@
     "build": {
       "executor": "@angular-devkit/build-angular:application",
       "outputs": ["{options.outputPath}"],
+      "dependsOn": ["generate-docs-index"],
       "options": {
         "outputPath": "dist/apps/blog",
         "index": "apps/blog/src/index.html",
@@ -99,6 +100,7 @@
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
+      "dependsOn": ["generate-docs-index"],
       "configurations": {
         "production": {
           "buildTarget": "blog:build:production"
@@ -125,6 +127,12 @@
       "options": {
         "jestConfig": "apps/blog/jest.config.ts",
         "tsConfig": "apps/blog/tsconfig.spec.json"
+      }
+    },
+    "generate-docs-index": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npx ts-node apps/blog/scripts/generate-docs-index.ts"
       }
     }
   }
